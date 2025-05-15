@@ -1,0 +1,34 @@
+package zw.co.techtrendz.school.management.api.service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import zw.co.techtrendz.school.management.api.entity.User;
+
+import java.util.List;
+
+@Service
+public interface UserService {
+
+    public User save(User user);
+
+    public List<User> saveAll(List<User> users);
+
+    public User getById(Long id);
+
+    public Page<User> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir);
+
+    public Page<User> getAllByExample(User user, int page, int size, String[] sortBy, Sort.Direction sortDir);
+
+    public User getByUsername(String username);
+
+    public User getByEmail(String email);
+
+    public User getByPhoneNumber(String phoneNumber);
+
+    public boolean existsByUsername(String username);
+
+    public boolean existsByEmail(String email);
+
+    public boolean existsByPhoneNumber(String phoneNumber);
+}
