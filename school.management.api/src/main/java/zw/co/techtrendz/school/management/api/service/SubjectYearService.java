@@ -16,7 +16,7 @@ public interface SubjectYearService {
 
     public SubjectYear getById(Long id);
 
-    public Page<SubjectYear> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<SubjectYear> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
-    public Page<SubjectYear> getAllByExample(SubjectYear subjectYear, int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<SubjectYear> getAllByExample(SubjectYear subjectYear, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 }

@@ -25,7 +25,7 @@ public class ExtraCurricularYearServiceImpl implements ExtraCurricularYearServic
 
     @Override
     public List<ExtraCurricularYear> saveAll(List<ExtraCurricularYear> extraCurricularYears) {
-        return this.extraCurricularYearRepository.saveAll(extraCurricularYears);
+        return extraCurricularYears.stream().map(this::save).toList();
     }
 
     @Override
@@ -34,17 +34,27 @@ public class ExtraCurricularYearServiceImpl implements ExtraCurricularYearServic
     }
 
     @Override
-    public Page<ExtraCurricularYear> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir) {
-        return this.extraCurricularYearRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+    public Page<ExtraCurricularYear> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.extraCurricularYearRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
     }
 
     @Override
-    public Page<ExtraCurricularYear> getAllByExample(ExtraCurricularYear extraCurricularYear, int page, int size, String[] sortBy, Sort.Direction sortDir) {
+    public Page<ExtraCurricularYear> getAllByExample(ExtraCurricularYear extraCurricularYear, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (extraCurricularYear == null) {
-            return null;
+            return this.getAll(page, size, sortBy, sortDir);
         } else {
             Example<ExtraCurricularYear> example = Example.of(extraCurricularYear);
-            return this.extraCurricularYearRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.extraCurricularYearRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
     }
 }

@@ -25,7 +25,7 @@ public class DormServiceImpl implements DormService {
 
     @Override
     public List<Dorm> saveAll(List<Dorm> dorms) {
-        return this.dormRepository.saveAll(dorms);
+        return dorms.stream().map(this::save).toList();
     }
 
     @Override
@@ -34,17 +34,27 @@ public class DormServiceImpl implements DormService {
     }
 
     @Override
-    public Page<Dorm> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir) {
-        return this.dormRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+    public Page<Dorm> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.dormRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
     }
 
     @Override
-    public Page<Dorm> getAllByExample(Dorm dorm, int page, int size, String[] sortBy, Sort.Direction sortDir) {
+    public Page<Dorm> getAllByExample(Dorm dorm, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (dorm == null) {
-            return null;
+            return this.getAll(page, size, sortBy, sortDir);
         } else {
             Example<Dorm> example = Example.of(dorm);
-            return this.dormRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.dormRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
     }
 }

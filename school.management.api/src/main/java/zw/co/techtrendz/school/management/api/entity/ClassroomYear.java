@@ -24,11 +24,12 @@ public class ClassroomYear extends Base {
     @ManyToOne
     private Classroom classroom;
 
-    private Integer year;
+    private Integer calendarYear;
 
     @ManyToMany
     private List<SubjectYear> subjects;
 
-    @OneToMany
-    private List<Student> students;
+    public ClassroomYear(long id) {
+        this.id = id;
+    }
 }

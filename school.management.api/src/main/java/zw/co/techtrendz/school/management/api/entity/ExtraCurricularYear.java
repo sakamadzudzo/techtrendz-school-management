@@ -21,7 +21,7 @@ public class ExtraCurricularYear extends Base{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer year;
+    private Integer calendarYear;
 
     @ManyToOne
     private ExtraCurricular extraCurricular;
@@ -31,4 +31,8 @@ public class ExtraCurricularYear extends Base{
 
     @ManyToMany
     private List<Student> students;
+
+    public ExtraCurricularYear(long id) {
+        this.id = id;
+    }
 }

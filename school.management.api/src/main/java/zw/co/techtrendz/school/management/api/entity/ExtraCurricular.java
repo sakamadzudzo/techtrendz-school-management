@@ -29,4 +29,8 @@ public class ExtraCurricular extends Base{
 
     @Size(max = 255, message = "Description cannot exceed 255 characters")
     private String description;
+
+    public ExtraCurricular(long id) {
+        this.id = id;
+    }
 }

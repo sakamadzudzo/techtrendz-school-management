@@ -16,7 +16,7 @@ public interface DormService {
 
     public Dorm getById(Long id);
 
-    public Page<Dorm> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<Dorm> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
-    public Page<Dorm> getAllByExample(Dorm dorm, int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<Dorm> getAllByExample(Dorm dorm, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 }

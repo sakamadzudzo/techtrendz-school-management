@@ -25,7 +25,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> saveAll(List<Subject> subjects) {
-        return this.subjectRepository.saveAll(subjects);
+        return subjects.stream().map(this::save).toList();
     }
 
     @Override
@@ -34,17 +34,27 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Page<Subject> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir) {
-        return this.subjectRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+    public Page<Subject> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.subjectRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
     }
 
     @Override
-    public Page<Subject> getAllByExample(Subject subject, int page, int size, String[] sortBy, Sort.Direction sortDir) {
+    public Page<Subject> getAllByExample(Subject subject, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (subject == null) {
-            return null;
+            return this.getAll(page, size, sortBy, sortDir);
         } else {
             Example<Subject> example = Example.of(subject);
-            return this.subjectRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.subjectRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
     }
 }

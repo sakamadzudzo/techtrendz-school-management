@@ -24,4 +24,8 @@ public class Teacher extends Base {
 
     @ManyToOne
     private Person person;
+
+    public Teacher(long id) {
+        this.id = id;
+    }
 }

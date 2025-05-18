@@ -16,7 +16,7 @@ public interface PersonService {
 
     public Person getById(Long id);
 
-    public Page<Person> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<Person> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
-    public Page<Person> getAllByExample(Person person, int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<Person> getAllByExample(Person person, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 }

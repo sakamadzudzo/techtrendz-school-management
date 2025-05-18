@@ -25,7 +25,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<Person> saveAll(List<Person> persons) {
-        return this.personRepository.saveAll(persons);
+        return persons.stream().map(this::save).toList();
     }
 
     @Override
@@ -34,17 +34,27 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Page<Person> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir) {
-        return this.personRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+    public Page<Person> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.personRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
     }
 
     @Override
-    public Page<Person> getAllByExample(Person person, int page, int size, String[] sortBy, Sort.Direction sortDir) {
+    public Page<Person> getAllByExample(Person person, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (person == null) {
-            return null;
+            return this.getAll(page, size, sortBy, sortDir);
         } else {
             Example<Person> example = Example.of(person);
-            return this.personRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.personRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
     }
 }

@@ -5,10 +5,13 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.Student;
+import zw.co.techtrendz.school.management.api.entity.User;
 import zw.co.techtrendz.school.management.api.repository.StudentRepository;
 import zw.co.techtrendz.school.management.api.service.StudentService;
+import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 
 import java.util.List;
 
@@ -25,7 +28,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> saveAll(List<Student> students) {
-        return this.studentRepository.saveAll(students);
+        return students.stream().map(this::save).toList();
     }
 
     @Override
@@ -34,17 +37,41 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Page<Student> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir) {
-        return this.studentRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+    public Page<Student> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.studentRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
     }
 
     @Override
-    public Page<Student> getAllByExample(Student student, int page, int size, String[] sortBy, Sort.Direction sortDir) {
+    public Page<Student> getAllByExample(Student student, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (student == null) {
-            return null;
+            return this.getAll(page, size, sortBy, sortDir);
         } else {
             Example<Student> example = Example.of(student);
-            return this.studentRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.studentRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
+    }
+
+    @Override
+    public Page<Student> getAllByClassroomId(long classroomId, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+        Specification<Student> spec = Specification.where(
+                SpecificationUtils.<Student>exactMatch("classroom.id", classroomId)
+        );
+
+        return this.studentRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
     }
 }

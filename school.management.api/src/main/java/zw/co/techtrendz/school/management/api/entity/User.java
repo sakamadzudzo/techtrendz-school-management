@@ -8,9 +8,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
+import zw.co.techtrendz.school.management.api.enums.Role;
 import zw.co.techtrendz.school.management.api.enums.Status;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "app_user")
@@ -33,7 +35,18 @@ public class User extends Base {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
-    private Boolean confirmed;
+    private Boolean verified;
+
+    private Boolean enabled;
 
     private Boolean changePassword;
+
+    @ManyToOne
+    private Person person;
+
+    List<Role> roles;
+
+    public User(long id) {
+        this.id = id;
+    }
 }

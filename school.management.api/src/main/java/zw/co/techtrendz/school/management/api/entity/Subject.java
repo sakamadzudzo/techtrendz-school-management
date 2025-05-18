@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 import zw.co.techtrendz.school.management.api.enums.Status;
+import zw.co.techtrendz.school.management.api.enums.SubjectType;
 
 import java.time.LocalDateTime;
 
@@ -37,9 +38,13 @@ public class Subject extends Base {
 
     private String curriculum;
 
-    private String level;
+    private Integer level;
 
-    private String type;
+    private SubjectType type;
 
     private String category;
+
+    public Subject(long id) {
+        this.id = id;
+    }
 }

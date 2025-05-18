@@ -25,7 +25,7 @@ public class ExtraCurricularServiceImpl implements ExtraCurricularService {
 
     @Override
     public List<ExtraCurricular> saveAll(List<ExtraCurricular> extraCurriculars) {
-        return this.extraCurricularRepository.saveAll(extraCurriculars);
+        return extraCurriculars.stream().map(this::save).toList();
     }
 
     @Override
@@ -34,17 +34,27 @@ public class ExtraCurricularServiceImpl implements ExtraCurricularService {
     }
 
     @Override
-    public Page<ExtraCurricular> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir) {
-        return this.extraCurricularRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+    public Page<ExtraCurricular> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.extraCurricularRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
     }
 
     @Override
-    public Page<ExtraCurricular> getAllByExample(ExtraCurricular extraCurricular, int page, int size, String[] sortBy, Sort.Direction sortDir) {
+    public Page<ExtraCurricular> getAllByExample(ExtraCurricular extraCurricular, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (extraCurricular == null) {
-            return null;
+            return this.getAll(page, size, sortBy, sortDir);
         } else {
             Example<ExtraCurricular> example = Example.of(extraCurricular);
-            return this.extraCurricularRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.extraCurricularRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
     }
 }

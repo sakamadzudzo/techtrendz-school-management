@@ -25,7 +25,7 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     public List<School> saveAll(List<School> schools) {
-        return this.schoolRepository.saveAll(schools);
+        return schools.stream().map(this::save).toList();
     }
 
     @Override
@@ -34,17 +34,27 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public Page<School> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir) {
-        return this.schoolRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+    public Page<School> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.schoolRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
     }
 
     @Override
-    public Page<School> getAllByExample(School school, int page, int size, String[] sortBy, Sort.Direction sortDir) {
+    public Page<School> getAllByExample(School school, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (school == null) {
-            return null;
+            return this.getAll(page, size, sortBy, sortDir);
         } else {
             Example<School> example = Example.of(school);
-            return this.schoolRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.schoolRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
     }
 }

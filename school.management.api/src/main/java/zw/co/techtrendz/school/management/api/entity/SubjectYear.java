@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @AllArgsConstructor
@@ -22,8 +24,12 @@ public class SubjectYear extends Base{
     @ManyToOne
     private Subject subject;
 
-    private Integer year;
+    private Integer calendarYear;
 
     @ManyToOne
     private Teacher teacher;
+
+    public SubjectYear(long id) {
+        this.id = id;
+    }
 }

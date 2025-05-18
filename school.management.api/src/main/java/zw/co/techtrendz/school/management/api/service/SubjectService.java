@@ -16,7 +16,7 @@ public interface SubjectService {
 
     public Subject getById(Long id);
 
-    public Page<Subject> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<Subject> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
-    public Page<Subject> getAllByExample(Subject subject, int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<Subject> getAllByExample(Subject subject, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 }

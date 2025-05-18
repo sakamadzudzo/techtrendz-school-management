@@ -10,9 +10,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 import zw.co.techtrendz.school.management.api.enums.Salutation;
-import zw.co.techtrendz.school.management.api.enums.Status;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -48,5 +47,9 @@ public class Person extends Base {
 
     private String linkedin;
 
-    private LocalDateTime dateOfBirth;
+    private LocalDate dateOfBirth;
+
+    public Person(long id) {
+        this.id = id;
+    }
 }

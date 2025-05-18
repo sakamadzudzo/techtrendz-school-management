@@ -16,7 +16,9 @@ public interface StudentService {
 
     public Student getById(Long id);
 
-    public Page<Student> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<Student> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
-    public Page<Student> getAllByExample(Student student, int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<Student> getAllByExample(Student student, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<Student> getAllByClassroomId(long classroomId, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 }

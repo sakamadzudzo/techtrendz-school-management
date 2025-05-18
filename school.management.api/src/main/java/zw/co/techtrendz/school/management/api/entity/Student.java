@@ -31,8 +31,8 @@ public class Student extends Base{
     @ManyToOne
     private ClassroomYear classroom;
 
-    @ManyToMany
-    private List<SubjectYear> subjects;
+//    @ManyToMany
+//    private List<SubjectYear> subjects;
 
     @ManyToOne
     private Dorm dorm;
@@ -40,6 +40,7 @@ public class Student extends Base{
     @ManyToOne
     private School school;
 
-    @ManyToMany
-    private List<Student> students;
+    public Student(long id) {
+        this.id = id;
+    }
 }

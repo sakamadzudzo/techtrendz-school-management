@@ -16,9 +16,9 @@ public interface UserService {
 
     public User getById(Long id);
 
-    public Page<User> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<User> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
-    public Page<User> getAllByExample(User user, int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<User> getAllByExample(User user, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public User getByUsername(String username);
 
@@ -31,4 +31,10 @@ public interface UserService {
     public boolean existsByEmail(String email);
 
     public boolean existsByPhoneNumber(String phoneNumber);
+
+    public void enableUser(Long id);
+
+    public void disableUser(Long id);
+
+    public void verifyUser(Long id);
 }

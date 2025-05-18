@@ -27,4 +27,8 @@ public class Classroom extends Base {
 
     @Size(max = 255, message = "Description cannot exceed 255 characters")
     private String description;
+
+    public Classroom(long id) {
+        this.id = id;
+    }
 }

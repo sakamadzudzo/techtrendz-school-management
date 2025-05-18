@@ -37,4 +37,8 @@ public class Dorm extends Base {
 
     @ManyToOne
     private School school;
+
+    public Dorm(long id) {
+        this.id = id;
+    }
 }

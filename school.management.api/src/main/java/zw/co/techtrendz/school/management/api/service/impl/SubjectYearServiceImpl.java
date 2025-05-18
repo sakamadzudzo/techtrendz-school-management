@@ -25,7 +25,7 @@ public class SubjectYearServiceImpl implements SubjectYearService {
 
     @Override
     public List<SubjectYear> saveAll(List<SubjectYear> subjectYears) {
-        return this.subjectYearRepository.saveAll(subjectYears);
+        return subjectYears.stream().map(this::save).toList();
     }
 
     @Override
@@ -34,17 +34,27 @@ public class SubjectYearServiceImpl implements SubjectYearService {
     }
 
     @Override
-    public Page<SubjectYear> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir) {
-        return this.subjectYearRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+    public Page<SubjectYear> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.subjectYearRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
     }
 
     @Override
-    public Page<SubjectYear> getAllByExample(SubjectYear subjectYear, int page, int size, String[] sortBy, Sort.Direction sortDir) {
+    public Page<SubjectYear> getAllByExample(SubjectYear subjectYear, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (subjectYear == null) {
-            return null;
+            return this.getAll(page, size, sortBy, sortDir);
         } else {
             Example<SubjectYear> example = Example.of(subjectYear);
-            return this.subjectYearRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortBy)));
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.subjectYearRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
     }
 }

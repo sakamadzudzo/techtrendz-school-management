@@ -16,7 +16,7 @@ public interface ExtraCurricularService {
 
     public ExtraCurricular getById(Long id);
 
-    public Page<ExtraCurricular> getAll(int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<ExtraCurricular> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
-    public Page<ExtraCurricular> getAllByExample(ExtraCurricular extraCurricular, int page, int size, String[] sortBy, Sort.Direction sortDir);
+    public Page<ExtraCurricular> getAllByExample(ExtraCurricular extraCurricular, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 }

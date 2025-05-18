@@ -40,4 +40,8 @@ public class School extends Base {
     private String address;
 
     private String website;
+
+    public School(long id) {
+        this.id = id;
+    }
 }
