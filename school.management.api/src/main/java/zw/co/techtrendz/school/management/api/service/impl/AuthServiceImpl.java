@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
             }
         }
 
-        String token = this.jwtUtil.generateToken(authDto.getUsername(), fingerprint, authDto.isRememberMe());
+        String token = this.jwtUtil.generateToken(authDto.getUsername(), fingerprint, authDto.isRememberMe(), user.getRoles());
         return ResponseEntity.ok(token);
     }
 
@@ -80,8 +80,9 @@ public class AuthServiceImpl implements AuthService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token is invalid or expired");
             } else {
                 String username = this.jwtUtil.extractUsername(token);
+                User user = this.userService.getByUsername(username);
                 String fingerprint = AppUtils.getClientFingerprint(request);
-                String newToken = this.jwtUtil.generateToken(username, fingerprint, true);
+                String newToken = this.jwtUtil.generateToken(username, fingerprint, true, user.getRoles());
                 return ResponseEntity.ok(newToken);
             }
         }

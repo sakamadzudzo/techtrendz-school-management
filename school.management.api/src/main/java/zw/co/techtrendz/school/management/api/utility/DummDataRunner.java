@@ -60,6 +60,8 @@ public class DummDataRunner {
         this.dummyClassroomYear();
         this.dummyStudent();
         this.dummyUser();
+        this.dummySchool();
+        this.dummyDorm();
     }
 
     private void dummyPersons() {
@@ -181,5 +183,34 @@ public class DummDataRunner {
         );
         this.userService.saveAll(users);
         users.stream().map(User::getId).forEach(this.userService::enableUser);
+    }
+
+    private void dummySchool() {
+        School s1 = new School();
+        s1.setName("TechTrendz Academy");
+        s1.setEmail("techtrendzacademy@mail.com");
+        s1.setMobileNumber("0771534567");
+        s1.setMobileNumber2("0771534568");
+        s1.setTelNumber("08600530056");
+        s1.setWebsite("https://www.techtrendzacademy.co.zw");
+        s1.setAddress("123 Altruz Street, Harare, Zimbabwe");
+
+        List<School> schools = Arrays.asList(
+                s1
+        );
+        this.schoolService.saveAll(schools);
+    }
+
+    private void dummyDorm() {
+        Dorm d1 = new Dorm();
+        d1.setName("Dorm A");
+        d1.setDescription("Dorm A Description");
+        d1.setAddress("123 Altruz Street, Harare, Zimbabwe");
+        d1.setSchool(new School(1L));
+
+        List<Dorm> dorms = Arrays.asList(
+                d1
+        );
+        this.dormService.saveAll(dorms);
     }
 }

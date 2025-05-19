@@ -100,7 +100,7 @@ class LoginMethodTests {
         user.setPassword(new BCryptPasswordEncoder().encode("correctPassword"));
 
         when(userService.getByUsername("validUser")).thenReturn(user);
-        when(jwtUtil.generateToken(anyString(), anyString(), anyBoolean())).thenReturn("mockToken");
+        when(jwtUtil.generateToken(anyString(), anyString(), anyBoolean(), anyList())).thenReturn("mockToken");
 
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader("User-Agent")).thenReturn("mockUserAgent");

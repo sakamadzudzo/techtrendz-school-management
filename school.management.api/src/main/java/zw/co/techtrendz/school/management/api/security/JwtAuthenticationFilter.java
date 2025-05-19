@@ -1,15 +1,18 @@
 package zw.co.techtrendz.school.management.api.security;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import zw.co.techtrendz.school.management.api.enums.Role;
 import zw.co.techtrendz.school.management.api.service.JwtBlacklistService;
 import zw.co.techtrendz.school.management.api.utility.AppUtils;
 
@@ -41,8 +44,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Logger.getLogger(JwtAuthenticationFilter.class.getName()).log(Level.WARNING, "Token is blacklisted");
             } else if (this.jwtUtil.validateToken(token, fingerprint)) {
                 String username = this.jwtUtil.extractUsername(token);
+                Claims claims = this.jwtUtil.extractAllClaims(token);
+                List<String> roles = (List<String>) claims.get("roles", List.class);
+                List<SimpleGrantedAuthority> authorities = roles
+                        .stream()
+                        .map(role ->
+                                new SimpleGrantedAuthority("ROLE_" + role.toUpperCase())
+                        )
+                        .toList();
+
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(username, null, List.of());
+                        new UsernamePasswordAuthenticationToken(username, null, authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {

@@ -34,7 +34,7 @@ class RefreshMethodTests {
         when(request.getHeader("Authorization")).thenReturn("Bearer " + oldToken);
         when(jwtUtil.validateToken(oldToken, AppUtils.getClientFingerprint(request))).thenReturn(true);
         when(jwtUtil.extractUsername(oldToken)).thenReturn(username);
-        when(jwtUtil.generateToken(username, AppUtils.getClientFingerprint(request), true)).thenReturn(newToken);
+        when(jwtUtil.generateToken(username, AppUtils.getClientFingerprint(request), true, anyList())).thenReturn(newToken);
 
         ResponseEntity<String> response = authService.refresh(request);
 
