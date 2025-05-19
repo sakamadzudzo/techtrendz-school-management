@@ -12,18 +12,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/dorm")
-@PreAuthorize("hasRole('STAFF')")
 public class DormController {
 
     @Autowired
     private DormService dormService;
 
     @PostMapping("/save")
+    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     public Dorm saveDorm(@RequestBody Dorm dorm) {
         return this.dormService.save(dorm);
     }
 
     @PostMapping("/save/all")
+    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     public List<Dorm> saveAllDorms(@RequestBody List<Dorm> dorms) {
         return this.dormService.saveAll(dorms);
     }

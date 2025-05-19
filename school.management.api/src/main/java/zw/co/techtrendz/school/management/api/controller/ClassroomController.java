@@ -11,18 +11,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/classroom")
-@PreAuthorize("hasRole('TEACHER')")
 public class ClassroomController {
 
     @Autowired
     private ClassroomService classroomService;
 
     @PostMapping("/save")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public Classroom saveClassroom(@RequestBody Classroom classroom) {
         return this.classroomService.save(classroom);
     }
 
     @PostMapping("/save/all")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public List<Classroom> saveAllClassrooms(@RequestBody List<Classroom> classrooms) {
         return this.classroomService.saveAll(classrooms);
     }

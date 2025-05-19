@@ -2,6 +2,7 @@ package zw.co.techtrendz.school.management.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.entity.ExtraCurricular;
 import zw.co.techtrendz.school.management.api.service.ExtraCurricularService;
@@ -16,11 +17,13 @@ public class ExtraCurricularController {
     private ExtraCurricularService extraCurricularService;
 
     @PostMapping("/save")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STAFF')")
     public ExtraCurricular saveExtraCurricular(@RequestBody ExtraCurricular extraCurricular) {
         return this.extraCurricularService.save(extraCurricular);
     }
 
     @PostMapping("/save/all")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STAFF')")
     public List<ExtraCurricular> saveAllExtraCurriculars(@RequestBody List<ExtraCurricular> extraCurriculars) {
         return this.extraCurricularService.saveAll(extraCurriculars);
     }

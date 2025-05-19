@@ -2,6 +2,7 @@ package zw.co.techtrendz.school.management.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.entity.ClassroomYear;
 import zw.co.techtrendz.school.management.api.service.ClassroomYearService;
@@ -16,11 +17,13 @@ public class ClassroomYearController {
     private ClassroomYearService classroomYearService;
 
     @PostMapping("/save")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public ClassroomYear saveClassroomYear(@RequestBody ClassroomYear classroomYear) {
         return this.classroomYearService.save(classroomYear);
     }
 
     @PostMapping("/save/all")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public List<ClassroomYear> saveAllClassroomYears(@RequestBody List<ClassroomYear> classroomYears) {
         return this.classroomYearService.saveAll(classroomYears);
     }

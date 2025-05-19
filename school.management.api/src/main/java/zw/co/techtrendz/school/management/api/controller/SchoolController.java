@@ -2,6 +2,7 @@ package zw.co.techtrendz.school.management.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.entity.School;
 import zw.co.techtrendz.school.management.api.service.SchoolService;
@@ -16,11 +17,13 @@ public class SchoolController {
     private SchoolService schoolService;
 
     @PostMapping("/save")
+    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     public School saveSchool(@RequestBody School school) {
         return this.schoolService.save(school);
     }
 
     @PostMapping("/save/all")
+    @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
     public List<School> saveAllSchools(@RequestBody List<School> schools) {
         return this.schoolService.saveAll(schools);
     }
