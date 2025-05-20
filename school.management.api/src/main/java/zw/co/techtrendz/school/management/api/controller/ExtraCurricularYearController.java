@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,13 +19,13 @@ public class ExtraCurricularYearController {
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STAFF')")
-    public ExtraCurricularYear saveExtraCurricularYear(@RequestBody ExtraCurricularYear extraCurricularYear) {
+    public ExtraCurricularYear saveExtraCurricularYear(@RequestBody @Valid ExtraCurricularYear extraCurricularYear) {
         return this.extraCurricularYearService.save(extraCurricularYear);
     }
 
     @PostMapping("/save/all")
     @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STAFF')")
-    public List<ExtraCurricularYear> saveAllExtraCurricularYears(@RequestBody List<ExtraCurricularYear> extraCurricularYears) {
+    public List<ExtraCurricularYear> saveAllExtraCurricularYears(@RequestBody @Valid List<ExtraCurricularYear> extraCurricularYears) {
         return this.extraCurricularYearService.saveAll(extraCurricularYears);
     }
 
@@ -39,7 +40,7 @@ public class ExtraCurricularYearController {
     }
 
     @GetMapping("/get/all/by/example")
-    public List<ExtraCurricularYear> getAllExtraCurricularYearsByExample(@RequestBody ExtraCurricularYear extraCurricularYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "extraCurricular.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+    public List<ExtraCurricularYear> getAllExtraCurricularYearsByExample(@RequestBody @Valid ExtraCurricularYear extraCurricularYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "extraCurricular.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
         return this.extraCurricularYearService.getAllByExample(extraCurricularYear, page, size, sortBy, sortDir).getContent();
     }
 }

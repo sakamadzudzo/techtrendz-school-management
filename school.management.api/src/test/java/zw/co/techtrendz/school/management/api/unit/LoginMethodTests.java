@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,6 +18,9 @@ import zw.co.techtrendz.school.management.api.security.JwtUtil;
 import zw.co.techtrendz.school.management.api.service.JwtBlacklistService;
 import zw.co.techtrendz.school.management.api.service.UserService;
 import zw.co.techtrendz.school.management.api.service.impl.AuthServiceImpl;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class LoginMethodTests {
 
@@ -32,10 +36,13 @@ class LoginMethodTests {
     @Mock
     private UserService userService;
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
     void testLogin_UserNotFound() {
-        MockitoAnnotations.openMocks(this);
-
         AuthDto authDto = new AuthDto();
         authDto.setUsername("nonexistent");
         authDto.setPassword("password");
@@ -50,8 +57,6 @@ class LoginMethodTests {
 
     @Test
     void testLogin_UserLocked() {
-        MockitoAnnotations.openMocks(this);
-
         AuthDto authDto = new AuthDto();
         authDto.setUsername("lockedUser");
         authDto.setPassword("password");
@@ -69,8 +74,6 @@ class LoginMethodTests {
 
     @Test
     void testLogin_InvalidPassword() {
-        MockitoAnnotations.openMocks(this);
-
         AuthDto authDto = new AuthDto();
         authDto.setUsername("validUser");
         authDto.setPassword("wrongPassword");
@@ -89,24 +92,25 @@ class LoginMethodTests {
 
     @Test
     void testLogin_Success() {
-        MockitoAnnotations.openMocks(this);
-
         AuthDto authDto = new AuthDto();
         authDto.setUsername("validUser");
         authDto.setPassword("correctPassword");
+        authDto.setRememberMe(false);
 
         User user = new User();
         user.setEnabled(true);
+        user.setUsername("validUser");
         user.setPassword(new BCryptPasswordEncoder().encode("correctPassword"));
 
         when(userService.getByUsername("validUser")).thenReturn(user);
-        when(jwtUtil.generateToken(anyString(), anyString(), anyBoolean(), anyList())).thenReturn("mockToken");
+        when(jwtUtil.generateToken(anyString(), anyString(), anyBoolean(), any())).thenReturn("mockToken");
 
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader("User-Agent")).thenReturn("mockUserAgent");
         when(request.getHeader("Accept-Language")).thenReturn("mockLanguage");
 
         ResponseEntity<String> response = authService.login(authDto, request);
+        Logger.getLogger(LoginMethodTests.class.getName()).log(Level.INFO, "Login response: {0}", response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("mockToken", response.getBody());

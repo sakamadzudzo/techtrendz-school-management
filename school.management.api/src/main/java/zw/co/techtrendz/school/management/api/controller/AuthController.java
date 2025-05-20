@@ -1,6 +1,7 @@
 package zw.co.techtrendz.school.management.api.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthDto authDto, HttpServletRequest request) {
+    public ResponseEntity<String> login(@RequestBody @Valid AuthDto authDto, HttpServletRequest request) {
         return this.authService.login(authDto, request);
     }
 
@@ -41,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user, HttpServletRequest request) {
+    public ResponseEntity<String> register(@RequestBody @Valid User user, HttpServletRequest request) {
         return this.authService.register(user, request);
     }
 }

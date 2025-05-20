@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,13 +19,13 @@ public class PersonController {
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN')")
-    public Person savePerson(@RequestBody Person person) {
+    public Person savePerson(@RequestBody @Valid Person person) {
         return this.personService.save(person);
     }
 
     @PostMapping("/save/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<Person> saveAllPersons(@RequestBody List<Person> persons) {
+    public List<Person> saveAllPersons(@RequestBody @Valid List<Person> persons) {
         return this.personService.saveAll(persons);
     }
 
@@ -39,7 +40,7 @@ public class PersonController {
     }
 
     @GetMapping("/get/all/by/example")
-    public List<Person> getAllPersonsByExample(@RequestBody Person person, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+    public List<Person> getAllPersonsByExample(@RequestBody @Valid Person person, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
         return this.personService.getAllByExample(person, page, size, sortBy, sortDir).getContent();
     }
 }

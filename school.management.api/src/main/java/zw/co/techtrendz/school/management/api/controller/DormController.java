@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
@@ -19,13 +20,13 @@ public class DormController {
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-    public Dorm saveDorm(@RequestBody Dorm dorm) {
+    public Dorm saveDorm(@RequestBody @Valid Dorm dorm) {
         return this.dormService.save(dorm);
     }
 
     @PostMapping("/save/all")
     @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-    public List<Dorm> saveAllDorms(@RequestBody List<Dorm> dorms) {
+    public List<Dorm> saveAllDorms(@RequestBody @Valid List<Dorm> dorms) {
         return this.dormService.saveAll(dorms);
     }
 
@@ -40,7 +41,7 @@ public class DormController {
     }
 
     @GetMapping("/get/all/by/example")
-    public List<Dorm> getAllDormsByExample(@RequestBody Dorm dorm, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+    public List<Dorm> getAllDormsByExample(@RequestBody @Valid Dorm dorm, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
         return this.dormService.getAllByExample(dorm, page, size, sortBy, sortDir).getContent();
     }
 }

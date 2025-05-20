@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,13 +19,13 @@ public class ClassroomYearController {
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
-    public ClassroomYear saveClassroomYear(@RequestBody ClassroomYear classroomYear) {
+    public ClassroomYear saveClassroomYear(@RequestBody @Valid ClassroomYear classroomYear) {
         return this.classroomYearService.save(classroomYear);
     }
 
     @PostMapping("/save/all")
     @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
-    public List<ClassroomYear> saveAllClassroomYears(@RequestBody List<ClassroomYear> classroomYears) {
+    public List<ClassroomYear> saveAllClassroomYears(@RequestBody @Valid List<ClassroomYear> classroomYears) {
         return this.classroomYearService.saveAll(classroomYears);
     }
 
@@ -39,7 +40,7 @@ public class ClassroomYearController {
     }
 
     @GetMapping("/get/all/by/example")
-    public List<ClassroomYear> getAllClassroomYearsByExample(@RequestBody ClassroomYear classroomYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "classroom.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+    public List<ClassroomYear> getAllClassroomYearsByExample(@RequestBody @Valid ClassroomYear classroomYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "classroom.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
         return this.classroomYearService.getAllByExample(classroomYear, page, size, sortBy, sortDir).getContent();
     }
 }

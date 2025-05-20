@@ -87,9 +87,22 @@ public class DummDataRunner {
         p2.setLastName("Kandemwa");
         p2.setDateOfBirth(LocalDate.of(2010, 5, 15));
 
+        Person p3 = new Person();
+        p3.setSalutation(Salutation.MR);
+        p3.setFirstName("Saka");
+        p3.setOtherNames("Shingirai");
+        p3.setLastName("Madzudzo");
+        p3.setEmail("sakamadzudzo@mail.com");
+        p3.setMobileNumber("0773702467");
+        p3.setMobileNumber2("0719702467");
+        p3.setWhatsapp("0773702467");
+        p3.setLinkedin("https://www.linkedin.com/in/sakamadzudzo/");
+        p3.setDateOfBirth(LocalDate.of(1970,8,1));
+
         List<Person> persons = Arrays.asList(
                 p1,
-                p2
+                p2,
+                p3
         );
         this.personService.saveAll(persons);
     }
@@ -176,10 +189,17 @@ public class DummDataRunner {
         u1.setPerson(new Person(1L));
         u1.setRoles(Arrays.asList(Role.TEACHER));
         u1.setEnabled(true);
-        u1.setEnabled(true);
+
+        User u2 = new User();
+        u2.setUsername("sakamadzudzo");
+        u2.setPassword("password");
+        u2.setPerson(new Person(3L));
+        u2.setRoles(Arrays.asList(Role.ADMIN));
+        u2.setEnabled(true);
 
         List<User> users = Arrays.asList(
-                u1
+                u1,
+                u2
         );
         this.userService.saveAll(users);
         users.stream().map(User::getId).forEach(this.userService::enableUser);
