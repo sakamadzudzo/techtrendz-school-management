@@ -24,6 +24,8 @@ public class DummDataRunner {
     @Autowired
     private DormService dormService;
     @Autowired
+    private DormYearService dormYearService;
+    @Autowired
     private ExtraCurricularService extraCurricularService;
     @Autowired
     private ExtraCurricularYearService extraCurricularYearService;
@@ -62,6 +64,7 @@ public class DummDataRunner {
         this.dummyUser();
         this.dummySchool();
         this.dummyDorm();
+        this.dummyDormYear();
     }
 
     private void dummyPersons() {
@@ -232,5 +235,17 @@ public class DummDataRunner {
                 d1
         );
         this.dormService.saveAll(dorms);
+    }
+
+    private void dummyDormYear() {
+        DormYear dy1 = new DormYear();
+        dy1.setDorm(new Dorm(1L));
+        dy1.setCalendarYear(2023);
+
+        List<DormYear> dormYears = Arrays.asList(
+                dy1
+        );
+
+        this.dormYearService.saveAll(dormYears);
     }
 }

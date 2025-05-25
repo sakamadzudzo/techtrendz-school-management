@@ -13,6 +13,8 @@ import zw.co.techtrendz.school.management.api.service.JwtBlacklistService;
 import zw.co.techtrendz.school.management.api.service.UserService;
 import zw.co.techtrendz.school.management.api.utility.AppUtils;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -27,7 +29,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid AuthDto authDto, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody @Valid AuthDto authDto, HttpServletRequest request) {
         return this.authService.login(authDto, request);
     }
 
