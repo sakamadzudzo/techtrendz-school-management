@@ -2,6 +2,7 @@ package zw.co.techtrendz.school.management.api.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,17 +36,17 @@ public class StudentController {
     }
 
     @GetMapping("/get/all")
-    public List<Student> getAllStudents(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.studentService.getAll(page, size, sortBy, sortDir).getContent();
+    public Page<Student> getAllStudents(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.studentService.getAll(page, size, sortBy, sortDir);
     }
 
     @GetMapping("/get/all/by/example")
-    public List<Student> getAllStudentsByExample(@RequestBody @Valid Student student, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.studentService.getAllByExample(student, page, size, sortBy, sortDir).getContent();
+    public Page<Student> getAllStudentsByExample(@RequestBody @Valid Student student, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.studentService.getAllByExample(student, page, size, sortBy, sortDir);
     }
 
     @GetMapping("/get/all/by/classroom")
-    public List<Student> getAllStudentsByClassroomId(@RequestParam long classroomId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.studentService.getAllByClassroomId(classroomId, page, size, sortBy, sortDir).getContent();
+    public Page<Student> getAllStudentsByClassroomId(@RequestParam long classroomId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.studentService.getAllByClassroomId(classroomId, page, size, sortBy, sortDir);
     }
 }

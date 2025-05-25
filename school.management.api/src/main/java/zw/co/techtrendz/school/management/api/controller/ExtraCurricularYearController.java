@@ -2,6 +2,7 @@ package zw.co.techtrendz.school.management.api.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,12 +36,12 @@ public class ExtraCurricularYearController {
     }
 
     @GetMapping("/get/all")
-    public List<ExtraCurricularYear> getAllExtraCurricularYears(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "extraCurricular.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.extraCurricularYearService.getAll(page, size, sortBy, sortDir).getContent();
+    public Page<ExtraCurricularYear> getAllExtraCurricularYears(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "extraCurricular.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.extraCurricularYearService.getAll(page, size, sortBy, sortDir);
     }
 
     @GetMapping("/get/all/by/example")
-    public List<ExtraCurricularYear> getAllExtraCurricularYearsByExample(@RequestBody @Valid ExtraCurricularYear extraCurricularYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "extraCurricular.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.extraCurricularYearService.getAllByExample(extraCurricularYear, page, size, sortBy, sortDir).getContent();
+    public Page<ExtraCurricularYear> getAllExtraCurricularYearsByExample(@RequestBody @Valid ExtraCurricularYear extraCurricularYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "extraCurricular.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.extraCurricularYearService.getAllByExample(extraCurricularYear, page, size, sortBy, sortDir);
     }
 }

@@ -2,6 +2,7 @@ package zw.co.techtrendz.school.management.api.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,12 +36,12 @@ public class DormYearController {
     }
 
     @GetMapping("/get/all")
-    public List<DormYear> getAllDormYears(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "dorm.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.dormYearService.getAll(page, size, sortBy, sortDir).getContent();
+    public Page<DormYear> getAllDormYears(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "dorm.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.dormYearService.getAll(page, size, sortBy, sortDir);
     }
 
     @GetMapping("/get/all/by/example")
-    public List<DormYear> getAllDormYearsByExample(@RequestBody @Valid DormYear dormYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "dorm.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.dormYearService.getAllByExample(dormYear, page, size, sortBy, sortDir).getContent();
+    public Page<DormYear> getAllDormYearsByExample(@RequestBody @Valid DormYear dormYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "dorm.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.dormYearService.getAllByExample(dormYear, page, size, sortBy, sortDir);
     }
 }

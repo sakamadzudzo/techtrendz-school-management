@@ -2,6 +2,7 @@ package zw.co.techtrendz.school.management.api.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -36,14 +37,14 @@ public class UserController {
 
     @GetMapping("/get/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<User> getAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.userService.getAll(page, size, sortBy, sortDir).getContent();
+    public Page<User> getAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.userService.getAll(page, size, sortBy, sortDir);
     }
 
     @GetMapping("/get/all/by/example")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<User> getAllUsersByExample(@RequestBody @Valid User user, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.userService.getAllByExample(user, page, size, sortBy, sortDir).getContent();
+    public Page<User> getAllUsersByExample(@RequestBody @Valid User user, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.userService.getAllByExample(user, page, size, sortBy, sortDir);
     }
 
     @GetMapping("/get/by/username")
