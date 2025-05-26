@@ -41,7 +41,11 @@ type SelectionMode = "single" | "multiple";
 
 type SelectionBehavior = "replace" | "toggle";
 
-type Row = (typeof rows)[0];
+export type Column = {
+  key: string;
+  label: string;
+  allowsSorting?: boolean;
+};
 
 type MyTableProps = {
   isHeaderSticky?: boolean;
@@ -63,164 +67,86 @@ type MyTableProps = {
   prevPage?: React.Dispatch<React.SetStateAction<number>>;
   setSize?: React.Dispatch<React.SetStateAction<number>>;
   statusOptions?: string[];
+  columns: Column[];
+  rows?: any[];
+  sortDescriptor?: SortDescriptor;
+  setSortDescriptor?: React.Dispatch<React.SetStateAction<SortDescriptor>>;
+  fetchButtonLabel?: string;
+  fetchButton?: boolean;
+  search?: () => void;
+  filterValue?: string;
+  setFilterValue?: React.Dispatch<React.SetStateAction<string>>;
+  searchBox?: boolean;
 };
 
-const rows = [
-  {
-    key: "1",
-    name: "Tony Reichert",
-    role: "CEO",
-    status: "ACTIVE",
-  },
-  {
-    key: "2",
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    status: "BLOCKED",
-  },
-  {
-    key: "3",
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    status: "ACTIVE",
-  },
-  {
-    key: "4",
-    name: "William Howard",
-    role: "Community Manager",
-    status: "DISABLED",
-  },
-  {
-    key: "5",
-    name: "Tony Reichert",
-    role: "CEO",
-    status: "ACTIVE",
-  },
-  {
-    key: "6",
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    status: "BLOCKED",
-  },
-  {
-    key: "7",
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    status: "ACTIVE",
-  },
-  //   {
-  //     key: "8",
-  //     name: "William Howard",
-  //     role: "Community Manager",
-  //     status: "DISABLED",
-  //   },
-  //   {
-  //     key: "9",
-  //     name: "Tony Reichert",
-  //     role: "CEO",
-  //     status: "ACTIVE",
-  //   },
-  //   {
-  //     key: "10",
-  //     name: "Zoey Lang",
-  //     role: "Technical Lead",
-  //     status: "BLOCKED",
-  //   },
-  //   {
-  //     key: "11",
-  //     name: "Jane Fisher",
-  //     role: "Senior Developer",
-  //     status: "ACTIVE",
-  //   },
-  //   {
-  //     key: "12",
-  //     name: "William Howard",
-  //     role: "Community Manager",
-  //     status: "DISABLED",
-  //   },
-  //   {
-  //     key: "13",
-  //     name: "Tony Reichert",
-  //     role: "CEO",
-  //     status: "ACTIVE",
-  //   },
-  //   {
-  //     key: "14",
-  //     name: "Zoey Lang",
-  //     role: "Technical Lead",
-  //     status: "BLOCKED",
-  //   },
-  //   {
-  //     key: "15",
-  //     name: "Jane Fisher",
-  //     role: "Senior Developer",
-  //     status: "ACTIVE",
-  //   },
-  //   {
-  //     key: "16",
-  //     name: "William Howard",
-  //     role: "Community Manager",
-  //     status: "DISABLED",
-  //   },
-];
+export default function MyTable(props: MyTableProps) {
+  const {
+    selectionColor = "primary",
+    selectionMode = "single",
+    selectionBehavior = "replace",
+    selectedKeys,
+    setSelectedKeys,
+    isHeaderSticky = true,
+    isLoading = false,
+    page = 1,
+    pages = 1,
+    total = 1,
+    size = 25,
+    offset = 0,
+    first = true,
+    last = false,
+    setPage,
+    nextPage,
+    prevPage,
+    setSize,
+    statusOptions,
+    columns,
+    rows,
+    sortDescriptor,
+    setSortDescriptor,
+    fetchButtonLabel = "Fetch",
+    fetchButton = true,
+    search,
+    filterValue,
+    setFilterValue,
+    searchBox = true,
+  } = props;
 
-const columns = [
-  {
-    key: "name",
-    label: "NAME",
-    allowsSorting: true,
-  },
-  {
-    key: "role",
-    label: "ROLE",
-  },
-  {
-    key: "status",
-    label: "STATUS",
-    allowsSorting: true,
-  },
-];
-
-export default function MyTable({
-  selectionColor = "primary",
-  selectionMode = "single",
-  selectionBehavior = "replace",
-  selectedKeys,
-  setSelectedKeys,
-  isHeaderSticky = true,
-  isLoading = false,
-  page = 1,
-  pages = 1,
-  total = 1,
-  size = 25,
-  offset = 0,
-  first = true,
-  last = false,
-  setPage,
-  nextPage,
-  prevPage,
-  setSize,
-  statusOptions
-}: MyTableProps) {
   const isStripped = true;
   const [internalSelectedKeys, setInternalSelectedKeys] =
     React.useState<Selection>(new Set([]));
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: columns[0].key,
-    direction: "ascending",
-  });
-  const [filterValue, setFilterValue] = React.useState<string>("");
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
-    new Set(columns.map((column) => column.key))
-  );
+  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set());
+  const [headerColumns, setHeaderColumns] = React.useState<Column[]>(props.columns);
+
+  // Update visibleColumns and headerColumns when columns change
+  React.useEffect(() => {
+    // If columns is not empty, set visibleColumns to all column keys
+    if (props.columns && props.columns.length > 0) {
+      setVisibleColumns(new Set(props.columns.map((col) => col.key)));
+      setHeaderColumns(props.columns);
+    }
+  }, [props.columns]);
+
+  // Update headerColumns when visibleColumns changes
+  React.useEffect(() => {
+    if (visibleColumns === "all") {
+      setHeaderColumns(props.columns);
+    } else {
+      setHeaderColumns(
+        props.columns.filter((column) =>
+          Array.from(visibleColumns).includes(column.key)
+        )
+      );
+    }
+  }, [visibleColumns, props.columns]);
 
   const actualSelectedKeys = selectedKeys ?? internalSelectedKeys;
   const actualSetSelectedKeys = setSelectedKeys ?? setInternalSelectedKeys;
   const hasSearchFilter = Boolean(filterValue);
 
-  const renderCell = React.useCallback((row: Row, columnKey: React.Key) => {
-    const cellValue = row[columnKey as keyof Row];
+  const renderCell = React.useCallback((row: any, columnKey: React.Key) => {
+    const cellValue = row[columnKey as keyof any];
 
     switch (columnKey) {
       case "status":
@@ -236,22 +162,6 @@ export default function MyTable({
         return cellValue;
     }
   }, []);
-
-  const sortedItems = React.useMemo(() => {
-    return [...rows].sort((a: Row, b: Row) => {
-      const first = a[sortDescriptor.column as keyof Row];
-      const second = b[sortDescriptor.column as keyof Row];
-
-      let cmp = 0;
-      if (typeof first === "number" && typeof second === "number") {
-        cmp = first - second;
-      } else {
-        cmp = String(first).localeCompare(String(second));
-      }
-
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
-  }, [sortDescriptor, rows]);
 
   const bottomContent =
     pages > 0 ? (
@@ -269,16 +179,16 @@ export default function MyTable({
     ) : null;
 
   const onClear = React.useCallback(() => {
-    setFilterValue("");
+    setFilterValue!("");
     setPage!(1);
   }, []);
 
   const onSearchChange = React.useCallback((value?: string) => {
     if (value) {
-      setFilterValue(value);
+      setFilterValue!(value);
       setPage!(1);
     } else {
-      setFilterValue("");
+      setFilterValue!("");
     }
   }, []);
 
@@ -290,19 +200,57 @@ export default function MyTable({
     []
   );
 
+  const filteredItems = React.useMemo(() => {
+    let filteredUsers = [...rows!];
+
+    if (hasSearchFilter) {
+      filteredUsers = filteredUsers.filter((row) => {
+        const matchingKeys = Object.keys(row).filter((key) => {
+          const value = row[key as keyof any];
+          if (typeof value === "string") {
+            return value.toLowerCase().includes(filterValue!.toLowerCase());
+          }
+          return value === filterValue;
+        });
+        return matchingKeys.length > 0;
+      });
+    }
+
+    if (
+      statusFilter !== "all" &&
+      Array.from(statusFilter).length !== statusOptions!.length
+    ) {
+      filteredUsers = filteredUsers.filter((row) => {
+        if (!Object.prototype.hasOwnProperty.call(row, "status")) {
+          return true;
+        }
+        return Array.from(statusFilter).includes(row.status);
+      });
+    }
+
+    return filteredUsers;
+  }, [rows, filterValue, hasSearchFilter, statusFilter]);
+
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-3 items-end">
-          <Input
-            isClearable
-            className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
-            startContent={<SearchIcon />}
-            value={filterValue}
-            onClear={() => onClear()}
-            onValueChange={onSearchChange}
-          />
+          {searchBox && (
+            <div className="flex gap-1 w-full sm:max-w-[44%]">
+              <Input
+                isClearable
+                className=""
+                placeholder="Search by name..."
+                startContent={<SearchIcon />}
+                value={filterValue}
+                onClear={() => onClear()}
+                onValueChange={onSearchChange}
+              />
+              {fetchButton && (
+                <Button onPress={search}>{fetchButtonLabel}</Button>
+              )}
+            </div>
+          )}
           <div className="flex gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
@@ -321,11 +269,12 @@ export default function MyTable({
                 selectionMode="multiple"
                 onSelectionChange={setStatusFilter}
               >
-                {statusOptions! && statusOptions.map((status) => (
-                  <DropdownItem key={status} className="capitalize">
-                    {capitalize(status)}
-                  </DropdownItem>
-                ))}
+                {statusOptions! &&
+                  statusOptions.map((status) => (
+                    <DropdownItem key={status} className="capitalize">
+                      {capitalize(status)}
+                    </DropdownItem>
+                  ))}
               </DropdownMenu>
             </Dropdown>
             <Dropdown>
@@ -359,17 +308,20 @@ export default function MyTable({
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {users.length} users
+            Total {filteredItems.length} rows
           </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
               className="bg-transparent outline-none text-default-400 text-small"
               onChange={onRowsPerPageChange}
+              value={size}
             >
               <option value="5">5</option>
               <option value="10">10</option>
-              <option value="15">15</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
             </select>
           </label>
         </div>
@@ -385,45 +337,6 @@ export default function MyTable({
     hasSearchFilter,
   ]);
 
-  const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
-
-    return columns.filter((column) =>
-      Array.from(visibleColumns).includes(column.key)
-    );
-  }, [visibleColumns]);
-
-  const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...sortedItems];
-
-    if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((row) => {
-        const matchingKeys = Object.keys(row).filter((key) => {
-          const value = row[key as keyof Row];
-          if (typeof value === "string") {
-            return value.toLowerCase().includes(filterValue.toLowerCase());
-          }
-          return value === filterValue;
-        });
-        return matchingKeys.length > 0;
-      });
-    }
-
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions!.length
-    ) {
-      filteredUsers = filteredUsers.filter((row) => {
-        if (!Object.prototype.hasOwnProperty.call(row, "status")) {
-          return true;
-        }
-        return Array.from(statusFilter).includes(row.status);
-      });
-    }
-
-    return filteredUsers;
-  }, [sortedItems, filterValue, hasSearchFilter, statusFilter]);
-
   return (
     <Table
       isHeaderSticky={isHeaderSticky}
@@ -438,6 +351,7 @@ export default function MyTable({
       onSortChange={setSortDescriptor}
       bottomContent={bottomContent}
       topContent={topContent}
+      className="h-full w-full flex flex-col mb-4 overflow-hidden"
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -453,12 +367,13 @@ export default function MyTable({
         }
         items={filteredItems}
         emptyContent={"No rows to display."}
+        className="grow overflow-auto"
       >
         {(item) => (
           <TableRow key={item.key}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
+            {headerColumns.map((column) => (
+              <TableCell key={column.key}>{renderCell(item, column.key)}</TableCell>
+            ))}
           </TableRow>
         )}
       </TableBody>

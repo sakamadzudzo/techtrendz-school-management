@@ -3,6 +3,7 @@ package zw.co.techtrendz.school.management.api.utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.enums.Role;
@@ -11,6 +12,7 @@ import zw.co.techtrendz.school.management.api.enums.SubjectType;
 import zw.co.techtrendz.school.management.api.service.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -150,25 +152,60 @@ public class DummDataRunner {
     }
 
     private void dummyClassroom() {
-        Classroom c1 = new Classroom();
-        c1.setName("Form 1A");
-        c1.setDescription("Form 1A Classroom");
+        List<Classroom> classrooms = new ArrayList<>();
 
-        List<Classroom> classrooms = Arrays.asList(
-                c1
-        );
+        // Form 1 to Form 4 with sections A to E
+        for (int form = 1; form <= 4; form++) {
+            for (char section = 'A'; section <= 'E'; section++) {
+                Classroom classroom = new Classroom();
+                String name = "Form " + form + section;
+                classroom.setName(name);
+                classroom.setDescription(name + " Classroom");
+                classrooms.add(classroom);
+            }
+        }
+
+        // Form 5 and Form 6 streams
+        String[] upperStreams = {"Science", "Arts", "Commercial", "Technical", "Agriculture"};
+
+        for (int form = 5; form <= 6; form++) {
+            for (String stream : upperStreams) {
+                Classroom classroom = new Classroom();
+                String name = "Form " + form + " " + stream;
+                classroom.setName(name);
+                classroom.setDescription(name + " Classroom");
+                classrooms.add(classroom);
+            }
+        }
+
+        // Optional special classes
+        String[] specialClasses = {"Resource Room", "Remedial Class", "Special Education Unit"};
+        for (String special : specialClasses) {
+            Classroom classroom = new Classroom();
+            classroom.setName(special);
+            classroom.setDescription(special + " for support and inclusive education");
+            classrooms.add(classroom);
+        }
+
         this.classroomService.saveAll(classrooms);
     }
 
     private void dummyClassroomYear() {
-        ClassroomYear cy1 = new ClassroomYear();
-        cy1.setClassroom(new Classroom(1L));
-        cy1.setCalendarYear(2023);
-        cy1.setSubjects(Arrays.asList(new SubjectYear(1L)));
+        List<Classroom> classrooms = this.classroomService.getAll(0,100,Arrays.asList("name"), Sort.Direction.DESC).getContent();
+        List<ClassroomYear> classroomYears = new ArrayList<>();
 
-        List<ClassroomYear> classroomYears = Arrays.asList(
-                cy1
-        );
+        List<SubjectYear> defaultSubjects = Arrays.asList(new SubjectYear(1L)); // Replace or expand as needed
+
+        for (Classroom classroom : classrooms) {
+            for (int year = 2023; year <= 2025; year++) {
+                ClassroomYear cy = new ClassroomYear();
+                cy.setClassroom(classroom);
+                cy.setCalendarYear(year);
+                cy.setSubjects(defaultSubjects);
+                classroomYears.add(cy);
+            }
+        }
+
         this.classroomYearService.saveAll(classroomYears);
     }
 
