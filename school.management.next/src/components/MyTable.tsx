@@ -350,7 +350,9 @@ export default function MyTable(props: MyTableProps) {
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
       bottomContent={bottomContent}
+      bottomContentPlacement="outside"
       topContent={topContent}
+      topContentPlacement="outside"
       className="h-full w-full flex flex-col mb-4 overflow-hidden"
     >
       <TableHeader columns={headerColumns}>

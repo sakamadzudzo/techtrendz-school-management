@@ -19,11 +19,15 @@ async function createClassroom(classroomDto: any, authHeader: any) {
   return res.json();
 }
 
-async function getClassrooms(authHeader: any) {
-  // fetch with pagination parameters if needed
-  // const params = new URLSearchParams({ page: String(page), size: String(size) }).toString();
-  // const res = await fetch(`${API_BASE}/get/all?${params}`, {
-  const res = await fetch(`${API_BASE}/get/all`, {
+async function getClassrooms(authHeader: any, query: any) {
+  const params = new URLSearchParams();
+  if (query.page) params.append("page", query.page);
+  if (query.size) params.append("size", query.size);
+  if (query.sort) params.append("sortBy", query.sort);
+  if (query.direction) params.append("sortDir", query.direction);
+  if (query.filter) params.append("filter", query.filter);
+
+  const res = await fetch(`${API_BASE}/get/all?${params.toString()}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
@@ -92,7 +96,7 @@ export default async function handler(
 
     if (req.method === "GET") {
       if (action === "all") {
-        const data = await getClassrooms(authHeader);
+        const data = await getClassrooms(authHeader, req.query);
         return res.status(200).json(data);
       }
       if (action === "one" && classroomId) {

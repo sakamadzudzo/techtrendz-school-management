@@ -1,29 +1,51 @@
-import useSWR from 'swr';
+import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError, Page } from '../utils/classes';
-import { RootState } from './../store/store'; // Adjust path if needed
+import { ApiError, Page } from "../utils/classes";
+import { RootState } from "./../store/store"; // Adjust path if needed
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
-  }).then(async res => {
+  }).then(async (res) => {
     if (!res.ok) {
-      throw new ApiError("Fetch failed: " + (await res.json()).error, res.status);
+      throw new ApiError(
+        "Fetch failed: " + (await res.json()).error,
+        res.status
+      );
     }
     return res.json();
   });
 
-export function useClassroomsAll() {
-  // fetch with pagination parameters if needed
-  // const params = new URLSearchParams({ page: String(page), size: String(size) }).toString();
+export function useClassroomsAll({
+  page,
+  size,
+  sort,
+  direction,
+  filter,
+}: {
+  page: number;
+  size: number;
+  sort?: string;
+  direction?: "ASC" | "DESC";
+  filter?: string;
+}) {
   const token = useSelector((state: RootState) => state.auth.token);
   const shouldFetch = !!token;
+  const params = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+    sort: sort ? `${sort}` : "",
+    direction: direction || "DESC",
+    filter: filter || "",
+  });
   const { data, error, mutate } = useSWR(
-    shouldFetch ? ["/api/classroom?action=all", token] : null,
+    shouldFetch
+      ? [`/api/classroom?action=all&${params.toString()}`, token]
+      : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    classrooms: data as Page<any>,
+    classrooms: data,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -34,7 +56,9 @@ export function useClassroomById(classroomId: string | undefined) {
   const token = useSelector((state: RootState) => state.auth.token);
   const shouldFetch = !!classroomId && !!token;
   const { data, error, mutate } = useSWR(
-    shouldFetch ? [`/api/classroom?action=one&classroomId=${classroomId}`, token] : null,
+    shouldFetch
+      ? [`/api/classroom?action=one&classroomId=${classroomId}`, token]
+      : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
@@ -47,7 +71,10 @@ export function useClassroomById(classroomId: string | undefined) {
 
 export function useClassroomsByExample(exampleDto: any) {
   const token = useSelector((state: RootState) => state.auth.token);
-  const key = exampleDto && token ? [`/api/classroom?action=example`, exampleDto, token] : null;
+  const key =
+    exampleDto && token
+      ? [`/api/classroom?action=example`, exampleDto, token]
+      : null;
   const fetcherWithBody = async ([url, body, token]: [string, any, string]) => {
     const res = await fetch(url, {
       method: "POST",
@@ -58,7 +85,10 @@ export function useClassroomsByExample(exampleDto: any) {
       body: JSON.stringify(body),
     });
     if (!res.ok) {
-      throw new ApiError("Fetch failed: " + (await res.json()).error, res.status);
+      throw new ApiError(
+        "Fetch failed: " + (await res.json()).error,
+        res.status
+      );
     }
     return res.json();
   };

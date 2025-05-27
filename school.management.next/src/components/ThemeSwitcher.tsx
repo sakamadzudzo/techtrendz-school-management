@@ -10,7 +10,7 @@ export function ThemeSwitcher({
 }) {
   return (
     <div
-      className="absolute right-1 bottom-1 bg-gradient-to-b from-background to-background/50 dark:from-background dark:to-background/50"
+      className="absolute right-1 bottom-1 bg-gradient-to-b from-background to-background/50 dark:from-background dark:to-background/50 z-50"
       onClick={() => saveDarkMode(!darkMode)}
     >
       {darkMode ? (
