@@ -1,5 +1,6 @@
 import MyTable, { Column } from "@/components/MyTable";
 import { useClassroomsAll } from "@/hooks/useClassrooms";
+import { statuses } from "@/utils/classes";
 import { SortDescriptor } from "@heroui/react";
 import React, { useEffect } from "react";
 
@@ -27,6 +28,14 @@ export default function AllClassroomsPage() {
     filter: searchValue,
   });
 
+  const viewOne = (id: string) => {
+    alert(`View classroom with ID: ${id}`);
+  };
+
+  const editOne = (id: string) => {
+    alert(`Edit classroom with ID: ${id}`);
+  };
+
   useEffect(() => {
     if (classrooms) {
       setTotal(classrooms.totalElements);
@@ -40,6 +49,18 @@ export default function AllClassroomsPage() {
         (classrooms.content || []).map((row: any) => ({
           ...row,
           key: row.id || row._id || row.name,
+          actions: [
+            {
+              label: "View",
+              function: () => viewOne(row.id),
+              key: `view-${row.id}`,
+            },
+            {
+              label: "Edit",
+              function: () => editOne(row.id),
+              key: `edit-${row.id}`,
+            },
+          ],
         }))
       );
     }
@@ -77,6 +98,11 @@ export default function AllClassroomsPage() {
       label: "Status",
       allowsSorting: true,
     },
+    {
+      key: "actions",
+      label: "Actions",
+      allowsSorting: false,
+    }
   ];
 
   const nextPage = () => {
@@ -91,19 +117,7 @@ export default function AllClassroomsPage() {
     alert("Clicked previous page.\n" + `Page: ${page}`);
   };
 
-  const statusOptions = [
-    "ACTIVE",
-    "INACTIVE",
-    "SUSPENDED",
-    "DELETED",
-    "PENDING",
-    "APPROVED",
-    "REJECTED",
-    "BLOCKED",
-    "UNBLOCKED",
-    "ENABLED",
-    "DISABLED",
-  ].sort();
+  const statusOptions = statuses;
 
   const search = () => {
     setSearchValue(filterValue);

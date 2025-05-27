@@ -5,10 +5,8 @@ import RegisterModal from "./RegisterModal";
 import { useSelector } from "react-redux";
 
 export default function Navbar_Guest({
-  darkMode,
   setLoading,
 }: {
-  darkMode: boolean;
   setLoading: (loading: boolean) => void;
 }) {
   const [loginOpen, setLoginOpen] = React.useState(false);
@@ -80,15 +78,13 @@ export default function Navbar_Guest({
         isOpen={loginOpen}
         onOpenChange={setLoginOpen}
         setLoading={setLoading}
-        darkMode={darkMode}
       />
       <RegisterModal
         isOpen={registerOpen}
         onOpenChange={setRegisterOpen}
         setLoading={setLoading}
-        darkMode={darkMode}
       />
-      <MyNavbar darkMode={darkMode} menuItems={menuItems} />
+      <MyNavbar menuItems={menuItems} />
     </>
   );
 }

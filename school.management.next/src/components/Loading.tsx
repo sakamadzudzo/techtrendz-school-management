@@ -9,13 +9,13 @@ import {
     Spinner,
 } from "@heroui/react";
 
-export default function Loading({ isOpen, darkMode }: { isOpen: boolean, darkMode: boolean }) {
+export default function Loading({ isOpen }: { isOpen: boolean }) {
     const { onOpen, onOpenChange } = useDisclosure();
 
     return (
         <>
             <Modal isOpen={isOpen}
-                className={`h-2/3 aspect-square ${darkMode ? "dark" : ""}`}
+                className={`h-2/3 aspect-square `}
                 isDismissable={false}
                 isKeyboardDismissDisabled={false}
                 backdrop="blur"

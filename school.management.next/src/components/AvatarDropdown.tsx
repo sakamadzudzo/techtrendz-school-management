@@ -3,7 +3,7 @@ import { Avatar, Dropdown, DropdownMenu, DropdownItem, DropdownTrigger } from "@
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/slices/authSlice"; // Adjust path as needed
 
-export default function AvatarDropdown({ darkMode }: { darkMode: boolean }) {
+export default function AvatarDropdown() {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.auth.user);
 
@@ -18,7 +18,7 @@ export default function AvatarDropdown({ darkMode }: { darkMode: boolean }) {
   };
 
   return (
-    <Dropdown className={` ${darkMode ? "dark" : ""}`}>
+    <Dropdown className={` `}>
       <DropdownTrigger>
         <Avatar
           src={user?.avatarUrl}
@@ -30,7 +30,7 @@ export default function AvatarDropdown({ darkMode }: { darkMode: boolean }) {
           {!user?.avatarUrl && getInitials(user?.name || "User")}
         </Avatar>
       </DropdownTrigger>
-      <DropdownMenu className={`text-foreground ${darkMode ? "dark" : ""}`}>
+      <DropdownMenu className={`text-foreground `}>
         <DropdownItem as="a" href="/profile" key={"profile"}>
           Profile
         </DropdownItem>

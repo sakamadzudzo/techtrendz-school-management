@@ -36,11 +36,9 @@ export type MyDropdown = {
 };
 
 export default function MyNavbar({
-  darkMode,
   menuItems,
   hasAvatar
 }: {
-  darkMode: boolean;
   menuItems: MyDropdown[];
   hasAvatar?: boolean;
 }) {
@@ -55,7 +53,7 @@ export default function MyNavbar({
 
   return (
     <Navbar
-      className={`mb-2 ${darkMode ? "dark" : ""}`}
+      className={`mb-2`}
       shouldHideOnScroll
       isBordered
       onMenuOpenChange={setIsMenuOpen}
@@ -73,11 +71,11 @@ export default function MyNavbar({
 
       {/* Desktop Menu */}
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        {renderDesktopMenu(menuItems, 0, darkMode)}
+        {renderDesktopMenu(menuItems, 0)}
       </NavbarContent>
       {hasAvatar && (
         <NavbarContent className="hidden sm:flex" justify="end">
-          <AvatarDropdown darkMode={darkMode} />
+          <AvatarDropdown />
         </NavbarContent>
       )}
 
@@ -87,7 +85,7 @@ export default function MyNavbar({
       <NavbarMenu>
         {hasAvatar && (
           <div className="flex justify-end px-4 py-2">
-            <AvatarDropdown darkMode={darkMode} />
+            <AvatarDropdown />
           </div>
         )}
         {renderMobileMenu(
@@ -95,7 +93,6 @@ export default function MyNavbar({
           openDropdown,
           setOpenDropdown,
           0,
-          darkMode
         )}
       </NavbarMenu>
     </Navbar>
@@ -105,11 +102,10 @@ export default function MyNavbar({
 function renderDesktopMenu(
   items: MyDropdown[],
   depth = 0,
-  darkMode: boolean = false
 ) {
   return items.map((item) =>
     item.dropdown ? (
-      <Dropdown key={item.label} className={`${darkMode ? "dark" : ""}`}>
+      <Dropdown key={item.label} className={``}>
         <DropdownTrigger>
           <NavbarItem className={`cursor-pointer pl-${depth * 1}`}>
             {item.label}
@@ -158,15 +154,12 @@ function renderMobileMenu(
   openDropdown: string | null,
   setOpenDropdown: (label: string | null) => void,
   depth = 0,
-  darkMode: boolean = false
 ) {
   return items.map((item) =>
     item.dropdown ? (
       <div key={item.label}>
         <NavbarMenuItem
-          className={`cursor-pointer font-semibold pl-${depth * 4} ${
-            darkMode ? "dark" : ""
-          }`}
+          className={`cursor-pointer font-semibold pl-${depth * 4}`}
           onClick={() =>
             setOpenDropdown(openDropdown === item.label ? null : item.label)
           }
@@ -184,9 +177,7 @@ function renderMobileMenu(
     ) : item.asButton ? (
       <NavbarItem
         key={item.label}
-        className={`pl-${depth * 4} ${item.className} ${
-          darkMode ? "dark" : ""
-        }`}
+        className={`pl-${depth * 4} ${item.className}`}
       >
         <Button
           as={Link}
@@ -203,9 +194,7 @@ function renderMobileMenu(
         key={item.label}
         as={Link}
         href={item.href}
-        className={`pl-${depth * 4} ${item.className} ${
-          darkMode ? "dark" : ""
-        }`}
+        className={`pl-${depth * 4} ${item.className}`}
         onClick={() => setOpenDropdown(null)}
       >
         {item.label}

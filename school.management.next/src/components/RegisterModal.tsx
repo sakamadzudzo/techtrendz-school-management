@@ -19,12 +19,10 @@ export default function RegisterModal({
   isOpen,
   onOpenChange,
   setLoading,
-  darkMode,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   setLoading: (loading: boolean) => void;
-  darkMode: boolean;
 }) {
   const [form, setForm] = useState({
     username: "",
@@ -95,7 +93,6 @@ export default function RegisterModal({
       backdrop="blur"
       radius="md"
       shadow="md"
-      className={` ${darkMode ? "dark" : ""}`}
       classNames={{
         wrapper: "py-2 overflow-hidden",
       }}
@@ -124,6 +121,7 @@ export default function RegisterModal({
               size="sm"
             />
             <Select
+            className="text-foreground"
               label="Salutation"
               selectedKeys={[form.salutation]}
               onSelectionChange={(keys) => handleChange("salutation", Array.from(keys)[0] as string)}

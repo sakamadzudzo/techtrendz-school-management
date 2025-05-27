@@ -64,3 +64,17 @@ export function defaultPage<T>(): Page<T> {
     empty: true,
   };
 }
+
+export const statuses = [
+    "ACTIVE",
+    "INACTIVE",
+    "SUSPENDED",
+    "DELETED",
+    "PENDING",
+    "APPROVED",
+    "REJECTED",
+    "BLOCKED",
+    "UNBLOCKED",
+    "ENABLED",
+    "DISABLED",
+  ].sort();

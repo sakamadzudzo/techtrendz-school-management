@@ -18,13 +18,11 @@ import InlineError from "./InlineError";
 export default function LoginModal({
   isOpen,
   onOpenChange,
-  setLoading,
-  darkMode,
+  setLoading
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   setLoading: (loading: boolean) => void;
-  darkMode: boolean;
 }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -90,7 +88,6 @@ export default function LoginModal({
       backdrop="blur"
       radius="md"
       shadow="md"
-      className={` ${darkMode ? "dark" : ""}`}
     >
       <ModalContent>
         <ModalHeader className="text-xl font-bold">Login</ModalHeader>

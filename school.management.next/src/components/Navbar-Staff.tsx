@@ -4,17 +4,15 @@ import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
 export default function Navbar_Staff({
-  darkMode,
   setLoading,
 }: {
-  darkMode: boolean;
   setLoading: (loading: boolean) => void;
 }) {
 
   const menuItems: MyDropdown[] = [
-  { label: "Subject", href: "/subject", className: "" },
+  { label: "Subjects", href: "/subject/all", className: "" },
   { label: "Subject Year", href: "/subject-year", className: "" },
-  { label: "Classroom", href: "/classroom", className: "" },
+  { label: "Classrooms", href: "/classroom/all", className: "" },
   { label: "Classroom Year", href: "/classroom-year", className: "" },
   { label: "Dorm", href: "/dorm", className: "" },
   { label: "Dorm Year", href: "/dorm-year", className: "" },
@@ -37,7 +35,7 @@ export default function Navbar_Staff({
 
   return (
     <>
-      <MyNavbar darkMode={darkMode} menuItems={menuItems} hasAvatar={true} />
+      <MyNavbar menuItems={menuItems} hasAvatar={true} />
     </>
   );
 }

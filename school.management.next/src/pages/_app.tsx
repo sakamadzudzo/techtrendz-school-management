@@ -28,24 +28,22 @@ function AppContent({ Component, pageProps, darkMode, setLoading, saveDarkMode, 
     }
   }, [dispatch]);
 
-  let navbar = <Navbar_Guest darkMode={darkMode} setLoading={setLoading} />;
+  let navbar = <Navbar_Guest setLoading={setLoading} />;
   if (token && user) {
     if (user.roles.includes("PARENT")) {
-      navbar = <Navbar_Parent darkMode={darkMode} setLoading={setLoading} />;
+      navbar = <Navbar_Parent setLoading={setLoading} />;
     } else {
-      navbar = <Navbar_Staff darkMode={darkMode} setLoading={setLoading} />;
+      navbar = <Navbar_Staff setLoading={setLoading} />;
     }
   }
 
   return (
     <main
-      className={`text-foreground bg-background h-dvh w-dvw relative flex flex-col ${
-        darkMode ? "dark" : ""
-      }`}
+      className={`text-foreground bg-background h-dvh w-dvw relative flex flex-col`}
     >
       <ThemeSwitcher saveDarkMode={saveDarkMode} darkMode={darkMode} />
       {navbar}
-      <Loading isOpen={loading} darkMode={darkMode} />
+      <Loading isOpen={loading} />
       <Component {...pageProps} setLoading={setLoading} />
     </main>
   );
@@ -69,8 +67,16 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, []);
 
+  React.useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   return (
-    <HeroUIProvider className="h-dvh w-dvw overflow-hidden">
+    <HeroUIProvider className={`h-dvh w-dvw overflow-hidden `}>
       <Provider store={store}>
         <AppContent
           Component={Component}

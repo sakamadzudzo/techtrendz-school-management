@@ -4,10 +4,8 @@ import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
 export default function Navbar_Parent({
-  darkMode,
   setLoading,
 }: {
-  darkMode: boolean;
   setLoading: (loading: boolean) => void;
 }) {
 
@@ -22,7 +20,7 @@ export default function Navbar_Parent({
 
   return (
     <>
-      <MyNavbar darkMode={darkMode} menuItems={menuItems} hasAvatar={true} />
+      <MyNavbar menuItems={menuItems} hasAvatar={true} />
     </>
   );
 }

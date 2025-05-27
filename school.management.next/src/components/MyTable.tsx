@@ -24,11 +24,10 @@ import MyChip from "./MyChip";
 import {
   SearchIcon,
   ChevronDownIcon,
-  statusOptions,
-  capitalize,
   PlusIcon,
-  users,
-} from "@/pages/subject/all";
+  VerticalDotsIcon,
+} from "@/components/icons/hero-icons";
+import { capitalize } from "@/utils/helpers";
 
 type SelectionColor =
   | "primary"
@@ -116,8 +115,12 @@ export default function MyTable(props: MyTableProps) {
   const [internalSelectedKeys, setInternalSelectedKeys] =
     React.useState<Selection>(new Set([]));
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set());
-  const [headerColumns, setHeaderColumns] = React.useState<Column[]>(props.columns);
+  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
+    new Set()
+  );
+  const [headerColumns, setHeaderColumns] = React.useState<Column[]>(
+    props.columns
+  );
 
   // Update visibleColumns and headerColumns when columns change
   React.useEffect(() => {
@@ -157,6 +160,24 @@ export default function MyTable(props: MyTableProps) {
             size="sm"
             variant="flat"
           />
+        );
+      // Add case for actions column, ellipsis with dropdown of actions (text only)
+      case "actions":
+        return (
+          <Dropdown>
+            <DropdownTrigger>
+              <Button variant="light" className="text-small border-0">
+                <VerticalDotsIcon />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu>
+              {row.actions.map((action: any) => (
+                <DropdownItem key={action.key} onClick={action.function}>
+                  {action.label}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
         );
       default:
         return cellValue;
@@ -333,7 +354,7 @@ export default function MyTable(props: MyTableProps) {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    users.length,
+    filteredItems.length,
     hasSearchFilter,
   ]);
 
@@ -374,7 +395,9 @@ export default function MyTable(props: MyTableProps) {
         {(item) => (
           <TableRow key={item.key}>
             {headerColumns.map((column) => (
-              <TableCell key={column.key}>{renderCell(item, column.key)}</TableCell>
+              <TableCell key={column.key}>
+                {renderCell(item, column.key)}
+              </TableCell>
             ))}
           </TableRow>
         )}
