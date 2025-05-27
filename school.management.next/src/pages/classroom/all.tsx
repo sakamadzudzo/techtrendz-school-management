@@ -1,7 +1,9 @@
 import MyTable, { Column } from "@/components/MyTable";
 import { useClassroomsAll } from "@/hooks/useClassrooms";
 import { statuses } from "@/utils/classes";
+import { formatDate } from "@/utils/helpers";
 import { SortDescriptor } from "@heroui/react";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 export default function AllClassroomsPage() {
@@ -19,6 +21,7 @@ export default function AllClassroomsPage() {
   const [filterValue, setFilterValue] = React.useState<string>("");
   const [searchValue, setSearchValue] = React.useState<string>("");
   const [rows, setRows] = React.useState<any[]>([]);
+  const router = useRouter();
   
   const { classrooms, isLoading, isError } = useClassroomsAll({
     page: page - 1,
@@ -29,11 +32,11 @@ export default function AllClassroomsPage() {
   });
 
   const viewOne = (id: string) => {
-    alert(`View classroom with ID: ${id}`);
+    router.push(`/classroom/one/${id}`);
   };
 
   const editOne = (id: string) => {
-    alert(`Edit classroom with ID: ${id}`);
+    router.push(`/classroom/edit/${id}`);
   };
 
   useEffect(() => {
@@ -49,6 +52,7 @@ export default function AllClassroomsPage() {
         (classrooms.content || []).map((row: any) => ({
           ...row,
           key: row.id || row._id || row.name,
+          datestamp: formatDate(row.datestamp),
           actions: [
             {
               label: "View",
@@ -147,6 +151,7 @@ export default function AllClassroomsPage() {
       last={last}
       nextPage={nextPage}
       prevPage={prevPage}
+      onRowAction={viewOne}
     />
   );
 }

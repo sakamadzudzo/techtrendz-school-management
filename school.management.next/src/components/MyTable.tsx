@@ -54,6 +54,7 @@ type MyTableProps = {
   selectionBehavior?: SelectionBehavior;
   selectedKeys?: Selection;
   setSelectedKeys?: React.Dispatch<React.SetStateAction<Selection>>;
+  onRowAction?: (key: any) => void;
   page?: number;
   pages?: number;
   total?: number;
@@ -85,6 +86,7 @@ export default function MyTable(props: MyTableProps) {
     selectionBehavior = "replace",
     selectedKeys,
     setSelectedKeys,
+    onRowAction,
     isHeaderSticky = true,
     isLoading = false,
     page = 1,
@@ -166,7 +168,12 @@ export default function MyTable(props: MyTableProps) {
         return (
           <Dropdown>
             <DropdownTrigger>
-              <Button variant="light" className="text-small border-0">
+              <Button
+                variant="light"
+                radius="full"
+                size="sm"
+                className="aspect-square"
+              >
                 <VerticalDotsIcon />
               </Button>
             </DropdownTrigger>
@@ -368,6 +375,7 @@ export default function MyTable(props: MyTableProps) {
       selectionBehavior={selectionBehavior}
       selectedKeys={actualSelectedKeys}
       onSelectionChange={actualSetSelectedKeys}
+      onRowAction={onRowAction!}
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
       bottomContent={bottomContent}

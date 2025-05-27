@@ -12,7 +12,6 @@ import {
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../store/slices/authSlice";
 import { useRouter } from "next/navigation";
-import Error from "next/error";
 import InlineError from "./InlineError";
 
 export default function LoginModal({

@@ -1,7 +1,9 @@
 import MyTable, { Column } from "@/components/MyTable";
 import { useSubjectsAll } from "@/hooks/useSubjects";
 import { statuses } from "@/utils/classes";
+import { formatDate } from "@/utils/helpers";
 import { SortDescriptor } from "@heroui/react";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 export default function AllSubjectsPage() {
@@ -19,6 +21,7 @@ export default function AllSubjectsPage() {
   const [filterValue, setFilterValue] = React.useState<string>("");
   const [searchValue, setSearchValue] = React.useState<string>("");
   const [rows, setRows] = React.useState<any[]>([]);
+  const router = useRouter();
   
   const { subjects, isLoading, isError } = useSubjectsAll({
     page: page - 1,
@@ -27,6 +30,14 @@ export default function AllSubjectsPage() {
     direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
     filter: searchValue,
   });
+
+  const viewOne = (id: string) => {
+    router.push(`/subject/one/${id}`);
+  };
+
+  const editOne = (id: string) => {
+    router.push(`/subject/edit/${id}`);
+  };
 
   useEffect(() => {
     if (subjects) {
@@ -41,6 +52,19 @@ export default function AllSubjectsPage() {
         (subjects.content || []).map((row: any) => ({
           ...row,
           key: row.id || row._id || row.name,
+          datestamp: formatDate(row.datestamp),
+          actions: [
+            {
+              label: "View",
+              function: () => viewOne(row.id),
+              key: `view-${row.id}`,
+            },
+            {
+              label: "Edit",
+              function: () => editOne(row.id),
+              key: `edit-${row.id}`,
+            },
+          ],
         }))
       );
     }
@@ -127,6 +151,7 @@ export default function AllSubjectsPage() {
       last={last}
       nextPage={nextPage}
       prevPage={prevPage}
+      onRowAction={viewOne}
     />
   );
 }

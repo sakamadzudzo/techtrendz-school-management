@@ -124,32 +124,67 @@ public class DummDataRunner {
     }
 
     private void dummySubject() {
-        Subject s1 = new Subject();
-        s1.setName("Mathematics");
-        s1.setDescription("Mathematics is the study of numbers, shapes, and patterns.");
-        s1.setCode("MATH101");
-        s1.setSyllabus("Mathematics Form 1 Syllabus");
-        s1.setCurriculum("Mathematics Form 1 Curriculum");
-        s1.setLevel(1);
-        s1.setType(SubjectType.CORE);
+        List<Subject> subjects = new ArrayList<>();
 
-        List<Subject> subjects = Arrays.asList(
-                s1
-        );
+        // Define subjects with level and type
+        subjects.add(createSubject("Mathematics", "MATH101", 1, SubjectType.CORE));
+        subjects.add(createSubject("English Language", "ENG101", 1, SubjectType.CORE));
+        subjects.add(createSubject("Shona", "SHO101", 1, SubjectType.CORE));
+        subjects.add(createSubject("Science", "SCI101", 1, SubjectType.CORE));
+        subjects.add(createSubject("Heritage Studies", "HST101", 1, SubjectType.CORE));
+        subjects.add(createSubject("Physical Education", "PE101", 1, SubjectType.CORE));
+        subjects.add(createSubject("Agriculture", "AGR101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Computer Science", "CS101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Commerce", "COM101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Geography", "GEO101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("History", "HIS101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Religious Studies", "RS101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Art and Design", "ART101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Technical Graphics", "TG101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Building Technology", "BT101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Metalwork", "MW101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Woodwork", "WW101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Food and Nutrition", "FN101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Fashion and Fabrics", "FF101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("French", "FR101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Ndebele", "NDE101", 1, SubjectType.ELECTIVE));
+        subjects.add(createSubject("Business Enterprise Skills", "BES101", 1, SubjectType.ELECTIVE));
+
         this.subjectService.saveAll(subjects);
     }
 
-    private void dummySubjectYear() {
-        SubjectYear sy1 = new SubjectYear();
-        sy1.setSubject(new Subject(1L));
-        sy1.setCalendarYear(2023);
-        sy1.setTeacher(new Teacher(1L));
+    private Subject createSubject(String name, String code, int level, SubjectType type) {
+        Subject subject = new Subject();
+        subject.setName(name);
+        subject.setCode(code);
+        subject.setLevel(level);
+        subject.setType(type);
+        subject.setDescription(name + " is a subject in the school curriculum.");
+        subject.setSyllabus(name + " Form " + level + " Syllabus");
+        subject.setCurriculum(name + " Form " + level + " Curriculum");
+        return subject;
+    }
 
-        List<SubjectYear> subjectYears = Arrays.asList(
-                sy1
-        );
+
+    private void dummySubjectYear() {
+        List<Subject> subjects = this.subjectService.getAll(0,100,Arrays.asList("name"), Sort.Direction.DESC).getContent();
+        List<SubjectYear> subjectYears = new ArrayList<>();
+
+        Teacher defaultTeacher = new Teacher(1L); // You can customize this logic later
+
+        for (Subject subject : subjects) {
+            for (int year = 2023; year <= 2025; year++) {
+                SubjectYear sy = new SubjectYear();
+                sy.setSubject(subject);
+                sy.setCalendarYear(year);
+                sy.setTeacher(defaultTeacher); // Replace with actual logic later
+                subjectYears.add(sy);
+            }
+        }
+
         this.subjectYearService.saveAll(subjectYears);
     }
+
 
     private void dummyClassroom() {
         List<Classroom> classrooms = new ArrayList<>();

@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError, Page } from "../utils/classes";
+import { ApiError } from "../utils/classes";
 import { RootState } from "../store/store"; // Adjust path if needed
 
 const fetcherWithAuth = (url: string, token?: string) =>

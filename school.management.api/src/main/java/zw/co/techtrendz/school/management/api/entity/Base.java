@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.entity;
 
+import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Base {
+@MappedSuperclass
+public abstract class Base {
 
     private LocalDateTime datestamp = LocalDateTime.now();
 
