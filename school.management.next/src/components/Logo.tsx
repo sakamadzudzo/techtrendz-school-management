@@ -1,13 +1,45 @@
+import React from "react";
 
 export const Logo = () => {
   return (
-    <svg fill="none" height="36" viewBox="0 0 32 32" width="36">
-      <path
-        clipRule="evenodd"
-        d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
-        fill="currentColor"
-        fillRule="evenodd"
-      />
-    </svg>
+    <div className="flex items-center gap-2 select-none">
+      <svg
+        fill="none"
+        height="36"
+        viewBox="0 0 36 36"
+        width="36"
+        aria-label="TechTrendz Logo Icon"
+      >
+        <rect x="4" y="6" width="28" height="4" rx="2" fill="currentColor" />
+        <rect x="14" y="10" width="4" height="20" rx="2" fill="currentColor" />
+        <rect
+          x="18"
+          y="14"
+          width="14"
+          height="4"
+          rx="2"
+          fill="currentColor"
+          opacity="0.7"
+        />
+        <rect
+          x="23"
+          y="18"
+          width="4"
+          height="12"
+          rx="2"
+          fill="currentColor"
+          opacity="0.7"
+        />
+        <path
+          d="M8 32 Q18 28 28 32"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          opacity="0.5"
+        />
+        <circle cx="8" cy="32" r="1.5" fill="currentColor" opacity="0.7" />
+        <circle cx="28" cy="32" r="1.5" fill="currentColor" opacity="0.7" />
+      </svg>
+    </div>
   );
 };

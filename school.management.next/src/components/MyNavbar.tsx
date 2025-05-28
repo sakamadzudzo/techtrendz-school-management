@@ -65,7 +65,7 @@ export default function MyNavbar({
         />
         <NavbarBrand>
           <Logo />
-          <p className="font-bold text-inherit">ACME</p>
+          <p className="font-bold text-inherit">TechTrendz</p>
         </NavbarBrand>
       </NavbarContent>
 
