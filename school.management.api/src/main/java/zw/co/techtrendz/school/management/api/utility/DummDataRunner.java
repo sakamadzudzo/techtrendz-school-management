@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.enums.Role;
 import zw.co.techtrendz.school.management.api.enums.Salutation;
+import zw.co.techtrendz.school.management.api.enums.Status;
 import zw.co.techtrendz.school.management.api.enums.SubjectType;
 import zw.co.techtrendz.school.management.api.service.*;
 
@@ -83,7 +84,7 @@ public class DummDataRunner {
         p1.setWhatsapp("0771234567");
         p1.setFacebook("https://www.facebook.com/arlington.maridimuka");
         p1.setLinkedin("https://www.linkedin.com/in/arlington-maridimuka-0b1a4a1b/");
-        p1.setDateOfBirth(LocalDate.of(1972,7,8));
+        p1.setDateOfBirth(LocalDate.of(1972, 7, 8));
 
         Person p2 = new Person();
         p2.setSalutation(Salutation.MS);
@@ -102,7 +103,7 @@ public class DummDataRunner {
         p3.setMobileNumber2("0719702467");
         p3.setWhatsapp("0773702467");
         p3.setLinkedin("https://www.linkedin.com/in/sakamadzudzo/");
-        p3.setDateOfBirth(LocalDate.of(1970,8,1));
+        p3.setDateOfBirth(LocalDate.of(1970, 8, 1));
 
         List<Person> persons = Arrays.asList(
                 p1,
@@ -162,12 +163,13 @@ public class DummDataRunner {
         subject.setDescription(name + " is a subject in the school curriculum.");
         subject.setSyllabus(name + " Form " + level + " Syllabus");
         subject.setCurriculum(name + " Form " + level + " Curriculum");
+        if (code.equals("BES101")) subject.setStatus(Status.DISABLED);
         return subject;
     }
 
 
     private void dummySubjectYear() {
-        List<Subject> subjects = this.subjectService.getAll(0,100,Arrays.asList("name"), Sort.Direction.DESC).getContent();
+        List<Subject> subjects = this.subjectService.getAll(0, 100, Arrays.asList("name"), Sort.Direction.DESC).getContent();
         List<SubjectYear> subjectYears = new ArrayList<>();
 
         Teacher defaultTeacher = new Teacher(1L); // You can customize this logic later
@@ -178,6 +180,7 @@ public class DummDataRunner {
                 sy.setSubject(subject);
                 sy.setCalendarYear(year);
                 sy.setTeacher(defaultTeacher); // Replace with actual logic later
+                if (subject.getCode().equals("BES101") && year == 2023) sy.setStatus(Status.DISABLED);
                 subjectYears.add(sy);
             }
         }
@@ -226,7 +229,7 @@ public class DummDataRunner {
     }
 
     private void dummyClassroomYear() {
-        List<Classroom> classrooms = this.classroomService.getAll(0,100,Arrays.asList("name"), Sort.Direction.DESC).getContent();
+        List<Classroom> classrooms = this.classroomService.getAll(0, 100, Arrays.asList("name"), Sort.Direction.DESC).getContent();
         List<ClassroomYear> classroomYears = new ArrayList<>();
 
         List<SubjectYear> defaultSubjects = Arrays.asList(new SubjectYear(1L)); // Replace or expand as needed

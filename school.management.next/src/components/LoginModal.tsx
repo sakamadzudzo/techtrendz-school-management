@@ -62,7 +62,7 @@ export default function LoginModal({
 
       setLoading(false);
       onOpenChange(false);
-      router.push("/");
+      // router.push("/");
     } catch (err: any) {
       setError("Network error");
       setStatusCode(err.status || 500);

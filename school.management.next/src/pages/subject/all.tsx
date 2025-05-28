@@ -83,6 +83,11 @@ export default function AllSubjectsPage() {
       allowsSorting: true,
     },
     {
+      key: "code",
+      label: "Code",
+      allowsSorting: true,
+    },
+    {
       key: "description",
       label: "Description",
       allowsSorting: true,
