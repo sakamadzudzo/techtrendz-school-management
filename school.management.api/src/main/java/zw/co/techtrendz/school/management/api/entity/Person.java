@@ -4,16 +4,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 import zw.co.techtrendz.school.management.api.enums.Salutation;
 
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

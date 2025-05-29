@@ -16,9 +16,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
-public class DummDataRunner {
+public class DummyDataRunner {
 
     @Autowired
     private ClassroomService classroomService;
@@ -50,9 +52,11 @@ public class DummDataRunner {
     @Bean
     public ApplicationRunner insertDummyData() {
         return args -> {
-            System.out.println("\n\nInserting dummy data...\n");
+//            System.out.println("\n\nInserting dummy data...\n");
+            Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy data...\n");
             this.dummyDataInsertion();
-            System.out.println("\n\nDummy data successfully inserted.\n");
+//            System.out.println("\n\nDummy data successfully inserted.\n");
+            Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Dummy data successfully inserted.\n");
         };
     }
 
@@ -71,6 +75,7 @@ public class DummDataRunner {
     }
 
     private void dummyPersons() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy persons...\n");
         Person p1 = new Person();
 //        p1.setId(1L);
         p1.setSalutation(Salutation.MR);
@@ -114,6 +119,7 @@ public class DummDataRunner {
     }
 
     private void dummTeachers() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy teachers...\n");
         Teacher t1 = new Teacher();
 //        t1.setId(1L);
         t1.setPerson(new Person(1L));
@@ -125,6 +131,7 @@ public class DummDataRunner {
     }
 
     private void dummySubject() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy subjects...\n");
         List<Subject> subjects = new ArrayList<>();
 
         // Define subjects with level and type
@@ -169,6 +176,7 @@ public class DummDataRunner {
 
 
     private void dummySubjectYear() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy subject years...\n");
         List<Subject> subjects = this.subjectService.getAll(0, 100, Arrays.asList("name"), Sort.Direction.DESC).getContent();
         List<SubjectYear> subjectYears = new ArrayList<>();
 
@@ -180,7 +188,9 @@ public class DummDataRunner {
                 sy.setSubject(subject);
                 sy.setCalendarYear(year);
                 sy.setTeacher(defaultTeacher); // Replace with actual logic later
-                if (subject.getCode().equals("BES101") && year == 2023) sy.setStatus(Status.DISABLED);
+                if (subject.getCode().equals("BES101") && year == 2023) {
+                    sy.setStatus(Status.DISABLED);
+                }
                 subjectYears.add(sy);
             }
         }
@@ -190,6 +200,7 @@ public class DummDataRunner {
 
 
     private void dummyClassroom() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy classrooms...\n");
         List<Classroom> classrooms = new ArrayList<>();
 
         // Form 1 to Form 4 with sections A to E
@@ -229,6 +240,7 @@ public class DummDataRunner {
     }
 
     private void dummyClassroomYear() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy classroom years...\n");
         List<Classroom> classrooms = this.classroomService.getAll(0, 100, Arrays.asList("name"), Sort.Direction.DESC).getContent();
         List<ClassroomYear> classroomYears = new ArrayList<>();
 
@@ -248,6 +260,7 @@ public class DummDataRunner {
     }
 
     private void dummyStudent() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy students...\n");
         Student s1 = new Student();
         s1.setPerson(new Person(1L));
         s1.setStartYear(2023);
@@ -261,6 +274,7 @@ public class DummDataRunner {
     }
 
     private void dummyUser() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy users...\n");
         User u1 = new User();
         u1.setUsername("amaridimuka");
         u1.setPassword("password");
@@ -284,6 +298,7 @@ public class DummDataRunner {
     }
 
     private void dummySchool() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy schools...\n");
         School s1 = new School();
         s1.setName("TechTrendz Academy");
         s1.setEmail("techtrendzacademy@mail.com");
@@ -300,6 +315,7 @@ public class DummDataRunner {
     }
 
     private void dummyDorm() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy dorms...\n");
         Dorm d1 = new Dorm();
         d1.setName("Dorm A");
         d1.setDescription("Dorm A Description");
@@ -313,6 +329,7 @@ public class DummDataRunner {
     }
 
     private void dummyDormYear() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy dorm years...\n");
         DormYear dy1 = new DormYear();
         dy1.setDorm(new Dorm(1L));
         dy1.setCalendarYear(2023);
