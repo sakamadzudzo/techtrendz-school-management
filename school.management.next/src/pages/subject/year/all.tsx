@@ -40,7 +40,6 @@ export default function AllSubjectYearsPage() {
   };
 
   useEffect(() => {
-    // console.log("Datestamp original:", subjects.content.map((row:any) => row.datestamp));
     if (subjects) {
       setTotal(subjects.totalElements);
       setPages(subjects.totalPages);
@@ -73,7 +72,6 @@ export default function AllSubjectYearsPage() {
         }))
       );
     }
-    // console.log("Datestamp format:", rows.map(row => row.datestamp));
   }, [subjects]);
 
   useEffect(() => {

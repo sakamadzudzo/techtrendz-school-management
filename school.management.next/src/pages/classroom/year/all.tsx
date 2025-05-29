@@ -40,7 +40,6 @@ export default function AllClassroomYearsPage() {
   };
 
   useEffect(() => {
-    // console.log("Datestamp original:", classrooms.content.map((row:any) => row.datestamp));
     if (classrooms) {
       setTotal(classrooms.totalElements);
       setPages(classrooms.totalPages);
@@ -72,7 +71,6 @@ export default function AllClassroomYearsPage() {
         }))
       );
     }
-    // console.log("Datestamp format:", rows.map(row => row.datestamp));
   }, [classrooms]);
 
   useEffect(() => {
