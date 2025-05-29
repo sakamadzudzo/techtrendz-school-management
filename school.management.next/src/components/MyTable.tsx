@@ -291,7 +291,7 @@ export default function MyTable(props: MyTableProps) {
               </DropdownTrigger>
               <DropdownMenu
                 disallowEmptySelection
-                aria-label="Table Columns"
+                aria-label="Statuses"
                 closeOnSelect={false}
                 selectedKeys={statusFilter}
                 selectionMode="multiple"
