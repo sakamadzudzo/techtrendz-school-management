@@ -20,6 +20,8 @@ public interface UserService {
 
     public Page<User> getAllByExample(User user, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
+    public Page<User> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
+
     public User getByUsername(String username);
 
     public User getByEmail(String email);

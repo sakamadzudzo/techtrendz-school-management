@@ -1,5 +1,8 @@
 import MyTable, { Column } from "@/components/MyTable";
-import { useClassroomsAll } from "@/hooks/useClassrooms";
+import {
+  useClassroomsAll,
+  useClassroomsAllByFilter,
+} from "@/hooks/useClassrooms";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
 import { SortDescriptor } from "@heroui/react";
@@ -22,14 +25,35 @@ export default function AllClassroomsPage() {
   const [searchValue, setSearchValue] = React.useState<string>("");
   const [rows, setRows] = React.useState<any[]>([]);
   const router = useRouter();
-  
-  const { classrooms, isLoading, isError } = useClassroomsAll({
-    page: page - 1,
-    size,
-    sort: sortDescriptor.column.toString(),
-    direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
-    filter: searchValue,
-  });
+
+  let classrooms;
+  let isLoading;
+  let isError;
+
+  if (searchValue) {
+    ({
+      data: classrooms,
+      isLoading,
+      isError,
+    } = useClassroomsAllByFilter({
+      page: page - 1,
+      size,
+      sort: sortDescriptor.column.toString(),
+      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+      filter: searchValue,
+    }));
+  } else {
+    ({
+      data: classrooms,
+      isLoading,
+      isError,
+    } = useClassroomsAll({
+      page: page - 1,
+      size,
+      sort: sortDescriptor.column.toString(),
+      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+    }));
+  }
 
   const viewOne = (id: string) => {
     router.push(`/classroom/one/${id}`);
@@ -38,6 +62,12 @@ export default function AllClassroomsPage() {
   const editOne = (id: string) => {
     router.push(`/classroom/edit/${id}`);
   };
+
+  useEffect(() => {
+    if (!filterValue) {
+      setSearchValue("");
+    }
+  }, [filterValue]);
 
   useEffect(() => {
     if (classrooms) {
@@ -106,7 +136,7 @@ export default function AllClassroomsPage() {
       key: "actions",
       label: "Actions",
       allowsSorting: false,
-    }
+    },
   ];
 
   const nextPage = () => {

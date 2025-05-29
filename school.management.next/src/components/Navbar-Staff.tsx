@@ -50,13 +50,6 @@ export default function Navbar_Staff({
         ],
       },
       {
-        label: "Students",
-        dropdown: [
-          { label: "All", href: "/student/all", className: "" },
-          { label: "Students", href: "/student/year/all", className: "" },
-        ],
-      },
-      {
         label: "Extra Curriculars",
         dropdown: [
           {
@@ -71,6 +64,7 @@ export default function Navbar_Staff({
           },
         ],
       },
+      { label: "Students", href: "/student/all", className: "" },
     ];
 
     const protectedItems: MyDropdown[] = [

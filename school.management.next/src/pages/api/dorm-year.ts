@@ -9,11 +9,11 @@ function getAuthHeader(req: NextApiRequest) {
   return auth ? { Authorization: auth } : {};
 }
 
-async function createDormYear(dormDto: any, authHeader: any) {
+async function createDormYear(dormYearDto: any, authHeader: any) {
   const res = await fetch(`${API_BASE}/save`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
-    body: JSON.stringify(dormDto),
+    body: JSON.stringify(dormYearDto),
   });
   if (!res.ok) throw new ApiError("Dorm year creation failed", res.status);
   return res.json();
@@ -25,7 +25,6 @@ async function getDormYears(authHeader: any, query: any) {
   if (query.size) params.append("size", query.size);
   if (query.sort) params.append("sortBy", query.sort);
   if (query.direction) params.append("sortDir", query.direction);
-  if (query.filter) params.append("filter", query.filter);
 
   const res = await fetch(`${API_BASE}/get/all?${params.toString()}`, {
     method: "GET",
@@ -35,18 +34,37 @@ async function getDormYears(authHeader: any, query: any) {
   return res.json();
 }
 
-// async function updateDormYear(dormId: string, dormDto: any, authHeader: any) {
-//   const res = await fetch(`${API_BASE}/update/${dormId}`, {
+async function getDormYearsByFilter(authHeader: any, query: any) {
+  const params = new URLSearchParams();
+  if (query.page) params.append("page", query.page);
+  if (query.size) params.append("size", query.size);
+  if (query.sort) params.append("sortBy", query.sort);
+  if (query.direction) params.append("sortDir", query.direction);
+  if (query.filter) params.append("filter", query.filter);
+
+  const res = await fetch(
+    `${API_BASE}/get/all/by/filter?${params.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json", ...authHeader },
+    }
+  );
+  if (!res.ok) throw new ApiError("Fetching dorm years failed", res.status);
+  return res.json();
+}
+
+// async function updateDormYear(dormYearId: string, dormYearDto: any, authHeader: any) {
+//   const res = await fetch(`${API_BASE}/update/${dormYearId}`, {
 //     method: "PUT",
 //     headers: { "Content-Type": "application/json", ...authHeader },
-//     body: JSON.stringify(dormDto),
+//     body: JSON.stringify(dormYearDto),
 //   });
 //   if (!res.ok) throw new ApiError("Dorm year update failed", res.status);
 //   return res.json();
 // }
 
-// async function deleteDormYear(dormId: string, authHeader: any) {
-//   const res = await fetch(`${API_BASE}/delete/${dormId}`, {
+// async function deleteDormYear(dormYearId: string, authHeader: any) {
+//   const res = await fetch(`${API_BASE}/delete/${dormYearId}`, {
 //     method: "DELETE",
 //     headers: { "Content-Type": "application/json", ...authHeader },
 //   });
@@ -54,29 +72,36 @@ async function getDormYears(authHeader: any, query: any) {
 //   return res.json();
 // }
 
-async function getDormYearById(dormId: string, authHeader: any) {
-  const params = new URLSearchParams({ id: dormId }).toString();
+async function getDormYearById(dormYearId: string, authHeader: any) {
+  const params = new URLSearchParams({ id: dormYearId }).toString();
   const res = await fetch(`${API_BASE}/get/one` + params, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching dorm year failed", res.status);
+  if (!res.ok) throw new ApiError("Fetching dorm years failed", res.status);
   return res.json();
 }
 
-async function getDormYearsByExample(exampleDto: any, authHeader: any, query: any) {
+async function getDormYearsByExample(
+  exampleDto: any,
+  authHeader: any,
+  query: any
+) {
   const params = new URLSearchParams();
   if (query.page) params.append("page", query.page);
   if (query.size) params.append("size", query.size);
   if (query.sort) params.append("sortBy", query.sort);
   if (query.direction) params.append("sortDir", query.direction);
   if (query.filter) params.append("filter", query.filter);
-  
-  const res = await fetch(`${API_BASE}/get/all/by/example?${params.toString()}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json", ...authHeader },
-    body: JSON.stringify(exampleDto),
-  });
+
+  const res = await fetch(
+    `${API_BASE}/get/all/by/example?${params.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json", ...authHeader },
+      body: JSON.stringify(exampleDto),
+    }
+  );
   if (!res.ok)
     throw new ApiError("Fetching dorm years by example failed", res.status);
   return res.json();
@@ -87,7 +112,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { action, dormId } = req.query;
+    const { action, dormYearId } = req.query;
     const authHeader = getAuthHeader(req);
 
     if (req.method === "POST") {
@@ -96,7 +121,11 @@ export default async function handler(
         return res.status(201).json(data);
       }
       if (action === "example") {
-        const data = await getDormYearsByExample(req.body, authHeader, req.query);
+        const data = await getDormYearsByExample(
+          req.body,
+          authHeader,
+          req.query
+        );
         return res.status(200).json(data);
       }
     }
@@ -106,22 +135,26 @@ export default async function handler(
         const data = await getDormYears(authHeader, req.query);
         return res.status(200).json(data);
       }
-      if (action === "one" && dormId) {
-        const data = await getDormYearById(dormId as string, authHeader);
+      if (action === "one" && dormYearId) {
+        const data = await getDormYearById(dormYearId as string, authHeader);
+        return res.status(200).json(data);
+      }
+      if (action === "filtered") {
+        const data = await getDormYearsByFilter(authHeader, req.query);
         return res.status(200).json(data);
       }
     }
 
     // if (req.method === "PUT") {
-    //   if (dormId) {
-    //     const data = await updateDormYear(dormId as string, req.body, authHeader);
+    //   if (dormYearId) {
+    //     const data = await updateDormYear(dormYearId as string, req.body, authHeader);
     //     return res.status(200).json(data);
     //   }
     // }
 
     // if (req.method === "DELETE") {
-    //   if (dormId) {
-    //     const data = await deleteDormYear(dormId as string, authHeader);
+    //   if (dormYearId) {
+    //     const data = await deleteDormYear(dormYearId as string, authHeader);
     //     return res.status(200).json(data);
     //   }
     // }

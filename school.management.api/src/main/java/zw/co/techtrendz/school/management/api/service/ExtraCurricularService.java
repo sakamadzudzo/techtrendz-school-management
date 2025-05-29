@@ -19,4 +19,6 @@ public interface ExtraCurricularService {
     public Page<ExtraCurricular> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<ExtraCurricular> getAllByExample(ExtraCurricular extraCurricular, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<ExtraCurricular> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 }

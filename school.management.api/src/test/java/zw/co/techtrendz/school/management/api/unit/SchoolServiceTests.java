@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import zw.co.techtrendz.school.management.api.entity.School;
 import zw.co.techtrendz.school.management.api.repository.SchoolRepository;
 import zw.co.techtrendz.school.management.api.service.impl.SchoolServiceImpl;
@@ -112,13 +109,13 @@ class SchoolServiceTests {
         List<School> schools = List.of(school);
         Page<School> page = new PageImpl<>(schools);
 
-        when(schoolRepository.findAll(any(), eq(PageRequest.of(0, 10, Sort.by("name").ascending())))).thenReturn(page);
+        when(schoolRepository.findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("name").ascending())))).thenReturn(page);
 
         List<School> foundSchools = schoolService.getAllByExample(example, 0, 10, List.of("name"), Sort.Direction.ASC).getContent();
 
         assertNotNull(foundSchools);
         assertEquals(1, foundSchools.size());
         assertEquals("TechTrendz Academy", foundSchools.get(0).getName());
-        verify(schoolRepository, times(1)).findAll(any(), eq(PageRequest.of(0, 10, Sort.by("name").ascending())));
+        verify(schoolRepository, times(1)).findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("name").ascending())));
     }
 }

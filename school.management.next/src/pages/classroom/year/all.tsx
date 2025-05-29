@@ -1,5 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
-import { useClassroomYearsAll } from "@/hooks/useClassroomYears";
+import { useClassroomYearsAll, useClassroomYearsAllByFilter } from "@/hooks/useClassroomYears";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
 import { SortDescriptor } from "@heroui/react";
@@ -22,22 +22,49 @@ export default function AllClassroomYearsPage() {
   const [searchValue, setSearchValue] = React.useState<string>("");
   const [rows, setRows] = React.useState<any[]>([]);
   const router = useRouter();
-  
-  const { classrooms, isLoading, isError } = useClassroomYearsAll({
-    page: page - 1,
-    size,
-    sort: sortDescriptor.column.toString(),
-    direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
-    filter: searchValue,
-  });
+
+  let classrooms;
+  let isLoading;
+  let isError;
+
+  if (searchValue) {
+    ({
+      data: classrooms,
+      isLoading,
+      isError,
+    } = useClassroomYearsAllByFilter({
+      page: page - 1,
+      size,
+      sort: sortDescriptor.column.toString(),
+      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+      filter: searchValue,
+    }));
+  } else {
+    ({
+      data: classrooms,
+      isLoading,
+      isError,
+    } = useClassroomYearsAll({
+      page: page - 1,
+      size,
+      sort: sortDescriptor.column.toString(),
+      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+    }));
+  }
 
   const viewOne = (id: string) => {
-    router.push(`/classroom/one/${id}`);
+    router.push(`/classroom/year/one/${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/classroom/edit/${id}`);
+    router.push(`/classroom/year/edit/${id}`);
   };
+
+  useEffect(() => {
+    if (!filterValue) {
+      setSearchValue("");
+    }
+  }, [filterValue]);
 
   useEffect(() => {
     if (classrooms) {

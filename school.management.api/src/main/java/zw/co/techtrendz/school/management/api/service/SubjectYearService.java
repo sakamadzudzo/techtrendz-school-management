@@ -19,4 +19,6 @@ public interface SubjectYearService {
     public Page<SubjectYear> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<SubjectYear> getAllByExample(SubjectYear subjectYear, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<SubjectYear> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 }

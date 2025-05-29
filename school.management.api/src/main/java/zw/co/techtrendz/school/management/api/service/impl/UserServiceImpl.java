@@ -94,6 +94,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<User> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter) {
+        if (filter == null || filter.isBlank()) {
+            return this.getAll(page, size, sortBy, sortDir);
+        } else {
+            Specification<User> spec = Specification.where(null);
+            for (var field : User.class.getDeclaredFields()) {
+                field.setAccessible(true); // Ensure private fields are accessible
+                if (field.getType().equals(String.class)) {
+                    spec = spec.or(SpecificationUtils.likeMatch(field.getName(), filter));
+                }
+            }
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.userRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
+        }
+    }
+
+    @Override
     public User getByUsername(String username) {
         Specification<User> spec = Specification.where(
                 SpecificationUtils.<User>exactMatch("username", username)

@@ -44,4 +44,9 @@ public class DormYearController {
     public Page<DormYear> getAllDormYearsByExample(@RequestBody @Valid DormYear dormYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "dorm.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
         return this.dormYearService.getAllByExample(dormYear, page, size, sortBy, sortDir);
     }
+
+    @GetMapping("/get/all/by/filter")
+    public Page<DormYear> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
+        return this.dormYearService.getAllByFilter(page, size, sortBy, sortDir, filter);
+    }
 }

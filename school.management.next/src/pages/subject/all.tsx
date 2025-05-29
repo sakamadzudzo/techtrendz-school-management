@@ -1,5 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
-import { useSubjectsAll } from "@/hooks/useSubjects";
+import { useSubjectsAll, useSubjectsAllByFilter } from "@/hooks/useSubjects";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
 import { SortDescriptor } from "@heroui/react";
@@ -22,14 +22,35 @@ export default function AllSubjectsPage() {
   const [searchValue, setSearchValue] = React.useState<string>("");
   const [rows, setRows] = React.useState<any[]>([]);
   const router = useRouter();
-  
-  const { subjects, isLoading, isError } = useSubjectsAll({
-    page: page - 1,
-    size,
-    sort: sortDescriptor.column.toString(),
-    direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
-    filter: searchValue,
-  });
+
+  let subjects;
+  let isLoading;
+  let isError;
+
+  if (searchValue) {
+    ({
+      data: subjects,
+      isLoading,
+      isError,
+    } = useSubjectsAllByFilter({
+      page: page - 1,
+      size,
+      sort: sortDescriptor.column.toString(),
+      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+      filter: searchValue,
+    }));
+  } else {
+    ({
+      data: subjects,
+      isLoading,
+      isError,
+    } = useSubjectsAll({
+      page: page - 1,
+      size,
+      sort: sortDescriptor.column.toString(),
+      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+    }));
+  }
 
   const viewOne = (id: string) => {
     router.push(`/subject/one/${id}`);
@@ -38,6 +59,12 @@ export default function AllSubjectsPage() {
   const editOne = (id: string) => {
     router.push(`/subject/edit/${id}`);
   };
+
+  useEffect(() => {
+    if (!filterValue) {
+      setSearchValue("");
+    }
+  }, [filterValue]);
 
   useEffect(() => {
     if (subjects) {

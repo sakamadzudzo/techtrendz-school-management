@@ -35,8 +35,7 @@ export function useSubjectYearsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
-    filter: filter || "",
+    direction: direction || "DESC"
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -45,24 +44,60 @@ export function useSubjectYearsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    subjects: data,
+    data,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
   };
 }
 
-export function useSubjectYearById(subjectId: string | undefined) {
+export function useSubjectYearsAllByFilter({
+  page,
+  size,
+  sort,
+  direction,
+  filter,
+}: {
+  page: number;
+  size: number;
+  sort?: string;
+  direction?: "ASC" | "DESC";
+  filter?: string;
+}) {
   const token = useSelector((state: RootState) => state.auth.token);
-  const shouldFetch = !!subjectId && !!token;
+  const shouldFetch = !!token;
+  const params = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+    sort: sort ? `${sort}` : "",
+    direction: direction || "DESC",
+    filter: filter || "",
+  });
   const { data, error, mutate } = useSWR(
     shouldFetch
-      ? [`/api/subject?action=one&subjectId=${subjectId}`, token]
+      ? [`/api/subject-year?action=filtered&${params.toString()}`, token]
       : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    subject: data,
+    data,
+    isLoading: shouldFetch && !error && !data,
+    isError: error,
+    mutate,
+  };
+}
+
+export function useSubjectYearById(subjectYearId: string | undefined) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!subjectYearId && !!token;
+  const { data, error, mutate } = useSWR(
+    shouldFetch
+      ? [`/api/subject-year?action=one&subjectYearId=${subjectYearId}`, token]
+      : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+  return {
+    subjectYear: data,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -73,7 +108,7 @@ export function useSubjectYearsByExample(exampleDto: any) {
   const token = useSelector((state: RootState) => state.auth.token);
   const key =
     exampleDto && token
-      ? [`/api/subject?action=example`, exampleDto, token]
+      ? [`/api/subject-year?action=example`, exampleDto, token]
       : null;
   const fetcherWithBody = async ([url, body, token]: [string, any, string]) => {
     const res = await fetch(url, {
@@ -94,7 +129,7 @@ export function useSubjectYearsByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    subjects: data,
+    subjectYears: data,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

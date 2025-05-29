@@ -1,5 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
-import { useDormYearsAll } from "@/hooks/useDormYears";
+import { useDormYearsAll, useDormYearsAllByFilter } from "@/hooks/useDormYears";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
 import { SortDescriptor } from "@heroui/react";
@@ -23,21 +23,48 @@ export default function AllDormYearsPage() {
   const [rows, setRows] = React.useState<any[]>([]);
   const router = useRouter();
 
-  const { dorms, isLoading, isError } = useDormYearsAll({
-    page: page - 1,
-    size,
-    sort: sortDescriptor.column.toString(),
-    direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
-    filter: searchValue,
-  });
+  let dorms;
+  let isLoading;
+  let isError;
+
+  if (searchValue) {
+    ({
+      data: dorms,
+      isLoading,
+      isError,
+    } = useDormYearsAllByFilter({
+      page: page - 1,
+      size,
+      sort: sortDescriptor.column.toString(),
+      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+      filter: searchValue,
+    }));
+  } else {
+    ({
+      data: dorms,
+      isLoading,
+      isError,
+    } = useDormYearsAll({
+      page: page - 1,
+      size,
+      sort: sortDescriptor.column.toString(),
+      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+    }));
+  }
 
   const viewOne = (id: string) => {
-    router.push(`/dorm/one/${id}`);
+    router.push(`/dorm/year/one/${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/dorm/edit/${id}`);
+    router.push(`/dorm/year/edit/${id}`);
   };
+
+  useEffect(() => {
+    if (!filterValue) {
+      setSearchValue("");
+    }
+  }, [filterValue]);
 
   useEffect(() => {
     if (dorms) {

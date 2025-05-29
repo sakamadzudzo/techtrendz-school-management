@@ -21,4 +21,6 @@ public interface StudentService {
     public Page<Student> getAllByExample(Student student, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<Student> getAllByClassroomId(long classroomId, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<Student> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 }

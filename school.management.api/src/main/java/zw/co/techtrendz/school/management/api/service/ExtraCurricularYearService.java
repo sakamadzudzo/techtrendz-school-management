@@ -19,4 +19,6 @@ public interface ExtraCurricularYearService {
     public Page<ExtraCurricularYear> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<ExtraCurricularYear> getAllByExample(ExtraCurricularYear extraCurricularYear, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<ExtraCurricularYear> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 }

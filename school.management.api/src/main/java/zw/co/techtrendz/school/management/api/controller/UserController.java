@@ -47,6 +47,11 @@ public class UserController {
         return this.userService.getAllByExample(user, page, size, sortBy, sortDir);
     }
 
+    @GetMapping("/get/all/by/filter")
+    public Page<User> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
+        return this.userService.getAllByFilter(page, size, sortBy, sortDir, filter);
+    }
+
     @GetMapping("/get/by/username")
     public User getUserByUsername(@RequestParam String username) {
         return this.userService.getByUsername(username);

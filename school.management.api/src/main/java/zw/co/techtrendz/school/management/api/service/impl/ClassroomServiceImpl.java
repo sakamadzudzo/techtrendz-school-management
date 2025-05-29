@@ -5,12 +5,17 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.Classroom;
 import zw.co.techtrendz.school.management.api.repository.ClassroomRepository;
 import zw.co.techtrendz.school.management.api.service.ClassroomService;
+import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class ClassroomServiceImpl implements ClassroomService {
@@ -55,6 +60,28 @@ public class ClassroomServiceImpl implements ClassroomService {
             String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
 
             return this.classroomRepository.findAll(example, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
+        }
+    }
+
+    @Override
+    public Page<Classroom> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter) {
+        if (filter == null || filter.isBlank()) {
+            return this.getAll(page, size, sortBy, sortDir);
+        } else {
+            Specification<Classroom> spec = Specification.where(null);
+            for (var field : Classroom.class.getDeclaredFields()) {
+                field.setAccessible(true); // Ensure private fields are accessible
+                if (field.getType().equals(String.class)) {
+                    spec = spec.or(SpecificationUtils.likeMatch(field.getName(), filter));
+                }
+            }
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.classroomRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
     }
 }

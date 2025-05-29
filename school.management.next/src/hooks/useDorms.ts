@@ -35,8 +35,7 @@ export function useDormsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
-    filter: filter || "",
+    direction: direction || "DESC"
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -45,7 +44,43 @@ export function useDormsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    dorms: data,
+    data,
+    isLoading: shouldFetch && !error && !data,
+    isError: error,
+    mutate,
+  };
+}
+
+export function useDormsAllByFilter({
+  page,
+  size,
+  sort,
+  direction,
+  filter,
+}: {
+  page: number;
+  size: number;
+  sort?: string;
+  direction?: "ASC" | "DESC";
+  filter?: string;
+}) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!token;
+  const params = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+    sort: sort ? `${sort}` : "",
+    direction: direction || "DESC",
+    filter: filter || "",
+  });
+  const { data, error, mutate } = useSWR(
+    shouldFetch
+      ? [`/api/dorm?action=filtered&${params.toString()}`, token]
+      : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+  return {
+    data,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,

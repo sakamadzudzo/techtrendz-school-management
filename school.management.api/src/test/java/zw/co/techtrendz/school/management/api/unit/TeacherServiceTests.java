@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import zw.co.techtrendz.school.management.api.entity.Person;
 import zw.co.techtrendz.school.management.api.entity.Teacher;
 import zw.co.techtrendz.school.management.api.repository.TeacherRepository;
@@ -182,7 +179,7 @@ class TeacherServiceTests {
         List<Teacher> teachers = List.of(result_teacher1, result_teacher2);
         Page<Teacher> page = new PageImpl<>(teachers);
 
-        when(teacherRepository.findAll(any(), eq(PageRequest.of(0, 10, Sort.by("name").ascending())))).thenReturn(page);
+        when(teacherRepository.findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("name").ascending())))).thenReturn(page);
 
         List<Teacher> foundTeachers = teacherService.getAllByExample(example, 0, 10, List.of("name"), Sort.Direction.ASC).getContent();
 
@@ -190,6 +187,6 @@ class TeacherServiceTests {
         assertEquals(2, foundTeachers.size());
         assertEquals("John", foundTeachers.get(0).getPerson().getFirstName());
         assertEquals("Doe", foundTeachers.get(0).getPerson().getLastName());
-        verify(teacherRepository, times(1)).findAll(any(), eq(PageRequest.of(0, 10, Sort.by("name").ascending())));
+        verify(teacherRepository, times(1)).findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("name").ascending())));
     }
 }

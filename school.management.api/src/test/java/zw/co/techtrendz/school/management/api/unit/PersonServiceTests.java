@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import zw.co.techtrendz.school.management.api.entity.Person;
 import zw.co.techtrendz.school.management.api.repository.PersonRepository;
 import zw.co.techtrendz.school.management.api.service.impl.PersonServiceImpl;
@@ -122,7 +119,7 @@ class PersonServiceTests {
         List<Person> persons = List.of(person);
         Page<Person> page = new PageImpl<>(persons);
 
-        when(personRepository.findAll(any(), eq(PageRequest.of(0, 10, Sort.by("name").ascending())))).thenReturn(page);
+        when(personRepository.findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("name").ascending())))).thenReturn(page);
 
         List<Person> foundPersons = personService.getAllByExample(example, 0, 10, List.of("name"), Sort.Direction.ASC).getContent();
 
@@ -130,6 +127,6 @@ class PersonServiceTests {
         assertEquals(1, foundPersons.size());
         assertEquals("John", foundPersons.get(0).getFirstName());
         assertEquals("Doe", foundPersons.get(0).getLastName());
-        verify(personRepository, times(1)).findAll(any(), eq(PageRequest.of(0, 10, Sort.by("name").ascending())));
+        verify(personRepository, times(1)).findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("name").ascending())));
     }
 }

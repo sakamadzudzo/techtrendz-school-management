@@ -1,5 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
-import { useDormsAll } from "@/hooks/useDorms";
+import { useDormsAll, useDormsAllByFilter } from "@/hooks/useDorms";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
 import { SortDescriptor } from "@heroui/react";
@@ -23,13 +23,34 @@ export default function AllDormsPage() {
   const [rows, setRows] = React.useState<any[]>([]);
   const router = useRouter();
 
-  const { dorms, isLoading, isError } = useDormsAll({
-    page: page - 1,
-    size,
-    sort: sortDescriptor.column.toString(),
-    direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
-    filter: searchValue,
-  });
+  let dorms;
+  let isLoading;
+  let isError;
+
+  if (searchValue) {
+    ({
+      data: dorms,
+      isLoading,
+      isError,
+    } = useDormsAllByFilter({
+      page: page - 1,
+      size,
+      sort: sortDescriptor.column.toString(),
+      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+      filter: searchValue,
+    }));
+  } else {
+    ({
+      data: dorms,
+      isLoading,
+      isError,
+    } = useDormsAll({
+      page: page - 1,
+      size,
+      sort: sortDescriptor.column.toString(),
+      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+    }));
+  }
 
   const viewOne = (id: string) => {
     router.push(`/dorm/one/${id}`);
@@ -38,6 +59,12 @@ export default function AllDormsPage() {
   const editOne = (id: string) => {
     router.push(`/dorm/edit/${id}`);
   };
+
+  useEffect(() => {
+    if (!filterValue) {
+      setSearchValue("");
+    }
+  }, [filterValue]);
 
   useEffect(() => {
     if (dorms) {

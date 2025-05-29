@@ -44,4 +44,9 @@ public class PersonController {
     public Page<Person> getAllPersonsByExample(@RequestBody @Valid Person person, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
         return this.personService.getAllByExample(person, page, size, sortBy, sortDir);
     }
+
+    @GetMapping("/get/all/by/filter")
+    public Page<Person> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
+        return this.personService.getAllByFilter(page, size, sortBy, sortDir, filter);
+    }
 }

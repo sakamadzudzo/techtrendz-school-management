@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
 import { ApiError } from "../utils/classes";
-import { RootState } from "../store/store"; // Adjust path if needed
+import { RootState } from "./../store/store"; // Adjust path if needed
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -35,8 +35,7 @@ export function useSubjectsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
-    filter: filter || "",
+    direction: direction || "DESC"
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -45,7 +44,43 @@ export function useSubjectsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    subjects: data,
+    data,
+    isLoading: shouldFetch && !error && !data,
+    isError: error,
+    mutate,
+  };
+}
+
+export function useSubjectsAllByFilter({
+  page,
+  size,
+  sort,
+  direction,
+  filter,
+}: {
+  page: number;
+  size: number;
+  sort?: string;
+  direction?: "ASC" | "DESC";
+  filter?: string;
+}) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!token;
+  const params = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+    sort: sort ? `${sort}` : "",
+    direction: direction || "DESC",
+    filter: filter || "",
+  });
+  const { data, error, mutate } = useSWR(
+    shouldFetch
+      ? [`/api/subject?action=filtered&${params.toString()}`, token]
+      : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+  return {
+    data,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,

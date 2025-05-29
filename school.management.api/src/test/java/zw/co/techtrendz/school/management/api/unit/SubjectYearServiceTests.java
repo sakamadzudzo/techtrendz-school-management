@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import zw.co.techtrendz.school.management.api.entity.SubjectYear;
 import zw.co.techtrendz.school.management.api.repository.SubjectYearRepository;
 import zw.co.techtrendz.school.management.api.service.impl.SubjectYearServiceImpl;
@@ -112,13 +109,13 @@ class SubjectYearServiceTests {
         List<SubjectYear> subjectYears = List.of(subjectYear);
         Page<SubjectYear> page = new PageImpl<>(subjectYears);
 
-        when(subjectYearRepository.findAll(any(), eq(PageRequest.of(0, 10, Sort.by("year").ascending())))).thenReturn(page);
+        when(subjectYearRepository.findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("year").ascending())))).thenReturn(page);
 
         List<SubjectYear> foundSubjectYears = subjectYearService.getAllByExample(example, 0, 10, List.of("year"), Sort.Direction.ASC).getContent();
 
         assertNotNull(foundSubjectYears);
         assertEquals(1, foundSubjectYears.size());
         assertEquals(2023, foundSubjectYears.get(0).getCalendarYear());
-        verify(subjectYearRepository, times(1)).findAll(any(), eq(PageRequest.of(0, 10, Sort.by("year").ascending())));
+        verify(subjectYearRepository, times(1)).findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("year").ascending())));
     }
 }

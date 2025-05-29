@@ -25,12 +25,30 @@ async function getClassrooms(authHeader: any, query: any) {
   if (query.size) params.append("size", query.size);
   if (query.sort) params.append("sortBy", query.sort);
   if (query.direction) params.append("sortDir", query.direction);
-  if (query.filter) params.append("filter", query.filter);
 
   const res = await fetch(`${API_BASE}/get/all?${params.toString()}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
+  if (!res.ok) throw new ApiError("Fetching classrooms failed", res.status);
+  return res.json();
+}
+
+async function getClassroomsByFilter(authHeader: any, query: any) {
+  const params = new URLSearchParams();
+  if (query.page) params.append("page", query.page);
+  if (query.size) params.append("size", query.size);
+  if (query.sort) params.append("sortBy", query.sort);
+  if (query.direction) params.append("sortDir", query.direction);
+  if (query.filter) params.append("filter", query.filter);
+
+  const res = await fetch(
+    `${API_BASE}/get/all/by/filter?${params.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json", ...authHeader },
+    }
+  );
   if (!res.ok) throw new ApiError("Fetching classrooms failed", res.status);
   return res.json();
 }
@@ -64,19 +82,26 @@ async function getClassroomById(classroomId: string, authHeader: any) {
   return res.json();
 }
 
-async function getClassroomsByExample(exampleDto: any, authHeader: any, query: any) {
+async function getClassroomsByExample(
+  exampleDto: any,
+  authHeader: any,
+  query: any
+) {
   const params = new URLSearchParams();
   if (query.page) params.append("page", query.page);
   if (query.size) params.append("size", query.size);
   if (query.sort) params.append("sortBy", query.sort);
   if (query.direction) params.append("sortDir", query.direction);
   if (query.filter) params.append("filter", query.filter);
-  
-  const res = await fetch(`${API_BASE}/get/all/by/example?${params.toString()}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json", ...authHeader },
-    body: JSON.stringify(exampleDto),
-  });
+
+  const res = await fetch(
+    `${API_BASE}/get/all/by/example?${params.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json", ...authHeader },
+      body: JSON.stringify(exampleDto),
+    }
+  );
   if (!res.ok)
     throw new ApiError("Fetching classrooms by example failed", res.status);
   return res.json();
@@ -96,7 +121,11 @@ export default async function handler(
         return res.status(201).json(data);
       }
       if (action === "example") {
-        const data = await getClassroomsByExample(req.body, authHeader, req.query);
+        const data = await getClassroomsByExample(
+          req.body,
+          authHeader,
+          req.query
+        );
         return res.status(200).json(data);
       }
     }
@@ -108,6 +137,10 @@ export default async function handler(
       }
       if (action === "one" && classroomId) {
         const data = await getClassroomById(classroomId as string, authHeader);
+        return res.status(200).json(data);
+      }
+      if (action === "filtered") {
+        const data = await getClassroomsByFilter(authHeader, req.query);
         return res.status(200).json(data);
       }
     }

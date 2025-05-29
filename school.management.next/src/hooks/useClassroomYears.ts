@@ -35,8 +35,7 @@ export function useClassroomYearsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
-    filter: filter || "",
+    direction: direction || "DESC"
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -45,24 +44,60 @@ export function useClassroomYearsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    classrooms: data,
+    data,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
   };
 }
 
-export function useClassroomYearById(classroomId: string | undefined) {
+export function useClassroomYearsAllByFilter({
+  page,
+  size,
+  sort,
+  direction,
+  filter,
+}: {
+  page: number;
+  size: number;
+  sort?: string;
+  direction?: "ASC" | "DESC";
+  filter?: string;
+}) {
   const token = useSelector((state: RootState) => state.auth.token);
-  const shouldFetch = !!classroomId && !!token;
+  const shouldFetch = !!token;
+  const params = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+    sort: sort ? `${sort}` : "",
+    direction: direction || "DESC",
+    filter: filter || "",
+  });
   const { data, error, mutate } = useSWR(
     shouldFetch
-      ? [`/api/classroom?action=one&classroomId=${classroomId}`, token]
+      ? [`/api/classroom-year?action=filtered&${params.toString()}`, token]
       : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    classroom: data,
+    data,
+    isLoading: shouldFetch && !error && !data,
+    isError: error,
+    mutate,
+  };
+}
+
+export function useClassroomYearById(classroomYearId: string | undefined) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!classroomYearId && !!token;
+  const { data, error, mutate } = useSWR(
+    shouldFetch
+      ? [`/api/classroom-year?action=one&classroomYearId=${classroomYearId}`, token]
+      : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+  return {
+    classroomYear: data,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -73,7 +108,7 @@ export function useClassroomYearsByExample(exampleDto: any) {
   const token = useSelector((state: RootState) => state.auth.token);
   const key =
     exampleDto && token
-      ? [`/api/classroom?action=example`, exampleDto, token]
+      ? [`/api/classroom-year?action=example`, exampleDto, token]
       : null;
   const fetcherWithBody = async ([url, body, token]: [string, any, string]) => {
     const res = await fetch(url, {
@@ -94,7 +129,7 @@ export function useClassroomYearsByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    classrooms: data,
+    classroomYears: data,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

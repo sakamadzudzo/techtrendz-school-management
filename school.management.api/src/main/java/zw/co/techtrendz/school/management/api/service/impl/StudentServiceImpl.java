@@ -74,4 +74,26 @@ public class StudentServiceImpl implements StudentService {
 
         return this.studentRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
     }
+
+    @Override
+    public Page<Student> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter) {
+        if (filter == null || filter.isBlank()) {
+            return this.getAll(page, size, sortBy, sortDir);
+        } else {
+            Specification<Student> spec = Specification.where(null);
+            for (var field : Student.class.getDeclaredFields()) {
+                field.setAccessible(true); // Ensure private fields are accessible
+                if (field.getType().equals(String.class)) {
+                    spec = spec.or(SpecificationUtils.likeMatch(field.getName(), filter));
+                }
+            }
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("name");
+            }
+            String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+
+            return this.studentRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
+        }
+    }
 }

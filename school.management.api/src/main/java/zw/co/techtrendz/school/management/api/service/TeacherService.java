@@ -19,4 +19,6 @@ public interface TeacherService {
     public Page<Teacher> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<Teacher> getAllByExample(Teacher teacher, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<Teacher> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 }
