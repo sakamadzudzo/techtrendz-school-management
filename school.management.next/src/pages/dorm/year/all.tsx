@@ -1,0 +1,172 @@
+import MyTable, { Column } from "@/components/MyTable";
+import { useClassroomYearsAll } from "@/hooks/useClassroomYears";
+import { statuses } from "@/utils/classes";
+import { formatDate } from "@/utils/helpers";
+import { SortDescriptor } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+
+export default function AllClassroomYearsPage() {
+  const [page, setPage] = React.useState(1);
+  const [pages, setPages] = React.useState(1);
+  const [total, setTotal] = React.useState(1);
+  const [size, setSize] = React.useState(25);
+  const [offset, setOffset] = React.useState(0);
+  const [first, setFirst] = React.useState(true);
+  const [last, setLast] = React.useState(false);
+  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
+    column: "calendarYear,classroom.name",
+    direction: "ascending",
+  });
+  const [filterValue, setFilterValue] = React.useState<string>("");
+  const [searchValue, setSearchValue] = React.useState<string>("");
+  const [rows, setRows] = React.useState<any[]>([]);
+  const router = useRouter();
+  
+  const { classrooms, isLoading, isError } = useClassroomYearsAll({
+    page: page - 1,
+    size,
+    sort: sortDescriptor.column.toString(),
+    direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+    filter: searchValue,
+  });
+
+  const viewOne = (id: string) => {
+    router.push(`/classroom/one/${id}`);
+  };
+
+  const editOne = (id: string) => {
+    router.push(`/classroom/edit/${id}`);
+  };
+
+  useEffect(() => {
+    // console.log("Datestamp original:", classrooms.content.map((row:any) => row.datestamp));
+    if (classrooms) {
+      setTotal(classrooms.totalElements);
+      setPages(classrooms.totalPages);
+      setSize(classrooms.size);
+      setOffset(classrooms.pageable.offset);
+      setFirst(classrooms.first);
+      setLast(classrooms.last);
+
+      setRows(
+        (classrooms.content || []).map((row: any) => ({
+          ...row,
+          key: row.id || row._id || row.name,
+          "classroom.name": row.classroom?.name || row.name,
+          "classroom.description": row.classroom?.description || row.description,
+          subjects: row.classroom?.subjects?.length || 0,
+          datestamp: formatDate(row.datestamp),
+          actions: [
+            {
+              label: "View",
+              function: () => viewOne(row.id),
+              key: `view-${row.id}`,
+            },
+            {
+              label: "Edit",
+              function: () => editOne(row.id),
+              key: `edit-${row.id}`,
+            },
+          ],
+        }))
+      );
+    }
+    // console.log("Datestamp format:", rows.map(row => row.datestamp));
+  }, [classrooms]);
+
+  useEffect(() => {
+    if (sortDescriptor) {
+      setPage(1);
+    }
+  }, [sortDescriptor]);
+
+  const columns: Column[] = [
+    {
+      key: "classroom.name",
+      label: "Name",
+      allowsSorting: true,
+    },
+    {
+      key: "classroom.description",
+      label: "Description",
+      allowsSorting: true,
+    },
+    {
+      key: "calendarYear",
+      label: "Calendar Year",
+      allowsSorting: true,
+    },
+    {
+      key: "subjects",
+      label: "Subjects",
+      allowsSorting: true,
+    },
+    {
+      key: "id",
+      label: "ID",
+      allowsSorting: true,
+    },
+    {
+      key: "datestamp",
+      label: "Date Created/Modified",
+      allowsSorting: true,
+    },
+    {
+      key: "status",
+      label: "Status",
+      allowsSorting: true,
+    },
+    {
+      key: "actions",
+      label: "Actions",
+      allowsSorting: false,
+    }
+  ];
+
+  const nextPage = () => {
+    if (last) return;
+    setPage((prev) => prev + 1);
+    alert("Clicked next page.\n" + `Page: ${page}`);
+  };
+
+  const prevPage = () => {
+    if (first) return;
+    setPage((prev) => prev - 1);
+    alert("Clicked previous page.\n" + `Page: ${page}`);
+  };
+
+  const statusOptions = statuses;
+
+  const search = () => {
+    setSearchValue(filterValue);
+    setPage(1);
+  };
+
+  return (
+    <MyTable
+      columns={columns}
+      rows={rows}
+      setPage={setPage}
+      page={page}
+      pages={pages}
+      statusOptions={statusOptions}
+      sortDescriptor={sortDescriptor}
+      setSortDescriptor={setSortDescriptor}
+      filterValue={filterValue}
+      setFilterValue={setFilterValue}
+      searchBox={true}
+      search={search}
+      isLoading={isLoading}
+      total={total}
+      size={size}
+      setSize={setSize}
+      offset={offset}
+      first={first}
+      last={last}
+      nextPage={nextPage}
+      prevPage={prevPage}
+      onRowAction={viewOne}
+    />
+  );
+}

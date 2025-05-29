@@ -33,15 +33,15 @@ export type MyDropdown = {
   variant?: "flat" | "solid" | "light" | "ghost" | undefined;
   onClick?: () => void;
   dropdown?: MyDropdown[];
+  isActive?: boolean;
 };
 
-export default function MyNavbar({
-  menuItems,
-  hasAvatar
-}: {
+type MyNavbarProps = {
   menuItems: MyDropdown[];
   hasAvatar?: boolean;
-}) {
+};
+
+export default function MyNavbar({ menuItems, hasAvatar }: MyNavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [openDropdown, setOpenDropdown] = React.useState<string | null>(null);
 
@@ -57,6 +57,22 @@ export default function MyNavbar({
       shouldHideOnScroll
       isBordered
       onMenuOpenChange={setIsMenuOpen}
+      classNames={{
+        item: [
+          "flex",
+          "relative",
+          "h-full",
+          "items-center",
+          "data-[active=true]:after:content-['']",
+          "data-[active=true]:after:absolute",
+          "data-[active=true]:after:bottom-0",
+          "data-[active=true]:after:left-0",
+          "data-[active=true]:after:right-0",
+          "data-[active=true]:after:h-[2px]",
+          "data-[active=true]:after:rounded-[2px]",
+          "data-[active=true]:after:bg-primary",
+        ],
+      }}
     >
       <NavbarContent>
         <NavbarMenuToggle
@@ -88,21 +104,13 @@ export default function MyNavbar({
             <AvatarDropdown />
           </div>
         )}
-        {renderMobileMenu(
-          menuItems,
-          openDropdown,
-          setOpenDropdown,
-          0,
-        )}
+        {renderMobileMenu(menuItems, openDropdown, setOpenDropdown, 0)}
       </NavbarMenu>
     </Navbar>
   );
 }
 
-function renderDesktopMenu(
-  items: MyDropdown[],
-  depth = 0,
-) {
+function renderDesktopMenu(items: MyDropdown[], depth = 0) {
   return items.map((item) =>
     item.dropdown ? (
       <Dropdown key={item.label} className={``}>
@@ -125,12 +133,16 @@ function renderDesktopMenu(
         </DropdownMenu>
       </Dropdown>
     ) : item.asButton ? (
-      <NavbarItem key={item.label} className={item.className}>
+      <NavbarItem
+        key={item.label}
+        className={item.className}
+        isActive={item.isActive || false}
+      >
         <Button
           as={Link}
           color={item.color}
           href={item.href}
-          onClick={item.onClick}
+          onPress={item.onClick}
           variant={item.variant}
         >
           {item.label}
@@ -142,6 +154,7 @@ function renderDesktopMenu(
         as={Link}
         href={item.href}
         className={item.className}
+        isActive={item.isActive || false}
       >
         {item.label}
       </NavbarItem>
@@ -153,7 +166,7 @@ function renderMobileMenu(
   items: MyDropdown[],
   openDropdown: string | null,
   setOpenDropdown: (label: string | null) => void,
-  depth = 0,
+  depth = 0
 ) {
   return items.map((item) =>
     item.dropdown ? (
@@ -177,16 +190,23 @@ function renderMobileMenu(
     ) : item.asButton ? (
       <NavbarItem
         key={item.label}
-        className={`pl-${depth * 4} ${item.className}`}
+        className={`cursor-pointer pl-${depth * 4} ${item.className}`}
       >
         <Button
           as={Link}
           color={item.color}
           href={item.href}
-          onClick={item.onClick}
+          onPress={() => setOpenDropdown(null)}
           variant={item.variant}
         >
-          {item.label}
+          <Link
+            className="w-full"
+            color={item.color === "default" ? "foreground" : item.color}
+            href={item.href}
+            size="lg"
+          >
+            {item.label}
+          </Link>
         </Button>
       </NavbarItem>
     ) : (
@@ -194,10 +214,17 @@ function renderMobileMenu(
         key={item.label}
         as={Link}
         href={item.href}
-        className={`pl-${depth * 4} ${item.className}`}
+        className={`cursor-pointer pl-${depth * 4} ${item.className}`}
         onClick={() => setOpenDropdown(null)}
       >
-        {item.label}
+        <Link
+          className="w-full"
+          color={item.color === "default" ? "foreground" : item.color}
+          href={item.href}
+          size="lg"
+        >
+          {item.label}
+        </Link>
       </NavbarMenuItem>
     )
   );
