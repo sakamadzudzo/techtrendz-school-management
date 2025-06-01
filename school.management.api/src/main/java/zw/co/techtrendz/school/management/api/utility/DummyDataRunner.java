@@ -70,6 +70,8 @@ public class DummyDataRunner {
         this.dummySchool();
         this.dummyDorm();
         this.dummyDormYear();
+        this.dummyExtraCurricular();
+        this.dummyExtraCurricularYear();
     }
 
     private void dummyPersons() {
@@ -337,5 +339,63 @@ public class DummyDataRunner {
         );
 
         this.dormYearService.saveAll(dormYears);
+    }
+
+    private void dummyExtraCurricular() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy extra curriculars...");
+
+        List<ExtraCurricular> extraCurriculars = new ArrayList<>();
+
+        extraCurriculars.add(createExtraCurricular("Physical Education", "Promotes physical fitness, teamwork, and healthy competition."));
+        extraCurriculars.add(createExtraCurricular("Soccer", "Team sport focusing on physical coordination, strategy, and endurance."));
+        extraCurriculars.add(createExtraCurricular("Netball", "Popular team sport for girls, emphasizing agility and teamwork."));
+        extraCurriculars.add(createExtraCurricular("Athletics", "Track and field activities promoting individual competition and fitness."));
+        extraCurriculars.add(createExtraCurricular("Debate Club", "Develops critical thinking, public speaking, and argumentation skills."));
+        extraCurriculars.add(createExtraCurricular("Drama Club", "Encourages self-expression and performance through theatre and acting."));
+        extraCurriculars.add(createExtraCurricular("Choir", "Develops vocal performance skills and appreciation for music."));
+        extraCurriculars.add(createExtraCurricular("Chess Club", "Enhances strategic thinking and concentration through competitive play."));
+        extraCurriculars.add(createExtraCurricular("Science Club", "Promotes scientific curiosity and experimentation beyond the classroom."));
+        extraCurriculars.add(createExtraCurricular("Art Club", "Provides a creative outlet through drawing, painting, and visual design."));
+        extraCurriculars.add(createExtraCurricular("Environmental Club", "Fosters environmental awareness and sustainability initiatives."));
+        extraCurriculars.add(createExtraCurricular("First Aid Club", "Trains students in basic medical and emergency response skills."));
+        extraCurriculars.add(createExtraCurricular("Rotary Interact Club", "Instills leadership and community service values."));
+        extraCurriculars.add(createExtraCurricular("Junior Achievement", "Introduces entrepreneurship and business skills to students."));
+        extraCurriculars.add(createExtraCurricular("Quiz Club", "Promotes academic excellence and broad knowledge through competition."));
+        extraCurriculars.add(createExtraCurricular("Marimba Band", "Teaches traditional Zimbabwean music through marimba instruments."));
+        extraCurriculars.add(createExtraCurricular("Culture Club", "Explores and celebrates diverse cultural traditions and practices."));
+        extraCurriculars.add(createExtraCurricular("Taekwondo", "Martial art promoting discipline, self-defense, and physical fitness."));
+        extraCurriculars.add(createExtraCurricular("Student Council", "Encourages leadership, responsibility, and school governance."));
+        extraCurriculars.add(createExtraCurricular("Media Club", "Engages students in photography, videography, and digital storytelling."));
+
+        this.extraCurricularService.saveAll(extraCurriculars);
+    }
+
+    private ExtraCurricular createExtraCurricular(String name, String description) {
+        ExtraCurricular ec = new ExtraCurricular();
+        ec.setName(name);
+        ec.setDescription(description);
+        return ec;
+    }
+
+    private void dummyExtraCurricularYear() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy extra curricular years...");
+        List<ExtraCurricular> extraCurriculars = this.extraCurricularService.getAll(0, 100, Arrays.asList("name"), Sort.Direction.DESC).getContent();
+        List<ExtraCurricularYear> extraCurricularYears = new ArrayList<>();
+
+        List<Teacher> defaultTeachers = Arrays.asList(new Teacher(1L)); // Replace or expand as needed
+        List<Student> defaultStudents = Arrays.asList(new Student(1L)); // Replace or expand as needed
+
+        for (ExtraCurricular extraCurricular : extraCurriculars) {
+            for (int year = 2023; year <= 2025; year++) {
+                ExtraCurricularYear ecy = new ExtraCurricularYear();
+                ecy.setExtraCurricular(extraCurricular);
+                ecy.setCalendarYear(year);
+                ecy.setFacilitators(defaultTeachers);
+                ecy.setStudents(defaultStudents);
+                extraCurricularYears.add(ecy);
+            }
+        }
+
+        this.extraCurricularYearService.saveAll(extraCurricularYears);
     }
 }
