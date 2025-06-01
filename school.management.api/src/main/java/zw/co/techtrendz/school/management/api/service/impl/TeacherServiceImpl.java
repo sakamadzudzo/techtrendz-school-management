@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.Teacher;
 import zw.co.techtrendz.school.management.api.repository.TeacherRepository;
+import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.service.TeacherService;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 
@@ -19,9 +20,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private TeacherRepository teacherRepository;
+    @Autowired
+    private PersonService personService;
 
     @Override
     public Teacher save(Teacher teacher) {
+        if (teacher.getPerson() != null && (teacher.getPerson().getId() == null || teacher.getPerson().getId().equals(0L))) {
+            teacher.setPerson(this.personService.save(teacher.getPerson()));
+        }
         return this.teacherRepository.save(teacher);
     }
 

@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -124,9 +125,54 @@ public class DummyDataRunner {
 //        t1.setId(1L);
         t1.setPerson(new Person(1L));
 
-        List<Teacher> teachers = Arrays.asList(
+        List<Teacher> teachers1 = Arrays.asList(
                 t1
         );
+        this.teacherService.saveAll(teachers1);
+
+        String[] firstNames = {
+                // Shona
+                "Tinotenda", "Tafadzwa", "Rufaro", "Tinashe", "Kudzanai", "Tawana", "Tariro", "Anotida", "Chengeto", "Takunda",
+                "Nyasha", "Munyaradzi", "Vimbai", "Runako", "Ruvimbo", "Fadzai", "Tanatswa", "Tanyaradzwa", "Shamiso", "Tadiwanashe",
+                "Chiedza", "Nomatter", "Natsai", "Takudzwa", "Tendekai", "Ruramai", "Munashe", "Farirai", "Kushinga", "Nyengeterai",
+
+                // Ndebele
+                "Thulisile", "Bonginkosi", "Siphosenkosi", "Lungile", "Sithembiso", "Nomathemba", "Khulekani", "Thembelihle", "Sithandazile", "Mpumelelo",
+                "Zanele", "Sibusisiwe", "Nqobile", "Gugulethu", "Nkosinathi", "Thandeka", "Sibusiso", "Mthandazo", "Mlungisi", "Khanyisani",
+
+                // English
+                "Jordan", "Melissa", "Trevor", "Chloe", "Dylan", "Nicole", "Liam", "Alyssa", "Ethan", "Grace",
+                "Logan", "Vanessa", "Nathan", "Madison", "Megan", "Kyle", "Brenda", "Noah", "Rachel", "Jonathan"
+        };
+        String[] lastNames = {
+                // Shona & Ndebele
+                "Makwavarara", "Mutambanengwe", "Chinyere", "Mugabe", "Mapuranga", "Muzenda", "Nyandoro", "Zhou", "Matavire", "Chindori",
+                "Mutasa", "Chiromo", "Mpofu", "Dlodlo", "Chigumba", "Mashakada", "Sibanda", "Mahlangu", "Chikore", "Nkomo",
+
+                // English / Anglicized
+                "Smith", "Johnson", "Miller", "Anderson", "Richards", "Gray", "Adams", "Marshall", "Perry", "Young"
+        };
+
+        Random random = new Random();
+        List<Teacher> teachers = new ArrayList<>();
+
+        for (int i = 0; i < 15; i++) {
+            Person person = new Person();
+            person.setFirstName(firstNames[this.getRandomNumber(0, 70)]);
+            person.setLastName(lastNames[this.getRandomNumber(0, 30)]);
+            int otherNameLotto = this.getRandomNumber(0, 93);
+            person.setOtherNames(otherNameLotto < 70 ? firstNames[otherNameLotto] : "");
+            person.setSalutation(random.nextBoolean() ? Salutation.MR : Salutation.MS);
+            person.setDateOfBirth(LocalDate.of(1980 + random.nextInt(15), 1 + random.nextInt(12), 1 + random.nextInt(28)));
+            person.setEmail(person.getFirstName().toLowerCase() + "." + person.getLastName().toLowerCase() + "@schoolmail.ac.zw");
+            person.setMobileNumber("07" + (10000000 + random.nextInt(9000000)));
+
+            Teacher teacher = new Teacher();
+            teacher.setPerson(person);
+
+            teachers.add(teacher);
+        }
+
         this.teacherService.saveAll(teachers);
     }
 
@@ -267,10 +313,82 @@ public class DummyDataRunner {
         s1.setEndYear(2027);
         s1.setClassroom(new ClassroomYear(1L));
 
-        List<Student> students = Arrays.asList(
+        List<Student> students1 = Arrays.asList(
                 s1
         );
+        this.studentService.saveAll(students1);
+
+        List<ClassroomYear> classroomYears = classroomYearService.getAll(0, 100, Arrays.asList("classroom.name", "calendarYear"), Sort.Direction.DESC).getContent();
+        List<Student> students = new ArrayList<>();
+
+        String[] firstNames = {
+                // Shona
+                "Tariro", "Tendai", "Rudo", "Kuda", "Chipo", "Nyasha", "Tatenda", "Rumbidzai", "Simba", "Takudzwa",
+                "Farai", "Kudzai", "Tanaka", "Vimbai", "Anesu", "Munyaradzi", "Tafadzwa", "Chenai", "Tanyaradzwa", "Nyengeterai",
+                "Shingai", "Ruramai", "Tichawona", "Runako", "Tinotenda", "Fadzai", "Nyengeterai", "Tawananyasha", "Tadiwanashe", "Munashe",
+                "Natsai", "Rutendo", "Tadiwa", "Tawana", "Tino", "Tashinga", "Nyarai", "Tafara", "Kudakwashe", "Tanyaradzwa",
+
+                // Ndebele
+                "Thandeka", "Bongani", "Nokuthula", "Sibusiso", "Nkosazana", "Mthokozisi", "Thabani", "Sithandekile", "Thembinkosi", "Nomathemba",
+                "Lindiwe", "Nqobile", "Sipho", "Gugulethu", "Zanele", "Themba", "Khanyisile", "Mlungisi", "Nomvula", "Sifiso",
+
+                // English / Mixed
+                "Ashley", "Brandon", "Courtney", "Daniel", "Emily", "Faith", "George", "Hannah", "Isaac", "Jessica",
+                "Kevin", "Lisa", "Michael", "Natalie", "Oliver", "Paige", "Quinton", "Rachel", "Sean", "Tanya",
+                "Ursula", "Victor", "Wendy", "Xavier", "Yvonne", "Zachary", "Angela", "Brian", "Cynthia", "Derrick"
+        };
+        String[] lastNames = {
+                // Zimbabwean (Shona/Ndebele dominant)
+                "Chirwa", "Moyo", "Nyoni", "Dube", "Chikafu", "Gumbo", "Mutsvangwa", "Mtetwa", "Makoni", "Zhou",
+                "Sibanda", "Marufu", "Banda", "Ncube", "Chingono", "Madzima", "Chihwai", "Maphosa", "Marechera", "Tsvangirai",
+                "Hove", "Chimombe", "Chinamasa", "Zvobgo", "Mutasa", "Chiwenga", "Chikowore", "Nhema", "Mazvimbakupa", "Kasukuwere",
+                "Mahere", "Masiyiwa", "Matemadanda", "Machingauta", "Madzokere", "Wadyajena", "Chiheru", "Kwaramba", "Chigudu", "Gwisai",
+                "Dzvairo", "Tandi", "Kasukuwere", "Chikwama", "Shava", "Muchena", "Rugare", "Munyai", "Bvute", "Mujuru",
+
+                // English/Anglicized mix
+                "Brown", "Taylor", "White", "Scott", "Grant", "Evans", "Nelson", "Foster", "Morgan", "Chambers",
+                "Clark", "Lewis", "Walker", "Roberts", "Reid", "Wright", "Baker", "Mason", "Stewart", "Campbell"
+        };
+
+        int studentCount = 30;
+        int currentPersonId = 1;
+
+        for (int i = 0; i < studentCount; i++) {
+            String firstName = firstNames[this.getRandomNumber(0, 90)];
+            String lastName = lastNames[this.getRandomNumber(0, 70)];
+            int otherNameLotto = this.getRandomNumber(0, 103);
+            String otherName = otherNameLotto < 90 ? firstNames[otherNameLotto] : "";
+
+            Person person = new Person();
+            person.setSalutation(Salutation.MR); // Or vary this if needed
+            person.setFirstName(firstName);
+            person.setOtherNames(otherName);
+            person.setLastName(lastName);
+            person.setEmail(firstName.toLowerCase() + "." + lastName.toLowerCase() + "@schoolmail.com");
+            person.setMobileNumber("077" + String.format("%07d", i + 100));
+            person.setDateOfBirth(LocalDate.of(2006 + (i % 5), 1 + (i % 12), 1 + (i % 28)));
+
+//            personService.save(person); // save person first to get ID
+
+            Student student = new Student();
+            student.setPerson(person);
+
+            int startYear = 2023 + (i % 3); // cycle through 2023–2025
+            student.setStartYear(startYear);
+            student.setEndYear(startYear + 4); // assume 4-year duration
+
+            ClassroomYear classroomYear = classroomYears.get(i % classroomYears.size());
+            student.setClassroom(classroomYear);
+
+            students.add(student);
+        }
+
         this.studentService.saveAll(students);
+    }
+
+    private int getRandomNumber(int min, int max) {
+        Random random = new Random();
+        return random.nextInt(max - min) + min;
     }
 
     private void dummyUser() {

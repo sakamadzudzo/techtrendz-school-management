@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.Student;
 import zw.co.techtrendz.school.management.api.entity.User;
 import zw.co.techtrendz.school.management.api.repository.StudentRepository;
+import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.service.StudentService;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 
@@ -20,9 +21,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private PersonService personService;
 
     @Override
     public Student save(Student student) {
+        if (student.getPerson() != null && (student.getPerson().getId() == null || student.getPerson().getId().equals(0L))) {
+            student.setPerson(this.personService.save(student.getPerson()));
+        }
         return this.studentRepository.save(student);
     }
 

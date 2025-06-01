@@ -31,8 +31,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        if(user.getPerson() != null && user.getPerson().getId() != null && !user.getPerson().getId().equals(0L)) {
+        if (user.getPerson() != null && user.getPerson().getId() != null && !user.getPerson().getId().equals(0L)) {
             user.setPerson(this.personService.getById(user.getPerson().getId()));
+        } else if (user.getPerson() != null && (user.getPerson().getId() == null || user.getPerson().getId().equals(0L))) {
+            user.setPerson(this.personService.save(user.getPerson()));
         }
         AppUtils.validateUser(user, this);
 
