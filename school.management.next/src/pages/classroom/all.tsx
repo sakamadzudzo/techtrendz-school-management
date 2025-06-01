@@ -23,7 +23,6 @@ export default function AllClassroomsPage() {
   });
   const [filterValue, setFilterValue] = React.useState<string>("");
   const [searchValue, setSearchValue] = React.useState<string>("");
-  const [rows, setRows] = React.useState<any[]>([]);
   const router = useRouter();
 
   let classrooms;
@@ -77,27 +76,28 @@ export default function AllClassroomsPage() {
       setOffset(classrooms.pageable.offset);
       setFirst(classrooms.first);
       setLast(classrooms.last);
-
-      setRows(
-        (classrooms.content || []).map((row: any) => ({
-          ...row,
-          key: row.id || row._id || row.name,
-          datestamp: formatDate(row.datestamp),
-          actions: [
-            {
-              label: "View",
-              function: () => viewOne(row.id),
-              key: `view-${row.id}`,
-            },
-            {
-              label: "Edit",
-              function: () => editOne(row.id),
-              key: `edit-${row.id}`,
-            },
-          ],
-        }))
-      );
     }
+  }, [classrooms]);
+
+  const rows = React.useMemo(() => {
+    if (!classrooms) return [];
+    return (classrooms.content || []).map((row: any) => ({
+      ...row,
+      key: row.id || row._id || row.name,
+      datestamp: formatDate(row.datestamp),
+      actions: [
+        {
+          label: "View",
+          function: () => viewOne(row.id),
+          key: `view-${row.id}`,
+        },
+        {
+          label: "Edit",
+          function: () => editOne(row.id),
+          key: `edit-${row.id}`,
+        },
+      ],
+    }));
   }, [classrooms]);
 
   useEffect(() => {

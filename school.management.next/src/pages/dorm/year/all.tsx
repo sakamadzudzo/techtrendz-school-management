@@ -20,7 +20,6 @@ export default function AllDormYearsPage() {
   });
   const [filterValue, setFilterValue] = React.useState<string>("");
   const [searchValue, setSearchValue] = React.useState<string>("");
-  const [rows, setRows] = React.useState<any[]>([]);
   const router = useRouter();
 
   let dorms;
@@ -74,32 +73,32 @@ export default function AllDormYearsPage() {
       setOffset(dorms.pageable.offset);
       setFirst(dorms.first);
       setLast(dorms.last);
-
-      setRows(
-        (dorms.content || []).map((row: any) => ({
-          ...row,
-          key: row.id || row._id || row.name,
-          "dorm.name": row.dorm?.name || row.name,
-          "dorm.description": row.dorm?.description || row.description,
-          "dorm.address": row.dorm?.address || row.address,
-          "dorm.school.name": row.dorm.school?.name,
-          subjects: row.dorm?.subjects?.length || 0,
-          datestamp: formatDate(row.datestamp),
-          actions: [
-            {
-              label: "View",
-              function: () => viewOne(row.id),
-              key: `view-${row.id}`,
-            },
-            {
-              label: "Edit",
-              function: () => editOne(row.id),
-              key: `edit-${row.id}`,
-            },
-          ],
-        }))
-      );
     }
+  }, [dorms]);
+
+  const rows = React.useMemo(() => {
+    if (!dorms) return [];
+    return (dorms.content || []).map((row: any) => ({
+      ...row,
+      key: row.id || row._id || row.name,
+      "dorm.name": row.dorm?.name || row.name,
+      "dorm.description": row.dorm?.description || row.description,
+      "dorm.address": row.dorm?.address || row.address,
+      "dorm.school.name": row.dorm.school?.name,
+      datestamp: formatDate(row.datestamp),
+      actions: [
+        {
+          label: "View",
+          function: () => viewOne(row.id),
+          key: `view-${row.id}`,
+        },
+        {
+          label: "Edit",
+          function: () => editOne(row.id),
+          key: `edit-${row.id}`,
+        },
+      ],
+    }));
   }, [dorms]);
 
   useEffect(() => {

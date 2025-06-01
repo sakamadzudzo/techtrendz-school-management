@@ -23,7 +23,6 @@ export default function AllSubjectYearsPage() {
   });
   const [filterValue, setFilterValue] = React.useState<string>("");
   const [searchValue, setSearchValue] = React.useState<string>("");
-  const [rows, setRows] = React.useState<any[]>([]);
   const router = useRouter();
 
   let subjects;
@@ -77,31 +76,31 @@ export default function AllSubjectYearsPage() {
       setOffset(subjects.pageable.offset);
       setFirst(subjects.first);
       setLast(subjects.last);
-
-      setRows(
-        (subjects.content || []).map((row: any) => ({
-          ...row,
-          key: row.id || row._id || row.name,
-          "subject.name": row.subject?.name || row.name,
-          "subject.code": row.subject?.code || row.code,
-          "subject.description": row.subject?.description || row.description,
-          subjects: row.subject?.subjects?.length || 0,
-          datestamp: formatDate(row.datestamp),
-          actions: [
-            {
-              label: "View",
-              function: () => viewOne(row.id),
-              key: `view-${row.id}`,
-            },
-            {
-              label: "Edit",
-              function: () => editOne(row.id),
-              key: `edit-${row.id}`,
-            },
-          ],
-        }))
-      );
     }
+  }, [subjects]);
+
+  const rows = React.useMemo(() => {
+    if (!subjects) return [];
+    return (subjects.content || []).map((row: any) => ({
+      ...row,
+      key: row.id || row._id || row.name,
+      "subject.name": row.subject?.name || row.name,
+      "subject.code": row.subject?.code || row.code,
+      "subject.description": row.subject?.description || row.description,
+      datestamp: formatDate(row.datestamp),
+      actions: [
+        {
+          label: "View",
+          function: () => viewOne(row.id),
+          key: `view-${row.id}`,
+        },
+        {
+          label: "Edit",
+          function: () => editOne(row.id),
+          key: `edit-${row.id}`,
+        },
+      ],
+    }));
   }, [subjects]);
 
   useEffect(() => {
@@ -130,11 +129,6 @@ export default function AllSubjectYearsPage() {
       {
         key: "calendarYear",
         label: "Calendar Year",
-        allowsSorting: true,
-      },
-      {
-        key: "subjects",
-        label: "Subjects",
         allowsSorting: true,
       },
       {

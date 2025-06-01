@@ -20,7 +20,6 @@ export default function AllDormsPage() {
   });
   const [filterValue, setFilterValue] = React.useState<string>("");
   const [searchValue, setSearchValue] = React.useState<string>("");
-  const [rows, setRows] = React.useState<any[]>([]);
   const router = useRouter();
 
   let dorms;
@@ -74,28 +73,29 @@ export default function AllDormsPage() {
       setOffset(dorms.pageable.offset);
       setFirst(dorms.first);
       setLast(dorms.last);
-
-      setRows(
-        (dorms.content || []).map((row: any) => ({
-          ...row,
-          key: row.id || row._id || row.name,
-          "school.name": row.school?.name,
-          datestamp: formatDate(row.datestamp),
-          actions: [
-            {
-              label: "View",
-              function: () => viewOne(row.id),
-              key: `view-${row.id}`,
-            },
-            {
-              label: "Edit",
-              function: () => editOne(row.id),
-              key: `edit-${row.id}`,
-            },
-          ],
-        }))
-      );
     }
+  }, [dorms]);
+
+  const rows = React.useMemo(() => {
+    if (!dorms) return [];
+    return (dorms.content || []).map((row: any) => ({
+      ...row,
+      key: row.id || row._id || row.name,
+      "school.name": row.school?.name,
+      datestamp: formatDate(row.datestamp),
+      actions: [
+        {
+          label: "View",
+          function: () => viewOne(row.id),
+          key: `view-${row.id}`,
+        },
+        {
+          label: "Edit",
+          function: () => editOne(row.id),
+          key: `edit-${row.id}`,
+        },
+      ],
+    }));
   }, [dorms]);
 
   useEffect(() => {
