@@ -1,5 +1,8 @@
 import MyTable, { Column } from "@/components/MyTable";
-import { useClassroomYearsAll, useClassroomYearsAllByFilter } from "@/hooks/useClassroomYears";
+import {
+  useClassroomYearsAll,
+  useClassroomYearsAllByFilter,
+} from "@/hooks/useClassroomYears";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
 import { SortDescriptor } from "@heroui/react";
@@ -80,7 +83,8 @@ export default function AllClassroomYearsPage() {
           ...row,
           key: row.id || row._id || row.name,
           "classroom.name": row.classroom?.name || row.name,
-          "classroom.description": row.classroom?.description || row.description,
+          "classroom.description":
+            row.classroom?.description || row.description,
           subjects: row.classroom?.subjects?.length || 0,
           datestamp: formatDate(row.datestamp),
           actions: [
@@ -106,48 +110,51 @@ export default function AllClassroomYearsPage() {
     }
   }, [sortDescriptor]);
 
-  const columns: Column[] = [
-    {
-      key: "classroom.name",
-      label: "Name",
-      allowsSorting: true,
-    },
-    {
-      key: "classroom.description",
-      label: "Description",
-      allowsSorting: true,
-    },
-    {
-      key: "calendarYear",
-      label: "Calendar Year",
-      allowsSorting: true,
-    },
-    {
-      key: "subjects",
-      label: "Subjects",
-      allowsSorting: true,
-    },
-    {
-      key: "id",
-      label: "ID",
-      allowsSorting: true,
-    },
-    {
-      key: "datestamp",
-      label: "Date Created/Modified",
-      allowsSorting: true,
-    },
-    {
-      key: "status",
-      label: "Status",
-      allowsSorting: true,
-    },
-    {
-      key: "actions",
-      label: "Actions",
-      allowsSorting: false,
-    }
-  ];
+  const columns = React.useMemo<Column[]>(
+    () => [
+      {
+        key: "classroom.name",
+        label: "Name",
+        allowsSorting: true,
+      },
+      {
+        key: "classroom.description",
+        label: "Description",
+        allowsSorting: true,
+      },
+      {
+        key: "calendarYear",
+        label: "Calendar Year",
+        allowsSorting: true,
+      },
+      {
+        key: "subjects",
+        label: "Subjects",
+        allowsSorting: true,
+      },
+      {
+        key: "id",
+        label: "ID",
+        allowsSorting: true,
+      },
+      {
+        key: "datestamp",
+        label: "Date Created/Modified",
+        allowsSorting: true,
+      },
+      {
+        key: "status",
+        label: "Status",
+        allowsSorting: true,
+      },
+      {
+        key: "actions",
+        label: "Actions",
+        allowsSorting: false,
+      },
+    ],
+    []
+  );
 
   const nextPage = () => {
     if (last) return;

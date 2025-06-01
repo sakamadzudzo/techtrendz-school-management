@@ -1,5 +1,8 @@
 import MyTable, { Column } from "@/components/MyTable";
-import { useSubjectYearsAll, useSubjectYearsAllByFilter } from "@/hooks/useSubjectYears";
+import {
+  useSubjectYearsAll,
+  useSubjectYearsAllByFilter,
+} from "@/hooks/useSubjectYears";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
 import { SortDescriptor } from "@heroui/react";
@@ -107,53 +110,56 @@ export default function AllSubjectYearsPage() {
     }
   }, [sortDescriptor]);
 
-  const columns: Column[] = [
-    {
-      key: "subject.name",
-      label: "Name",
-      allowsSorting: true,
-    },
-    {
-      key: "subject.code",
-      label: "Code",
-      allowsSorting: true,
-    },
-    {
-      key: "subject.description",
-      label: "Description",
-      allowsSorting: true,
-    },
-    {
-      key: "calendarYear",
-      label: "Calendar Year",
-      allowsSorting: true,
-    },
-    {
-      key: "subjects",
-      label: "Subjects",
-      allowsSorting: true,
-    },
-    {
-      key: "id",
-      label: "ID",
-      allowsSorting: true,
-    },
-    {
-      key: "datestamp",
-      label: "Date Created/Modified",
-      allowsSorting: true,
-    },
-    {
-      key: "status",
-      label: "Status",
-      allowsSorting: true,
-    },
-    {
-      key: "actions",
-      label: "Actions",
-      allowsSorting: false,
-    },
-  ];
+  const columns = React.useMemo<Column[]>(
+    () => [
+      {
+        key: "subject.name",
+        label: "Name",
+        allowsSorting: true,
+      },
+      {
+        key: "subject.code",
+        label: "Code",
+        allowsSorting: true,
+      },
+      {
+        key: "subject.description",
+        label: "Description",
+        allowsSorting: true,
+      },
+      {
+        key: "calendarYear",
+        label: "Calendar Year",
+        allowsSorting: true,
+      },
+      {
+        key: "subjects",
+        label: "Subjects",
+        allowsSorting: true,
+      },
+      {
+        key: "id",
+        label: "ID",
+        allowsSorting: true,
+      },
+      {
+        key: "datestamp",
+        label: "Date Created/Modified",
+        allowsSorting: true,
+      },
+      {
+        key: "status",
+        label: "Status",
+        allowsSorting: true,
+      },
+      {
+        key: "actions",
+        label: "Actions",
+        allowsSorting: false,
+      },
+    ],
+    []
+  );
 
   const nextPage = () => {
     if (last) return;

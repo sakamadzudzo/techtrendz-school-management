@@ -104,48 +104,51 @@ export default function AllDormsPage() {
     }
   }, [sortDescriptor]);
 
-  const columns: Column[] = [
-    {
-      key: "name",
-      label: "Name",
-      allowsSorting: true,
-    },
-    {
-      key: "description",
-      label: "Description",
-      allowsSorting: true,
-    },
-    {
-      key: "id",
-      label: "ID",
-      allowsSorting: true,
-    },
-    {
-      key: "address",
-      label: "Address",
-      allowsSorting: true,
-    },
-    {
-      key: "school.name",
-      label: "School",
-      allowsSorting: true,
-    },
-    {
-      key: "datestamp",
-      label: "Date Created/Modified",
-      allowsSorting: true,
-    },
-    {
-      key: "status",
-      label: "Status",
-      allowsSorting: true,
-    },
-    {
-      key: "actions",
-      label: "Actions",
-      allowsSorting: false,
-    },
-  ];
+  const columns = React.useMemo<Column[]>(
+    () => [
+      {
+        key: "name",
+        label: "Name",
+        allowsSorting: true,
+      },
+      {
+        key: "description",
+        label: "Description",
+        allowsSorting: true,
+      },
+      {
+        key: "id",
+        label: "ID",
+        allowsSorting: true,
+      },
+      {
+        key: "address",
+        label: "Address",
+        allowsSorting: true,
+      },
+      {
+        key: "school.name",
+        label: "School",
+        allowsSorting: true,
+      },
+      {
+        key: "datestamp",
+        label: "Date Created/Modified",
+        allowsSorting: true,
+      },
+      {
+        key: "status",
+        label: "Status",
+        allowsSorting: true,
+      },
+      {
+        key: "actions",
+        label: "Actions",
+        allowsSorting: false,
+      },
+    ],
+    []
+  );
 
   const nextPage = () => {
     if (last) return;

@@ -108,53 +108,56 @@ export default function AllDormYearsPage() {
     }
   }, [sortDescriptor]);
 
-  const columns: Column[] = [
-    {
-      key: "dorm.name",
-      label: "Name",
-      allowsSorting: true,
-    },
-    {
-      key: "dorm.description",
-      label: "Description",
-      allowsSorting: true,
-    },
-    {
-      key: "calendarYear",
-      label: "Calendar Year",
-      allowsSorting: true,
-    },
-    {
-      key: "id",
-      label: "ID",
-      allowsSorting: true,
-    },
-    {
-      key: "dorm.address",
-      label: "Address",
-      allowsSorting: true,
-    },
-    {
-      key: "dorm.school.name",
-      label: "School",
-      allowsSorting: true,
-    },
-    {
-      key: "datestamp",
-      label: "Date Created/Modified",
-      allowsSorting: true,
-    },
-    {
-      key: "status",
-      label: "Status",
-      allowsSorting: true,
-    },
-    {
-      key: "actions",
-      label: "Actions",
-      allowsSorting: false,
-    },
-  ];
+  const columns = React.useMemo<Column[]>(
+    () => [
+      {
+        key: "dorm.name",
+        label: "Name",
+        allowsSorting: true,
+      },
+      {
+        key: "dorm.description",
+        label: "Description",
+        allowsSorting: true,
+      },
+      {
+        key: "calendarYear",
+        label: "Calendar Year",
+        allowsSorting: true,
+      },
+      {
+        key: "id",
+        label: "ID",
+        allowsSorting: true,
+      },
+      {
+        key: "dorm.address",
+        label: "Address",
+        allowsSorting: true,
+      },
+      {
+        key: "dorm.school.name",
+        label: "School",
+        allowsSorting: true,
+      },
+      {
+        key: "datestamp",
+        label: "Date Created/Modified",
+        allowsSorting: true,
+      },
+      {
+        key: "status",
+        label: "Status",
+        allowsSorting: true,
+      },
+      {
+        key: "actions",
+        label: "Actions",
+        allowsSorting: false,
+      },
+    ],
+    []
+  );
 
   const nextPage = () => {
     if (last) return;

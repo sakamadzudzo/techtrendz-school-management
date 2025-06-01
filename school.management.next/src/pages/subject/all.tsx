@@ -103,43 +103,46 @@ export default function AllSubjectsPage() {
     }
   }, [sortDescriptor]);
 
-  const columns: Column[] = [
-    {
-      key: "name",
-      label: "Name",
-      allowsSorting: true,
-    },
-    {
-      key: "code",
-      label: "Code",
-      allowsSorting: true,
-    },
-    {
-      key: "description",
-      label: "Description",
-      allowsSorting: true,
-    },
-    {
-      key: "id",
-      label: "ID",
-      allowsSorting: true,
-    },
-    {
-      key: "datestamp",
-      label: "Date Created/Modified",
-      allowsSorting: true,
-    },
-    {
-      key: "status",
-      label: "Status",
-      allowsSorting: true,
-    },
-    {
-      key: "actions",
-      label: "Actions",
-      allowsSorting: false,
-    }
-  ];
+  const columns = React.useMemo<Column[]>(
+    () => [
+      {
+        key: "name",
+        label: "Name",
+        allowsSorting: true,
+      },
+      {
+        key: "code",
+        label: "Code",
+        allowsSorting: true,
+      },
+      {
+        key: "description",
+        label: "Description",
+        allowsSorting: true,
+      },
+      {
+        key: "id",
+        label: "ID",
+        allowsSorting: true,
+      },
+      {
+        key: "datestamp",
+        label: "Date Created/Modified",
+        allowsSorting: true,
+      },
+      {
+        key: "status",
+        label: "Status",
+        allowsSorting: true,
+      },
+      {
+        key: "actions",
+        label: "Actions",
+        allowsSorting: false,
+      },
+    ],
+    []
+  );
 
   const nextPage = () => {
     if (last) return;

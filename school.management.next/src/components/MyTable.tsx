@@ -120,31 +120,22 @@ export default function MyTable(props: MyTableProps) {
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
     new Set()
   );
-  const [headerColumns, setHeaderColumns] = React.useState<Column[]>(
-    props.columns
-  );
 
   // Update visibleColumns and headerColumns when columns change
   React.useEffect(() => {
     // If columns is not empty, set visibleColumns to all column keys
     if (props.columns && props.columns.length > 0) {
       setVisibleColumns(new Set(props.columns.map((col) => col.key)));
-      setHeaderColumns(props.columns);
+      // setHeaderColumns(props.columns);
     }
   }, [props.columns]);
 
-  // Update headerColumns when visibleColumns changes
-  React.useEffect(() => {
-    if (visibleColumns === "all") {
-      setHeaderColumns(props.columns);
-    } else {
-      setHeaderColumns(
-        props.columns.filter((column) =>
-          Array.from(visibleColumns).includes(column.key)
-        )
-      );
-    }
-  }, [visibleColumns, props.columns]);
+  const headerColumns = React.useMemo(() => {
+  if (visibleColumns === "all") return columns;
+  return columns.filter((column) =>
+    Array.from(visibleColumns).includes(column.key)
+  );
+}, [visibleColumns, columns]);
 
   const actualSelectedKeys = selectedKeys ?? internalSelectedKeys;
   const actualSetSelectedKeys = setSelectedKeys ?? setInternalSelectedKeys;
@@ -229,35 +220,33 @@ export default function MyTable(props: MyTableProps) {
   );
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...rows!];
+  if (!rows || rows.length === 0) return [];
+  let filtered = rows;
 
-    if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((row) => {
-        const matchingKeys = Object.keys(row).filter((key) => {
-          const value = row[key as keyof any];
-          if (typeof value === "string") {
-            return value.toLowerCase().includes(filterValue!.toLowerCase());
-          }
-          return value === filterValue;
-        });
-        return matchingKeys.length > 0;
-      });
-    }
+  if (hasSearchFilter && filterValue) {
+    filtered = filtered.filter((row) =>
+      columns.some((col) => {
+        const value = row[col.key];
+        return (
+          typeof value === "string" &&
+          value.toLowerCase().includes(filterValue.toLowerCase())
+        );
+      })
+    );
+  }
 
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions!.length
-    ) {
-      filteredUsers = filteredUsers.filter((row) => {
-        if (!Object.prototype.hasOwnProperty.call(row, "status")) {
-          return true;
-        }
-        return Array.from(statusFilter).includes(row.status);
-      });
-    }
+  if (
+    statusFilter !== "all" &&
+    Array.from(statusFilter).length !== statusOptions?.length
+  ) {
+    filtered = filtered.filter((row) => {
+      if (!("status" in row)) return true;
+      return Array.from(statusFilter).includes(row.status);
+    });
+  }
 
-    return filteredUsers;
-  }, [rows, filterValue, hasSearchFilter, statusFilter]);
+  return filtered;
+}, [rows, filterValue, hasSearchFilter, statusFilter, columns, statusOptions]);
 
   const topContent = React.useMemo(() => {
     return (
