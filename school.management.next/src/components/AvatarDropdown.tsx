@@ -1,33 +1,24 @@
 import React from "react";
 import { Avatar, Dropdown, DropdownMenu, DropdownItem, DropdownTrigger } from "@heroui/react";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../store/slices/authSlice"; // Adjust path as needed
+import { logout } from "../store/slices/authSlice";
+import { getInitials } from "@/utils/helpers";
 
 export default function AvatarDropdown() {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.auth.user);
-
-  const getInitials = (name: string) => {
-    if (!name) return "U";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
 
   return (
     <Dropdown className={` `}>
       <DropdownTrigger>
         <Avatar
           src={user?.avatarUrl}
-          name={user?.name}
+          name={getInitials(user?.name || "User")}
           size="md"
           color="primary"
           className="cursor-pointer"
         >
-          {!user?.avatarUrl && getInitials(user?.name || "User")}
+          {!user?.avatarUrl && getInitials(user?.person?.name || "User")}
         </Avatar>
       </DropdownTrigger>
       <DropdownMenu className={`text-foreground `}>

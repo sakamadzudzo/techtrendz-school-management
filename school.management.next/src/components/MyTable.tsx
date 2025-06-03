@@ -131,11 +131,11 @@ export default function MyTable(props: MyTableProps) {
   }, [props.columns]);
 
   const headerColumns = React.useMemo(() => {
-  if (visibleColumns === "all") return columns;
-  return columns.filter((column) =>
-    Array.from(visibleColumns).includes(column.key)
-  );
-}, [visibleColumns, columns]);
+    if (visibleColumns === "all") return columns;
+    return columns.filter((column) =>
+      Array.from(visibleColumns).includes(column.key)
+    );
+  }, [visibleColumns, columns]);
 
   const actualSelectedKeys = selectedKeys ?? internalSelectedKeys;
   const actualSetSelectedKeys = setSelectedKeys ?? setInternalSelectedKeys;
@@ -211,42 +211,46 @@ export default function MyTable(props: MyTableProps) {
     }
   }, []);
 
-  const onRowsPerPageChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setSize!(Number(e.target.value));
-      setPage!(1);
-    },
-    []
-  );
+  const onRowsPerPageChange = React.useCallback((val: any) => {
+    setSize!(Number(val.currentKey));
+    setPage!(1);
+  }, []);
 
   const filteredItems = React.useMemo(() => {
-  if (!rows || rows.length === 0) return [];
-  let filtered = rows;
+    if (!rows || rows.length === 0) return [];
+    let filtered = rows;
 
-  if (hasSearchFilter && filterValue) {
-    filtered = filtered.filter((row) =>
-      columns.some((col) => {
-        const value = row[col.key];
-        return (
-          typeof value === "string" &&
-          value.toLowerCase().includes(filterValue.toLowerCase())
-        );
-      })
-    );
-  }
+    if (hasSearchFilter && filterValue) {
+      filtered = filtered.filter((row) =>
+        columns.some((col) => {
+          const value = row[col.key];
+          return (
+            typeof value === "string" &&
+            value.toLowerCase().includes(filterValue.toLowerCase())
+          );
+        })
+      );
+    }
 
-  if (
-    statusFilter !== "all" &&
-    Array.from(statusFilter).length !== statusOptions?.length
-  ) {
-    filtered = filtered.filter((row) => {
-      if (!("status" in row)) return true;
-      return Array.from(statusFilter).includes(row.status);
-    });
-  }
+    if (
+      statusFilter !== "all" &&
+      Array.from(statusFilter).length !== statusOptions?.length
+    ) {
+      filtered = filtered.filter((row) => {
+        if (!("status" in row)) return true;
+        return Array.from(statusFilter).includes(row.status);
+      });
+    }
 
-  return filtered;
-}, [rows, filterValue, hasSearchFilter, statusFilter, columns, statusOptions]);
+    return filtered;
+  }, [
+    rows,
+    filterValue,
+    hasSearchFilter,
+    statusFilter,
+    columns,
+    statusOptions,
+  ]);
 
   const topContent = React.useMemo(() => {
     return (
@@ -312,7 +316,7 @@ export default function MyTable(props: MyTableProps) {
                 onSelectionChange={setVisibleColumns}
               >
                 {columns.map((column) => (
-                  <DropdownItem key={column.key} className="capitalize">
+                  <DropdownItem key={column.key}>
                     {capitalize(column.label)}
                   </DropdownItem>
                 ))}
@@ -327,20 +331,30 @@ export default function MyTable(props: MyTableProps) {
           <span className="text-default-400 text-small">
             Total {filteredItems.length} rows
           </span>
-          <label className="flex items-center text-default-400 text-small">
-            Rows per page:
-            <select
-              className="bg-transparent outline-none text-default-400 text-small"
-              onChange={onRowsPerPageChange}
-              value={size}
+          <Dropdown>
+            <DropdownTrigger className="hidden sm:flex bg-transparent outline-none text-default-400 text-small">
+              <Button
+                endContent={<ChevronDownIcon className="" />}
+                variant="light"
+              >
+                Rows per page: {size}
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              disallowEmptySelection
+              aria-label="Rows per page:"
+              closeOnSelect={true}
+              selectionMode="single"
+              onSelectionChange={onRowsPerPageChange}
+              selectedKeys={[size]}
             >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-          </label>
+              <DropdownItem key={5}>5</DropdownItem>
+              <DropdownItem key={10}>10</DropdownItem>
+              <DropdownItem key={25}>25</DropdownItem>
+              <DropdownItem key={50}>50</DropdownItem>
+              <DropdownItem key={100}>100</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </div>
     );

@@ -55,11 +55,11 @@ export default function AllClassroomYearsPage() {
   }
 
   const viewOne = (id: string) => {
-    router.push(`/classroom/year/one/${id}`);
+    router.push(`/classroom/year/one?id=${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/classroom/year/edit/${id}`);
+    router.push(`/classroom/year/edit?id=${id}`);
   };
 
   useEffect(() => {

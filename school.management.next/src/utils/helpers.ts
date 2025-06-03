@@ -52,3 +52,22 @@ export const formatDate = (date: Date | string) => {
   }
   return dateStr;
 };
+
+export const getInitials = (name: string) => {
+  if (!name) return "U";
+  if (name.split(". ").length > 1) {
+    const subname: string[] = name.split(". ");
+    return subname[1]
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 5);
+  }
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 5);
+};

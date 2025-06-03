@@ -52,11 +52,11 @@ export default function AllDormsPage() {
   }
 
   const viewOne = (id: string) => {
-    router.push(`/dorm/one/${id}`);
+    router.push(`/dorm/one?id=${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/dorm/edit/${id}`);
+    router.push(`/dorm/edit?id=${id}`);
   };
 
   useEffect(() => {

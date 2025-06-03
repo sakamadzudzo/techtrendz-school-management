@@ -74,7 +74,7 @@ async function getExtraCurricularYearsByFilter(authHeader: any, query: any) {
 
 async function getExtraCurricularYearById(extraCurricularYearId: string, authHeader: any) {
   const params = new URLSearchParams({ id: extraCurricularYearId }).toString();
-  const res = await fetch(`${API_BASE}/get/one` + params, {
+  const res = await fetch(`${API_BASE}/get/one?` + params, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });

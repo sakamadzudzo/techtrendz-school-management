@@ -52,11 +52,11 @@ export default function AllSubjectsPage() {
   }
 
   const viewOne = (id: string) => {
-    router.push(`/subject/one/${id}`);
+    router.push(`/subject/one?id=${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/subject/edit/${id}`);
+    router.push(`/subject/edit?id=${id}`);
   };
 
   useEffect(() => {

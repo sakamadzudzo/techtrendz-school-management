@@ -52,11 +52,11 @@ export default function AllTeachersPage() {
   }
 
   const viewOne = (id: string) => {
-    router.push(`/teacher/one/${id}`);
+    router.push(`/teacher/one?id=${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/teacher/edit/${id}`);
+    router.push(`/teacher/edit?id=${id}`);
   };
 
   useEffect(() => {

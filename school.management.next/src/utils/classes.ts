@@ -66,15 +66,27 @@ export function defaultPage<T>(): Page<T> {
 }
 
 export const statuses = [
-    "ACTIVE",
-    "INACTIVE",
-    "SUSPENDED",
-    "DELETED",
-    "PENDING",
-    "APPROVED",
-    "REJECTED",
-    "BLOCKED",
-    "UNBLOCKED",
-    "ENABLED",
-    "DISABLED",
-  ].sort();
+  "ACTIVE",
+  "INACTIVE",
+  "SUSPENDED",
+  "DELETED",
+  "PENDING",
+  "APPROVED",
+  "REJECTED",
+  "BLOCKED",
+  "UNBLOCKED",
+  "ENABLED",
+  "DISABLED",
+].sort();
+
+export const salutations = [
+  "MR",
+  "MRS",
+  "MS",
+  "DR",
+  "PROF",
+  "ENG",
+  "REV",
+  "SNR",
+  "JNR",
+].sort();

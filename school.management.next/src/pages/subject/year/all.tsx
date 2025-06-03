@@ -55,11 +55,11 @@ export default function AllSubjectYearsPage() {
   }
 
   const viewOne = (id: string) => {
-    router.push(`/subject/year/one/${id}`);
+    router.push(`/subject/year/one?id=${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/subject/year/edit/${id}`);
+    router.push(`/subject/year/edit?id=${id}`);
   };
 
   useEffect(() => {

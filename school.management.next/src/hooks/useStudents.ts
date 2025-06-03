@@ -2,6 +2,7 @@ import useSWR from "swr";
 import { useSelector } from "react-redux";
 import { ApiError } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
+import { Student } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -97,7 +98,7 @@ export function useStudentById(studentId: string | undefined) {
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    student: data,
+    student: data as Student,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,

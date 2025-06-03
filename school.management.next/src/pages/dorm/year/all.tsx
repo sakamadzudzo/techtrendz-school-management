@@ -52,11 +52,11 @@ export default function AllDormYearsPage() {
   }
 
   const viewOne = (id: string) => {
-    router.push(`/dorm/year/one/${id}`);
+    router.push(`/dorm/year/one?id=${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/dorm/year/edit/${id}`);
+    router.push(`/dorm/year/edit?id=${id}`);
   };
 
   useEffect(() => {

@@ -55,11 +55,11 @@ export default function AllExtraCurricularYearsPage() {
   }
 
   const viewOne = (id: string) => {
-    router.push(`/extra-curricular/year/one/${id}`);
+    router.push(`/extra-curricular/year/one?id=${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/extra-curricular/year/edit/${id}`);
+    router.push(`/extra-curricular/year/edit?id=${id}`);
   };
 
   useEffect(() => {

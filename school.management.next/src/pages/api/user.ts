@@ -74,7 +74,7 @@ async function getUsersByFilter(authHeader: any, query: any) {
 
 async function getUserById(userId: string, authHeader: any) {
   const params = new URLSearchParams({ id: userId }).toString();
-  const res = await fetch(`${API_BASE}/get/one` + params, {
+  const res = await fetch(`${API_BASE}/get/one?` + params, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });

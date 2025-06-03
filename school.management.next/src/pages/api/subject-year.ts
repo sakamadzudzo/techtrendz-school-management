@@ -74,7 +74,7 @@ async function getClassroomYearsByFilter(authHeader: any, query: any) {
 
 async function getClassroomYearById(subjectYearId: string, authHeader: any) {
   const params = new URLSearchParams({ id: subjectYearId }).toString();
-  const res = await fetch(`${API_BASE}/get/one` + params, {
+  const res = await fetch(`${API_BASE}/get/one?` + params, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });

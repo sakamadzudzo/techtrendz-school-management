@@ -66,11 +66,11 @@ public class DummyDataRunner {
         this.dummySubjectYear();
         this.dummyClassroom();
         this.dummyClassroomYear();
-        this.dummyStudent();
         this.dummyUser();
         this.dummySchool();
         this.dummyDorm();
         this.dummyDormYear();
+        this.dummyStudent();
         this.dummyExtraCurricular();
         this.dummyExtraCurricularYear();
     }
@@ -379,6 +379,7 @@ public class DummyDataRunner {
 
             ClassroomYear classroomYear = classroomYears.get(i % classroomYears.size());
             student.setClassroom(classroomYear);
+            student.setDorm(new DormYear(1L));
 
             students.add(student);
         }

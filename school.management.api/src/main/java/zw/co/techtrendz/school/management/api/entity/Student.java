@@ -33,7 +33,7 @@ public class Student extends Base{
 //    private List<SubjectYear> subjects;
 
     @ManyToOne
-    private Dorm dorm;
+    private DormYear dorm;
 
     @ManyToOne
     private School school;

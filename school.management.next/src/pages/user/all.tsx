@@ -52,11 +52,11 @@ export default function AllUsersPage() {
   }
 
   const viewOne = (id: string) => {
-    router.push(`/user/one/${id}`);
+    router.push(`/user/one?id=${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/user/edit/${id}`);
+    router.push(`/user/edit?id=${id}`);
   };
 
   useEffect(() => {

@@ -113,18 +113,7 @@ public class AuthServiceImpl implements AuthService {
 
         String name = "";
         if (user.getPerson() != null) {
-            if (user.getPerson().getSalutation() != null) {
-                name += (name != null ? " " : "") + user.getPerson().getSalutation();
-            }
-            if (user.getPerson().getFirstName() != null) {
-                name += (name != null ? " " : "") + user.getPerson().getFirstName();
-            }
-            if (user.getPerson().getOtherNames() != null) {
-                name += (name != null ? " " : "") + " " + user.getPerson().getOtherNames();
-            }
-            if (user.getPerson().getLastName() != null) {
-                name += (name != null ? " " : "") + " " + user.getPerson().getLastName();
-            }
+            name = user.getPerson().getFullname();
         }
         userViewDto.setName(name);
         userViewDto.setUsername(user.getUsername());

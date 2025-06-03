@@ -52,11 +52,11 @@ export default function AllStudentsPage() {
   }
 
   const viewOne = (id: string) => {
-    router.push(`/student/one/${id}`);
+    router.push(`/student/one?id=${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/student/edit/${id}`);
+    router.push(`/student/edit?id=${id}`);
   };
 
   useEffect(() => {

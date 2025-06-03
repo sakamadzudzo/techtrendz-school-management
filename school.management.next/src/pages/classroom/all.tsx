@@ -55,11 +55,11 @@ export default function AllClassroomsPage() {
   }
 
   const viewOne = (id: string) => {
-    router.push(`/classroom/one/${id}`);
+    router.push(`/classroom/one?id=${id}`);
   };
 
   const editOne = (id: string) => {
-    router.push(`/classroom/edit/${id}`);
+    router.push(`/classroom/edit?id=${id}`);
   };
 
   useEffect(() => {

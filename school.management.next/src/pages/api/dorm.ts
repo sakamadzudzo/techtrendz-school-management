@@ -74,7 +74,7 @@ async function getDormsByFilter(authHeader: any, query: any) {
 
 async function getDormById(dormId: string, authHeader: any) {
   const params = new URLSearchParams({ id: dormId }).toString();
-  const res = await fetch(`${API_BASE}/get/one` + params, {
+  const res = await fetch(`${API_BASE}/get/one?` + params, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
