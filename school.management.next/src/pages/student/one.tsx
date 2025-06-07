@@ -1,23 +1,41 @@
 import { IconPencilThin } from "@/components/icons/pencil-thin";
 import MyChip from "@/components/MyChip";
 import { useStudentById } from "@/hooks/useStudents";
-import { formatDate, getInitials } from "@/utils/helpers";
+import {
+  capitalize,
+  formatDate,
+  getInitials,
+  sanitizeForWhatsapp,
+} from "@/utils/helpers";
 import {
   Accordion,
   AccordionItem,
   Avatar,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
   Image,
-  Input,
+  Link,
   Spacer,
 } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
+import {
+  IdentificationCardIcon,
+  UserFocusIcon,
+  StudentIcon,
+  BookOpenTextIcon,
+  HouseLineIcon,
+  ChalkboardSimpleIcon,
+  GearIcon,
+} from "@phosphor-icons/react";
 
 export default function OneStudentPage() {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
   const { student, isLoading, isError } = useStudentById(id!);
-  const accordionSubtitle = "Press to expand/collapse";
 
   return (
     <div className="grow overflow-auto">
@@ -36,8 +54,8 @@ export default function OneStudentPage() {
           key="1"
           aria-label="Student Overview"
           title="Student Overview"
-          subtitle={accordionSubtitle}
-          startContent={<IconPencilThin className="w-6 h-6 bg-transparent" />}
+          subtitle="Quick snapshot of the student's current status and core identifiers"
+          startContent={<IdentificationCardIcon weight="thin" size={34} />}
         >
           <div className="w-full px-4 flex flex-col md:flex-row">
             <div className="w-full md:w-1/4 aspect-square flex justify-center items-center">
@@ -47,13 +65,13 @@ export default function OneStudentPage() {
                   src="C:\Users\sakamadzudzo\Desktop\Pro_Pic_3.jpg"
                   alt="Profile picture"
                   shadow="md"
-                  className="w-full aspect-square"
+                  className="w-full h-full"
                 />
               ) : (
                 <Avatar
                   src={student?.person?.avatarUrl}
                   color="primary"
-                  className="cursor-pointer w-full aspect-square"
+                  className="cursor-pointer w-full h-full"
                 >
                   {!student?.person?.avatarUrl &&
                     getInitials(student?.person?.name || "User")}
@@ -121,8 +139,8 @@ export default function OneStudentPage() {
           key="2"
           aria-label="Personal Information"
           title="Personal Information"
-          subtitle={accordionSubtitle}
-          startContent={<IconPencilThin className="w-6 h-6 bg-transparent" />}
+          subtitle="Full details of the student's personal profile"
+          startContent={<UserFocusIcon weight="thin" size={34} />}
         >
           <div className="flex flex-col px-4">
             <div className="info-row">
@@ -165,7 +183,9 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">E-mail:</div>
                   <div className="info-row-content whitespace-pre-wrap">
-                    {student?.person?.email}
+                    <Link href={`mailto:${student?.person?.email}`}>
+                      {student?.person?.email}
+                    </Link>
                   </div>
                 </div>
                 <Spacer x={4} y={4} />
@@ -178,7 +198,9 @@ export default function OneStudentPage() {
                     {student?.person?.mobileNumber2 ? "Cell 1" : "Cell"}
                   </div>
                   <div className="info-row-content">
-                    {student?.person?.mobileNumber}
+                    <Link href={`tel:${student?.person?.mobileNumber}`}>
+                      {student?.person?.mobileNumber}
+                    </Link>
                   </div>
                 </div>
                 <Spacer x={4} y={4} />
@@ -189,7 +211,9 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">Cell 2:</div>
                   <div className="info-row-content">
-                    {student?.person?.mobileNumber2}
+                    <Link href={`tel:${student?.person?.mobileNumber2}`}>
+                      {student?.person?.mobileNumber2}
+                    </Link>
                   </div>
                 </div>
                 <Spacer x={4} y={4} />
@@ -200,7 +224,9 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">Tel:</div>
                   <div className="info-row-content">
-                    {student?.person?.telNumber}
+                    <Link href={`tel:${student?.person?.telNumber}`}>
+                      {student?.person?.telNumber}
+                    </Link>
                   </div>
                 </div>
                 <Spacer x={4} y={4} />
@@ -211,7 +237,13 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">WhatsApp:</div>
                   <div className="info-row-content">
-                    {student?.person?.whatsapp}
+                    <Link
+                      href={`https://wa.me/${sanitizeForWhatsapp(
+                        student?.person?.whatsapp
+                      )}`}
+                    >
+                      {student?.person?.whatsapp}
+                    </Link>
                   </div>
                 </div>
                 <Spacer x={4} y={4} />
@@ -222,7 +254,9 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">LinkedIn:</div>
                   <div className="info-row-content">
-                    {student?.person?.linkedin}
+                    <Link href={student?.person?.linkedin}>
+                      {student?.person?.linkedin}
+                    </Link>
                   </div>
                 </div>
                 <Spacer x={4} y={4} />
@@ -233,7 +267,9 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">Facebook:</div>
                   <div className="info-row-content">
-                    {student?.person?.facebook}
+                    <Link href={student?.person?.facebook}>
+                      {student?.person?.facebook}
+                    </Link>
                   </div>
                 </div>
               </>
@@ -244,47 +280,368 @@ export default function OneStudentPage() {
           key="3"
           aria-label="Academic Details"
           title="Academic Details"
-          subtitle={accordionSubtitle}
-          startContent={<IconPencilThin className="w-6 h-6 bg-transparent" />}
+          subtitle="Shows enrollment and classroom info"
+          startContent={<StudentIcon weight="thin" size={34} />}
         >
-          <div>Academic Details</div>
+          <div className="flex flex-col px-4">
+            <div className="info-row">
+              <div className="info-row-title">Start Year - End Year:</div>
+              <div className="info-row-content">
+                {`${student?.startYear} - ${student?.endYear}`}
+              </div>
+            </div>
+            <Spacer x={4} y={4} />
+            <div className="info-row flex-col">
+              <div className="info-row-title">Current Classroom:</div>
+              <div className="info-row-content pl-8 flex-col">
+                <div className="flex">
+                  <div className="w-48 font-normal">Name:</div>
+                  <div>{student?.classroom?.classroom?.name}</div>
+                </div>
+                <Spacer x={4} y={4} />
+                <div className="flex">
+                  <div className="w-48 font-normal">Description:</div>
+                  <div>{student?.classroom?.classroom?.description}</div>
+                </div>
+                <Spacer x={4} y={4} />
+                <div className="flex">
+                  <div className="w-48 font-normal">Year:</div>
+                  <div>{student?.classroom?.calendarYear}</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </AccordionItem>
         <AccordionItem
           key="4"
           aria-label="Subjects & Teachers"
           title="Subjects & Teachers"
-          subtitle={accordionSubtitle}
-          startContent={<IconPencilThin className="w-6 h-6 bg-transparent" />}
+          subtitle="Lists subjects taken and their respective teachers"
+          startContent={<BookOpenTextIcon weight="thin" size={34} />}
         >
-          <div>Subjects & Teachers</div>
+          {student?.classroom?.subjects.map((subject) => (
+            <Card className="px-4 m-4">
+              <CardHeader>
+                <div className="-space-y-2">
+                  <div className="font-semibold">{subject?.subject?.name}:</div>
+                  <div className="font-light text-sm italic w-full">
+                    {subject?.subject?.description}
+                  </div>
+                </div>
+              </CardHeader>
+              <Divider />
+              <CardBody>
+                <div className="info-row">
+                  <div className="info-row-title">Code:</div>
+                  <div className="info-row-content">
+                    {subject?.subject?.code}
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+                <div className="info-row">
+                  <div className="info-row-title">Curriculum:</div>
+                  <div className="info-row-content">
+                    {subject?.subject?.curriculum}
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+                <div className="info-row">
+                  <div className="info-row-title">Syllabus:</div>
+                  <div className="info-row-content">
+                    {subject?.subject?.syllabus}
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+                <div className="info-row">
+                  <div className="info-row-title">Level:</div>
+                  <div className="info-row-content">
+                    {subject?.subject?.level}
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+                <div className="info-row">
+                  <div className="info-row-title">Category:</div>
+                  <div className="info-row-content">
+                    {subject?.subject?.category}
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+                <div className="info-row">
+                  <div className="info-row-title">Type:</div>
+                  <div className="info-row-content">
+                    {capitalize(subject?.subject?.type)}
+                  </div>
+                </div>
+              </CardBody>
+              <Divider />
+              <CardBody>
+                <div className="info-row">
+                  <div className="info-row-title">Teacher:</div>
+                  <div className="info-row-content">
+                    {subject?.teacher?.person?.fullname}
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+                {subject?.teacher?.person?.email && (
+                  <>
+                    <div className="info-row">
+                      <div className="info-row-title">E-mail:</div>
+                      <div className="info-row-content whitespace-pre-wrap">
+                        <Link
+                          href={`mailto:${subject?.teacher?.person?.email}`}
+                        >
+                          {subject?.teacher?.person?.email}
+                        </Link>
+                      </div>
+                    </div>
+                    <Spacer x={4} y={4} />
+                  </>
+                )}
+                {subject?.teacher?.person?.mobileNumber && (
+                  <>
+                    <div className="info-row">
+                      <div className="info-row-title">
+                        {subject?.teacher?.person?.mobileNumber2
+                          ? "Cell 1"
+                          : "Cell"}
+                      </div>
+                      <div className="info-row-content">
+                        <Link
+                          href={`tel:${subject?.teacher?.person?.mobileNumber}`}
+                        >
+                          {subject?.teacher?.person?.mobileNumber}
+                        </Link>
+                      </div>
+                    </div>
+                    <Spacer x={4} y={4} />
+                  </>
+                )}
+                {subject?.teacher?.person?.mobileNumber2 && (
+                  <>
+                    <div className="info-row">
+                      <div className="info-row-title">Cell 2:</div>
+                      <div className="info-row-content">
+                        <Link
+                          href={`tel:${subject?.teacher?.person?.mobileNumber2}`}
+                        >
+                          {subject?.teacher?.person?.mobileNumber2}
+                        </Link>
+                      </div>
+                    </div>
+                    <Spacer x={4} y={4} />
+                  </>
+                )}
+                {subject?.teacher?.person?.telNumber && (
+                  <>
+                    <div className="info-row">
+                      <div className="info-row-title">Tel:</div>
+                      <div className="info-row-content">
+                        <Link
+                          href={`tel:${subject?.teacher?.person?.telNumber}`}
+                        >
+                          {subject?.teacher?.person?.telNumber}
+                        </Link>
+                      </div>
+                    </div>
+                    <Spacer x={4} y={4} />
+                  </>
+                )}
+                {subject?.teacher?.person?.whatsapp && (
+                  <>
+                    <div className="info-row">
+                      <div className="info-row-title">WhatsApp:</div>
+                      <div className="info-row-content">
+                        <Link
+                          href={`https://wa.me/${sanitizeForWhatsapp(
+                            subject?.teacher?.person?.whatsapp
+                          )}`}
+                        >
+                          {subject?.teacher?.person?.whatsapp}
+                        </Link>
+                      </div>
+                    </div>
+                    <Spacer x={4} y={4} />
+                  </>
+                )}
+                {subject?.teacher?.person?.linkedin && (
+                  <>
+                    <div className="info-row">
+                      <div className="info-row-title">LinkedIn:</div>
+                      <div className="info-row-content">
+                        <Link href={subject?.teacher?.person?.linkedin}>
+                          {subject?.teacher?.person?.linkedin}
+                        </Link>
+                      </div>
+                    </div>
+                    <Spacer x={4} y={4} />
+                  </>
+                )}
+                {subject?.teacher?.person?.facebook && (
+                  <>
+                    <div className="info-row">
+                      <div className="info-row-title">Facebook:</div>
+                      <div className="info-row-content">
+                        <Link href={subject?.teacher?.person?.facebook}>
+                          {subject?.teacher?.person?.facebook}
+                        </Link>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </CardBody>
+              <Divider />
+              <CardFooter>
+                <div className="info-row">
+                  <div className="info-row-title">Calendar Year:</div>
+                  <div className="info-row-content">
+                    {subject?.calendarYear}
+                  </div>
+                </div>
+              </CardFooter>
+            </Card>
+          ))}
         </AccordionItem>
         <AccordionItem
           key="5"
           aria-label="Dormitory Information"
           title="Dormitory Information"
-          subtitle={accordionSubtitle}
-          startContent={<IconPencilThin className="w-6 h-6 bg-transparent" />}
+          subtitle="Dormitory accommodation details"
+          startContent={<HouseLineIcon weight="thin" size={34} />}
         >
-          <div>Dormitory Information</div>
+          <div className="flex flex-col px-4">
+            <div className="info-row">
+              <div className="info-row-title">Dorm:</div>
+              <div className="info-row-content flex-col">
+                {student?.dorm?.dorm?.name}
+                <div className="font-extralight italic text-sm -mt-1">
+                  {student?.dorm?.dorm?.description}
+                </div>
+              </div>
+            </div>
+            <Spacer x={4} y={4} />
+            <div className="info-row">
+              <div className="info-row-title">Dorm Address:</div>
+              <div className="info-row-content">
+                {student?.dorm?.dorm?.address}
+              </div>
+            </div>
+            <Spacer x={4} y={4} />
+            <div className="info-row">
+              <div className="info-row-title">Linked School:</div>
+              <div className="info-row-content">
+                {student?.dorm?.dorm?.school?.name}
+              </div>
+            </div>
+          </div>
         </AccordionItem>
         <AccordionItem
           key="6"
           aria-label="School Information"
           title="School Information"
-          subtitle={accordionSubtitle}
-          startContent={<IconPencilThin className="w-6 h-6 bg-transparent" />}
+          subtitle="Institutional context of the student"
+          startContent={<ChalkboardSimpleIcon weight="thin" size={34} />}
         >
-          <div>School Information</div>
+          <div className="flex flex-col px-4">
+            <div className="info-row">
+              <div className="info-row-title">School:</div>
+              <div className="info-row-content">{student?.school?.name}</div>
+            </div>
+            <Spacer x={4} y={4} />
+            {student?.school?.email && (
+              <>
+                <div className="info-row">
+                  <div className="info-row-title">E-mail:</div>
+                  <div className="info-row-content">
+                    <Link href={`mailto:${student?.school?.email}`}>
+                      {student?.school?.email}
+                    </Link>
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+              </>
+            )}
+            {student?.school?.website && (
+              <>
+                <div className="info-row">
+                  <div className="info-row-title">Website:</div>
+                  <div className="info-row-content">
+                    <Link href={student?.school?.website}>
+                      {student?.school?.website}
+                    </Link>
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+              </>
+            )}
+            {student?.school?.mobileNumber && (
+              <>
+                <div className="info-row">
+                  <div className="info-row-title">
+                    {student?.school?.mobileNumber2 ? "Cell 1" : "Cell"}
+                  </div>
+                  <div className="info-row-content">
+                    <Link href={`tel:${student?.school?.mobileNumber}`}>
+                      {student?.school?.mobileNumber}
+                    </Link>
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+              </>
+            )}
+            {student?.school?.mobileNumber2 && (
+              <>
+                <div className="info-row">
+                  <div className="info-row-title">Cell 2:</div>
+                  <div className="info-row-content">
+                    <Link href={`tel:${student?.school?.mobileNumber2}`}>
+                      {student?.school?.mobileNumber2}
+                    </Link>
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+              </>
+            )}
+            {student?.school?.telNumber && (
+              <>
+                <div className="info-row">
+                  <div className="info-row-title">Tel:</div>
+                  <div className="info-row-content">
+                    <Link href={`tel:${student?.school?.telNumber}`}>
+                      {student?.school?.telNumber}
+                    </Link>
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+              </>
+            )}
+            {student?.school?.address && (
+              <>
+                <div className="info-row">
+                  <div className="info-row-title">Address:</div>
+                  <div className="info-row-content">
+                    {student?.school?.address}
+                  </div>
+                </div>
+                <Spacer x={4} y={4} />
+              </>
+            )}
+          </div>
         </AccordionItem>
-        <AccordionItem
+        {/* <AccordionItem
           key="7"
           aria-label="System Metadata"
           title="System Metadata"
-          subtitle={accordionSubtitle}
-          startContent={<IconPencilThin className="w-6 h-6 bg-transparent" />}
+          subtitle="Shows system-level data"
+          startContent={<GearIcon weight="thin" size={34} />}
         >
-          <div>System Metadata (Optional/For Admin View)</div>
-        </AccordionItem>
+          <div className="flex flex-col px-4">
+            <div className="info-row">
+              <div className="info-row-title">School:</div>
+              <div className="info-row-content">{student?.school?.name}</div>
+            </div>
+            <Spacer x={4} y={4} />
+          </div>
+        </AccordionItem> */}
       </Accordion>
     </div>
   );

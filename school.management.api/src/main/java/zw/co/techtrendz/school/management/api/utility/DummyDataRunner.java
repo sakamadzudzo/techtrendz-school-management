@@ -380,6 +380,7 @@ public class DummyDataRunner {
             ClassroomYear classroomYear = classroomYears.get(i % classroomYears.size());
             student.setClassroom(classroomYear);
             student.setDorm(new DormYear(1L));
+            student.setSchool(new School(1L));
 
             students.add(student);
         }

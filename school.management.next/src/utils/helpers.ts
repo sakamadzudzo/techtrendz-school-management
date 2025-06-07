@@ -71,3 +71,12 @@ export const getInitials = (name: string) => {
     .toUpperCase()
     .slice(0, 5);
 };
+
+export const sanitizeForWhatsapp = (phone: string) => {
+  if (!phone) {
+    return "";
+  }
+  if (phone.startsWith("0")) {
+    return phone.substring(1);
+  }
+};

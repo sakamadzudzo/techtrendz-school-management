@@ -77,7 +77,7 @@ export type ClassroomYear = {
   id: string;
   classroom: Classroom;
   calendarYear: string;
-  subjects: string;
+  subjects: SubjectYear[];
 };
 
 export type Dorm = {
@@ -140,3 +140,29 @@ export type DormYear = {
   dorm: Dorm;
   calendarYear: string;
 };
+
+export enum Status {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  SUSPENDED = "SUSPENDED",
+  DELETED = "DELETED",
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  BLOCKED = "BLOCKED",
+  UNBLOCKED = "UNBLOCKED",
+  ENABLED = "ENABLED",
+  DISABLED = "DISABLED",
+}
+
+export enum Salutation {
+  MR = "MR",
+  MRS = "MRS",
+  MS = "MS",
+  DR = "DR",
+  PROF = "PROF",
+  ENG = "ENG",
+  REV = "REV",
+  SNR = "SNR",
+  JNR = "JNR",
+}
