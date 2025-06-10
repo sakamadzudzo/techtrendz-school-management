@@ -11,7 +11,6 @@ import Navbar_Staff from "@/components/Navbar-Staff";
 import Navbar_Parent from "@/components/Navbar-Parent";
 import { rehydrate } from "@/store/slices/authSlice";
 
-// This component is rendered inside the Provider
 function AppContent({ Component, pageProps, darkMode, setLoading, saveDarkMode, loading }: any) {
   const { token, user } = useSelector((state: any) => state.auth);
   const dispatch = useDispatch();

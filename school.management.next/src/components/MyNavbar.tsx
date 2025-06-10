@@ -87,7 +87,7 @@ export default function MyNavbar({ menuItems, hasAvatar }: MyNavbarProps) {
 
       {/* Desktop Menu */}
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        {renderDesktopMenu(menuItems, 0)}
+        {renderDesktopMenu(menuItems, 1)}
       </NavbarContent>
       {hasAvatar && (
         <NavbarContent className="hidden sm:flex" justify="end">
@@ -104,7 +104,7 @@ export default function MyNavbar({ menuItems, hasAvatar }: MyNavbarProps) {
             <AvatarDropdown />
           </div>
         )}
-        {renderMobileMenu(menuItems, openDropdown, setOpenDropdown, 0)}
+        {renderMobileMenu(menuItems, openDropdown, setOpenDropdown, 1)}
       </NavbarMenu>
     </Navbar>
   );
@@ -193,7 +193,7 @@ function renderMobileMenu(
         className={`cursor-pointer pl-${depth * 4} ${item.className}`}
       >
         <Button
-          as={Link}
+          // as={Link}
           color={item.color}
           href={item.href}
           onPress={() => setOpenDropdown(null)}

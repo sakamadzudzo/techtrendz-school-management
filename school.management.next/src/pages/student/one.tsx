@@ -1,4 +1,3 @@
-import { IconPencilThin } from "@/components/icons/pencil-thin";
 import MyChip from "@/components/MyChip";
 import { useStudentById } from "@/hooks/useStudents";
 import {
@@ -29,7 +28,7 @@ import {
   BookOpenTextIcon,
   HouseLineIcon,
   ChalkboardSimpleIcon,
-  GearIcon,
+  PencilSimpleLineIcon,
 } from "@phosphor-icons/react";
 
 export default function OneStudentPage() {
@@ -42,9 +41,7 @@ export default function OneStudentPage() {
       <div aria-label="Page buttons" className="w-full flex justify-end gap-4">
         <Button
           color="primary"
-          endContent={
-            <IconPencilThin className="w-6 h-6 bg-transparent fill-white" />
-          }
+          endContent={<PencilSimpleLineIcon weight="thin" size={34} />}
         >
           Edit
         </Button>
@@ -183,7 +180,7 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">E-mail:</div>
                   <div className="info-row-content whitespace-pre-wrap">
-                    <Link href={`mailto:${student?.person?.email}`}>
+                    <Link isExternal href={`mailto:${student?.person?.email}`}>
                       {student?.person?.email}
                     </Link>
                   </div>
@@ -198,7 +195,10 @@ export default function OneStudentPage() {
                     {student?.person?.mobileNumber2 ? "Cell 1" : "Cell"}
                   </div>
                   <div className="info-row-content">
-                    <Link href={`tel:${student?.person?.mobileNumber}`}>
+                    <Link
+                      isExternal
+                      href={`tel:${student?.person?.mobileNumber}`}
+                    >
                       {student?.person?.mobileNumber}
                     </Link>
                   </div>
@@ -211,7 +211,10 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">Cell 2:</div>
                   <div className="info-row-content">
-                    <Link href={`tel:${student?.person?.mobileNumber2}`}>
+                    <Link
+                      isExternal
+                      href={`tel:${student?.person?.mobileNumber2}`}
+                    >
                       {student?.person?.mobileNumber2}
                     </Link>
                   </div>
@@ -224,7 +227,7 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">Tel:</div>
                   <div className="info-row-content">
-                    <Link href={`tel:${student?.person?.telNumber}`}>
+                    <Link isExternal href={`tel:${student?.person?.telNumber}`}>
                       {student?.person?.telNumber}
                     </Link>
                   </div>
@@ -238,9 +241,8 @@ export default function OneStudentPage() {
                   <div className="info-row-title">WhatsApp:</div>
                   <div className="info-row-content">
                     <Link
-                      href={`https://wa.me/${sanitizeForWhatsapp(
-                        student?.person?.whatsapp
-                      )}`}
+                      isExternal
+                      href={sanitizeForWhatsapp(student?.person?.whatsapp)}
                     >
                       {student?.person?.whatsapp}
                     </Link>
@@ -254,7 +256,7 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">LinkedIn:</div>
                   <div className="info-row-content">
-                    <Link href={student?.person?.linkedin}>
+                    <Link isExternal href={student?.person?.linkedin}>
                       {student?.person?.linkedin}
                     </Link>
                   </div>
@@ -267,7 +269,7 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">Facebook:</div>
                   <div className="info-row-content">
-                    <Link href={student?.person?.facebook}>
+                    <Link isExternal href={student?.person?.facebook}>
                       {student?.person?.facebook}
                     </Link>
                   </div>
@@ -388,6 +390,7 @@ export default function OneStudentPage() {
                       <div className="info-row-title">E-mail:</div>
                       <div className="info-row-content whitespace-pre-wrap">
                         <Link
+                          isExternal
                           href={`mailto:${subject?.teacher?.person?.email}`}
                         >
                           {subject?.teacher?.person?.email}
@@ -407,6 +410,7 @@ export default function OneStudentPage() {
                       </div>
                       <div className="info-row-content">
                         <Link
+                          isExternal
                           href={`tel:${subject?.teacher?.person?.mobileNumber}`}
                         >
                           {subject?.teacher?.person?.mobileNumber}
@@ -422,6 +426,7 @@ export default function OneStudentPage() {
                       <div className="info-row-title">Cell 2:</div>
                       <div className="info-row-content">
                         <Link
+                          isExternal
                           href={`tel:${subject?.teacher?.person?.mobileNumber2}`}
                         >
                           {subject?.teacher?.person?.mobileNumber2}
@@ -437,6 +442,7 @@ export default function OneStudentPage() {
                       <div className="info-row-title">Tel:</div>
                       <div className="info-row-content">
                         <Link
+                          isExternal
                           href={`tel:${subject?.teacher?.person?.telNumber}`}
                         >
                           {subject?.teacher?.person?.telNumber}
@@ -452,9 +458,10 @@ export default function OneStudentPage() {
                       <div className="info-row-title">WhatsApp:</div>
                       <div className="info-row-content">
                         <Link
-                          href={`https://wa.me/${sanitizeForWhatsapp(
+                          isExternal
+                          href={sanitizeForWhatsapp(
                             subject?.teacher?.person?.whatsapp
-                          )}`}
+                          )}
                         >
                           {subject?.teacher?.person?.whatsapp}
                         </Link>
@@ -468,7 +475,10 @@ export default function OneStudentPage() {
                     <div className="info-row">
                       <div className="info-row-title">LinkedIn:</div>
                       <div className="info-row-content">
-                        <Link href={subject?.teacher?.person?.linkedin}>
+                        <Link
+                          isExternal
+                          href={subject?.teacher?.person?.linkedin}
+                        >
                           {subject?.teacher?.person?.linkedin}
                         </Link>
                       </div>
@@ -481,7 +491,10 @@ export default function OneStudentPage() {
                     <div className="info-row">
                       <div className="info-row-title">Facebook:</div>
                       <div className="info-row-content">
-                        <Link href={subject?.teacher?.person?.facebook}>
+                        <Link
+                          isExternal
+                          href={subject?.teacher?.person?.facebook}
+                        >
                           {subject?.teacher?.person?.facebook}
                         </Link>
                       </div>
@@ -552,7 +565,7 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">E-mail:</div>
                   <div className="info-row-content">
-                    <Link href={`mailto:${student?.school?.email}`}>
+                    <Link isExternal href={`mailto:${student?.school?.email}`}>
                       {student?.school?.email}
                     </Link>
                   </div>
@@ -565,7 +578,7 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">Website:</div>
                   <div className="info-row-content">
-                    <Link href={student?.school?.website}>
+                    <Link isExternal href={student?.school?.website}>
                       {student?.school?.website}
                     </Link>
                   </div>
@@ -580,7 +593,10 @@ export default function OneStudentPage() {
                     {student?.school?.mobileNumber2 ? "Cell 1" : "Cell"}
                   </div>
                   <div className="info-row-content">
-                    <Link href={`tel:${student?.school?.mobileNumber}`}>
+                    <Link
+                      isExternal
+                      href={`tel:${student?.school?.mobileNumber}`}
+                    >
                       {student?.school?.mobileNumber}
                     </Link>
                   </div>
@@ -593,7 +609,10 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">Cell 2:</div>
                   <div className="info-row-content">
-                    <Link href={`tel:${student?.school?.mobileNumber2}`}>
+                    <Link
+                      isExternal
+                      href={`tel:${student?.school?.mobileNumber2}`}
+                    >
                       {student?.school?.mobileNumber2}
                     </Link>
                   </div>
@@ -606,7 +625,7 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">Tel:</div>
                   <div className="info-row-content">
-                    <Link href={`tel:${student?.school?.telNumber}`}>
+                    <Link isExternal href={`tel:${student?.school?.telNumber}`}>
                       {student?.school?.telNumber}
                     </Link>
                   </div>

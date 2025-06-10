@@ -77,6 +77,7 @@ export const sanitizeForWhatsapp = (phone: string) => {
     return "";
   }
   if (phone.startsWith("0")) {
-    return phone.substring(1);
+    // return "https://api.whatsapp.com/send?phone=" + phone.substring(1);
+    return "https://api.whatsapp.com/send?phone=772397475";
   }
 };

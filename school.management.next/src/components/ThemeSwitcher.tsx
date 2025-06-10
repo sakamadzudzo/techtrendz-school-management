@@ -1,5 +1,4 @@
-import { IconSunThin } from "./../components/icons/sun-thin";
-import { IconMoonThin } from "./../components/icons/moon-thin";
+import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 
 export function ThemeSwitcher({
   saveDarkMode,
@@ -10,13 +9,13 @@ export function ThemeSwitcher({
 }) {
   return (
     <div
-      className="absolute right-3 bottom-3 bg-gradient-to-b from-background to-background/50 dark:from-background dark:to-background/50 z-50 border rounded-md overflow-hidden p-1"
+      className="absolute right-3 bottom-3 z-50 border border-foreground cursor-pointer rounded-xl overflow-hidden p-1"
       onClick={() => saveDarkMode(!darkMode)}
     >
       {darkMode ? (
-        <IconMoonThin className="w-6 h-6" />
+        <MoonIcon weight="thin" size={30} />
       ) : (
-        <IconSunThin className="w-6 h-6" />
+        <SunIcon weight="thin" size={30} />
       )}
     </div>
   );
