@@ -1,8 +1,8 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError } from "../utils/classes";
+import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
-import { Student } from "@/utils/types";
+import { Student, StudentView } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -45,7 +45,7 @@ export function useStudentsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    students: data as Page<StudentView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -81,7 +81,7 @@ export function useStudentsAllByFilter({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    students: data as Page<StudentView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -98,7 +98,7 @@ export function useStudentById(studentId: string | undefined) {
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    student: data as Student,
+    student: data as StudentView,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -130,7 +130,7 @@ export function useStudentsByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    students: data,
+    students: data as Page<StudentView>,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

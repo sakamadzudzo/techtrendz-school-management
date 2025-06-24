@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.entity.Student;
 import zw.co.techtrendz.school.management.api.service.StudentService;
+import zw.co.techtrendz.school.management.api.view.StudentDto;
 
 import java.util.List;
 
@@ -53,5 +54,25 @@ public class StudentController {
     @GetMapping("/get/all/by/filter")
     public Page<Student> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.studentService.getAllByFilter(page, size, sortBy, sortDir, filter);
+    }
+
+    @GetMapping("/view/get/one")
+    public StudentDto getStudentView(@RequestParam Long id) {
+        return this.studentService.getViewById(id);
+    }
+
+    @GetMapping("/view/get/all")
+    public Page<StudentDto> getAllStudentViews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.studentService.getViewAll(page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/view/get/all/by/example")
+    public Page<StudentDto> getAllStudentViewsByExample(@RequestBody @Valid Student student, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.studentService.getViewAllByExample(student, page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/view/get/all/by/filter")
+    public Page<StudentDto> getAllStudentViewsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
+        return this.studentService.getViewAllByFilter(page, size, sortBy, sortDir, filter);
     }
 }

@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.service.impl;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -8,13 +9,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.Student;
-import zw.co.techtrendz.school.management.api.entity.User;
+import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
 import zw.co.techtrendz.school.management.api.repository.StudentRepository;
 import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.service.StudentService;
+import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
+import zw.co.techtrendz.school.management.api.view.*;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -23,6 +28,8 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
     @Autowired
     private PersonService personService;
+    @Autowired
+    private StudentQueryService studentQueryService;
 
     @Override
     public Student save(Student student) {
@@ -101,5 +108,80 @@ public class StudentServiceImpl implements StudentService {
 
             return this.studentRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
+    }
+
+    @Override
+    public StudentDto getViewById(Long id) {
+        StudentDto studentDto = this.studentQueryService.getStudentDetails(id);
+        StudentClassDto classroom = studentDto.getClassroom();
+        classroom
+                .setSubjects(
+                        this.studentQueryService
+                                .getSubjectYears(
+                                        Collections.singletonList(classroom.getId())
+                                )
+                );
+        studentDto.setClassroom(classroom);
+        return studentDto;
+    }
+
+    @Override
+    public Page<StudentDto> getViewAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        Page<StudentDto> studentDtoPage = this.studentQueryService.getAllStudentDetails(page, size, sortBy, sortDir);
+        return this.getClassroomSubjects(studentDtoPage);
+    }
+
+    @Override
+    public Page<StudentDto> getViewAllByExample(Student student, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (student == null) {
+            return this.getViewAll(page, size, sortBy, sortDir);
+        } else {
+            Example<Student> example = Example.of(student);
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("person.lastName");
+            }
+
+            Page<StudentDto> studentDtoPage = this.studentQueryService.getAllStudentDetailsByExample(page, size, sortBy, sortDir, example);
+            return this.getClassroomSubjects(studentDtoPage);
+        }
+    }
+
+    @Override
+    public Page<StudentDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter) {
+        if (filter == null || filter.isBlank()) {
+            return this.getViewAll(page, size, sortBy, sortDir);
+        } else {
+            BooleanExpression predicate = null;
+            for (var field : Student.class.getDeclaredFields()) {
+                field.setAccessible(true); // Ensure private fields are accessible
+                if (field.getType().equals(String.class)) {
+                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(Student.class, field.getName(), filter), false);
+                }
+            }
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("person.lastName");
+            }
+
+            Page<StudentDto> studentDtoPage = this.studentQueryService.getAllStudentDetailsByPredicate(page, size, sortBy, sortDir, predicate);
+            return this.getClassroomSubjects(studentDtoPage);
+        }
+    }
+
+    private Page<StudentDto> getClassroomSubjects(Page<StudentDto> studentDtoPage) {
+        List<Long> classroomIds = studentDtoPage.getContent().stream().map(student -> student.getClassroom().getId()).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        List<SubjectYearDto> subjectYearDtoList = this.studentQueryService.getSubjectYears(classroomIds);
+        return studentDtoPage.map(student -> {
+            StudentClassDto classroom = student.getClassroom();
+            classroom.setSubjects(subjectYearDtoList
+                    .stream()
+                    .filter(subject -> subject
+                            .getClassroomId()
+                            .equals(classroom.getId()))
+                    .collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
+            student.setClassroom(classroom);
+            return student;
+        });
     }
 }

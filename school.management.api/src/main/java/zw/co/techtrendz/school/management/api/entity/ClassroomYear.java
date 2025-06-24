@@ -27,6 +27,9 @@ public class ClassroomYear extends Base {
     @ManyToMany
     private List<SubjectYear> subjects;
 
+    @ManyToOne
+    private Teacher homeroomTeacher;
+
     public ClassroomYear(long id) {
         this.id = id;
     }

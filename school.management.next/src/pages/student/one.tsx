@@ -30,6 +30,7 @@ import {
   ChalkboardSimpleIcon,
   PencilSimpleLineIcon,
 } from "@phosphor-icons/react";
+import SubjectViewCard from "@/components/SubjectViewCard";
 
 export default function OneStudentPage() {
   const searchParams = useSearchParams();
@@ -56,29 +57,31 @@ export default function OneStudentPage() {
         >
           <div className="w-full px-4 flex flex-col md:flex-row">
             <div className="w-full md:w-1/4 aspect-square flex justify-center items-center">
-              {!!student?.person?.avatarUrl ? (
-                <Image
-                  // src={student?.person?.avatarUrl}
-                  src="C:\Users\sakamadzudzo\Desktop\Pro_Pic_3.jpg"
-                  alt="Profile picture"
-                  shadow="md"
-                  className="w-full h-full"
-                />
-              ) : (
-                <Avatar
-                  src={student?.person?.avatarUrl}
-                  color="primary"
-                  className="cursor-pointer w-full h-full"
-                >
-                  {!student?.person?.avatarUrl &&
-                    getInitials(student?.person?.name || "User")}
-                </Avatar>
-              )}
+              <div className="w-full aspect-square">
+                {!!student?.avatarUrl ? (
+                  <Image
+                    // src={student?.avatarUrl}
+                    src="C:\Users\sakamadzudzo\Desktop\Pro_Pic_3.jpg"
+                    alt="Profile picture"
+                    shadow="md"
+                    className="w-full h-full"
+                  />
+                ) : (
+                  <Avatar
+                    src={student?.avatarUrl}
+                    color="primary"
+                    className="cursor-pointer w-full h-full"
+                  >
+                    {!student?.avatarUrl &&
+                      getInitials(student?.name || "User")}
+                  </Avatar>
+                )}
+              </div>
             </div>
             <div className="w-3/4 flex flex-col px-4">
               <div className="info-row">
                 <div className="info-row-title">Name:</div>
-                <div className="info-row-content">{student?.person?.name}</div>
+                <div className="info-row-content">{student?.name}</div>
               </div>
               <Spacer x={4} y={4} />
               <div className="info-row">
@@ -91,14 +94,14 @@ export default function OneStudentPage() {
               <div className="info-row">
                 <div className="info-row-title">Current Class:</div>
                 <div className="info-row-content">
-                  {`${student?.classroom?.classroom?.name} - ${student?.classroom?.calendarYear}`}
+                  {`${student?.classroom?.name} - ${student?.classroom?.calendarYear}`}
                 </div>
               </div>
               <Spacer x={4} y={4} />
               <div className="info-row">
                 <div className="info-row-title">Current Dorm:</div>
                 <div className="info-row-content">
-                  {`${student?.dorm?.dorm?.name} - ${student?.dorm?.calendarYear}`}
+                  {`${student?.dorm?.name} - ${student?.dorm?.calendarYear}`}
                 </div>
               </div>
               <Spacer x={4} y={4} />
@@ -143,134 +146,134 @@ export default function OneStudentPage() {
             <div className="info-row">
               <div className="info-row-title">Salutation:</div>
               <div className="info-row-content">
-                {student?.person?.salutation}
+                {student?.salutation}
               </div>
             </div>
             <Spacer x={4} y={4} />
             <div className="info-row">
               <div className="info-row-title">First Name:</div>
               <div className="info-row-content">
-                {student?.person?.firstName}
+                {student?.firstName}
               </div>
             </div>
             <Spacer x={4} y={4} />
             <div className="info-row">
               <div className="info-row-title">Other Names:</div>
               <div className="info-row-content">
-                {student?.person?.otherNames}
+                {student?.otherNames}
               </div>
             </div>
             <Spacer x={4} y={4} />
             <div className="info-row">
               <div className="info-row-title">Last Name:</div>
               <div className="info-row-content">
-                {student?.person?.lastName}
+                {student?.lastName}
               </div>
             </div>
             <Spacer x={4} y={4} />
             <div className="info-row">
               <div className="info-row-title">D.O.B:</div>
               <div className="info-row-content">
-                {formatDate(student?.person?.dateOfBirth)}
+                {formatDate(student?.dateOfBirth)}
               </div>
             </div>
-            <Spacer x={4} y={4} />
-            {student?.person?.email && (
+            {student?.email && (
               <>
+                <Spacer x={4} y={4} />
                 <div className="info-row">
                   <div className="info-row-title">E-mail:</div>
                   <div className="info-row-content whitespace-pre-wrap">
-                    <Link isExternal href={`mailto:${student?.person?.email}`}>
-                      {student?.person?.email}
+                    <Link isExternal href={`mailto:${student?.email}`}>
+                      {student?.email}
                     </Link>
                   </div>
                 </div>
-                <Spacer x={4} y={4} />
               </>
             )}
-            {student?.person?.mobileNumber && (
+            {student?.mobileNumber && (
               <>
+                <Spacer x={4} y={4} />
                 <div className="info-row">
                   <div className="info-row-title">
-                    {student?.person?.mobileNumber2 ? "Cell 1" : "Cell"}
+                    {student?.mobileNumber2 ? "Cell 1" : "Cell"}
                   </div>
                   <div className="info-row-content">
                     <Link
                       isExternal
-                      href={`tel:${student?.person?.mobileNumber}`}
+                      href={`tel:${student?.mobileNumber}`}
                     >
-                      {student?.person?.mobileNumber}
+                      {student?.mobileNumber}
                     </Link>
                   </div>
                 </div>
-                <Spacer x={4} y={4} />
               </>
             )}
-            {student?.person?.mobileNumber2 && (
+            {student?.mobileNumber2 && (
               <>
+                <Spacer x={4} y={4} />
                 <div className="info-row">
                   <div className="info-row-title">Cell 2:</div>
                   <div className="info-row-content">
                     <Link
                       isExternal
-                      href={`tel:${student?.person?.mobileNumber2}`}
+                      href={`tel:${student?.mobileNumber2}`}
                     >
-                      {student?.person?.mobileNumber2}
+                      {student?.mobileNumber2}
                     </Link>
                   </div>
                 </div>
-                <Spacer x={4} y={4} />
               </>
             )}
-            {student?.person?.telNumber && (
+            {student?.telNumber && (
               <>
+                <Spacer x={4} y={4} />
                 <div className="info-row">
                   <div className="info-row-title">Tel:</div>
                   <div className="info-row-content">
-                    <Link isExternal href={`tel:${student?.person?.telNumber}`}>
-                      {student?.person?.telNumber}
+                    <Link isExternal href={`tel:${student?.telNumber}`}>
+                      {student?.telNumber}
                     </Link>
                   </div>
                 </div>
-                <Spacer x={4} y={4} />
               </>
             )}
-            {student?.person?.whatsapp && (
+            {student?.whatsapp && (
               <>
+                <Spacer x={4} y={4} />
                 <div className="info-row">
                   <div className="info-row-title">WhatsApp:</div>
                   <div className="info-row-content">
                     <Link
                       isExternal
-                      href={sanitizeForWhatsapp(student?.person?.whatsapp)}
+                      href={sanitizeForWhatsapp(student?.whatsapp)}
                     >
-                      {student?.person?.whatsapp}
+                      {student?.whatsapp}
                     </Link>
                   </div>
                 </div>
-                <Spacer x={4} y={4} />
               </>
             )}
-            {student?.person?.linkedin && (
+            {student?.linkedin && (
               <>
+                <Spacer x={4} y={4} />
                 <div className="info-row">
                   <div className="info-row-title">LinkedIn:</div>
                   <div className="info-row-content">
-                    <Link isExternal href={student?.person?.linkedin}>
-                      {student?.person?.linkedin}
+                    <Link isExternal href={student?.linkedin}>
+                      {student?.linkedin}
                     </Link>
                   </div>
                 </div>
-                <Spacer x={4} y={4} />
               </>
             )}
-            {student?.person?.facebook && (
+            {student?.facebook && (
               <>
+                <Spacer x={4} y={4} />
                 <div className="info-row">
                   <div className="info-row-title">Facebook:</div>
                   <div className="info-row-content">
-                    <Link isExternal href={student?.person?.facebook}>
-                      {student?.person?.facebook}
+                    <Link isExternal href={student?.facebook}>
+                      {student?.facebook}
                     </Link>
                   </div>
                 </div>
@@ -298,12 +301,12 @@ export default function OneStudentPage() {
               <div className="info-row-content pl-8 flex-col">
                 <div className="flex">
                   <div className="w-48 font-normal">Name:</div>
-                  <div>{student?.classroom?.classroom?.name}</div>
+                  <div>{student?.classroom?.name}</div>
                 </div>
                 <Spacer x={4} y={4} />
                 <div className="flex">
                   <div className="w-48 font-normal">Description:</div>
-                  <div>{student?.classroom?.classroom?.description}</div>
+                  <div>{student?.classroom?.description}</div>
                 </div>
                 <Spacer x={4} y={4} />
                 <div className="flex">
@@ -322,196 +325,7 @@ export default function OneStudentPage() {
           startContent={<BookOpenTextIcon weight="thin" size={34} />}
         >
           {student?.classroom?.subjects.map((subject) => (
-            <Card className="px-4 m-4">
-              <CardHeader>
-                <div className="-space-y-2">
-                  <div className="font-semibold">{subject?.subject?.name}:</div>
-                  <div className="font-light text-sm italic w-full">
-                    {subject?.subject?.description}
-                  </div>
-                </div>
-              </CardHeader>
-              <Divider />
-              <CardBody>
-                <div className="info-row">
-                  <div className="info-row-title">Code:</div>
-                  <div className="info-row-content">
-                    {subject?.subject?.code}
-                  </div>
-                </div>
-                <Spacer x={4} y={4} />
-                <div className="info-row">
-                  <div className="info-row-title">Curriculum:</div>
-                  <div className="info-row-content">
-                    {subject?.subject?.curriculum}
-                  </div>
-                </div>
-                <Spacer x={4} y={4} />
-                <div className="info-row">
-                  <div className="info-row-title">Syllabus:</div>
-                  <div className="info-row-content">
-                    {subject?.subject?.syllabus}
-                  </div>
-                </div>
-                <Spacer x={4} y={4} />
-                <div className="info-row">
-                  <div className="info-row-title">Level:</div>
-                  <div className="info-row-content">
-                    {subject?.subject?.level}
-                  </div>
-                </div>
-                <Spacer x={4} y={4} />
-                <div className="info-row">
-                  <div className="info-row-title">Category:</div>
-                  <div className="info-row-content">
-                    {subject?.subject?.category}
-                  </div>
-                </div>
-                <Spacer x={4} y={4} />
-                <div className="info-row">
-                  <div className="info-row-title">Type:</div>
-                  <div className="info-row-content">
-                    {capitalize(subject?.subject?.type)}
-                  </div>
-                </div>
-              </CardBody>
-              <Divider />
-              <CardBody>
-                <div className="info-row">
-                  <div className="info-row-title">Teacher:</div>
-                  <div className="info-row-content">
-                    {subject?.teacher?.person?.fullname}
-                  </div>
-                </div>
-                <Spacer x={4} y={4} />
-                {subject?.teacher?.person?.email && (
-                  <>
-                    <div className="info-row">
-                      <div className="info-row-title">E-mail:</div>
-                      <div className="info-row-content whitespace-pre-wrap">
-                        <Link
-                          isExternal
-                          href={`mailto:${subject?.teacher?.person?.email}`}
-                        >
-                          {subject?.teacher?.person?.email}
-                        </Link>
-                      </div>
-                    </div>
-                    <Spacer x={4} y={4} />
-                  </>
-                )}
-                {subject?.teacher?.person?.mobileNumber && (
-                  <>
-                    <div className="info-row">
-                      <div className="info-row-title">
-                        {subject?.teacher?.person?.mobileNumber2
-                          ? "Cell 1"
-                          : "Cell"}
-                      </div>
-                      <div className="info-row-content">
-                        <Link
-                          isExternal
-                          href={`tel:${subject?.teacher?.person?.mobileNumber}`}
-                        >
-                          {subject?.teacher?.person?.mobileNumber}
-                        </Link>
-                      </div>
-                    </div>
-                    <Spacer x={4} y={4} />
-                  </>
-                )}
-                {subject?.teacher?.person?.mobileNumber2 && (
-                  <>
-                    <div className="info-row">
-                      <div className="info-row-title">Cell 2:</div>
-                      <div className="info-row-content">
-                        <Link
-                          isExternal
-                          href={`tel:${subject?.teacher?.person?.mobileNumber2}`}
-                        >
-                          {subject?.teacher?.person?.mobileNumber2}
-                        </Link>
-                      </div>
-                    </div>
-                    <Spacer x={4} y={4} />
-                  </>
-                )}
-                {subject?.teacher?.person?.telNumber && (
-                  <>
-                    <div className="info-row">
-                      <div className="info-row-title">Tel:</div>
-                      <div className="info-row-content">
-                        <Link
-                          isExternal
-                          href={`tel:${subject?.teacher?.person?.telNumber}`}
-                        >
-                          {subject?.teacher?.person?.telNumber}
-                        </Link>
-                      </div>
-                    </div>
-                    <Spacer x={4} y={4} />
-                  </>
-                )}
-                {subject?.teacher?.person?.whatsapp && (
-                  <>
-                    <div className="info-row">
-                      <div className="info-row-title">WhatsApp:</div>
-                      <div className="info-row-content">
-                        <Link
-                          isExternal
-                          href={sanitizeForWhatsapp(
-                            subject?.teacher?.person?.whatsapp
-                          )}
-                        >
-                          {subject?.teacher?.person?.whatsapp}
-                        </Link>
-                      </div>
-                    </div>
-                    <Spacer x={4} y={4} />
-                  </>
-                )}
-                {subject?.teacher?.person?.linkedin && (
-                  <>
-                    <div className="info-row">
-                      <div className="info-row-title">LinkedIn:</div>
-                      <div className="info-row-content">
-                        <Link
-                          isExternal
-                          href={subject?.teacher?.person?.linkedin}
-                        >
-                          {subject?.teacher?.person?.linkedin}
-                        </Link>
-                      </div>
-                    </div>
-                    <Spacer x={4} y={4} />
-                  </>
-                )}
-                {subject?.teacher?.person?.facebook && (
-                  <>
-                    <div className="info-row">
-                      <div className="info-row-title">Facebook:</div>
-                      <div className="info-row-content">
-                        <Link
-                          isExternal
-                          href={subject?.teacher?.person?.facebook}
-                        >
-                          {subject?.teacher?.person?.facebook}
-                        </Link>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </CardBody>
-              <Divider />
-              <CardFooter>
-                <div className="info-row">
-                  <div className="info-row-title">Calendar Year:</div>
-                  <div className="info-row-content">
-                    {subject?.calendarYear}
-                  </div>
-                </div>
-              </CardFooter>
-            </Card>
+            <SubjectViewCard subject={subject} />
           ))}
         </AccordionItem>
         <AccordionItem
@@ -525,9 +339,9 @@ export default function OneStudentPage() {
             <div className="info-row">
               <div className="info-row-title">Dorm:</div>
               <div className="info-row-content flex-col">
-                {student?.dorm?.dorm?.name}
+                {student?.dorm?.name}
                 <div className="font-extralight italic text-sm -mt-1">
-                  {student?.dorm?.dorm?.description}
+                  {student?.dorm?.description}
                 </div>
               </div>
             </div>
@@ -535,14 +349,14 @@ export default function OneStudentPage() {
             <div className="info-row">
               <div className="info-row-title">Dorm Address:</div>
               <div className="info-row-content">
-                {student?.dorm?.dorm?.address}
+                {student?.dorm?.address}
               </div>
             </div>
             <Spacer x={4} y={4} />
             <div className="info-row">
               <div className="info-row-title">Linked School:</div>
               <div className="info-row-content">
-                {student?.dorm?.dorm?.school?.name}
+                {student?.dorm?.linkedSchool}
               </div>
             </div>
           </div>

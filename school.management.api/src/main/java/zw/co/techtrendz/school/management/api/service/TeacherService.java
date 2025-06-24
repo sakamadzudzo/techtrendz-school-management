@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.Teacher;
+import zw.co.techtrendz.school.management.api.view.TeacherDto;
 
 import java.util.List;
 
@@ -21,4 +22,12 @@ public interface TeacherService {
     public Page<Teacher> getAllByExample(Teacher teacher, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<Teacher> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
+
+    public TeacherDto getViewById(Long id);
+
+    public Page<TeacherDto> getViewAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<TeacherDto> getViewAllByExample(Teacher teacher, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<TeacherDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 }

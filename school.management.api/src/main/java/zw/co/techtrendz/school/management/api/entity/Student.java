@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.entity;
 
+import com.querydsl.core.annotations.QueryInit;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -27,12 +28,15 @@ public class Student extends Base{
     private Integer endYear;
 
     @ManyToOne
+    @QueryInit("*.*")
     private ClassroomYear classroom;
 
 //    @ManyToMany
 //    private List<SubjectYear> subjects;
 
     @ManyToOne
+    @QueryInit("*.*")
+//    @QueryInit("dorm.dorm.school")
     private DormYear dorm;
 
     @ManyToOne

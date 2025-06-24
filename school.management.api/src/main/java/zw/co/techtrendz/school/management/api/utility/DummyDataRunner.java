@@ -17,8 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Component
 public class DummyDataRunner {
@@ -61,7 +63,7 @@ public class DummyDataRunner {
 
     private void dummyDataInsertion() {
         this.dummyPersons();
-        this.dummTeachers();
+        this.dummyTeachers();
         this.dummySubject();
         this.dummySubjectYear();
         this.dummyClassroom();
@@ -119,7 +121,7 @@ public class DummyDataRunner {
         this.personService.saveAll(persons);
     }
 
-    private void dummTeachers() {
+    private void dummyTeachers() {
         Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy teachers...");
         Teacher t1 = new Teacher();
 //        t1.setId(1L);
@@ -166,6 +168,11 @@ public class DummyDataRunner {
             person.setDateOfBirth(LocalDate.of(1980 + random.nextInt(15), 1 + random.nextInt(12), 1 + random.nextInt(28)));
             person.setEmail(person.getFirstName().toLowerCase() + "." + person.getLastName().toLowerCase() + "@schoolmail.ac.zw");
             person.setMobileNumber("07" + (10000000 + random.nextInt(9000000)));
+            person.setFacebook("https://www.facebook.com/" + person.getFirstName().toLowerCase() + person.getLastName().toLowerCase());
+            person.setLinkedin("https://www.linkedin.com/in/" + person.getFirstName().toLowerCase() + "-" + person.getLastName().toLowerCase());
+            if(person.getMobileNumber() != null) {
+                person.setWhatsapp(person.getMobileNumber());
+            }
 
             Teacher teacher = new Teacher();
             teacher.setPerson(person);
@@ -224,16 +231,15 @@ public class DummyDataRunner {
     private void dummySubjectYear() {
         Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy subject years...");
         List<Subject> subjects = this.subjectService.getAll(0, 100, Arrays.asList("name"), Sort.Direction.DESC).getContent();
+        List<Teacher> teachers = this.teacherService.getAll(0, 100, Arrays.asList("person.lastName"), Sort.Direction.DESC).getContent();
         List<SubjectYear> subjectYears = new ArrayList<>();
-
-        Teacher defaultTeacher = new Teacher(1L); // You can customize this logic later
 
         for (Subject subject : subjects) {
             for (int year = 2023; year <= 2025; year++) {
                 SubjectYear sy = new SubjectYear();
                 sy.setSubject(subject);
                 sy.setCalendarYear(year);
-                sy.setTeacher(defaultTeacher); // Replace with actual logic later
+                sy.setTeacher(teachers.get(this.getRandomNumber(0, teachers.size() - 1)));
                 if (subject.getCode().equals("BES101") && year == 2023) {
                     sy.setStatus(Status.DISABLED);
                 }
@@ -288,16 +294,33 @@ public class DummyDataRunner {
     private void dummyClassroomYear() {
         Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy classroom years...");
         List<Classroom> classrooms = this.classroomService.getAll(0, 100, Arrays.asList("name"), Sort.Direction.DESC).getContent();
+        List<SubjectYear> subjectYears = this.subjectYearService.getAll(0, 100, Arrays.asList("subject.name"), Sort.Direction.DESC).getContent();
+        List<Teacher> teachers = this.teacherService.getAll(0, 100, Arrays.asList("person.lastName"), Sort.Direction.DESC).getContent();
         List<ClassroomYear> classroomYears = new ArrayList<>();
-
-        List<SubjectYear> defaultSubjects = Arrays.asList(new SubjectYear(1L)); // Replace or expand as needed
 
         for (Classroom classroom : classrooms) {
             for (int year = 2023; year <= 2025; year++) {
+                final Integer calendarYear = year;
                 ClassroomYear cy = new ClassroomYear();
                 cy.setClassroom(classroom);
                 cy.setCalendarYear(year);
-                cy.setSubjects(defaultSubjects);
+                cy.setSubjects(
+                        subjectYears
+                                .stream()
+                                .filter(
+                                        subjectYear ->
+                                                subjectYear
+                                                        .getCalendarYear()
+                                                        .equals(calendarYear)
+                                )
+                                .collect(
+                                        Collectors
+                                                .toCollection(
+                                                        CopyOnWriteArrayList::new
+                                                )
+                                )
+                );
+                cy.setHomeroomTeacher(teachers.get(this.getRandomNumber(0, teachers.size() - 1)));
                 classroomYears.add(cy);
             }
         }

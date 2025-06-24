@@ -1,5 +1,7 @@
 package zw.co.techtrendz.school.management.api.service.impl;
 
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -8,12 +10,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.Teacher;
+import zw.co.techtrendz.school.management.api.querydsl.TeacherQueryService;
 import zw.co.techtrendz.school.management.api.repository.TeacherRepository;
 import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.service.TeacherService;
+import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
+import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
+import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
+import zw.co.techtrendz.school.management.api.view.TeacherDto;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -22,6 +31,8 @@ public class TeacherServiceImpl implements TeacherService {
     private TeacherRepository teacherRepository;
     @Autowired
     private PersonService personService;
+    @Autowired
+    private TeacherQueryService teacherQueryService;
 
     @Override
     public Teacher save(Teacher teacher) {
@@ -44,7 +55,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Page<Teacher> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (sortBy.isEmpty()) {
-            sortBy.add("name");
+            sortBy.add("person.lastName");
         }
         String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
         return this.teacherRepository.findAll(PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
@@ -58,7 +69,7 @@ public class TeacherServiceImpl implements TeacherService {
             Example<Teacher> example = Example.of(teacher);
 
             if (sortBy.isEmpty()) {
-                sortBy.add("name");
+                sortBy.add("person.lastName");
             }
             String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
 
@@ -80,11 +91,87 @@ public class TeacherServiceImpl implements TeacherService {
             }
 
             if (sortBy.isEmpty()) {
-                sortBy.add("name");
+                sortBy.add("person.lastName");
             }
             String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
 
             return this.teacherRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
         }
+    }
+
+    @Override
+    public TeacherDto getViewById(Long id) {
+        TeacherDto teacherDto = this.teacherQueryService.getTeacherDetails(id);
+        if (teacherDto != null) {
+            teacherDto.setClassrooms(this.teacherQueryService.getClassroomYears(id));
+            teacherDto.setSubjects(this.teacherQueryService.getSubjectYears(id));
+        }
+        return teacherDto;
+    }
+
+    @Override
+    public Page<TeacherDto> getViewAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        Page<TeacherDto> teacherDtoPage = this.teacherQueryService.getAllTeacherDetails(page, size, sortBy, sortDir);
+        return getTeacherClassesAndSubjects(teacherDtoPage);
+    }
+
+    @Override
+    public Page<TeacherDto> getViewAllByExample(Teacher teacher, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (teacher == null) {
+            return this.getViewAll(page, size, sortBy, sortDir);
+        } else {
+            Example<Teacher> example = Example.of(teacher);
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("person.lastName");
+            }
+
+            Page<TeacherDto> teacherDtoPage = this.teacherQueryService.getAllTeacherDetailsByExample(page, size, sortBy, sortDir, example);
+            return getTeacherClassesAndSubjects(teacherDtoPage);
+        }
+    }
+
+    @Override
+    public Page<TeacherDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter) {
+        if (filter == null || filter.isBlank()) {
+            return this.getViewAll(page, size, sortBy, sortDir);
+        } else {
+            BooleanExpression predicate = null;
+            for (var field : Teacher.class.getDeclaredFields()) {
+                field.setAccessible(true); // Ensure private fields are accessible
+                if (field.getType().equals(String.class)) {
+                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(Teacher.class, field.getName(), filter), false);
+                }
+            }
+
+            if (sortBy.isEmpty()) {
+                sortBy.add("person.lastName");
+            }
+
+            Page<TeacherDto> teacherDtoPage = this.teacherQueryService.getAllTeacherDetailsByPredicate(page, size, sortBy, sortDir, predicate);
+            return getTeacherClassesAndSubjects(teacherDtoPage);
+        }
+    }
+
+    private Page<TeacherDto> getTeacherClassesAndSubjects(Page<TeacherDto> teacherDtoPage) {
+        List<Long> teacherIds = teacherDtoPage.getContent().stream().map(TeacherDto::getId).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        List<ClassroomYearDto> classroomYearDtoList = this.teacherQueryService.getClassroomYears(teacherIds);
+        List<SubjectYearDto> subjectYearDtoList = this.teacherQueryService.getSubjectYears(teacherIds);
+        return teacherDtoPage.map(teacher -> {
+            teacher.setClassrooms(
+                    classroomYearDtoList
+                            .stream()
+                            .filter(classroom -> classroom
+                                    .getHomeroomTeacher()
+                                    .equals(teacher.getId()))
+                            .collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
+            teacher.setSubjects(subjectYearDtoList
+                    .stream()
+                    .filter(subject -> subject
+                            .getTeacherId()
+                            .equals(teacher.getId()))
+                    .collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
+            return teacher;
+        });
     }
 }

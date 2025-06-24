@@ -34,14 +34,14 @@ export type User = {
 };
 
 export type Teacher = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
   person: Person;
 };
 
 export type Subject = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
   name: string;
@@ -55,16 +55,16 @@ export type Subject = {
 };
 
 export type SubjectYear = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
   subject: Subject;
-  calendarYear: string;
+  calendarYear: number;
   teacher: Teacher;
 };
 
 export type Classroom = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
   name: string;
@@ -72,16 +72,16 @@ export type Classroom = {
 };
 
 export type ClassroomYear = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
   classroom: Classroom;
-  calendarYear: string;
+  calendarYear: number;
   subjects: SubjectYear[];
 };
 
 export type Dorm = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
   name: string;
@@ -91,7 +91,7 @@ export type Dorm = {
 };
 
 export type School = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
   name: string;
@@ -104,7 +104,7 @@ export type School = {
 };
 
 export type Student = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
   person: Person;
@@ -116,7 +116,7 @@ export type Student = {
 };
 
 export type ExtraCurricular = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
   name: string;
@@ -124,21 +124,121 @@ export type ExtraCurricular = {
 };
 
 export type ExtraCurricularYear = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
-  calendarYear: string;
+  calendarYear: number;
   extraCurricular: ExtraCurricular;
   facilitators: string;
   students: string;
 };
 
 export type DormYear = {
-  datestamp: string;
+  datestamp: Date | string;
   status: string;
   id: string;
   dorm: Dorm;
+  calendarYear: number;
+};
+
+export type TeacherView = {
+  id: number;
+  salutation: string;
+  firstName: string;
+  otherNames: string;
+  lastName: string;
+  dateOfBirth: Date | string;
+  email: string;
+  mobileNumber: string;
+  mobileNumber2: string;
+  telNumber: string;
+  whatsapp: string;
+  facebook: string;
+  linkedin: string;
+  status: string;
+  datestamp: Date | string;
+  classrooms: ClassroomView[];
+  subjects: SubjectView[];
+  name: string;
+  fullname: string;
+  avatarUrl: string;
+  imagesUrls: string[];
+};
+
+export type ClassroomView = {
+  calendarYear: number;
+  name: string;
+  description: string;
+  homeroomTeacher: number;
+};
+
+export type SubjectView = {
+  calendarYear: number;
+  name: string;
+  description: string;
+  code: string;
+  type: string;
+  teacherId: number;
+  syllabus: string;
+  curriculum: string;
+  category: string;
+  level: number;
+  teacher: TeacherView;
+};
+
+export type StudentClassView = {
+  id: string;
+  name: string;
+  description: string;
   calendarYear: string;
+  subjects: SubjectView[];
+};
+
+export type StudentView = {
+  id: number;
+  salutation: string;
+  firstName: string;
+  otherNames: string;
+  lastName: string;
+  dateOfBirth: string;
+  email: string;
+  mobileNumber: string;
+  mobileNumber2: string;
+  telNumber: string;
+  whatsapp: string;
+  facebook: string;
+  linkedin: string;
+  status: string;
+  datestamp: Date | string;
+  classroom: StudentClassView;
+  dorm: DormView;
+  school: SchoolView;
+  startYear: string;
+  endYear: string;
+  name: string;
+  fullname: string;
+  avatarUrl: string;
+  imagesUrls: string[];
+};
+
+export type DormView = {
+  id: number;
+  name: string;
+  description: string;
+  address: string;
+  calendarYear: number;
+  linkedSchool: string;
+};
+
+export type SchoolView = {
+  id: number;
+  name: string;
+  email: string;
+  telNumber: string;
+  mobileNumber: string;
+  mobileNumber2: string;
+  address: string;
+  website: string;
 };
 
 export enum Status {

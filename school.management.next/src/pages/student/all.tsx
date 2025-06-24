@@ -28,7 +28,7 @@ export default function AllStudentsPage() {
 
   if (searchValue) {
     ({
-      data: students,
+       students,
       isLoading,
       isError,
     } = useStudentsAllByFilter({
@@ -40,7 +40,7 @@ export default function AllStudentsPage() {
     }));
   } else {
     ({
-      data: students,
+      students,
       isLoading,
       isError,
     } = useStudentsAll({

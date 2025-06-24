@@ -3,6 +3,7 @@ package zw.co.techtrendz.school.management.api.utility;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.digest.DigestUtils;
 import zw.co.techtrendz.school.management.api.entity.User;
+import zw.co.techtrendz.school.management.api.enums.Salutation;
 import zw.co.techtrendz.school.management.api.exception.UserCreationException;
 import zw.co.techtrendz.school.management.api.service.UserService;
 
@@ -43,5 +44,38 @@ public class AppUtils {
         if (userService.existsByUsername(user.getUsername())) {
             throw new UserCreationException("Username already in use");
         }
+    }
+    
+    public static String getFullname(Salutation salutation, String firstName, String otherNames, String lastName) {
+        StringBuilder fullname = new StringBuilder();
+        if (salutation != null) {
+            fullname.append(salutation.getValue()).append(".");
+        }
+        if (firstName != null && !firstName.isBlank()) {
+            fullname.append(fullname.isEmpty() ? firstName : " " + firstName);
+        }
+        if (otherNames != null && !otherNames.isBlank()) {
+            fullname.append(fullname.isEmpty() ? otherNames : " " + otherNames);
+        }
+        if (lastName != null && !lastName.isBlank()) {
+            fullname.append(fullname.isEmpty() ? lastName : " " + lastName);
+        }
+
+        return fullname.toString();
+    }
+
+    public static String getName(String firstName, String otherNames, String lastName) {
+        StringBuilder name = new StringBuilder();
+        if (firstName != null && !firstName.isBlank()) {
+            name.append(name.isEmpty() ? firstName : " " + firstName);
+        }
+        if (otherNames != null && !otherNames.isBlank()) {
+            name.append(name.isEmpty() ? otherNames : " " + otherNames);
+        }
+        if (lastName != null && !lastName.isBlank()) {
+            name.append(name.isEmpty() ? lastName : " " + lastName);
+        }
+
+        return name.toString();
     }
 }

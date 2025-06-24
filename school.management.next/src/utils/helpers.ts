@@ -10,7 +10,7 @@ export const numformat = (num: number) => {
   return result;
 };
 
-export const formatDate = (date: Date | string) => {
+export const formatDate = (date: Date | string, withTime: boolean = true) => {
   if (!date) return "";
   const d = typeof date === "string" ? new Date(date) : date;
   if (isNaN(d.getTime())) return "";
@@ -42,7 +42,7 @@ export const formatDate = (date: Date | string) => {
     d.getHours() !== 0 || d.getMinutes() !== 0 || d.getSeconds() !== 0;
 
   const dateStr = `${dayOfWeek}, ${dayWithOrdinal} of ${month}, ${year}`;
-  if (hasTime) {
+  if (hasTime && withTime) {
     const timeStr = d.toLocaleTimeString(undefined, {
       hour: "numeric",
       minute: "2-digit",

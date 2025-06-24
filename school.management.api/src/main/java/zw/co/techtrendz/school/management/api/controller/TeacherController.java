@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.entity.Teacher;
 import zw.co.techtrendz.school.management.api.service.TeacherService;
+import zw.co.techtrendz.school.management.api.view.TeacherDto;
 
 import java.util.List;
 
@@ -38,18 +39,41 @@ public class TeacherController {
 
     @GetMapping("/get/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public Page<Teacher> getAllTeachers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+    public Page<Teacher> getAllTeachers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
         return this.teacherService.getAll(page, size, sortBy, sortDir);
     }
 
     @GetMapping("/get/all/by/example")
     @PreAuthorize("hasRole('ADMIN')")
-    public Page<Teacher> getAllTeachersByExample(@RequestBody @Valid Teacher teacher, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+    public Page<Teacher> getAllTeachersByExample(@RequestBody @Valid Teacher teacher, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
         return this.teacherService.getAllByExample(teacher, page, size, sortBy, sortDir);
     }
 
     @GetMapping("/get/all/by/filter")
-    public Page<Teacher> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
+    public Page<Teacher> getAllTeachersByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.teacherService.getAllByFilter(page, size, sortBy, sortDir, filter);
+    }
+
+    @GetMapping("/view/get/one")
+    @PreAuthorize("hasRole('ADMIN')")
+    public TeacherDto getTeacherView(@RequestParam Long id) {
+        return this.teacherService.getViewById(id);
+    }
+
+    @GetMapping("/view/get/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<TeacherDto> getAllTeacherViews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.teacherService.getViewAll(page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/view/get/all/by/example")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<TeacherDto> getAllTeacherViewsByExample(@RequestBody @Valid Teacher teacher, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.teacherService.getViewAllByExample(teacher, page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/view/get/all/by/filter")
+    public Page<TeacherDto> getAllTeacherViewsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
+        return this.teacherService.getViewAllByFilter(page, size, sortBy, sortDir, filter);
     }
 }

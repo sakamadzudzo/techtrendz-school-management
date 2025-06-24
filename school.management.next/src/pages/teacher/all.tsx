@@ -2,6 +2,7 @@ import MyTable, { Column } from "@/components/MyTable";
 import { useTeachersAll, useTeachersAllByFilter } from "@/hooks/useTeachers";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
+import { TeacherView } from "@/utils/types";
 import { SortDescriptor } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -28,7 +29,7 @@ export default function AllTeachersPage() {
 
   if (searchValue) {
     ({
-      data: teachers,
+       teachers,
       isLoading,
       isError,
     } = useTeachersAllByFilter({
@@ -40,7 +41,7 @@ export default function AllTeachersPage() {
     }));
   } else {
     ({
-      data: teachers,
+       teachers,
       isLoading,
       isError,
     } = useTeachersAll({
@@ -78,12 +79,14 @@ export default function AllTeachersPage() {
 
   const rows = React.useMemo(() => {
     if (!teachers) return [];
-    return (teachers.content || []).map((row: any) => ({
+    return (teachers.content || []).map((row: TeacherView | any) => ({
       ...row,
       key: row.id || row._id || row.name,
       "person.firstName": row.person?.firstName || row.firstName,
       "person.otherNames": row.person?.otherNames || row.otherNames,
       "person.lastName": row.person?.lastName || row.lastName,
+      classes: row.classrooms?.length || 0,
+      subjects: row.subjects?.length || 0,
       datestamp: formatDate(row.datestamp),
       actions: [
         {
@@ -121,6 +124,16 @@ export default function AllTeachersPage() {
       {
         key: "person.lastName",
         label: "Last Name",
+        allowsSorting: true,
+      },
+      {
+        key: "classes",
+        label: "Classes",
+        allowsSorting: true,
+      },
+      {
+        key: "subjects",
+        label: "Subjects",
         allowsSorting: true,
       },
       {

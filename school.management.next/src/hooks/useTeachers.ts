@@ -1,7 +1,8 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError } from "../utils/classes";
+import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
+import { TeacherView } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -35,7 +36,7 @@ export function useTeachersAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC"
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -44,7 +45,7 @@ export function useTeachersAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    teachers: data as Page<TeacherView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -80,7 +81,7 @@ export function useTeachersAllByFilter({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    teachers: data as Page<TeacherView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -97,7 +98,7 @@ export function useTeacherById(teacherId: string | undefined) {
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    teacher: data,
+    teacher: data as TeacherView,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -129,7 +130,7 @@ export function useTeachersByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    teachers: data,
+    teachers: data as Page<TeacherView>,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,
