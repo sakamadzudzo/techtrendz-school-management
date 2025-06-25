@@ -175,6 +175,7 @@ export type ClassroomView = {
 };
 
 export type SubjectView = {
+  id: number;
   calendarYear: number;
   name: string;
   description: string;
@@ -186,6 +187,7 @@ export type SubjectView = {
   category: string;
   level: number;
   teacher: TeacherView;
+  classroomId: number;
 };
 
 export type StudentView = {

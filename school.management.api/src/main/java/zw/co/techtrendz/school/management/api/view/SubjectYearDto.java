@@ -3,7 +3,11 @@ package zw.co.techtrendz.school.management.api.view;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
+import zw.co.techtrendz.school.management.api.enums.Status;
 import zw.co.techtrendz.school.management.api.enums.SubjectType;
+
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -35,6 +39,10 @@ public class SubjectYearDto {
     private TeacherDto teacher;
 
     private Long classroomId;
+
+    private LocalDateTime datestamp;
+
+    private Status status;
 
     public SubjectYearDto(
             Long id,
@@ -88,5 +96,37 @@ public class SubjectYearDto {
         this.category = category;
         this.teacherId = teacherId;
         this.classroomId = classroomId;
+    }
+
+    public SubjectYearDto(
+            Long id,
+            Integer calendarYear,
+            String name,
+            String description,
+            String code,
+            SubjectType type,
+            String syllabus,
+            String curriculum,
+            Integer level,
+            String category,
+            Long teacherId,
+            TeacherDto teacher,
+            LocalDateTime datestamp,
+            Status status
+    ) {
+        this.id = id;
+        this.calendarYear = calendarYear;
+        this.name = name;
+        this.description = description;
+        this.code = code;
+        this.type = type;
+        this.syllabus = syllabus;
+        this.curriculum = curriculum;
+        this.level = level;
+        this.category = category;
+        this.teacherId = teacherId;
+        this.teacher = teacher;
+        this.datestamp = datestamp;
+        this.status = status;
     }
 }

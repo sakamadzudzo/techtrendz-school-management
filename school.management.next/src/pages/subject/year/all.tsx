@@ -25,16 +25,12 @@ export default function AllSubjectYearsPage() {
   const [searchValue, setSearchValue] = React.useState<string>("");
   const router = useRouter();
 
-  let subjects;
+  let subjectYears;
   let isLoading;
   let isError;
 
   if (searchValue) {
-    ({
-      data: subjects,
-      isLoading,
-      isError,
-    } = useSubjectYearsAllByFilter({
+    ({ subjectYears, isLoading, isError } = useSubjectYearsAllByFilter({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -42,11 +38,7 @@ export default function AllSubjectYearsPage() {
       filter: searchValue,
     }));
   } else {
-    ({
-      data: subjects,
-      isLoading,
-      isError,
-    } = useSubjectYearsAll({
+    ({ subjectYears, isLoading, isError } = useSubjectYearsAll({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -69,24 +61,24 @@ export default function AllSubjectYearsPage() {
   }, [filterValue]);
 
   useEffect(() => {
-    if (subjects) {
-      setTotal(subjects.totalElements);
-      setPages(subjects.totalPages);
-      setSize(subjects.size);
-      setOffset(subjects.pageable.offset);
-      setFirst(subjects.first);
-      setLast(subjects.last);
+    if (subjectYears) {
+      setTotal(subjectYears.totalElements);
+      setPages(subjectYears.totalPages);
+      setSize(subjectYears.size);
+      setOffset(subjectYears.pageable.offset);
+      setFirst(subjectYears.first);
+      setLast(subjectYears.last);
     }
-  }, [subjects]);
+  }, [subjectYears]);
 
   const rows = React.useMemo(() => {
-    if (!subjects) return [];
-    return (subjects.content || []).map((row: any) => ({
+    if (!subjectYears) return [];
+    return (subjectYears.content || []).map((row: any) => ({
       ...row,
       key: row.id || row._id || row.name,
-      "subject.name": row.subject?.name || row.name,
-      "subject.code": row.subject?.code || row.code,
-      "subject.description": row.subject?.description || row.description,
+      "subject.name": row.name,
+      "subject.code": row.code,
+      "subject.description": row.description,
       datestamp: formatDate(row.datestamp),
       actions: [
         {
@@ -101,7 +93,7 @@ export default function AllSubjectYearsPage() {
         },
       ],
     }));
-  }, [subjects]);
+  }, [subjectYears]);
 
   useEffect(() => {
     if (sortDescriptor) {

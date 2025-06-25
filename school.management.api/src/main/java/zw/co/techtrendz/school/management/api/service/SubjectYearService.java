@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.SubjectYear;
+import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
 
 import java.util.List;
 
@@ -21,4 +22,12 @@ public interface SubjectYearService {
     public Page<SubjectYear> getAllByExample(SubjectYear subjectYear, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<SubjectYear> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
+
+    public SubjectYearDto getViewById(Long id);
+
+    public Page<SubjectYearDto> getViewAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<SubjectYearDto> getViewAllByExample(SubjectYear subjectYear, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<SubjectYearDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 }

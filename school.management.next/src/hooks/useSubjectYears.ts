@@ -1,7 +1,8 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError } from "../utils/classes";
+import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
+import { SubjectView } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -44,7 +45,7 @@ export function useSubjectYearsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    subjectYears: data as Page<SubjectView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -80,7 +81,7 @@ export function useSubjectYearsAllByFilter({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    subjectYears: data as Page<SubjectView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -97,7 +98,7 @@ export function useSubjectYearById(subjectYearId: string | undefined) {
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    subjectYear: data,
+    subjectYear: data as SubjectView,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -129,7 +130,7 @@ export function useSubjectYearsByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    subjectYears: data,
+    subjectYears: data as Page<SubjectView>,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

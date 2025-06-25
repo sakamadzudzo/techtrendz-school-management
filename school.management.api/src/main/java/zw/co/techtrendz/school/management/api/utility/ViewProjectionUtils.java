@@ -124,6 +124,44 @@ public class ViewProjectionUtils {
         );
     }
 
+    public static ConstructorExpression<SubjectYearDto> getSubjectYearWithTeacherNoClassroomProjection() {
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
+        QClassroomYear classroomYear = QClassroomYear.classroomYear;
+
+        return Projections.constructor(SubjectYearDto.class,
+                subjectYear.id,
+                subjectYear.calendarYear,
+                subjectYear.subject.name,
+                subjectYear.subject.description,
+                subjectYear.subject.code,
+                subjectYear.subject.type,
+                subjectYear.subject.syllabus,
+                subjectYear.subject.curriculum,
+                subjectYear.subject.level,
+                subjectYear.subject.category,
+                subjectYear.teacher.id,
+                Projections.constructor(TeacherDto.class,
+                        subjectYear.teacher.id,
+                        subjectYear.teacher.person.salutation,
+                        subjectYear.teacher.person.firstName,
+                        subjectYear.teacher.person.otherNames,
+                        subjectYear.teacher.person.lastName,
+                        subjectYear.teacher.person.dateOfBirth,
+                        subjectYear.teacher.person.email,
+                        subjectYear.teacher.person.mobileNumber,
+                        subjectYear.teacher.person.mobileNumber2,
+                        subjectYear.teacher.person.telNumber,
+                        subjectYear.teacher.person.whatsapp,
+                        subjectYear.teacher.person.facebook,
+                        subjectYear.teacher.person.linkedin,
+                        subjectYear.teacher.status,
+                        subjectYear.teacher.datestamp
+                ),
+                subjectYear.datestamp,
+                subjectYear.status
+        );
+    }
+
     public static ConstructorExpression<StudentDto> getStudentProjection() {
         QStudent student = QStudent.student;
 

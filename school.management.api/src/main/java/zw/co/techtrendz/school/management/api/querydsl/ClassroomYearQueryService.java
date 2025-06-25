@@ -112,7 +112,7 @@ public class ClassroomYearQueryService {
 
     private Pageable getPageRequest(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (sortBy.isEmpty()) {
-            sortBy.add("person.lastName");
+            sortBy.add("classroom.name");
         }
         String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
 
