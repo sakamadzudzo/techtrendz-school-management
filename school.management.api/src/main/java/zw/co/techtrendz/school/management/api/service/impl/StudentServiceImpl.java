@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.Student;
 import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
+import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
 import zw.co.techtrendz.school.management.api.repository.StudentRepository;
 import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.service.StudentService;
@@ -30,6 +31,8 @@ public class StudentServiceImpl implements StudentService {
     private PersonService personService;
     @Autowired
     private StudentQueryService studentQueryService;
+    @Autowired
+    private SubjectYearQueryService subjectYearQueryService;
 
     @Override
     public Student save(Student student) {
@@ -116,7 +119,7 @@ public class StudentServiceImpl implements StudentService {
         StudentClassDto classroom = studentDto.getClassroom();
         classroom
                 .setSubjects(
-                        this.studentQueryService
+                        this.subjectYearQueryService
                                 .getSubjectYears(
                                         Collections.singletonList(classroom.getId())
                                 )
@@ -171,7 +174,7 @@ public class StudentServiceImpl implements StudentService {
 
     private Page<StudentDto> getClassroomSubjects(Page<StudentDto> studentDtoPage) {
         List<Long> classroomIds = studentDtoPage.getContent().stream().map(student -> student.getClassroom().getId()).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
-        List<SubjectYearDto> subjectYearDtoList = this.studentQueryService.getSubjectYears(classroomIds);
+        List<SubjectYearDto> subjectYearDtoList = this.subjectYearQueryService.getSubjectYears(classroomIds);
         return studentDtoPage.map(student -> {
             StudentClassDto classroom = student.getClassroom();
             classroom.setSubjects(subjectYearDtoList

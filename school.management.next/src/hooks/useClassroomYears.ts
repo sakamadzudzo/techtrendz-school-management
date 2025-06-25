@@ -1,7 +1,8 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError } from "../utils/classes";
+import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
+import { Classroom, ClassroomView } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -44,7 +45,7 @@ export function useClassroomYearsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    classroomYears: data as Page<ClassroomView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -80,7 +81,7 @@ export function useClassroomYearsAllByFilter({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    classroomYears: data as Page<ClassroomView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -97,7 +98,7 @@ export function useClassroomYearById(classroomYearId: string | undefined) {
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    classroomYear: data,
+    classroomYear: data as ClassroomView,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -129,7 +130,7 @@ export function useClassroomYearsByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    classroomYears: data,
+    classroomYears: data as Page<ClassroomView>,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

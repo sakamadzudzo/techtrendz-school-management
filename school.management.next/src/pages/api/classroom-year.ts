@@ -26,7 +26,7 @@ async function getClassroomYears(authHeader: any, query: any) {
   if (query.sort) params.append("sortBy", query.sort);
   if (query.direction) params.append("sortDir", query.direction);
 
-  const res = await fetch(`${API_BASE}/get/all?${params.toString()}`, {
+  const res = await fetch(`${API_BASE}/view/get/all?${params.toString()}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
@@ -43,7 +43,7 @@ async function getClassroomYearsByFilter(authHeader: any, query: any) {
   if (query.filter) params.append("filter", query.filter);
 
   const res = await fetch(
-    `${API_BASE}/get/all/by/filter?${params.toString()}`,
+    `${API_BASE}/view/get/all/by/filter?${params.toString()}`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -74,7 +74,7 @@ async function getClassroomYearsByFilter(authHeader: any, query: any) {
 
 async function getClassroomYearById(classroomYearId: string, authHeader: any) {
   const params = new URLSearchParams({ id: classroomYearId }).toString();
-  const res = await fetch(`${API_BASE}/get/one?` + params, {
+  const res = await fetch(`${API_BASE}/view/get/one?` + params, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
@@ -95,7 +95,7 @@ async function getClassroomYearsByExample(
   if (query.filter) params.append("filter", query.filter);
 
   const res = await fetch(
-    `${API_BASE}/get/all/by/example?${params.toString()}`,
+    `${API_BASE}/view/get/all/by/example?${params.toString()}`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json", ...authHeader },

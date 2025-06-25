@@ -102,20 +102,6 @@ public class StudentQueryService {
         return new PageImpl<>(studentDtoList, pageable, total);
     }
 
-    public List<SubjectYearDto> getSubjectYears(List<Long> classroomYearIds) {
-        QSubjectYear subjectYear = QSubjectYear.subjectYear;
-        QClassroomYear classroomYear = QClassroomYear.classroomYear;
-
-        // Solution 1: Using direct join (recommended)
-        return queryFactory.select(
-                        ViewProjectionUtils.getSubjectYearWithTeacherProjection()
-                )
-                .from(subjectYear)
-                .join(subjectYear.classrooms, classroomYear) // Join through the relationship
-                .where(classroomYear.id.in(classroomYearIds))
-                .fetch();
-    }
-
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {
         // Build sorting order
         Order order = sortDir == Sort.Direction.ASC ? Order.ASC : Order.DESC;

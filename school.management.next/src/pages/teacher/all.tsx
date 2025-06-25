@@ -28,11 +28,7 @@ export default function AllTeachersPage() {
   let isError;
 
   if (searchValue) {
-    ({
-       teachers,
-      isLoading,
-      isError,
-    } = useTeachersAllByFilter({
+    ({ teachers, isLoading, isError } = useTeachersAllByFilter({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -40,11 +36,7 @@ export default function AllTeachersPage() {
       filter: searchValue,
     }));
   } else {
-    ({
-       teachers,
-      isLoading,
-      isError,
-    } = useTeachersAll({
+    ({ teachers, isLoading, isError } = useTeachersAll({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),

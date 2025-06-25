@@ -166,10 +166,12 @@ export type TeacherView = {
 };
 
 export type ClassroomView = {
-  calendarYear: number;
+  id: number;
   name: string;
   description: string;
+  calendarYear: number;
   homeroomTeacher: number;
+  subjects: SubjectView[];
 };
 
 export type SubjectView = {
@@ -184,14 +186,6 @@ export type SubjectView = {
   category: string;
   level: number;
   teacher: TeacherView;
-};
-
-export type StudentClassView = {
-  id: string;
-  name: string;
-  description: string;
-  calendarYear: string;
-  subjects: SubjectView[];
 };
 
 export type StudentView = {
@@ -210,7 +204,7 @@ export type StudentView = {
   linkedin: string;
   status: string;
   datestamp: Date | string;
-  classroom: StudentClassView;
+  classroom: ClassroomView;
   dorm: DormView;
   school: SchoolView;
   startYear: string;

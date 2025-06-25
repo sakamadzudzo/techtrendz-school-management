@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.entity.ClassroomYear;
 import zw.co.techtrendz.school.management.api.service.ClassroomYearService;
+import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
 
 import java.util.List;
 
@@ -48,5 +49,25 @@ public class ClassroomYearController {
     @GetMapping("/get/all/by/filter")
     public Page<ClassroomYear> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.classroomYearService.getAllByFilter(page, size, sortBy, sortDir, filter);
+    }
+
+    @GetMapping("/view/get/one")
+    public ClassroomYearDto getClassroomYearView(@RequestParam Long id) {
+        return this.classroomYearService.getViewById(id);
+    }
+
+    @GetMapping("/view/get/all")
+    public Page<ClassroomYearDto> getAllClassroomYearViews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "classroom.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.classroomYearService.getViewAll(page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/view/get/all/by/example")
+    public Page<ClassroomYearDto> getAllClassroomYearViewsByExample(@RequestBody @Valid ClassroomYear classroomYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "classroom.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.classroomYearService.getViewAllByExample(classroomYear, page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/view/get/all/by/filter")
+    public Page<ClassroomYearDto> getAllClassroomYearViewsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
+        return this.classroomYearService.getViewAllByFilter(page, size, sortBy, sortDir, filter);
     }
 }

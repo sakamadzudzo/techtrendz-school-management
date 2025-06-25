@@ -25,16 +25,12 @@ export default function AllClassroomYearsPage() {
   const [searchValue, setSearchValue] = React.useState<string>("");
   const router = useRouter();
 
-  let classrooms;
+  let classroomYears;
   let isLoading;
   let isError;
 
   if (searchValue) {
-    ({
-      data: classrooms,
-      isLoading,
-      isError,
-    } = useClassroomYearsAllByFilter({
+    ({ classroomYears, isLoading, isError } = useClassroomYearsAllByFilter({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -42,11 +38,7 @@ export default function AllClassroomYearsPage() {
       filter: searchValue,
     }));
   } else {
-    ({
-      data: classrooms,
-      isLoading,
-      isError,
-    } = useClassroomYearsAll({
+    ({ classroomYears, isLoading, isError } = useClassroomYearsAll({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -69,24 +61,24 @@ export default function AllClassroomYearsPage() {
   }, [filterValue]);
 
   useEffect(() => {
-    if (classrooms) {
-      setTotal(classrooms.totalElements);
-      setPages(classrooms.totalPages);
-      setSize(classrooms.size);
-      setOffset(classrooms.pageable.offset);
-      setFirst(classrooms.first);
-      setLast(classrooms.last);
+    if (classroomYears) {
+      setTotal(classroomYears.totalElements);
+      setPages(classroomYears.totalPages);
+      setSize(classroomYears.size);
+      setOffset(classroomYears.pageable.offset);
+      setFirst(classroomYears.first);
+      setLast(classroomYears.last);
     }
-  }, [classrooms]);
+  }, [classroomYears]);
 
   const rows = React.useMemo(() => {
-    if (!classrooms) return [];
-    return (classrooms.content || []).map((row: any) => ({
+    if (!classroomYears) return [];
+    return (classroomYears.content || []).map((row: any) => ({
       ...row,
       key: row.id || row._id || row.name,
-      "classroom.name": row.classroom?.name || row.name,
-      "classroom.description": row.classroom?.description || row.description,
-      subjects: row.classroom?.subjects?.length || 0,
+      "classroom.name": row.name,
+      "classroom.description": row.description,
+      subjects: row.subjects?.length || 0,
       datestamp: formatDate(row.datestamp),
       actions: [
         {
@@ -101,7 +93,7 @@ export default function AllClassroomYearsPage() {
         },
       ],
     }));
-  }, [classrooms]);
+  }, [classroomYears]);
 
   useEffect(() => {
     if (sortDescriptor) {

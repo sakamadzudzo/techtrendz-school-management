@@ -38,10 +38,13 @@ public class ViewProjectionUtils {
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
 
         return Projections.constructor(ClassroomYearDto.class,
-                classroomYear.calendarYear,
+                classroomYear.id,
                 classroomYear.classroom.name,
                 classroomYear.classroom.description,
-                classroomYear.homeroomTeacher.id
+                classroomYear.calendarYear,
+                classroomYear.homeroomTeacher.id,
+                classroomYear.datestamp,
+                classroomYear.status
         );
     }
 
