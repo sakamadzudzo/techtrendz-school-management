@@ -120,7 +120,9 @@ public class ViewProjectionUtils {
                         subjectYear.teacher.status,
                         subjectYear.teacher.datestamp
                 ),
-                classroomYear.id
+                classroomYear.id,
+                subjectYear.datestamp,
+                subjectYear.status
         );
     }
 
