@@ -1,5 +1,5 @@
 import { capitalize, sanitizeForWhatsapp } from "@/utils/helpers";
-import { SubjectView, TeacherView } from "@/utils/types";
+import { SubjectView } from "@/utils/types";
 import {
   Card,
   CardHeader,
@@ -63,7 +63,7 @@ export default function SubjectViewCard({
           <CardBody>
             <div className="info-row">
               <div className="info-row-title">Teacher:</div>
-              <div className="info-row-content"><Link href={`/teacher/one?id=`+subject.teacher.id}>{subject.teacher?.fullname}</Link></div>
+              <div className="info-row-content"><Link href={`/teacher/one?id=${subject.teacher.id}`}>{subject.teacher?.fullname}</Link></div>
             </div>
             <Spacer x={4} y={4} />
             {subject.teacher?.email && (

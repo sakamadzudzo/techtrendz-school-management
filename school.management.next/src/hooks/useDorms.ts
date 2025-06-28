@@ -1,7 +1,8 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError } from "../utils/classes";
+import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
+import { Dorm } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -44,7 +45,7 @@ export function useDormsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    dorms: data as Page<Dorm>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -80,7 +81,7 @@ export function useDormsAllByFilter({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    dorms: data as Page<Dorm>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -97,7 +98,7 @@ export function useDormById(dormId: string | undefined) {
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    dorm: data,
+    dorm: data as Dorm,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -129,7 +130,7 @@ export function useDormsByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    dorms: data,
+    dorms: data as Page<Dorm>,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

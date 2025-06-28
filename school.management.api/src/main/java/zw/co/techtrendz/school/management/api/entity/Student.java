@@ -31,8 +31,8 @@ public class Student extends Base{
     @QueryInit("*.*")
     private ClassroomYear classroom;
 
-//    @ManyToMany
-//    private List<SubjectYear> subjects;
+    @ManyToMany(mappedBy = "students")
+    private List<ExtraCurricularYear> extraCurricularYears;
 
     @ManyToOne
     @QueryInit("*.*")

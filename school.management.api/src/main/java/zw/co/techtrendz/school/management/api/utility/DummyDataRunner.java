@@ -170,7 +170,7 @@ public class DummyDataRunner {
             person.setMobileNumber("07" + (10000000 + random.nextInt(9000000)));
             person.setFacebook("https://www.facebook.com/" + person.getFirstName().toLowerCase() + person.getLastName().toLowerCase());
             person.setLinkedin("https://www.linkedin.com/in/" + person.getFirstName().toLowerCase() + "-" + person.getLastName().toLowerCase());
-            if(person.getMobileNumber() != null) {
+            if (person.getMobileNumber() != null) {
                 person.setWhatsapp(person.getMobileNumber());
             }
 
@@ -330,16 +330,16 @@ public class DummyDataRunner {
 
     private void dummyStudent() {
         Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy students...");
-        Student s1 = new Student();
-        s1.setPerson(new Person(1L));
-        s1.setStartYear(2023);
-        s1.setEndYear(2027);
-        s1.setClassroom(new ClassroomYear(1L));
-
-        List<Student> students1 = Arrays.asList(
-                s1
-        );
-        this.studentService.saveAll(students1);
+//        Student s1 = new Student();
+//        s1.setPerson(new Person(1L));
+//        s1.setStartYear(2023);
+//        s1.setEndYear(2027);
+//        s1.setClassroom(new ClassroomYear(1L));
+//
+//        List<Student> students1 = Arrays.asList(
+//                s1
+//        );
+//        this.studentService.saveAll(students1);
 
         List<ClassroomYear> classroomYears = classroomYearService.getAll(0, 100, Arrays.asList("classroom.name", "calendarYear"), Sort.Direction.DESC).getContent();
         List<Student> students = new ArrayList<>();
@@ -523,6 +523,8 @@ public class DummyDataRunner {
     private void dummyExtraCurricularYear() {
         Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy extra curricular years...");
         List<ExtraCurricular> extraCurriculars = this.extraCurricularService.getAll(0, 100, Arrays.asList("name"), Sort.Direction.DESC).getContent();
+        List<Teacher> teachers = this.teacherService.getAll(0, 100, Arrays.asList("person.lastName"), Sort.Direction.DESC).getContent();
+        List<Student> students = this.studentService.getAll(0, 100, Arrays.asList("person.lastName"), Sort.Direction.DESC).getContent();
         List<ExtraCurricularYear> extraCurricularYears = new ArrayList<>();
 
         List<Teacher> defaultTeachers = Arrays.asList(new Teacher(1L)); // Replace or expand as needed
@@ -530,11 +532,21 @@ public class DummyDataRunner {
 
         for (ExtraCurricular extraCurricular : extraCurriculars) {
             for (int year = 2023; year <= 2025; year++) {
+                int numberOfTeachers = this.getRandomNumber(1, 5);
+                int numberOfStudents = this.getRandomNumber(5, 30);
+                List<Teacher> teacherList = new ArrayList<>();
+                List<Student> studentList = new ArrayList<>();
+                for (int teacherCount = 0; teacherCount < numberOfTeachers; teacherCount++) {
+                    teacherList.add(teachers.get(teacherCount));
+                }
+                for (int studentCount = 0; studentCount < numberOfStudents; studentCount++) {
+                    studentList.add(students.get(studentCount));
+                }
                 ExtraCurricularYear ecy = new ExtraCurricularYear();
                 ecy.setExtraCurricular(extraCurricular);
                 ecy.setCalendarYear(year);
-                ecy.setFacilitators(defaultTeachers);
-                ecy.setStudents(defaultStudents);
+                ecy.setFacilitators(teacherList);
+                ecy.setStudents(studentList);
                 extraCurricularYears.add(ecy);
             }
         }

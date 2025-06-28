@@ -22,13 +22,13 @@ export default function AllDormYearsPage() {
   const [searchValue, setSearchValue] = React.useState<string>("");
   const router = useRouter();
 
-  let dorms;
+  let dormYears;
   let isLoading;
   let isError;
 
   if (searchValue) {
     ({
-      data: dorms,
+      dormYears,
       isLoading,
       isError,
     } = useDormYearsAllByFilter({
@@ -40,7 +40,7 @@ export default function AllDormYearsPage() {
     }));
   } else {
     ({
-      data: dorms,
+      dormYears,
       isLoading,
       isError,
     } = useDormYearsAll({
@@ -66,19 +66,19 @@ export default function AllDormYearsPage() {
   }, [filterValue]);
 
   useEffect(() => {
-    if (dorms) {
-      setTotal(dorms.totalElements);
-      setPages(dorms.totalPages);
-      setSize(dorms.size);
-      setOffset(dorms.pageable.offset);
-      setFirst(dorms.first);
-      setLast(dorms.last);
+    if (dormYears) {
+      setTotal(dormYears.totalElements);
+      setPages(dormYears.totalPages);
+      setSize(dormYears.size);
+      setOffset(dormYears.pageable.offset);
+      setFirst(dormYears.first);
+      setLast(dormYears.last);
     }
-  }, [dorms]);
+  }, [dormYears]);
 
   const rows = React.useMemo(() => {
-    if (!dorms) return [];
-    return (dorms.content || []).map((row: any) => ({
+    if (!dormYears) return [];
+    return (dormYears.content || []).map((row: any) => ({
       ...row,
       key: row.id || row._id || row.name,
       "dorm.name": row.dorm?.name || row.name,
@@ -99,7 +99,7 @@ export default function AllDormYearsPage() {
         },
       ],
     }));
-  }, [dorms]);
+  }, [dormYears]);
 
   useEffect(() => {
     if (sortDescriptor) {

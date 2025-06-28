@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.entity.ExtraCurricularYear;
 import zw.co.techtrendz.school.management.api.service.ExtraCurricularYearService;
+import zw.co.techtrendz.school.management.api.view.ExtraCurricularYearDto;
 
 import java.util.List;
 
@@ -48,5 +49,25 @@ public class ExtraCurricularYearController {
     @GetMapping("/get/all/by/filter")
     public Page<ExtraCurricularYear> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.extraCurricularYearService.getAllByFilter(page, size, sortBy, sortDir, filter);
+    }
+
+    @GetMapping("/view/get/one")
+    public ExtraCurricularYearDto getExtraCurricularYearView(@RequestParam Long id) {
+        return this.extraCurricularYearService.getViewById(id);
+    }
+
+    @GetMapping("/view/get/all")
+    public Page<ExtraCurricularYearDto> getAllExtraCurricularYearViews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "extraCurricular.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.extraCurricularYearService.getViewAll(page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/view/get/all/by/example")
+    public Page<ExtraCurricularYearDto> getAllExtraCurricularYearViewsByExample(@RequestBody @Valid ExtraCurricularYear extraCurricularYear, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "extraCurricular.name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.extraCurricularYearService.getViewAllByExample(extraCurricularYear, page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/view/get/all/by/filter")
+    public Page<ExtraCurricularYearDto> getAllExtraCurricularYearViewsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
+        return this.extraCurricularYearService.getViewAllByFilter(page, size, sortBy, sortDir, filter);
     }
 }

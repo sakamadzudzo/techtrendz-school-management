@@ -7,6 +7,7 @@ import org.hibernate.envers.Audited;
 import zw.co.techtrendz.school.management.api.enums.Status;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -24,6 +25,9 @@ public class Teacher extends Base {
 
     @ManyToOne
     private Person person;
+
+    @ManyToMany(mappedBy = "facilitators")
+    private List<ExtraCurricularYear> extraCurricularYears;
 
     public Teacher(long id) {
         this.id = id;

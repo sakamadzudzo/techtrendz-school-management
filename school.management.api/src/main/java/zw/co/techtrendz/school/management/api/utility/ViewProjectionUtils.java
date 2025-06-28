@@ -1,12 +1,7 @@
 package zw.co.techtrendz.school.management.api.utility;
 
-import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
 import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.view.*;
 
@@ -31,6 +26,30 @@ public class ViewProjectionUtils {
                 teacher.person.linkedin,
                 teacher.status,
                 teacher.datestamp
+        );
+    }
+
+    public static ConstructorExpression<TeacherDto> getTeacherWithECYProjection() {
+        QTeacher teacher = QTeacher.teacher;
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+
+        return Projections.constructor(TeacherDto.class,
+                teacher.id,
+                teacher.person.salutation,
+                teacher.person.firstName,
+                teacher.person.otherNames,
+                teacher.person.lastName,
+                teacher.person.dateOfBirth,
+                teacher.person.email,
+                teacher.person.mobileNumber,
+                teacher.person.mobileNumber2,
+                teacher.person.telNumber,
+                teacher.person.whatsapp,
+                teacher.person.facebook,
+                teacher.person.linkedin,
+                teacher.status,
+                teacher.datestamp,
+                extraCurricularYear.id
         );
     }
 
@@ -186,6 +205,32 @@ public class ViewProjectionUtils {
         );
     }
 
+    public static ConstructorExpression<StudentDto> getStudentWithECYProjection() {
+        QStudent student = QStudent.student;
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+
+        return Projections.constructor(StudentDto.class,
+                student.id,
+                student.person.salutation,
+                student.person.firstName,
+                student.person.otherNames,
+                student.person.lastName,
+                student.person.dateOfBirth,
+                student.person.email,
+                student.person.mobileNumber,
+                student.person.mobileNumber2,
+                student.person.telNumber,
+                student.person.whatsapp,
+                student.person.facebook,
+                student.person.linkedin,
+                student.status,
+                student.datestamp,
+                student.startYear,
+                student.endYear,
+                extraCurricularYear.id
+        );
+    }
+
     public static ConstructorExpression<StudentDto> getStudentWithClassroomProjection() {
         QStudent student = QStudent.student;
 
@@ -231,6 +276,32 @@ public class ViewProjectionUtils {
                 ),
                 student.startYear,
                 student.endYear
+        );
+    }
+
+    public static ConstructorExpression<ExtraCurricularYearDto> getExtraCurricularYearProjection() {
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+
+        return Projections.constructor(ExtraCurricularYearDto.class,
+                extraCurricularYear.id,
+                extraCurricularYear.extraCurricular.name,
+                extraCurricularYear.extraCurricular.description,
+                extraCurricularYear.calendarYear,
+                extraCurricularYear.datestamp,
+                extraCurricularYear.status
+        );
+    }
+
+    public static ConstructorExpression<DormDto> getDormYearProjection() {
+        QDormYear dormYear = QDormYear.dormYear;
+
+        return Projections.constructor(DormDto.class,
+                dormYear.id,
+                dormYear.dorm.name,
+                dormYear.dorm.description,
+                dormYear.dorm.address,
+                dormYear.calendarYear,
+                dormYear.dorm.school.name
         );
     }
 }

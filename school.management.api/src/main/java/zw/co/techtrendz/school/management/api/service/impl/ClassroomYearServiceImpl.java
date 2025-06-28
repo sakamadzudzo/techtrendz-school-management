@@ -139,10 +139,6 @@ public class ClassroomYearServiceImpl implements ClassroomYearService {
                 }
             }
 
-            if (sortBy.isEmpty()) {
-                sortBy.add("classroom.name");
-            }
-
             Page<ClassroomYearDto> classroomYearDtoPage = this.classroomYearQueryService.getAllClassroomYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return getClassroomYearClassesAndSubjects(classroomYearDtoPage);
         }

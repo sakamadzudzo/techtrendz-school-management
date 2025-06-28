@@ -1,7 +1,8 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError } from "../utils/classes";
+import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
+import { ExtraCurricularYearView } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -44,7 +45,7 @@ export function useExtraCurricularYearsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    extraCurricularYears: data as Page<ExtraCurricularYearView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -80,7 +81,7 @@ export function useExtraCurricularYearsAllByFilter({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    extraCurricularYears: data as Page<ExtraCurricularYearView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -97,7 +98,7 @@ export function useExtraCurricularYearById(extraCurricularYearId: string | undef
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    extraCurricularYear: data,
+    extraCurricularYear: data as ExtraCurricularYearView,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -129,7 +130,7 @@ export function useExtraCurricularYearsByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    extraCurricularYears: data,
+    extraCurricularYears: data as Page<ExtraCurricularYearView>,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

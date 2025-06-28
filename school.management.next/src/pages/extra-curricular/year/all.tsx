@@ -25,13 +25,13 @@ export default function AllExtraCurricularYearsPage() {
   const [searchValue, setSearchValue] = React.useState<string>("");
   const router = useRouter();
 
-  let extraCurriculars;
+  let extraCurricularYears;
   let isLoading;
   let isError;
 
   if (searchValue) {
     ({
-      data: extraCurriculars,
+      extraCurricularYears,
       isLoading,
       isError,
     } = useExtraCurricularYearsAllByFilter({
@@ -43,7 +43,7 @@ export default function AllExtraCurricularYearsPage() {
     }));
   } else {
     ({
-      data: extraCurriculars,
+      extraCurricularYears,
       isLoading,
       isError,
     } = useExtraCurricularYearsAll({
@@ -69,19 +69,19 @@ export default function AllExtraCurricularYearsPage() {
   }, [filterValue]);
 
   useEffect(() => {
-    if (extraCurriculars) {
-      setTotal(extraCurriculars.totalElements);
-      setPages(extraCurriculars.totalPages);
-      setSize(extraCurriculars.size);
-      setOffset(extraCurriculars.pageable.offset);
-      setFirst(extraCurriculars.first);
-      setLast(extraCurriculars.last);
+    if (extraCurricularYears) {
+      setTotal(extraCurricularYears.totalElements);
+      setPages(extraCurricularYears.totalPages);
+      setSize(extraCurricularYears.size);
+      setOffset(extraCurricularYears.pageable.offset);
+      setFirst(extraCurricularYears.first);
+      setLast(extraCurricularYears.last);
     }
-  }, [extraCurriculars]);
+  }, [extraCurricularYears]);
 
   const rows = React.useMemo(() => {
-    if (!extraCurriculars) return [];
-    return (extraCurriculars.content || []).map((row: any) => ({
+    if (!extraCurricularYears) return [];
+    return (extraCurricularYears.content || []).map((row: any) => ({
       ...row,
       key: row.id || row._id || row.name,
       "extraCurricular.name": row.extraCurricular?.name || row.name,
@@ -102,7 +102,7 @@ export default function AllExtraCurricularYearsPage() {
         },
       ],
     }));
-  }, [extraCurriculars]);
+  }, [extraCurricularYears]);
 
   useEffect(() => {
     if (sortDescriptor) {

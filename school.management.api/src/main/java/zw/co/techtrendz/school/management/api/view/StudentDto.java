@@ -56,6 +56,8 @@ public class StudentDto {
 
     private Integer endYear;
 
+    private Long extraCurricularYearId;
+
     public StudentDto(
             Long id,
             Salutation salutation,
@@ -88,6 +90,68 @@ public class StudentDto {
         this.linkedin = linkedin;
         this.status = status;
         this.datestamp = datestamp;
+    }
+
+    public StudentDto(
+            Long id,
+            Salutation salutation,
+            String firstName,
+            String otherNames,
+            String lastName,
+            LocalDate dateOfBirth,
+            String email,
+            String mobileNumber,
+            String mobileNumber2,
+            String telNumber,
+            String whatsapp,
+            String facebook,
+            String linkedin,
+            Status status,
+            LocalDateTime datestamp,
+            Integer startYear,
+            Integer endYear
+    ){
+        this.id = id;
+        this.salutation = salutation;
+        this.firstName = firstName;
+        this.otherNames = otherNames;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.mobileNumber = mobileNumber;
+        this.mobileNumber2 = mobileNumber2;
+        this.telNumber = telNumber;
+        this.whatsapp = whatsapp;
+        this.facebook = facebook;
+        this.linkedin = linkedin;
+        this.status = status;
+        this.datestamp = datestamp;
+        this.startYear = startYear;
+        this.endYear = endYear;
+    }
+
+    public StudentDto(
+            Long id,
+            Salutation salutation,
+            String firstName,
+            String otherNames,
+            String lastName,
+            LocalDate dateOfBirth,
+            String email,
+            String mobileNumber,
+            String mobileNumber2,
+            String telNumber,
+            String whatsapp,
+            String facebook,
+            String linkedin,
+            Status status,
+            LocalDateTime datestamp,
+            Integer startYear,
+            Integer endYear,
+            Long extraCurricularYearId
+    ){
+        this(id,salutation,firstName,otherNames,lastName,dateOfBirth,email,mobileNumber,mobileNumber2,telNumber,whatsapp,facebook,linkedin,status,datestamp,startYear,endYear);
+        this.extraCurricularYearId = extraCurricularYearId;
     }
 
     public String getFullname() {

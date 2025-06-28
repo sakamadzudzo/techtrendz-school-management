@@ -28,7 +28,7 @@ export default function AllDormsPage() {
 
   if (searchValue) {
     ({
-      data: dorms,
+      dorms,
       isLoading,
       isError,
     } = useDormsAllByFilter({
@@ -40,7 +40,7 @@ export default function AllDormsPage() {
     }));
   } else {
     ({
-      data: dorms,
+      dorms,
       isLoading,
       isError,
     } = useDormsAll({

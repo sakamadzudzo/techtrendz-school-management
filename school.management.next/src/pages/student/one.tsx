@@ -1,7 +1,6 @@
 import MyChip from "@/components/MyChip";
 import { useStudentById } from "@/hooks/useStudents";
 import {
-  capitalize,
   formatDate,
   getInitials,
   sanitizeForWhatsapp,
@@ -11,11 +10,6 @@ import {
   AccordionItem,
   Avatar,
   Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Divider,
   Image,
   Link,
   Spacer,
@@ -43,6 +37,7 @@ export default function OneStudentPage() {
         <Button
           color="primary"
           endContent={<PencilSimpleLineIcon weight="thin" size={34} />}
+          href={`/student/edit?id=${student?.id}`}
         >
           Edit
         </Button>

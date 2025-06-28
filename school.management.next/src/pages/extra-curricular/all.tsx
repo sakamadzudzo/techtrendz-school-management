@@ -31,7 +31,7 @@ export default function AllExtraCurricularsPage() {
 
   if (searchValue) {
     ({
-      data: extraCurriculars,
+      extraCurriculars,
       isLoading,
       isError,
     } = useExtraCurricularsAllByFilter({
@@ -43,7 +43,7 @@ export default function AllExtraCurricularsPage() {
     }));
   } else {
     ({
-      data: extraCurriculars,
+      extraCurriculars,
       isLoading,
       isError,
     } = useExtraCurricularsAll({

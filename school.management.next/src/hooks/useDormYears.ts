@@ -1,7 +1,8 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError } from "../utils/classes";
+import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
+import { DormYear } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -44,7 +45,7 @@ export function useDormYearsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    dormYears: data as Page<DormYear>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -80,7 +81,7 @@ export function useDormYearsAllByFilter({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    dormYears: data as Page<DormYear>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -97,7 +98,7 @@ export function useDormYearById(dormYearId: string | undefined) {
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    dormYear: data,
+    dormYear: data as DormYear,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -129,7 +130,7 @@ export function useDormYearsByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    dormYears: data,
+    dormYears: data as Page<DormYear>,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

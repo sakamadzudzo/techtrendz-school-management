@@ -76,9 +76,9 @@ export default function AllClassroomYearsPage() {
     return (classroomYears.content || []).map((row: any) => ({
       ...row,
       key: row.id || row._id || row.name,
-      "classroom.name": row.name,
-      "classroom.description": row.description,
-      subjects: row.subjects?.length || 0,
+      "classroom.name": row.classroom?.name || row.name,
+      "classroom.description": row.classroom?.description || row.description,
+      subjects: row.classroom?.subjects?.length || row.subjects?.length || 0,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

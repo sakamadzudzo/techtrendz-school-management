@@ -8,10 +8,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import zw.co.techtrendz.school.management.api.entity.QClassroomYear;
-import zw.co.techtrendz.school.management.api.entity.QStudent;
-import zw.co.techtrendz.school.management.api.entity.QSubjectYear;
-import zw.co.techtrendz.school.management.api.entity.Student;
+import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
 import zw.co.techtrendz.school.management.api.utility.ViewProjectionUtils;
 import zw.co.techtrendz.school.management.api.view.StudentDto;
@@ -100,6 +97,18 @@ public class StudentQueryService {
         long total = queryFactory.selectFrom(student).where(QuerydslUtils.toPredicate(example, Student.class)).fetchCount();
 
         return new PageImpl<>(studentDtoList, pageable, total);
+    }
+
+    public List<StudentDto> getStudentsByExtraCurricular(List<Long> extraCurricularIds) {
+        QStudent student = QStudent.student;
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+
+        return queryFactory.select(
+                        ViewProjectionUtils.getStudentWithECYProjection()
+                ).from(student)
+                .join(student.extraCurricularYears, extraCurricularYear)
+                .where(extraCurricularYear.id.in(extraCurricularIds))
+                .fetch();
     }
 
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {

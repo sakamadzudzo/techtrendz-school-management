@@ -50,6 +50,8 @@ public class TeacherDto {
 
     private List<SubjectYearDto> subjects;
 
+    private Long extraCurricularYearId;
+
     public TeacherDto(
             Long id,
             Salutation salutation,
@@ -82,6 +84,28 @@ public class TeacherDto {
         this.linkedin = linkedin;
         this.status = status;
         this.datestamp = datestamp;
+    }
+
+    public TeacherDto(
+            Long id,
+            Salutation salutation,
+            String firstName,
+            String otherNames,
+            String lastName,
+            LocalDate dateOfBirth,
+            String email,
+            String mobileNumber,
+            String mobileNumber2,
+            String telNumber,
+            String whatsapp,
+            String facebook,
+            String linkedin,
+            Status status,
+            LocalDateTime datestamp,
+            Long extraCurricularYearId
+    ) {
+        this(id, salutation, firstName, otherNames, lastName, dateOfBirth, email, mobileNumber, mobileNumber2, telNumber, whatsapp, facebook, linkedin, status, datestamp);
+        this.extraCurricularYearId = extraCurricularYearId;
     }
 
     public String getFullname() {

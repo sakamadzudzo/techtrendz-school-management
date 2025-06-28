@@ -1,7 +1,8 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError } from "../utils/classes";
+import { ApiError, Page } from "../utils/classes";
 import { RootState } from "../store/store"; // Adjust path if needed
+import { ExtraCurricular } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -44,7 +45,7 @@ export function useExtraCurricularsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    extraCurriculars: data as Page<ExtraCurricular>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -80,7 +81,7 @@ export function useExtraCurricularsAllByFilter({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    extraCurriculars: data as Page<ExtraCurricular>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -97,7 +98,7 @@ export function useExtraCurricularById(extraCurricularId: string | undefined) {
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    extraCurricular: data,
+    extraCurricular: data as ExtraCurricular,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -129,7 +130,7 @@ export function useExtraCurricularsByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    extraCurriculars: data,
+    extraCurriculars: data as Page<ExtraCurricular>,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

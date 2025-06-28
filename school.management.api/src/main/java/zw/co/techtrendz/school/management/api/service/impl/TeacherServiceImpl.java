@@ -144,10 +144,6 @@ public class TeacherServiceImpl implements TeacherService {
                 }
             }
 
-            if (sortBy.isEmpty()) {
-                sortBy.add("person.lastName");
-            }
-
             Page<TeacherDto> teacherDtoPage = this.teacherQueryService.getAllTeacherDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return getTeacherClassesAndSubjects(teacherDtoPage);
         }

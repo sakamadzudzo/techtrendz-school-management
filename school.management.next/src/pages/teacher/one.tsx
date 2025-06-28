@@ -58,6 +58,7 @@ export default function OneTeacherPage() {
         <Button
           color="primary"
           endContent={<PencilSimpleLineIcon weight="thin" size={34} />}
+          href={`/teacher/edit?id=${teacher?.id}`}
         >
           Edit
         </Button>

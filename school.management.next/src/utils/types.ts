@@ -36,14 +36,14 @@ export type User = {
 export type Teacher = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   person: Person;
 };
 
 export type Subject = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   name: string;
   description: string;
   code: string;
@@ -57,7 +57,7 @@ export type Subject = {
 export type SubjectYear = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   subject: Subject;
   calendarYear: number;
   teacher: Teacher;
@@ -66,7 +66,7 @@ export type SubjectYear = {
 export type Classroom = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   name: string;
   description: string;
 };
@@ -74,7 +74,7 @@ export type Classroom = {
 export type ClassroomYear = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   classroom: Classroom;
   calendarYear: number;
   subjects: SubjectYear[];
@@ -83,7 +83,7 @@ export type ClassroomYear = {
 export type Dorm = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   name: string;
   description: string;
   address: string;
@@ -93,7 +93,7 @@ export type Dorm = {
 export type School = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   name: string;
   email: string;
   telNumber: string;
@@ -106,7 +106,7 @@ export type School = {
 export type Student = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   person: Person;
   startYear: string;
   endYear: string;
@@ -118,7 +118,7 @@ export type Student = {
 export type ExtraCurricular = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   name: string;
   description: string;
 };
@@ -126,19 +126,20 @@ export type ExtraCurricular = {
 export type ExtraCurricularYear = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   calendarYear: number;
   extraCurricular: ExtraCurricular;
-  facilitators: string;
-  students: string;
+  facilitators: Teacher[];
+  students: Student[];
 };
 
 export type DormYear = {
   datestamp: Date | string;
   status: string;
-  id: string;
+  id: number
   dorm: Dorm;
   calendarYear: number;
+  school: School;
 };
 
 export type TeacherView = {
@@ -236,6 +237,17 @@ export type SchoolView = {
   address: string;
   website: string;
 };
+
+export type ExtraCurricularYearView = {
+  datestamp: Date | string;
+  status: string;
+  id: number
+  calendarYear: number;
+  name: string;
+  description: string;
+  facilitators: TeacherView[];
+  students: StudentView[];
+}
 
 export enum Status {
   ACTIVE = "ACTIVE",

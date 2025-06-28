@@ -163,10 +163,6 @@ public class StudentServiceImpl implements StudentService {
                 }
             }
 
-            if (sortBy.isEmpty()) {
-                sortBy.add("person.lastName");
-            }
-
             Page<StudentDto> studentDtoPage = this.studentQueryService.getAllStudentDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return this.getClassroomSubjects(studentDtoPage);
         }

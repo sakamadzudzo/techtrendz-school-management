@@ -7,10 +7,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import zw.co.techtrendz.school.management.api.entity.QClassroomYear;
-import zw.co.techtrendz.school.management.api.entity.QSubjectYear;
-import zw.co.techtrendz.school.management.api.entity.QTeacher;
-import zw.co.techtrendz.school.management.api.entity.Teacher;
+import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
 import zw.co.techtrendz.school.management.api.utility.ViewProjectionUtils;
 import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
@@ -140,6 +137,18 @@ public class TeacherQueryService {
         long total = queryFactory.selectFrom(teacher).where(QuerydslUtils.toPredicate(example, Teacher.class)).fetchCount();
 
         return new PageImpl<>(teacherDtoList, pageable, total);
+    }
+
+    public List<TeacherDto> getFacilitatorsByExtraCurricular(List<Long> extraCurricularIds) {
+        QTeacher teacher = QTeacher.teacher;
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+
+        return queryFactory.select(
+                        ViewProjectionUtils.getTeacherWithECYProjection()
+                ).from(teacher)
+                .join(teacher.extraCurricularYears, extraCurricularYear)
+                .where(extraCurricularYear.id.in(extraCurricularIds))
+                .fetch();
     }
 
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {
