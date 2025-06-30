@@ -20,16 +20,4 @@ public class StudentClassDto {
     private Integer calendarYear;
 
     private List<SubjectYearDto> subjects;
-
-    public StudentClassDto(
-            Long id,
-            String name,
-            String description,
-            Integer calendarYear
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.calendarYear = calendarYear;
-    }
 }

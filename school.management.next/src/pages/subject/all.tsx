@@ -28,7 +28,7 @@ export default function AllSubjectsPage() {
 
   if (searchValue) {
     ({
-      data: subjects,
+      subjects,
       isLoading,
       isError,
     } = useSubjectsAllByFilter({
@@ -40,7 +40,7 @@ export default function AllSubjectsPage() {
     }));
   } else {
     ({
-      data: subjects,
+      subjects,
       isLoading,
       isError,
     } = useSubjectsAll({

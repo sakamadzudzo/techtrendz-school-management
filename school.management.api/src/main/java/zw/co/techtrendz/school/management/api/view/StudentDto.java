@@ -9,7 +9,6 @@ import zw.co.techtrendz.school.management.api.utility.AppUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -48,7 +47,7 @@ public class StudentDto {
 
     private StudentClassDto classroom;
 
-    private DormDto dorm;
+    private DormYearDto dorm;
 
     private SchoolDto school;
 
@@ -58,101 +57,7 @@ public class StudentDto {
 
     private Long extraCurricularYearId;
 
-    public StudentDto(
-            Long id,
-            Salutation salutation,
-            String firstName,
-            String otherNames,
-            String lastName,
-            LocalDate dateOfBirth,
-            String email,
-            String mobileNumber,
-            String mobileNumber2,
-            String telNumber,
-            String whatsapp,
-            String facebook,
-            String linkedin,
-            Status status,
-            LocalDateTime datestamp
-    ){
-        this.id = id;
-        this.salutation = salutation;
-        this.firstName = firstName;
-        this.otherNames = otherNames;
-        this.lastName = lastName;
-        this.dateOfBirth = dateOfBirth;
-        this.email = email;
-        this.mobileNumber = mobileNumber;
-        this.mobileNumber2 = mobileNumber2;
-        this.telNumber = telNumber;
-        this.whatsapp = whatsapp;
-        this.facebook = facebook;
-        this.linkedin = linkedin;
-        this.status = status;
-        this.datestamp = datestamp;
-    }
-
-    public StudentDto(
-            Long id,
-            Salutation salutation,
-            String firstName,
-            String otherNames,
-            String lastName,
-            LocalDate dateOfBirth,
-            String email,
-            String mobileNumber,
-            String mobileNumber2,
-            String telNumber,
-            String whatsapp,
-            String facebook,
-            String linkedin,
-            Status status,
-            LocalDateTime datestamp,
-            Integer startYear,
-            Integer endYear
-    ){
-        this.id = id;
-        this.salutation = salutation;
-        this.firstName = firstName;
-        this.otherNames = otherNames;
-        this.lastName = lastName;
-        this.dateOfBirth = dateOfBirth;
-        this.email = email;
-        this.mobileNumber = mobileNumber;
-        this.mobileNumber2 = mobileNumber2;
-        this.telNumber = telNumber;
-        this.whatsapp = whatsapp;
-        this.facebook = facebook;
-        this.linkedin = linkedin;
-        this.status = status;
-        this.datestamp = datestamp;
-        this.startYear = startYear;
-        this.endYear = endYear;
-    }
-
-    public StudentDto(
-            Long id,
-            Salutation salutation,
-            String firstName,
-            String otherNames,
-            String lastName,
-            LocalDate dateOfBirth,
-            String email,
-            String mobileNumber,
-            String mobileNumber2,
-            String telNumber,
-            String whatsapp,
-            String facebook,
-            String linkedin,
-            Status status,
-            LocalDateTime datestamp,
-            Integer startYear,
-            Integer endYear,
-            Long extraCurricularYearId
-    ){
-        this(id,salutation,firstName,otherNames,lastName,dateOfBirth,email,mobileNumber,mobileNumber2,telNumber,whatsapp,facebook,linkedin,status,datestamp,startYear,endYear);
-        this.extraCurricularYearId = extraCurricularYearId;
-    }
+    private Long dormId;
 
     public String getFullname() {
         return AppUtils.getFullname(this.salutation, this.firstName, this.otherNames, this.lastName);

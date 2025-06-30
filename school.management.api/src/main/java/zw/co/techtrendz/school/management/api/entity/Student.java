@@ -36,7 +36,6 @@ public class Student extends Base{
 
     @ManyToOne
     @QueryInit("*.*")
-//    @QueryInit("dorm.dorm.school")
     private DormYear dorm;
 
     @ManyToOne

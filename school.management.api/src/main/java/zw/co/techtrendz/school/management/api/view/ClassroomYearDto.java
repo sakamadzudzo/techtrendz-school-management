@@ -25,39 +25,9 @@ public class ClassroomYearDto {
 
     private List<SubjectYearDto> subjects;
 
+    private TeacherDto teacher;
+
     private LocalDateTime datestamp;
 
     private Status status;
-
-    public ClassroomYearDto(
-            Long id,
-            String name,
-            String description,
-            Integer calendarYear,
-            Long homeroomTeacher
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.calendarYear = calendarYear;
-        this.homeroomTeacher = homeroomTeacher;
-    }
-
-    public ClassroomYearDto(
-            Long id,
-            String name,
-            String description,
-            Integer calendarYear,
-            Long homeroomTeacher,
-            LocalDateTime datestamp,
-            Status status
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.calendarYear = calendarYear;
-        this.homeroomTeacher = homeroomTeacher;
-        this.datestamp = datestamp;
-        this.status = status;
-    }
 }

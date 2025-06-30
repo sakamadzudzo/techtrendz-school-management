@@ -1,7 +1,8 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError } from "../utils/classes";
+import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
+import { Subject } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -44,7 +45,7 @@ export function useSubjectsAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    subjects: data as Page<Subject>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -80,7 +81,7 @@ export function useSubjectsAllByFilter({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    subjects: data as Page<Subject>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -97,7 +98,7 @@ export function useSubjectById(subjectId: string | undefined) {
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    subject: data,
+    subject: data as Subject,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -129,7 +130,7 @@ export function useSubjectsByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    subjects: data,
+    subjects: data as Page<Subject>,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

@@ -111,6 +111,17 @@ public class StudentQueryService {
                 .fetch();
     }
 
+    public List<StudentDto> getStudentsByDormId(List<Long> dormIds) {
+        QStudent student = QStudent.student;
+        QDormYear dormYear = QDormYear.dormYear;
+
+        return queryFactory.select(
+                        ViewProjectionUtils.getStudentWithDormProjection()
+                ).from(student)
+                .where(student.dorm.id.in(dormIds))
+                .fetch();
+    }
+
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {
         // Build sorting order
         Order order = sortDir == Sort.Direction.ASC ? Order.ASC : Order.DESC;

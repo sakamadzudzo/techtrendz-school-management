@@ -11,7 +11,7 @@ import zw.co.techtrendz.school.management.api.entity.DormYear;
 import zw.co.techtrendz.school.management.api.entity.QDormYear;
 import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
 import zw.co.techtrendz.school.management.api.utility.ViewProjectionUtils;
-import zw.co.techtrendz.school.management.api.view.DormDto;
+import zw.co.techtrendz.school.management.api.view.DormYearDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class DormYearQueryService {
         this.queryFactory = queryFactory;
     }
 
-    public DormDto getDormYearDetails(Long dormYearId) {
+    public DormYearDto getDormYearDetails(Long dormYearId) {
         QDormYear dormYear = QDormYear.dormYear;
 
         return queryFactory.select(
@@ -35,14 +35,14 @@ public class DormYearQueryService {
                 .fetchOne();
     }
 
-    public Page<DormDto> getAllDormYearDetails(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+    public Page<DormYearDto> getAllDormYearDetails(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         QDormYear dormYear = QDormYear.dormYear;
 
         List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
 
         Pageable pageable = this.getPageRequest(page, size, sortBy, sortDir);
 
-        List<DormDto> dormYearDtoList = queryFactory.select(
+        List<DormYearDto> dormYearDtoList = queryFactory.select(
                         ViewProjectionUtils.getDormYearProjection()
                 )
                 .from(dormYear)
@@ -56,14 +56,14 @@ public class DormYearQueryService {
         return new PageImpl<>(dormYearDtoList, pageable, total);
     }
 
-    public Page<DormDto> getAllDormYearDetailsByPredicate(int page, int size, List<String> sortBy, Sort.Direction sortDir, BooleanExpression predicate) {
+    public Page<DormYearDto> getAllDormYearDetailsByPredicate(int page, int size, List<String> sortBy, Sort.Direction sortDir, BooleanExpression predicate) {
         QDormYear dormYear = QDormYear.dormYear;
 
         List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
 
         Pageable pageable = this.getPageRequest(page, size, sortBy, sortDir);
 
-        List<DormDto> dormYearDtoList = queryFactory.select(
+        List<DormYearDto> dormYearDtoList = queryFactory.select(
                         ViewProjectionUtils.getDormYearProjection()
                 ).from(dormYear)
                 .where(predicate)
@@ -77,14 +77,14 @@ public class DormYearQueryService {
         return new PageImpl<>(dormYearDtoList, pageable, total);
     }
 
-    public Page<DormDto> getAllDormYearDetailsByExample(int page, int size, List<String> sortBy, Sort.Direction sortDir, Example<DormYear> example) {
+    public Page<DormYearDto> getAllDormYearDetailsByExample(int page, int size, List<String> sortBy, Sort.Direction sortDir, Example<DormYear> example) {
         QDormYear dormYear = QDormYear.dormYear;
 
         List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
 
         Pageable pageable = this.getPageRequest(page, size, sortBy, sortDir);
 
-        List<DormDto> dormYearDtoList = queryFactory.select(
+        List<DormYearDto> dormYearDtoList = queryFactory.select(
                         ViewProjectionUtils.getDormYearProjection()
                 ).from(dormYear)
                 .where(QuerydslUtils.toPredicate(example, DormYear.class))

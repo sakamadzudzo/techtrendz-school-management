@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.DormYear;
-import zw.co.techtrendz.school.management.api.view.DormDto;
+import zw.co.techtrendz.school.management.api.view.DormYearDto;
 
 import java.util.List;
 
@@ -23,11 +23,11 @@ public interface DormYearService {
 
     public Page<DormYear> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 
-    public DormDto getViewById(Long id);
+    public DormYearDto getViewById(Long id);
 
-    public Page<DormDto> getViewAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
+    public Page<DormYearDto> getViewAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
-    public Page<DormDto> getViewAllByExample(DormYear dormYear, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+    public Page<DormYearDto> getViewAllByExample(DormYear dormYear, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
-    public Page<DormDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
+    public Page<DormYearDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 }

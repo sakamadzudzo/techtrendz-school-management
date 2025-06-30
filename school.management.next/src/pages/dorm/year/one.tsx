@@ -16,7 +16,7 @@ export default function OneDormYearPage() {
         <Button
           color="primary"
           endContent={<PencilSimpleLineIcon weight="thin" size={34} />}
-          href={`/dormYear/edit?id=${dormYear?.id}`}
+          href={`/dorm/year/edit?id=${dormYear?.id}`}
         >
           Edit
         </Button>

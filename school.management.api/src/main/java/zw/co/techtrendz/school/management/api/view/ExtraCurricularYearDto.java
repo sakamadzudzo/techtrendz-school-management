@@ -28,20 +28,4 @@ public class ExtraCurricularYearDto {
     private List<TeacherDto> facilitators;
 
     private List<StudentDto> students;
-
-    public ExtraCurricularYearDto(
-            Long id,
-            String name,
-            String description,
-            Integer calendarYear,
-            LocalDateTime datestamp,
-            Status status
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.calendarYear = calendarYear;
-        this.datestamp = datestamp;
-        this.status = status;
-    }
 }

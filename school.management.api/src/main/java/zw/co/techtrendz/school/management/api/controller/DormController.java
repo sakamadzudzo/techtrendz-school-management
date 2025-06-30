@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.entity.Dorm;
 import zw.co.techtrendz.school.management.api.service.DormService;
+import zw.co.techtrendz.school.management.api.view.DormDto;
 
 import java.util.List;
 
@@ -32,22 +33,22 @@ public class DormController {
     }
 
     @GetMapping("/get/one")
-    public Dorm getDorm(@RequestParam Long id) {
-        return this.dormService.getById(id);
+    public DormDto getDorm(@RequestParam Long id) {
+        return this.dormService.getViewById(id);
     }
 
     @GetMapping("/get/all")
-    public Page<Dorm> getAllDorms(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.dormService.getAll(page, size, sortBy, sortDir);
+    public Page<DormDto> getAllDorms(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.dormService.getViewAll(page, size, sortBy, sortDir);
     }
 
     @GetMapping("/get/all/by/example")
-    public Page<Dorm> getAllDormsByExample(@RequestBody @Valid Dorm dorm, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
-        return this.dormService.getAllByExample(dorm, page, size, sortBy, sortDir);
+    public Page<DormDto> getAllDormsByExample(@RequestBody @Valid Dorm dorm, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.dormService.getViewAllByExample(dorm, page, size, sortBy, sortDir);
     }
 
     @GetMapping("/get/all/by/filter")
-    public Page<Dorm> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
-        return this.dormService.getAllByFilter(page, size, sortBy, sortDir, filter);
+    public Page<DormDto> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
+        return this.dormService.getViewAllByFilter(page, size, sortBy, sortDir, filter);
     }
 }

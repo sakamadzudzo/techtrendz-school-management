@@ -8,16 +8,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import zw.co.techtrendz.school.management.api.entity.Dorm;
 import zw.co.techtrendz.school.management.api.entity.DormYear;
-import zw.co.techtrendz.school.management.api.entity.Teacher;
 import zw.co.techtrendz.school.management.api.querydsl.DormYearQueryService;
+import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
 import zw.co.techtrendz.school.management.api.repository.DormYearRepository;
 import zw.co.techtrendz.school.management.api.service.DormYearService;
 import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
-import zw.co.techtrendz.school.management.api.view.DormDto;
+import zw.co.techtrendz.school.management.api.view.*;
+import zw.co.techtrendz.school.management.api.view.DormYearDto;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class DormYearServiceImpl implements DormYearService {
@@ -26,6 +31,8 @@ public class DormYearServiceImpl implements DormYearService {
     private DormYearRepository dormYearRepository;
     @Autowired
     private DormYearQueryService dormYearQueryService;
+    @Autowired
+    private StudentQueryService studentQueryService;
 
     @Override
     public DormYear save(DormYear dormYear) {
@@ -90,28 +97,32 @@ public class DormYearServiceImpl implements DormYearService {
     }
 
     @Override
-    public DormDto getViewById(Long id) {
-        return this.dormYearQueryService.getDormYearDetails(id);
+    public DormYearDto getViewById(Long id) {
+        DormYearDto dormYearDto = this.dormYearQueryService.getDormYearDetails(id);
+        dormYearDto.setStudents(this.studentQueryService.getStudentsByDormId(Collections.singletonList(id)));
+        return dormYearDto;
     }
 
     @Override
-    public Page<DormDto> getViewAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
-        return this.dormYearQueryService.getAllDormYearDetails(page, size, sortBy, sortDir);
+    public Page<DormYearDto> getViewAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        Page<DormYearDto> dormDtoPage = this.dormYearQueryService.getAllDormYearDetails(page, size, sortBy, sortDir);
+        return this.getDormStudents(dormDtoPage);
     }
 
     @Override
-    public Page<DormDto> getViewAllByExample(DormYear dormYear, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+    public Page<DormYearDto> getViewAllByExample(DormYear dormYear, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (dormYear == null) {
             return this.getViewAll(page, size, sortBy, sortDir);
         } else {
             Example<DormYear> example = Example.of(dormYear);
 
-            return this.dormYearQueryService.getAllDormYearDetailsByExample(page, size, sortBy, sortDir, example);
+            Page<DormYearDto> dormDtoPage = this.dormYearQueryService.getAllDormYearDetailsByExample(page, size, sortBy, sortDir, example);
+            return this.getDormStudents(dormDtoPage);
         }
     }
 
     @Override
-    public Page<DormDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter) {
+    public Page<DormYearDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter) {
         if (filter == null || filter.isBlank()) {
             return this.getViewAll(page, size, sortBy, sortDir);
         } else {
@@ -119,11 +130,27 @@ public class DormYearServiceImpl implements DormYearService {
             for (var field : DormYear.class.getDeclaredFields()) {
                 field.setAccessible(true); // Ensure private fields are accessible
                 if (field.getType().equals(String.class)) {
-                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(Teacher.class, field.getName(), filter), false);
+                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(Dorm.class, field.getName(), filter), false);
                 }
             }
 
-            return this.dormYearQueryService.getAllDormYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
+            Page<DormYearDto> dormDtoPage = this.dormYearQueryService.getAllDormYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
+            return this.getDormStudents(dormDtoPage);
         }
+    }
+
+    private Page<DormYearDto> getDormStudents(Page<DormYearDto> dormDtoPage) {
+        List<Long> dormIds = dormDtoPage.getContent().stream().map(DormYearDto::getId).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        List<StudentDto> studentDtoList = this.studentQueryService.getStudentsByDormId(dormIds);
+        return dormDtoPage.map(dorm -> {
+            dorm.setStudents(
+                    studentDtoList
+                            .stream()
+                            .filter(student -> student
+                                    .getDormId()
+                                    .equals(dorm.getId()))
+                            .collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
+            return dorm;
+        });
     }
 }

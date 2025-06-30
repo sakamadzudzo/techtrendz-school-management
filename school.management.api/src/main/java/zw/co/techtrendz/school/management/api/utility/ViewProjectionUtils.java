@@ -1,9 +1,12 @@
 package zw.co.techtrendz.school.management.api.utility;
 
 import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Projections;
 import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.view.*;
+
+import java.util.List;
 
 public class ViewProjectionUtils {
 
@@ -25,7 +28,10 @@ public class ViewProjectionUtils {
                 teacher.person.facebook,
                 teacher.person.linkedin,
                 teacher.status,
-                teacher.datestamp
+                teacher.datestamp,
+                new NullExpression<>(List.class),
+                new NullExpression<>(List.class),
+                new NullExpression<>(Long.class)
         );
     }
 
@@ -49,6 +55,8 @@ public class ViewProjectionUtils {
                 teacher.person.linkedin,
                 teacher.status,
                 teacher.datestamp,
+                new NullExpression<>(List.class),
+                new NullExpression<>(List.class),
                 extraCurricularYear.id
         );
     }
@@ -62,6 +70,27 @@ public class ViewProjectionUtils {
                 classroomYear.classroom.description,
                 classroomYear.calendarYear,
                 classroomYear.homeroomTeacher.id,
+                new NullExpression<>(List.class),
+                Projections.constructor(TeacherDto.class,
+                        classroomYear.homeroomTeacher.id,
+                        classroomYear.homeroomTeacher.person.salutation,
+                        classroomYear.homeroomTeacher.person.firstName,
+                        classroomYear.homeroomTeacher.person.otherNames,
+                        classroomYear.homeroomTeacher.person.lastName,
+                        classroomYear.homeroomTeacher.person.dateOfBirth,
+                        classroomYear.homeroomTeacher.person.email,
+                        classroomYear.homeroomTeacher.person.mobileNumber,
+                        classroomYear.homeroomTeacher.person.mobileNumber2,
+                        classroomYear.homeroomTeacher.person.telNumber,
+                        classroomYear.homeroomTeacher.person.whatsapp,
+                        classroomYear.homeroomTeacher.person.facebook,
+                        classroomYear.homeroomTeacher.person.linkedin,
+                        classroomYear.homeroomTeacher.status,
+                        classroomYear.homeroomTeacher.datestamp,
+                        new NullExpression<>(List.class),
+                        new NullExpression<>(List.class),
+                        new NullExpression<>(Long.class)
+                ),
                 classroomYear.datestamp,
                 classroomYear.status
         );
@@ -69,26 +98,6 @@ public class ViewProjectionUtils {
 
     public static ConstructorExpression<SubjectYearDto> getSubjectYearProjection() {
         QSubjectYear subjectYear = QSubjectYear.subjectYear;
-        QClassroomYear classroomYear = QClassroomYear.classroomYear;
-
-        return Projections.constructor(SubjectYearDto.class,
-                subjectYear.id,
-                subjectYear.calendarYear,
-                subjectYear.subject.name,
-                subjectYear.subject.description,
-                subjectYear.subject.code,
-                subjectYear.subject.type,
-                subjectYear.subject.syllabus,
-                subjectYear.subject.curriculum,
-                subjectYear.subject.level,
-                subjectYear.subject.category,
-                subjectYear.teacher.id
-        );
-    }
-
-    public static ConstructorExpression<SubjectYearDto> getSubjectYearWithClassroomIdProjection() {
-        QSubjectYear subjectYear = QSubjectYear.subjectYear;
-        QClassroomYear classroomYear = QClassroomYear.classroomYear;
 
         return Projections.constructor(SubjectYearDto.class,
                 subjectYear.id,
@@ -102,7 +111,10 @@ public class ViewProjectionUtils {
                 subjectYear.subject.level,
                 subjectYear.subject.category,
                 subjectYear.teacher.id,
-                classroomYear.id
+                new NullExpression<>(TeacherDto.class),
+                new NullExpression<>(Long.class),
+                subjectYear.datestamp,
+                subjectYear.status
         );
     }
 
@@ -137,7 +149,10 @@ public class ViewProjectionUtils {
                         subjectYear.teacher.person.facebook,
                         subjectYear.teacher.person.linkedin,
                         subjectYear.teacher.status,
-                        subjectYear.teacher.datestamp
+                        subjectYear.teacher.datestamp,
+                        new NullExpression<>(List.class),
+                        new NullExpression<>(List.class),
+                        new NullExpression<>(Long.class)
                 ),
                 classroomYear.id,
                 subjectYear.datestamp,
@@ -176,8 +191,12 @@ public class ViewProjectionUtils {
                         subjectYear.teacher.person.facebook,
                         subjectYear.teacher.person.linkedin,
                         subjectYear.teacher.status,
-                        subjectYear.teacher.datestamp
+                        subjectYear.teacher.datestamp,
+                        new NullExpression<>(List.class),
+                        new NullExpression<>(List.class),
+                        new NullExpression<>(Long.class)
                 ),
+                new NullExpression<>(Long.class),
                 subjectYear.datestamp,
                 subjectYear.status
         );
@@ -201,7 +220,43 @@ public class ViewProjectionUtils {
                 student.person.facebook,
                 student.person.linkedin,
                 student.status,
-                student.datestamp
+                student.datestamp,
+                new NullExpression<>(StudentClassDto.class),
+                new NullExpression<>(DormYearDto.class),
+                new NullExpression<>(SchoolDto.class),
+                student.startYear,
+                student.endYear,
+                new NullExpression<>(Long.class),
+                new NullExpression<>(Long.class)
+        );
+    }
+
+    public static ConstructorExpression<StudentDto> getStudentWithDormProjection() {
+        QStudent student = QStudent.student;
+
+        return Projections.constructor(StudentDto.class,
+                student.id,
+                student.person.salutation,
+                student.person.firstName,
+                student.person.otherNames,
+                student.person.lastName,
+                student.person.dateOfBirth,
+                student.person.email,
+                student.person.mobileNumber,
+                student.person.mobileNumber2,
+                student.person.telNumber,
+                student.person.whatsapp,
+                student.person.facebook,
+                student.person.linkedin,
+                student.status,
+                student.datestamp,
+                new NullExpression<>(StudentClassDto.class),
+                new NullExpression<>(DormYearDto.class),
+                new NullExpression<>(SchoolDto.class),
+                student.startYear,
+                student.endYear,
+                new NullExpression<>(Long.class),
+                student.dorm.id
         );
     }
 
@@ -225,9 +280,13 @@ public class ViewProjectionUtils {
                 student.person.linkedin,
                 student.status,
                 student.datestamp,
+                new NullExpression<>(StudentClassDto.class),
+                new NullExpression<>(DormYearDto.class),
+                new NullExpression<>(SchoolDto.class),
                 student.startYear,
                 student.endYear,
-                extraCurricularYear.id
+                extraCurricularYear.id,
+                new NullExpression<>(Long.class)
         );
     }
 
@@ -254,15 +313,17 @@ public class ViewProjectionUtils {
                         student.classroom.id,
                         student.classroom.classroom.name,
                         student.classroom.classroom.description,
-                        student.classroom.calendarYear
+                        student.classroom.calendarYear,
+                        new NullExpression<>(List.class)
                 ),
-                Projections.constructor(DormDto.class,
+                Projections.constructor(DormYearDto.class,
                         student.dorm.id,
                         student.dorm.dorm.name,
                         student.dorm.dorm.description,
                         student.dorm.dorm.address,
                         student.dorm.calendarYear,
-                        student.dorm.dorm.school.name
+                        student.dorm.dorm.school.name,
+                        new NullExpression<>(List.class)
                 ),
                 Projections.constructor(SchoolDto.class,
                         student.school.id,
@@ -275,7 +336,9 @@ public class ViewProjectionUtils {
                         student.school.website
                 ),
                 student.startYear,
-                student.endYear
+                student.endYear,
+                new NullExpression<>(Long.class),
+                new NullExpression<>(Long.class)
         );
     }
 
@@ -288,20 +351,46 @@ public class ViewProjectionUtils {
                 extraCurricularYear.extraCurricular.description,
                 extraCurricularYear.calendarYear,
                 extraCurricularYear.datestamp,
-                extraCurricularYear.status
+                extraCurricularYear.status,
+                new NullExpression<>(List.class),
+                new NullExpression<>(List.class)
         );
     }
 
-    public static ConstructorExpression<DormDto> getDormYearProjection() {
+    public static ConstructorExpression<DormYearDto> getDormYearProjection() {
         QDormYear dormYear = QDormYear.dormYear;
 
-        return Projections.constructor(DormDto.class,
+        return Projections.constructor(DormYearDto.class,
                 dormYear.id,
                 dormYear.dorm.name,
                 dormYear.dorm.description,
                 dormYear.dorm.address,
                 dormYear.calendarYear,
-                dormYear.dorm.school.name
+                dormYear.dorm.school.name,
+                new NullExpression<>(List.class)
+        );
+    }
+
+    public static ConstructorExpression<DormDto> getDormProjection() {
+        QDorm dorm = QDorm.dorm;
+
+        return Projections.constructor(DormDto.class,
+                dorm.id,
+                dorm.name,
+                dorm.description,
+                dorm.address,
+                dorm.status,
+                dorm.datestamp,
+                Projections.constructor(SchoolDto.class,
+                        dorm.school.id,
+                        dorm.school.name,
+                        dorm.school.email,
+                        dorm.school.telNumber,
+                        dorm.school.mobileNumber,
+                        dorm.school.mobileNumber2,
+                        dorm.school.address,
+                        dorm.school.website
+                )
         );
     }
 }
