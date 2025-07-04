@@ -3,7 +3,6 @@ package zw.co.techtrendz.school.management.api.view;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 import zw.co.techtrendz.school.management.api.enums.Status;
 import zw.co.techtrendz.school.management.api.enums.SubjectType;
 

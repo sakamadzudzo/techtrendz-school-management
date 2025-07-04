@@ -1,6 +1,8 @@
 package zw.co.techtrendz.school.management.api.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 import zw.co.techtrendz.school.management.api.enums.Role;

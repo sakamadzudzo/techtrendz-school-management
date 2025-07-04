@@ -13,7 +13,7 @@ import zw.co.techtrendz.school.management.api.querydsl.ClassroomYearQueryService
 import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
 import zw.co.techtrendz.school.management.api.repository.ClassroomYearRepository;
 import zw.co.techtrendz.school.management.api.service.ClassroomYearService;
-import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
+import zw.co.techtrendz.school.management.api.utility.AppUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
 import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
@@ -132,12 +132,7 @@ public class ClassroomYearServiceImpl implements ClassroomYearService {
             return this.getViewAll(page, size, sortBy, sortDir);
         } else {
             BooleanExpression predicate = null;
-            for (var field : ClassroomYear.class.getDeclaredFields()) {
-                field.setAccessible(true); // Ensure private fields are accessible
-                if (field.getType().equals(String.class)) {
-                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(ClassroomYear.class, field.getName(), filter), false);
-                }
-            }
+            predicate = AppUtils.getBooleanExpression(filter, predicate, ClassroomYear.class, "classroomYear", Arrays.asList("homeroomTeacher", "subjects"));
 
             Page<ClassroomYearDto> classroomYearDtoPage = this.classroomYearQueryService.getAllClassroomYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return getClassroomYearClassesAndSubjects(classroomYearDtoPage);

@@ -14,11 +14,15 @@ import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
 import zw.co.techtrendz.school.management.api.repository.StudentRepository;
 import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.service.StudentService;
-import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
+import zw.co.techtrendz.school.management.api.utility.AppUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
-import zw.co.techtrendz.school.management.api.view.*;
+import zw.co.techtrendz.school.management.api.view.StudentClassDto;
+import zw.co.techtrendz.school.management.api.view.StudentDto;
+import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -156,12 +160,7 @@ public class StudentServiceImpl implements StudentService {
             return this.getViewAll(page, size, sortBy, sortDir);
         } else {
             BooleanExpression predicate = null;
-            for (var field : Student.class.getDeclaredFields()) {
-                field.setAccessible(true); // Ensure private fields are accessible
-                if (field.getType().equals(String.class)) {
-                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(Student.class, field.getName(), filter), false);
-                }
-            }
+            predicate = AppUtils.getBooleanExpression(filter, predicate, Student.class, "student", Arrays.asList("classroom", "extraCurricularYears", "dorm", "school"));
 
             Page<StudentDto> studentDtoPage = this.studentQueryService.getAllStudentDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return this.getClassroomSubjects(studentDtoPage);

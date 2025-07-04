@@ -4,15 +4,16 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import zw.co.techtrendz.school.management.api.entity.*;
+import zw.co.techtrendz.school.management.api.entity.QDormYear;
+import zw.co.techtrendz.school.management.api.entity.QExtraCurricularYear;
+import zw.co.techtrendz.school.management.api.entity.QStudent;
+import zw.co.techtrendz.school.management.api.entity.Student;
 import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
 import zw.co.techtrendz.school.management.api.utility.ViewProjectionUtils;
 import zw.co.techtrendz.school.management.api.view.StudentDto;
-import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,13 +89,13 @@ public class StudentQueryService {
         List<StudentDto> studentDtoList = queryFactory.select(
                         ViewProjectionUtils.getStudentWithClassroomProjection()
                 ).from(student)
-                .where(QuerydslUtils.toPredicate(example, Student.class))
+                .where(QuerydslUtils.toPredicate(example, Student.class, "student"))
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = queryFactory.selectFrom(student).where(QuerydslUtils.toPredicate(example, Student.class)).fetchCount();
+        long total = queryFactory.selectFrom(student).where(QuerydslUtils.toPredicate(example, Student.class, "student")).fetchCount();
 
         return new PageImpl<>(studentDtoList, pageable, total);
     }

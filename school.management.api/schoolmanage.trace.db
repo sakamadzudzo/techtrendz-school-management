@@ -2873,3 +2873,30 @@ create global temporary table HTE_revinfo(id integer, rn_ integer not null, time
 2025-06-29 22:55:28.161082+02:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PERSON" not found; SQL statement:
 select p1_0.id,p1_0.date_of_birth,p1_0.datestamp,p1_0.email,p1_0.facebook,p1_0.first_name,p1_0.last_name,p1_0.linkedin,p1_0.mobile_number,p1_0.mobile_number2,p1_0.other_names,p1_0.salutation,p1_0.status,p1_0.tel_number,p1_0.whatsapp from person p1_0 where p1_0.id=? [42102-232]
+2025-07-01 09:45:34.803997+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXTRA_CURRICULAR_YEAR_AUD" not found; SQL statement:
+insert into extra_curricular_year_aud (revtype,calendar_year,extra_curricular_id,rev,id) values (?,?,?,?,?) [42102-232]
+2025-07-01 09:46:16.038441+02:00 jdbc[7]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "HTE_REVINFO" already exists; SQL statement:
+create global temporary table HTE_revinfo(id integer, rn_ integer not null, timestamp bigint, user_id bigint, username varchar(255), primary key (rn_)) TRANSACTIONAL [42101-232]
+2025-07-01 09:46:18.226500+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PERSON" not found; SQL statement:
+select t1_0.id,t1_0.datestamp,t1_0.person_id,t1_0.status from teacher t1_0 left join person p1_0 on p1_0.id=t1_0.person_id order by p1_0.last_name desc offset ? rows fetch first ? rows only [42102-232]
+2025-07-04 02:30:11.143364+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CLASSROOM_YEAR_AUD" not found; SQL statement:
+insert into classroom_year_aud (revtype,calendar_year,classroom_id,homeroom_teacher_id,rev,id) values (?,?,?,?,?,?) [42102-232]
+2025-07-04 02:34:15.586964+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "HTE_REVINFO" already exists; SQL statement:
+create global temporary table HTE_revinfo(id integer, rn_ integer not null, timestamp bigint, user_id bigint, username varchar(255), primary key (rn_)) TRANSACTIONAL [42101-232]
+2025-07-04 02:34:18.103915+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CLASSROOM_YEAR_AUD" not found; SQL statement:
+insert into classroom_year_aud (revtype,calendar_year,classroom_id,homeroom_teacher_id,rev,id) values (?,?,?,?,?,?) [42102-232]
+2025-07-04 02:42:06.633132+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CLASSROOM_YEAR_AUD" not found; SQL statement:
+insert into classroom_year_aud (revtype,calendar_year,classroom_id,homeroom_teacher_id,rev,id) values (?,?,?,?,?,?) [42102-232]
+2025-07-04 02:46:49.049220+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "HTE_REVINFO" already exists; SQL statement:
+create global temporary table HTE_revinfo(id integer, rn_ integer not null, timestamp bigint, user_id bigint, username varchar(255), primary key (rn_)) TRANSACTIONAL [42101-232]
+2025-07-04 02:46:51.222460+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CLASSROOM_YEAR_AUD" not found; SQL statement:
+insert into classroom_year_aud (revtype,calendar_year,classroom_id,homeroom_teacher_id,rev,id) values (?,?,?,?,?,?) [42102-232]

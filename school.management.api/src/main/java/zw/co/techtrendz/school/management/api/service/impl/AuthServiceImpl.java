@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.dto.AuthDto;
 import zw.co.techtrendz.school.management.api.dto.UserViewDto;
 import zw.co.techtrendz.school.management.api.entity.User;
-import zw.co.techtrendz.school.management.api.security.JwtAuthenticationFilter;
 import zw.co.techtrendz.school.management.api.security.JwtUtil;
 import zw.co.techtrendz.school.management.api.service.AuthService;
 import zw.co.techtrendz.school.management.api.service.JwtBlacklistService;

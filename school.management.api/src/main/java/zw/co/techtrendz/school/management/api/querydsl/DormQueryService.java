@@ -87,13 +87,13 @@ public class DormQueryService {
         List<DormDto> dormDtoList = queryFactory.select(
                         ViewProjectionUtils.getDormProjection()
                 ).from(dorm)
-                .where(QuerydslUtils.toPredicate(example, Dorm.class))
+                .where(QuerydslUtils.toPredicate(example, Dorm.class, "dorm"))
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = queryFactory.selectFrom(dorm).where(QuerydslUtils.toPredicate(example, Dorm.class)).fetchCount();
+        long total = queryFactory.selectFrom(dorm).where(QuerydslUtils.toPredicate(example, Dorm.class, "dorm")).fetchCount();
 
         return new PageImpl<>(dormDtoList, pageable, total);
     }

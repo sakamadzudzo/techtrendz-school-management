@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.entity.User;
 import zw.co.techtrendz.school.management.api.service.UserService;
+import zw.co.techtrendz.school.management.api.view.UserDto;
 
 import java.util.List;
 
@@ -50,6 +51,28 @@ public class UserController {
     @GetMapping("/get/all/by/filter")
     public Page<User> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.userService.getAllByFilter(page, size, sortBy, sortDir, filter);
+    }
+
+    @GetMapping("/view/get/one")
+    public UserDto getViewUser(@RequestParam Long id) {
+        return this.userService.getViewById(id);
+    }
+
+    @GetMapping("/view/get/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<UserDto> getViewAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.userService.getViewAll(page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/view/get/all/by/example")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<UserDto> getViewAllUsersByExample(@RequestBody @Valid User user, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.userService.getViewAllByExample(user, page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/view/get/all/by/filter")
+    public Page<UserDto> getViewAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
+        return this.userService.getViewAllByFilter(page, size, sortBy, sortDir, filter);
     }
 
     @GetMapping("/get/by/username")

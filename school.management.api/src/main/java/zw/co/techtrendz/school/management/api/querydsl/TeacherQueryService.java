@@ -128,13 +128,13 @@ public class TeacherQueryService {
         List<TeacherDto> teacherDtoList = queryFactory.select(
                         ViewProjectionUtils.getTeacherProjection()
                 ).from(teacher)
-                .where(QuerydslUtils.toPredicate(example, Teacher.class))
+                .where(QuerydslUtils.toPredicate(example, Teacher.class, "teacher"))
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = queryFactory.selectFrom(teacher).where(QuerydslUtils.toPredicate(example, Teacher.class)).fetchCount();
+        long total = queryFactory.selectFrom(teacher).where(QuerydslUtils.toPredicate(example, Teacher.class, "teacher")).fetchCount();
 
         return new PageImpl<>(teacherDtoList, pageable, total);
     }

@@ -14,9 +14,11 @@ import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.TeacherQueryService;
 import zw.co.techtrendz.school.management.api.repository.ExtraCurricularYearRepository;
 import zw.co.techtrendz.school.management.api.service.ExtraCurricularYearService;
-import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
+import zw.co.techtrendz.school.management.api.utility.AppUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
-import zw.co.techtrendz.school.management.api.view.*;
+import zw.co.techtrendz.school.management.api.view.ExtraCurricularYearDto;
+import zw.co.techtrendz.school.management.api.view.StudentDto;
+import zw.co.techtrendz.school.management.api.view.TeacherDto;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -136,12 +138,7 @@ public class ExtraCurricularYearServiceImpl implements ExtraCurricularYearServic
             return this.getViewAll(page, size, sortBy, sortDir);
         } else {
             BooleanExpression predicate = null;
-            for (var field : ExtraCurricularYear.class.getDeclaredFields()) {
-                field.setAccessible(true); // Ensure private fields are accessible
-                if (field.getType().equals(String.class)) {
-                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(ExtraCurricularYear.class, field.getName(), filter), false);
-                }
-            }
+            predicate = AppUtils.getBooleanExpression(filter, predicate, ExtraCurricularYear.class, "extraCurricularYear", Arrays.asList("students", "facilitators"));
 
             Page<ExtraCurricularYearDto> extraCurricularYearDtoPage = this.extraCurricularYearQueryService.getAllExtraCurricularYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return getExtraCurricularYearClassesAndSubjects(extraCurricularYearDtoPage);

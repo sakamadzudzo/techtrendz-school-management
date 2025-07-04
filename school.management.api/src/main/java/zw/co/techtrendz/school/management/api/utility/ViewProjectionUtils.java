@@ -393,4 +393,33 @@ public class ViewProjectionUtils {
                 )
         );
     }
+
+    public static ConstructorExpression<UserDto> getUserProjection() {
+        QUser user = QUser.user;
+
+        return Projections.constructor(UserDto.class,
+                user.id,
+                user.person.id,
+                user.person.salutation,
+                user.person.firstName,
+                user.person.otherNames,
+                user.person.lastName,
+                user.person.dateOfBirth,
+                user.person.email,
+                user.person.mobileNumber,
+                user.person.mobileNumber2,
+                user.person.telNumber,
+                user.person.whatsapp,
+                user.person.facebook,
+                user.person.linkedin,
+                user.username,
+                user.password,
+                user.verified,
+                user.enabled,
+                user.changePassword,
+                user.roles,
+                user.status,
+                user.datestamp
+        );
+    }
 }

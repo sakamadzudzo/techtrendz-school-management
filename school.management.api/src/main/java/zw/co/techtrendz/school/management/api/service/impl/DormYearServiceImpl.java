@@ -8,17 +8,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import zw.co.techtrendz.school.management.api.entity.Dorm;
 import zw.co.techtrendz.school.management.api.entity.DormYear;
 import zw.co.techtrendz.school.management.api.querydsl.DormYearQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
 import zw.co.techtrendz.school.management.api.repository.DormYearRepository;
 import zw.co.techtrendz.school.management.api.service.DormYearService;
-import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
+import zw.co.techtrendz.school.management.api.utility.AppUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
-import zw.co.techtrendz.school.management.api.view.*;
 import zw.co.techtrendz.school.management.api.view.DormYearDto;
+import zw.co.techtrendz.school.management.api.view.StudentDto;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -127,12 +127,7 @@ public class DormYearServiceImpl implements DormYearService {
             return this.getViewAll(page, size, sortBy, sortDir);
         } else {
             BooleanExpression predicate = null;
-            for (var field : DormYear.class.getDeclaredFields()) {
-                field.setAccessible(true); // Ensure private fields are accessible
-                if (field.getType().equals(String.class)) {
-                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(Dorm.class, field.getName(), filter), false);
-                }
-            }
+            predicate = AppUtils.getBooleanExpression(filter, predicate, DormYear.class, "dormYear", Arrays.asList("school"));
 
             Page<DormYearDto> dormDtoPage = this.dormYearQueryService.getAllDormYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return this.getDormStudents(dormDtoPage);

@@ -4,11 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 import zw.co.techtrendz.school.management.api.enums.Role;
-import zw.co.techtrendz.school.management.api.enums.Status;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -40,6 +40,7 @@ public class User extends Base {
     private Boolean changePassword;
 
     @ManyToOne
+    @Fetch(FetchMode.JOIN)
     private Person person;
 
     List<Role> roles;

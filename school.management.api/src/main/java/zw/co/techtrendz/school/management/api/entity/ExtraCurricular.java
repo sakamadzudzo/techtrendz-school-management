@@ -6,8 +6,6 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.envers.Audited;
 
-import java.util.List;
-
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Entity

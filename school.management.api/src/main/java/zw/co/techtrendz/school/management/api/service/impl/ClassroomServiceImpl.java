@@ -12,10 +12,7 @@ import zw.co.techtrendz.school.management.api.repository.ClassroomRepository;
 import zw.co.techtrendz.school.management.api.service.ClassroomService;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Service
 public class ClassroomServiceImpl implements ClassroomService {

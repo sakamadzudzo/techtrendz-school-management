@@ -87,13 +87,13 @@ public class ExtraCurricularYearQueryService {
         List<ExtraCurricularYearDto> extraCurricularYearDtoList = queryFactory.select(
                         ViewProjectionUtils.getExtraCurricularYearProjection()
                 ).from(extraCurricularYear)
-                .where(QuerydslUtils.toPredicate(example, ExtraCurricularYear.class))
+                .where(QuerydslUtils.toPredicate(example, ExtraCurricularYear.class, "extraCurricularYear"))
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = queryFactory.selectFrom(extraCurricularYear).where(QuerydslUtils.toPredicate(example, ExtraCurricularYear.class)).fetchCount();
+        long total = queryFactory.selectFrom(extraCurricularYear).where(QuerydslUtils.toPredicate(example, ExtraCurricularYear.class, "extraCurricularYear")).fetchCount();
 
         return new PageImpl<>(extraCurricularYearDtoList, pageable, total);
     }

@@ -5,10 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.envers.Audited;
-import zw.co.techtrendz.school.management.api.enums.Status;
 import zw.co.techtrendz.school.management.api.enums.SubjectType;
-
-import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

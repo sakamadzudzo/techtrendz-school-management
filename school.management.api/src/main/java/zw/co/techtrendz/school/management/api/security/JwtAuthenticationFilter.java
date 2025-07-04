@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import zw.co.techtrendz.school.management.api.enums.Role;
 import zw.co.techtrendz.school.management.api.service.JwtBlacklistService;
 import zw.co.techtrendz.school.management.api.utility.AppUtils;
 

@@ -101,13 +101,13 @@ public class SubjectYearQueryService {
         List<SubjectYearDto> subjectYearDtoList = queryFactory.select(
                         ViewProjectionUtils.getSubjectYearWithTeacherNoClassroomProjection()
                 ).from(subjectYear)
-                .where(QuerydslUtils.toPredicate(example, SubjectYear.class))
+                .where(QuerydslUtils.toPredicate(example, SubjectYear.class, "subjectYear"))
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = queryFactory.selectFrom(subjectYear).where(QuerydslUtils.toPredicate(example, SubjectYear.class)).fetchCount();
+        long total = queryFactory.selectFrom(subjectYear).where(QuerydslUtils.toPredicate(example, SubjectYear.class, "subjectYear")).fetchCount();
 
         return new PageImpl<>(subjectYearDtoList, pageable, total);
     }

@@ -4,9 +4,7 @@ import com.querydsl.core.annotations.QueryEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
-import zw.co.techtrendz.school.management.api.enums.Status;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)

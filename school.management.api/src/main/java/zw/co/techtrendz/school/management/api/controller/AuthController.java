@@ -4,14 +4,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import zw.co.techtrendz.school.management.api.dto.AuthDto;
 import zw.co.techtrendz.school.management.api.entity.User;
 import zw.co.techtrendz.school.management.api.security.JwtUtil;
 import zw.co.techtrendz.school.management.api.service.AuthService;
 import zw.co.techtrendz.school.management.api.service.JwtBlacklistService;
 import zw.co.techtrendz.school.management.api.service.UserService;
-import zw.co.techtrendz.school.management.api.utility.AppUtils;
 
 import java.util.Map;
 

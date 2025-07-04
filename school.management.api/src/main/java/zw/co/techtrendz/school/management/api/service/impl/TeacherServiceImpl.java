@@ -1,6 +1,5 @@
 package zw.co.techtrendz.school.management.api.service.impl;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -14,12 +13,13 @@ import zw.co.techtrendz.school.management.api.querydsl.TeacherQueryService;
 import zw.co.techtrendz.school.management.api.repository.TeacherRepository;
 import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.service.TeacherService;
-import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
+import zw.co.techtrendz.school.management.api.utility.AppUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
 import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
 import zw.co.techtrendz.school.management.api.view.TeacherDto;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -137,12 +137,7 @@ public class TeacherServiceImpl implements TeacherService {
             return this.getViewAll(page, size, sortBy, sortDir);
         } else {
             BooleanExpression predicate = null;
-            for (var field : Teacher.class.getDeclaredFields()) {
-                field.setAccessible(true); // Ensure private fields are accessible
-                if (field.getType().equals(String.class)) {
-                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(Teacher.class, field.getName(), filter), false);
-                }
-            }
+            predicate = AppUtils.getBooleanExpression(filter, predicate, Teacher.class, "teacher", Arrays.asList("extraCurricularYears"));
 
             Page<TeacherDto> teacherDtoPage = this.teacherQueryService.getAllTeacherDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return getTeacherClassesAndSubjects(teacherDtoPage);

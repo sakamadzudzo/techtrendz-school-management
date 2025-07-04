@@ -12,10 +12,11 @@ import zw.co.techtrendz.school.management.api.entity.SubjectYear;
 import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
 import zw.co.techtrendz.school.management.api.repository.SubjectYearRepository;
 import zw.co.techtrendz.school.management.api.service.SubjectYearService;
-import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
+import zw.co.techtrendz.school.management.api.utility.AppUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -119,12 +120,7 @@ public class SubjectYearServiceImpl implements SubjectYearService {
             return this.getViewAll(page, size, sortBy, sortDir);
         } else {
             BooleanExpression predicate = null;
-            for (var field : SubjectYear.class.getDeclaredFields()) {
-                field.setAccessible(true); // Ensure private fields are accessible
-                if (field.getType().equals(String.class)) {
-                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(SubjectYear.class, field.getName(), filter), false);
-                }
-            }
+            predicate = AppUtils.getBooleanExpression(filter, predicate, SubjectYear.class, "subjectYear", Arrays.asList("teacher", "classrooms"));
 
             if (sortBy.isEmpty()) {
                 sortBy.add("subject.name");

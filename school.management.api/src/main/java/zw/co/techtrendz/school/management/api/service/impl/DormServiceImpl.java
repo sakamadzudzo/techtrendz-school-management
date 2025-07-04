@@ -9,14 +9,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.Dorm;
-import zw.co.techtrendz.school.management.api.entity.Teacher;
 import zw.co.techtrendz.school.management.api.querydsl.DormQueryService;
 import zw.co.techtrendz.school.management.api.repository.DormRepository;
 import zw.co.techtrendz.school.management.api.service.DormService;
-import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
+import zw.co.techtrendz.school.management.api.utility.AppUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 import zw.co.techtrendz.school.management.api.view.DormDto;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -143,12 +143,7 @@ public class DormServiceImpl implements DormService {
 //            return this.dormRepository.findAll(spec, PageRequest.of(page, size, Sort.by(sortDir, sortFields)));
 
             BooleanExpression predicate = null;
-            for (var field : Dorm.class.getDeclaredFields()) {
-                field.setAccessible(true); // Ensure private fields are accessible
-                if (field.getType().equals(String.class)) {
-                    predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.likeMatch(Teacher.class, field.getName(), filter), false);
-                }
-            }
+            predicate = AppUtils.getBooleanExpression(filter, predicate, Dorm.class, "dorm", Arrays.asList("school"));
 
             return this.dormQueryService.getAllDormDetailsByPredicate(page, size, sortBy, sortDir, predicate);
         }
