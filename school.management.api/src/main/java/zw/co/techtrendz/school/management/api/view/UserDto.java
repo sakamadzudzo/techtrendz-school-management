@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import zw.co.techtrendz.school.management.api.enums.Role;
 import zw.co.techtrendz.school.management.api.enums.Salutation;
 import zw.co.techtrendz.school.management.api.enums.Status;
+import zw.co.techtrendz.school.management.api.utility.AppUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -59,4 +60,12 @@ public class UserDto {
     private Status status;
 
     private LocalDateTime datestamp;
+
+    public String getFullname() {
+        return AppUtils.getFullname(this.salutation, this.firstName, this.otherNames, this.lastName);
+    }
+
+    public String getName() {
+        return AppUtils.getName(this.firstName, this.otherNames, this.lastName);
+    }
 }

@@ -48,6 +48,7 @@ export default function Settings() {
                 value={current}
                 onValueChange={setCurrent}
                 required
+                variant="underlined"
               />
               <Input
                 label="New Password"
@@ -55,6 +56,7 @@ export default function Settings() {
                 value={newPass}
                 onValueChange={setNewPass}
                 required
+                variant="underlined"
               />
               <Input
                 label="Confirm New Password"
@@ -62,13 +64,12 @@ export default function Settings() {
                 value={confirm}
                 onValueChange={setConfirm}
                 required
+                variant="underlined"
               />
               <Button type="submit" color="primary">
                 Change Password
               </Button>
-              {message && (
-                <p className="text-danger mt-2">{message}</p>
-              )}
+              {message && <p className="text-danger mt-2">{message}</p>}
             </form>
           </section>
         </CardBody>

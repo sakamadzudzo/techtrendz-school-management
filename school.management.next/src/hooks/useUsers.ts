@@ -1,7 +1,8 @@
 import useSWR from "swr";
 import { useSelector } from "react-redux";
-import { ApiError } from "../utils/classes";
+import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
+import { UserView } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -44,7 +45,7 @@ export function useUsersAll({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    users: data as Page<UserView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -80,7 +81,7 @@ export function useUsersAllByFilter({
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    data,
+    users: data as Page<UserView>,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -97,7 +98,7 @@ export function useUserById(userId: string | undefined) {
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
-    user: data,
+    user: data as UserView,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
@@ -129,7 +130,7 @@ export function useUsersByExample(exampleDto: any) {
   };
   const { data, error, mutate } = useSWR(key, fetcherWithBody);
   return {
-    users: data,
+    users: data as Page<UserView>,
     isLoading: !!exampleDto && !!token && !error && !data,
     isError: error,
     mutate,

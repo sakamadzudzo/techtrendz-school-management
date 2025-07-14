@@ -9,12 +9,13 @@ function getAuthHeader(req: NextApiRequest) {
   return auth ? { Authorization: auth } : {};
 }
 
-async function createSchool(schoolDto: any, authHeader: any) {
+async function saveSchool(schoolDto: any, authHeader: any) {
   const res = await fetch(`${API_BASE}/save`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
     body: JSON.stringify(schoolDto),
   });
+  console.log(authHeader);
   if (!res.ok) throw new ApiError("School creation failed", res.status);
   return res.json();
 }
@@ -116,8 +117,8 @@ export default async function handler(
     const authHeader = getAuthHeader(req);
 
     if (req.method === "POST") {
-      if (action === "create") {
-        const data = await createSchool(req.body, authHeader);
+      if (action === "save") {
+        const data = await saveSchool(req.body, authHeader);
         return res.status(201).json(data);
       }
       if (action === "example") {

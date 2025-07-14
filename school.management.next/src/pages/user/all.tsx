@@ -28,7 +28,7 @@ export default function AllUsersPage() {
 
   if (searchValue) {
     ({
-      data: users,
+      users,
       isLoading,
       isError,
     } = useUsersAllByFilter({
@@ -40,7 +40,7 @@ export default function AllUsersPage() {
     }));
   } else {
     ({
-      data: users,
+      users,
       isLoading,
       isError,
     } = useUsersAll({

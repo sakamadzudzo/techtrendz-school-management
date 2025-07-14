@@ -254,6 +254,35 @@ export type ExtraCurricularYearView = {
   students: StudentView[];
 };
 
+export type UserView = {
+  id: number;
+  personId: number;
+  salutation: string;
+  firstName: string;
+  otherNames: string;
+  lastName: string;
+  dateOfBirth: Date | string;
+  email: string;
+  mobileNumber: string;
+  mobileNumber2: string;
+  telNumber: string;
+  whatsapp: string;
+  facebook: string;
+  linkedin: string;
+  username: string;
+  password: string;
+  verified: string;
+  enabled: string;
+  changePassword: string;
+  roles: string[];
+  status: string;
+  datestamp: Date | string;
+  name: string;
+  fullname: string;
+  avatarUrl: string;
+  imagesUrls: string[];
+};
+
 export enum Status {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",

@@ -9,7 +9,7 @@ function getAuthHeader(req: NextApiRequest) {
   return auth ? { Authorization: auth } : {};
 }
 
-async function createClassroomYear(classroomYearDto: any, authHeader: any) {
+async function saveClassroomYear(classroomYearDto: any, authHeader: any) {
   const res = await fetch(`${API_BASE}/save`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
@@ -116,8 +116,8 @@ export default async function handler(
     const authHeader = getAuthHeader(req);
 
     if (req.method === "POST") {
-      if (action === "create") {
-        const data = await createClassroomYear(req.body, authHeader);
+      if (action === "save") {
+        const data = await saveClassroomYear(req.body, authHeader);
         return res.status(201).json(data);
       }
       if (action === "example") {

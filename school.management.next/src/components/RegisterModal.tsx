@@ -98,7 +98,9 @@ export default function RegisterModal({
       }}
     >
       <ModalContent className="overflow-y-auto max-h-full">
-        <ModalHeader className="text-xl font-bold text-foreground">Register</ModalHeader>
+        <ModalHeader className="text-xl font-bold text-foreground">
+          Register
+        </ModalHeader>
         <ModalBody>
           <Form onSubmit={onSubmit} className="space-y-3">
             <Input
@@ -109,6 +111,7 @@ export default function RegisterModal({
               value={form.username}
               onValueChange={(v) => handleChange("username", v)}
               size="sm"
+              variant="underlined"
             />
             <Input
               isRequired
@@ -119,12 +122,16 @@ export default function RegisterModal({
               value={form.password}
               onValueChange={(v) => handleChange("password", v)}
               size="sm"
+              variant="underlined"
             />
             <Select
-            className="text-foreground"
+              className="text-foreground"
               label="Salutation"
               selectedKeys={[form.salutation]}
-              onSelectionChange={(keys) => handleChange("salutation", Array.from(keys)[0] as string)}
+              variant="underlined"
+              onSelectionChange={(keys) =>
+                handleChange("salutation", Array.from(keys)[0] as string)
+              }
             >
               {salutations.map((s) => (
                 <SelectItem key={s}>{s}</SelectItem>
@@ -138,6 +145,7 @@ export default function RegisterModal({
               value={form.firstName}
               onValueChange={(v) => handleChange("firstName", v)}
               size="sm"
+              variant="underlined"
             />
             <Input
               label="Other Names"
@@ -146,6 +154,7 @@ export default function RegisterModal({
               value={form.otherNames}
               onValueChange={(v) => handleChange("otherNames", v)}
               size="sm"
+              variant="underlined"
             />
             <Input
               isRequired
@@ -155,6 +164,7 @@ export default function RegisterModal({
               value={form.lastName}
               onValueChange={(v) => handleChange("lastName", v)}
               size="sm"
+              variant="underlined"
             />
             <Input
               isRequired
@@ -165,6 +175,7 @@ export default function RegisterModal({
               value={form.email}
               onValueChange={(v) => handleChange("email", v)}
               size="sm"
+              variant="underlined"
             />
             <Input
               label="Mobile Number"
@@ -173,6 +184,7 @@ export default function RegisterModal({
               value={form.mobileNumber}
               onValueChange={(v) => handleChange("mobileNumber", v)}
               size="sm"
+              variant="underlined"
             />
             <Input
               label="Date of Birth"
@@ -181,11 +193,15 @@ export default function RegisterModal({
               value={form.dateOfBirth}
               onValueChange={(v) => handleChange("dateOfBirth", v)}
               size="sm"
+              variant="underlined"
             />
             <Select
               label="Role"
               selectedKeys={[form.role]}
-              onSelectionChange={(keys) => handleChange("role", Array.from(keys)[0] as string)}
+              variant="underlined"
+              onSelectionChange={(keys) =>
+                handleChange("role", Array.from(keys)[0] as string)
+              }
             >
               {roles.map((r) => (
                 <SelectItem key={r}>{r}</SelectItem>
@@ -197,7 +213,11 @@ export default function RegisterModal({
           </Form>
         </ModalBody>
         <ModalFooter>
-          <Button variant="light" onClick={() => onOpenChange(false)}>
+          <Button
+            color="danger"
+            className="w-full"
+            onPress={() => onOpenChange(false)}
+          >
             Cancel
           </Button>
         </ModalFooter>

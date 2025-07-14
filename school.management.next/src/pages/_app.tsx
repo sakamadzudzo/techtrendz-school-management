@@ -11,7 +11,14 @@ import Navbar_Staff from "@/components/Navbar-Staff";
 import Navbar_Parent from "@/components/Navbar-Parent";
 import { rehydrate } from "@/store/slices/authSlice";
 
-function AppContent({ Component, pageProps, darkMode, setLoading, saveDarkMode, loading }: any) {
+function AppContent({
+  Component,
+  pageProps,
+  darkMode,
+  setLoading,
+  saveDarkMode,
+  loading,
+}: any) {
   const { token, user } = useSelector((state: any) => state.auth);
   const dispatch = useDispatch();
 
@@ -38,7 +45,7 @@ function AppContent({ Component, pageProps, darkMode, setLoading, saveDarkMode, 
 
   return (
     <main
-      className={`text-foreground bg-background h-dvh w-dvw relative flex flex-col`}
+      className={`text-foreground bg-background h-full w-full relative flex flex-col`}
     >
       <ThemeSwitcher saveDarkMode={saveDarkMode} darkMode={darkMode} />
       {navbar}

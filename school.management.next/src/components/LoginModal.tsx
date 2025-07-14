@@ -17,7 +17,7 @@ import InlineError from "./InlineError";
 export default function LoginModal({
   isOpen,
   onOpenChange,
-  setLoading
+  setLoading,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -92,12 +92,7 @@ export default function LoginModal({
         <ModalHeader className="text-xl font-bold">Login</ModalHeader>
         <ModalBody>
           <Form onSubmit={onSubmit} className="space-y-4">
-            {error && (
-              <InlineError
-                statusCode={statusCode}
-                title={error}
-              />
-            )}
+            {error && <InlineError statusCode={statusCode} title={error} />}
             <Input
               isRequired
               label="Username"
@@ -107,6 +102,7 @@ export default function LoginModal({
               value={username}
               onValueChange={setUsername}
               size="sm"
+              variant="underlined"
               autoFocus={true}
             />
             <Input
@@ -118,6 +114,7 @@ export default function LoginModal({
               value={password}
               onValueChange={setPassword}
               size="sm"
+              variant="underlined"
             />
             <Button type="submit" color="primary" className="w-full">
               Login
@@ -125,7 +122,11 @@ export default function LoginModal({
           </Form>
         </ModalBody>
         <ModalFooter>
-          <Button variant="light" onClick={() => onOpenChange(false)}>
+          <Button
+            color="danger"
+            className="w-full"
+            onPress={() => onOpenChange(false)}
+          >
             Cancel
           </Button>
         </ModalFooter>

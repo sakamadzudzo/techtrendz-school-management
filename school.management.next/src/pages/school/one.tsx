@@ -15,6 +15,7 @@ export default function OneSchoolPage() {
       <div aria-label="Page buttons" className="w-full flex justify-end gap-4">
         <Button
           color="primary"
+          as={Link}
           endContent={<PencilSimpleLineIcon weight="thin" size={34} />}
           href={`/school/edit?id=${school?.id}`}
         >

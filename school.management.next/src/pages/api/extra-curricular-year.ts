@@ -9,7 +9,7 @@ function getAuthHeader(req: NextApiRequest) {
   return auth ? { Authorization: auth } : {};
 }
 
-async function createExtraCurricularYear(extraCurricularYearDto: any, authHeader: any) {
+async function saveExtraCurricularYear(extraCurricularYearDto: any, authHeader: any) {
   const res = await fetch(`${API_BASE}/save`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
@@ -116,8 +116,8 @@ export default async function handler(
     const authHeader = getAuthHeader(req);
 
     if (req.method === "POST") {
-      if (action === "create") {
-        const data = await createExtraCurricularYear(req.body, authHeader);
+      if (action === "save") {
+        const data = await saveExtraCurricularYear(req.body, authHeader);
         return res.status(201).json(data);
       }
       if (action === "example") {
