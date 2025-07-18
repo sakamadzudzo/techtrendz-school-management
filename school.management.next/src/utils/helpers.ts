@@ -81,3 +81,5 @@ export const sanitizeForWhatsapp = (phone: string) => {
     return "https://api.whatsapp.com/send?phone=772397475";
   }
 };
+
+export const API_URL = "http://localhost:4002";

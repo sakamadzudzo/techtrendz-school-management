@@ -1,9 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "./../../utils/classes";
+import { API_URL } from "@/utils/helpers";
 
 // Example backend API base URL
-// const API_BASE = process.env.AUTH_API_BASE + "/auth" || "http://localhost:4002/auth";
-const API_BASE = "http://localhost:4002/auth";
+// const API_BASE = process.env.AUTH_API_BASE + "/auth" || "http://localhost:4002/auth";import { API_URL } from "@/utils/helpers";
+
+const API_BASE = API_URL + "/auth";
 
 async function login(authDto: {
   username: string;

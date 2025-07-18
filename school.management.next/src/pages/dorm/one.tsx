@@ -4,14 +4,33 @@ import { useSearchParams } from "next/navigation";
 import { PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { formatDate } from "@/utils/helpers";
 import MyChip from "@/components/MyChip";
+import { useEffect } from "react";
+import { Wrapper } from "@/components/Wrapper";
 
-export default function OneDormPage() {
+export default function OneDormPage({
+  setLoading,
+}: {
+  setLoading: (loading: boolean) => void;
+}) {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
-  const { dorm, isLoading, isError } = useDormById(id!);
+  const { dorm, isLoading, isError, errorMessage, statusCode } = useDormById(
+    id!
+  );
+
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
+
+  useEffect(() => {
+    console.log(dorm);
+    console.log("isError is: " + isError);
+    console.log("statusCode:", statusCode);
+    console.log("errorMessage:", errorMessage);
+  }, [dorm, isError, errorMessage]);
 
   return (
-    <div className="grow overflow-auto">
+    <Wrapper hasData={!!dorm} error={errorMessage} statusCode={statusCode}>
       <div aria-label="Page buttons" className="w-full flex justify-end gap-4">
         <Button
           color="primary"
@@ -66,6 +85,6 @@ export default function OneDormPage() {
           <div className="info-row-content">{formatDate(dorm?.datestamp)}</div>
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 }

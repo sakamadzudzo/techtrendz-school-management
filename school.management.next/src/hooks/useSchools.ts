@@ -36,12 +36,10 @@ export function useSchoolsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC"
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
-    shouldFetch
-      ? [`/api/school?action=all&${params.toString()}`, token]
-      : null,
+    shouldFetch ? [`/api/school?action=all&${params.toString()}`, token] : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
@@ -92,9 +90,7 @@ export function useSchoolById(schoolId: string | undefined) {
   const token = useSelector((state: RootState) => state.auth.token);
   const shouldFetch = !!schoolId && !!token;
   const { data, error, mutate } = useSWR(
-    shouldFetch
-      ? [`/api/school?action=one&schoolId=${schoolId}`, token]
-      : null,
+    shouldFetch ? [`/api/school?action=one&schoolId=${schoolId}`, token] : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
@@ -132,6 +128,33 @@ export function useSchoolsByExample(exampleDto: any) {
   return {
     schools: data as Page<School>,
     isLoading: !!exampleDto && !!token && !error && !data,
+    isError: error,
+    mutate,
+  };
+}
+
+export function useSchoolsList({
+  sort,
+  direction,
+}: {
+  sort?: string;
+  direction?: "ASC" | "DESC";
+}) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!token;
+  const params = new URLSearchParams({
+    sort: sort ? `${sort}` : "",
+    direction: direction || "DESC",
+  });
+  const { data, error, mutate } = useSWR(
+    shouldFetch
+      ? [`/api/school?action=list&${params.toString()}`, token]
+      : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+  return {
+    schools: data as School[],
+    isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
   };

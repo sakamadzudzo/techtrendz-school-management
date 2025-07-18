@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "./../../utils/classes";
+import { API_URL } from "@/utils/helpers";
 
-const API_BASE = "http://localhost:4002/dorm";
+const API_BASE = API_URL + "/dorm";
 
 // Helper to get Authorization header from request
 function getAuthHeader(req: NextApiRequest) {
@@ -78,15 +79,18 @@ async function getDormById(dormId: string, authHeader: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching dorm failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching dorm failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
-async function getDormsByExample(
-  exampleDto: any,
-  authHeader: any,
-  query: any
-) {
+async function getDormsByExample(exampleDto: any, authHeader: any, query: any) {
   const params = new URLSearchParams();
   if (query.page) params.append("page", query.page);
   if (query.size) params.append("size", query.size);
@@ -121,11 +125,7 @@ export default async function handler(
         return res.status(201).json(data);
       }
       if (action === "example") {
-        const data = await getDormsByExample(
-          req.body,
-          authHeader,
-          req.query
-        );
+        const data = await getDormsByExample(req.body, authHeader, req.query);
         return res.status(200).json(data);
       }
     }

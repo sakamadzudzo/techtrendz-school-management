@@ -24,5 +24,5 @@ public class DormDto {
 
     private LocalDateTime datestamp;
 
-    private SchoolDto schoolDto;
+    private SchoolDto school;
 }

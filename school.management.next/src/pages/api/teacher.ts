@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "./../../utils/classes";
+import { API_URL } from "@/utils/helpers";
 
-const API_BASE = "http://localhost:4002/teacher";
+const API_BASE = API_URL + "/teacher";
 
 // Helper to get Authorization header from request
 function getAuthHeader(req: NextApiRequest) {

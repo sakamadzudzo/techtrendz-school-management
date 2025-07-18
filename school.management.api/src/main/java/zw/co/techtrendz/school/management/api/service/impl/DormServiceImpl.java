@@ -6,8 +6,11 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.ResourceNotFoundException;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.Dorm;
 import zw.co.techtrendz.school.management.api.querydsl.DormQueryService;
 import zw.co.techtrendz.school.management.api.repository.DormRepository;
@@ -92,7 +95,12 @@ public class DormServiceImpl implements DormService {
     @Override
     public DormDto getViewById(Long id) {
 //        return this.dormRepository.findById(id).orElse(null);
-        return this.dormQueryService.getDormDetails(id);
+        DormDto dormDto = this.dormQueryService.getDormDetails(id);
+        if (dormDto == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Dorm with id '%d' was not found", id));
+//            throw new ResourceNotFoundException(String.format("Dorm with id '%d' was not found", id));
+        }
+        return dormDto;
     }
 
     @Override

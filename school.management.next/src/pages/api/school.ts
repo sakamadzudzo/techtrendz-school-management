@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "../../utils/classes";
+import { API_URL } from "@/utils/helpers";
 
-const API_BASE = "http://localhost:4002/school";
+const API_BASE = API_URL + "/school";
 
 // Helper to get Authorization header from request
 function getAuthHeader(req: NextApiRequest) {
@@ -28,6 +29,19 @@ async function getSchools(authHeader: any, query: any) {
   if (query.direction) params.append("sortDir", query.direction);
 
   const res = await fetch(`${API_BASE}/get/all?${params.toString()}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json", ...authHeader },
+  });
+  if (!res.ok) throw new ApiError("Fetching schools failed", res.status);
+  return res.json();
+}
+
+async function getSchoolsList(authHeader: any, query: any) {
+  const params = new URLSearchParams();
+  if (query.sort) params.append("sortBy", query.sort);
+  if (query.direction) params.append("sortDir", query.direction);
+
+  const res = await fetch(`${API_BASE}/get/all/list?${params.toString()}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
@@ -142,6 +156,10 @@ export default async function handler(
       }
       if (action === "filtered") {
         const data = await getSchoolsByFilter(authHeader, req.query);
+        return res.status(200).json(data);
+      }
+      if (action === "list") {
+        const data = await getSchoolsList(authHeader, req.query);
         return res.status(200).json(data);
       }
     }

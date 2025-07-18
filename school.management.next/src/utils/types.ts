@@ -90,6 +90,16 @@ export type Dorm = {
   school: School;
 };
 
+export type DormView = {
+  datestamp: Date | string;
+  status: string;
+  id: number;
+  name: string;
+  description: string;
+  address: string;
+  school: School;
+};
+
 export type School = {
   datestamp: Date | string;
   status: string;
@@ -213,7 +223,7 @@ export type StudentView = {
   status: string;
   datestamp: Date | string;
   classroom: ClassroomView;
-  dorm: DormView;
+  dorm: DormYearView;
   school: SchoolView;
   startYear: string;
   endYear: string;
@@ -223,7 +233,7 @@ export type StudentView = {
   imagesUrls: string[];
 };
 
-export type DormView = {
+export type DormYearView = {
   id: number;
   name: string;
   description: string;
