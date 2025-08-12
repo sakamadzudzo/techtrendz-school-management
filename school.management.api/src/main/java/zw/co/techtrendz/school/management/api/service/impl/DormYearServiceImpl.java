@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.DormYear;
 import zw.co.techtrendz.school.management.api.querydsl.DormYearQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
@@ -99,7 +101,11 @@ public class DormYearServiceImpl implements DormYearService {
     @Override
     public DormYearDto getViewById(Long id) {
         DormYearDto dormYearDto = this.dormYearQueryService.getDormYearDetails(id);
-        dormYearDto.setStudents(this.studentQueryService.getStudentsByDormId(Collections.singletonList(id)));
+        if (dormYearDto != null) {
+            dormYearDto.setStudents(this.studentQueryService.getStudentsByDormId(Collections.singletonList(id)));
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Dorm year with id '%d' was not found", id));
+        }
         return dormYearDto;
     }
 

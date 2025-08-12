@@ -5,9 +5,11 @@ import RegisterModal from "./RegisterModal";
 import { useSelector } from "react-redux";
 
 export default function Navbar_Guest({
-  setLoading,
+  incrementLoading,
+  decrementLoading,
 }: {
-  setLoading: (loading: boolean) => void;
+  incrementLoading: () => void;
+  decrementLoading: () => void;
 }) {
   const [loginOpen, setLoginOpen] = React.useState(false);
   const [registerOpen, setRegisterOpen] = React.useState(false);
@@ -77,12 +79,14 @@ export default function Navbar_Guest({
       <LoginModal
         isOpen={loginOpen}
         onOpenChange={setLoginOpen}
-        setLoading={setLoading}
+        incrementLoading={incrementLoading}
+        decrementLoading={decrementLoading}
       />
       <RegisterModal
         isOpen={registerOpen}
         onOpenChange={setRegisterOpen}
-        setLoading={setLoading}
+        incrementLoading={incrementLoading}
+        decrementLoading={decrementLoading}
       />
       <MyNavbar menuItems={menuItems} />
     </>

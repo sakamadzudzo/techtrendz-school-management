@@ -79,7 +79,14 @@ async function getSubjectById(subjectId: string, authHeader: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching subject failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching subject failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 

@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.Teacher;
 import zw.co.techtrendz.school.management.api.querydsl.TeacherQueryService;
 import zw.co.techtrendz.school.management.api.repository.TeacherRepository;
@@ -105,6 +107,8 @@ public class TeacherServiceImpl implements TeacherService {
         if (teacherDto != null) {
             teacherDto.setClassrooms(this.teacherQueryService.getClassroomYears(id));
             teacherDto.setSubjects(this.teacherQueryService.getSubjectYears(id));
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Teacher with id '%d' was not found", id));
         }
         return teacherDto;
     }

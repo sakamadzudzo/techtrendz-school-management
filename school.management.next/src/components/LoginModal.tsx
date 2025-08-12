@@ -13,15 +13,18 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../store/slices/authSlice";
 import { useRouter } from "next/navigation";
 import InlineError from "./InlineError";
+import { SignInIcon, XIcon } from "@phosphor-icons/react";
 
 export default function LoginModal({
   isOpen,
   onOpenChange,
-  setLoading,
+  incrementLoading,
+  decrementLoading,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  setLoading: (loading: boolean) => void;
+  incrementLoading: () => void;
+  decrementLoading: () => void;
 }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +37,7 @@ export default function LoginModal({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    setLoading(true);
+    incrementLoading();
 
     try {
       const res = await fetch("/api/auth?action=login", {
@@ -51,7 +54,7 @@ export default function LoginModal({
         const data = await res.json();
         setError(data.error || "Login failed");
         setStatusCode(res.status || 500);
-        setLoading(false);
+        decrementLoading();
         return;
       }
 
@@ -60,13 +63,13 @@ export default function LoginModal({
       const user = data.user;
       dispatch(setCredentials({ token, user }));
 
-      setLoading(false);
+      decrementLoading();
       onOpenChange(false);
       // router.push("/");
     } catch (err: any) {
       setError("Network error");
       setStatusCode(err.status || 500);
-      setLoading(false);
+      decrementLoading();
     }
   };
 
@@ -116,7 +119,12 @@ export default function LoginModal({
               size="sm"
               variant="underlined"
             />
-            <Button type="submit" color="primary" className="w-full">
+            <Button
+              type="submit"
+              color="primary"
+              className="w-full"
+              endContent={<SignInIcon weight="thin" size={25} />}
+            >
               Login
             </Button>
           </Form>
@@ -126,6 +134,7 @@ export default function LoginModal({
             color="danger"
             className="w-full"
             onPress={() => onOpenChange(false)}
+            endContent={<XIcon weight="thin" size={25} />}
           >
             Cancel
           </Button>

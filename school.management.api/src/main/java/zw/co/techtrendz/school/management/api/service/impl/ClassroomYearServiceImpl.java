@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.ClassroomYear;
 import zw.co.techtrendz.school.management.api.querydsl.ClassroomYearQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
@@ -100,6 +102,8 @@ public class ClassroomYearServiceImpl implements ClassroomYearService {
         ClassroomYearDto classroomYearDto = this.classroomYearQueryService.getClassroomYearDetails(id);
         if (classroomYearDto != null) {
             classroomYearDto.setSubjects(this.subjectYearQueryService.getSubjectYears(Arrays.asList(id)));
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Classroom year with id '%d' was not found", id));
         }
         return classroomYearDto;
     }

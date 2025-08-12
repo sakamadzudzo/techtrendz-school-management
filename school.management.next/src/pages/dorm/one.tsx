@@ -6,28 +6,35 @@ import { formatDate } from "@/utils/helpers";
 import MyChip from "@/components/MyChip";
 import { useEffect } from "react";
 import { Wrapper } from "@/components/Wrapper";
+import React from "react";
 
 export default function OneDormPage({
-  setLoading,
+  incrementLoading,
+  decrementLoading,
 }: {
-  setLoading: (loading: boolean) => void;
+  incrementLoading: () => void;
+  decrementLoading: () => void;
 }) {
   const searchParams = useSearchParams();
+  const [fetchStarted, setFetchStarted] = React.useState(false);
   const id: string | null = searchParams.get("id");
   const { dorm, isLoading, isError, errorMessage, statusCode } = useDormById(
     id!
   );
 
   useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading]);
-
-  useEffect(() => {
-    console.log(dorm);
-    console.log("isError is: " + isError);
-    console.log("statusCode:", statusCode);
-    console.log("errorMessage:", errorMessage);
-  }, [dorm, isError, errorMessage]);
+    // If we have an id and are loading, mark fetch as started
+    if (id && isLoading && !fetchStarted) {
+      setFetchStarted(true);
+      incrementLoading();
+    }
+    // If fetch was started and isLoading is now false, decrement
+    if (fetchStarted && !isLoading) {
+      decrementLoading();
+      setFetchStarted(false); // Reset for next fetch
+    }
+    // eslint-disable-next-line
+  }, [id, isLoading]);
 
   return (
     <Wrapper hasData={!!dorm} error={errorMessage} statusCode={statusCode}>

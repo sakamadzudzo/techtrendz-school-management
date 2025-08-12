@@ -10,9 +10,11 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 export default function SchoolEdit({
-  setLoading,
+  incrementLoading,
+  decrementLoading,
 }: {
-  setLoading: (loading: boolean) => void;
+  incrementLoading: () => void;
+  decrementLoading: () => void;
 }) {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
@@ -60,7 +62,7 @@ export default function SchoolEdit({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    setLoading(true);
+    incrementLoading();
 
     try {
       const res = await fetch("/api/school?action=save", {
@@ -82,11 +84,11 @@ export default function SchoolEdit({
       } else if (data?.id) {
         router.push(`/school/one?id=${data?.id}`);
       }
-      setLoading(false);
+      decrementLoading();
     } catch (err: any) {
       setError("Network error");
       setStatusCode(err.status || 500);
-      setLoading(false);
+      decrementLoading();
     }
   };
 

@@ -31,7 +31,14 @@ async function getDormYears(authHeader: any, query: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching dorm years failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching dorm years failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -79,7 +86,14 @@ async function getDormYearById(dormYearId: string, authHeader: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching dorm years failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching dorm year failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 

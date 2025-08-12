@@ -1,17 +1,22 @@
 package zw.co.techtrendz.school.management.api.service.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.User;
 import zw.co.techtrendz.school.management.api.querydsl.UserQueryService;
 import zw.co.techtrendz.school.management.api.repository.UserRepository;
+import zw.co.techtrendz.school.management.api.security.JwtUtil;
 import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.service.UserService;
 import zw.co.techtrendz.school.management.api.utility.AppUtils;
@@ -30,6 +35,8 @@ public class UserServiceImpl implements UserService {
     private PersonService personService;
     @Autowired
     private UserQueryService userQueryService;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Override
     public User save(User user) {
@@ -121,7 +128,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getViewById(Long id) {
-        return this.userQueryService.getUserDetails(id);
+        UserDto userDto = this.userQueryService.getUserDetails(id);
+        if (userDto == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id '%d' was not found", id));
+        }
+        return userDto;
     }
 
     @Override
@@ -255,5 +266,17 @@ public class UserServiceImpl implements UserService {
             user.setVerified(true);
             this.userRepository.save(user);
         }
+    }
+
+    @Override
+    public void changePassword(String currentPassword, String newPassword, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        String username = this.jwtUtil.extractUsername(token);
+        User user = this.getByUsername(username);
+        if (!new BCryptPasswordEncoder().matches(currentPassword, user.getPassword())) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), String.format("The current password is incorrect"));
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(newPassword)); // Encrypt password
+        this.userRepository.save(user);
     }
 }

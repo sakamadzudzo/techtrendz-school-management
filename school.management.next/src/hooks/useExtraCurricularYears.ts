@@ -36,7 +36,7 @@ export function useExtraCurricularYearsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC"
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -76,7 +76,10 @@ export function useExtraCurricularYearsAllByFilter({
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
-      ? [`/api/extra-curricular-year?action=filtered&${params.toString()}`, token]
+      ? [
+          `/api/extra-curricular-year?action=filtered&${params.toString()}`,
+          token,
+        ]
       : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
@@ -88,19 +91,36 @@ export function useExtraCurricularYearsAllByFilter({
   };
 }
 
-export function useExtraCurricularYearById(extraCurricularYearId: string | undefined) {
+export function useExtraCurricularYearById(
+  extraCurricularYearId: string | undefined
+) {
   const token = useSelector((state: RootState) => state.auth.token);
   const shouldFetch = !!extraCurricularYearId && !!token;
   const { data, error, mutate } = useSWR(
     shouldFetch
-      ? [`/api/extra-curricular-year?action=one&extraCurricularYearId=${extraCurricularYearId}`, token]
+      ? [
+          `/api/extra-curricular-year?action=one&extraCurricularYearId=${extraCurricularYearId}`,
+          token,
+        ]
       : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
+
+  let errorMessage: string | undefined = undefined;
+  let statusCode: number | undefined = undefined;
+  if (error instanceof ApiError) {
+    errorMessage = error.message;
+    statusCode = error.statusCode;
+  } else if (error && error.message) {
+    errorMessage = error.message;
+  }
+
   return {
     extraCurricularYear: data as ExtraCurricularYearView,
     isLoading: shouldFetch && !error && !data,
-    isError: error,
+    isError: !!error,
+    errorMessage,
+    statusCode,
     mutate,
   };
 }

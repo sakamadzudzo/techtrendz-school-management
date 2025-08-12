@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.ExtraCurricularYear;
 import zw.co.techtrendz.school.management.api.querydsl.ExtraCurricularYearQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
@@ -106,6 +108,8 @@ public class ExtraCurricularYearServiceImpl implements ExtraCurricularYearServic
         if (extraCurricularYearDto != null) {
             extraCurricularYearDto.setFacilitators(this.teacherQueryService.getFacilitatorsByExtraCurricular(Collections.singletonList(extraCurricularYearDto.getId())));
             extraCurricularYearDto.setStudents(this.studentQueryService.getStudentsByExtraCurricular(Collections.singletonList(extraCurricularYearDto.getId())));
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Extra curricular year with id '%d' was not found", id));
         }
         return extraCurricularYearDto;
     }

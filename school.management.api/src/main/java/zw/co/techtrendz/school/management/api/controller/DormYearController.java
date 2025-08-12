@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.entity.DormYear;
 import zw.co.techtrendz.school.management.api.service.DormYearService;
+import zw.co.techtrendz.school.management.api.view.DormYearDto;
 
 import java.util.List;
 
@@ -31,8 +32,8 @@ public class DormYearController {
     }
 
     @GetMapping("/get/one")
-    public DormYear getDormYear(@RequestParam Long id) {
-        return this.dormYearService.getById(id);
+    public DormYearDto getDormYear(@RequestParam Long id) {
+        return this.dormYearService.getViewById(id);
     }
 
     @GetMapping("/get/all")

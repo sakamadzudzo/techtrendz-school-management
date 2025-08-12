@@ -10,13 +10,17 @@ function getAuthHeader(req: NextApiRequest) {
   return auth ? { Authorization: auth } : {};
 }
 
-async function saveExtraCurricularYear(extraCurricularYearDto: any, authHeader: any) {
+async function saveExtraCurricularYear(
+  extraCurricularYearDto: any,
+  authHeader: any
+) {
   const res = await fetch(`${API_BASE}/save`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
     body: JSON.stringify(extraCurricularYearDto),
   });
-  if (!res.ok) throw new ApiError("Extra curricular year creation failed", res.status);
+  if (!res.ok)
+    throw new ApiError("Extra curricular year creation failed", res.status);
   return res.json();
 }
 
@@ -31,7 +35,8 @@ async function getExtraCurricularYears(authHeader: any, query: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching extra curricular years failed", res.status);
+  if (!res.ok)
+    throw new ApiError("Fetching extra curricular years failed", res.status);
   return res.json();
 }
 
@@ -50,7 +55,8 @@ async function getExtraCurricularYearsByFilter(authHeader: any, query: any) {
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
-  if (!res.ok) throw new ApiError("Fetching extra curricular years failed", res.status);
+  if (!res.ok)
+    throw new ApiError("Fetching extra curricular years failed", res.status);
   return res.json();
 }
 
@@ -73,13 +79,23 @@ async function getExtraCurricularYearsByFilter(authHeader: any, query: any) {
 //   return res.json();
 // }
 
-async function getExtraCurricularYearById(extraCurricularYearId: string, authHeader: any) {
+async function getExtraCurricularYearById(
+  extraCurricularYearId: string,
+  authHeader: any
+) {
   const params = new URLSearchParams({ id: extraCurricularYearId }).toString();
   const res = await fetch(`${API_BASE}/view/get/one?` + params, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching extra curricular years failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching extra curricular year failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -104,7 +120,10 @@ async function getExtraCurricularYearsByExample(
     }
   );
   if (!res.ok)
-    throw new ApiError("Fetching extra curricular years by example failed", res.status);
+    throw new ApiError(
+      "Fetching extra curricular years by example failed",
+      res.status
+    );
   return res.json();
 }
 
@@ -137,11 +156,17 @@ export default async function handler(
         return res.status(200).json(data);
       }
       if (action === "one" && extraCurricularYearId) {
-        const data = await getExtraCurricularYearById(extraCurricularYearId as string, authHeader);
+        const data = await getExtraCurricularYearById(
+          extraCurricularYearId as string,
+          authHeader
+        );
         return res.status(200).json(data);
       }
       if (action === "filtered") {
-        const data = await getExtraCurricularYearsByFilter(authHeader, req.query);
+        const data = await getExtraCurricularYearsByFilter(
+          authHeader,
+          req.query
+        );
         return res.status(200).json(data);
       }
     }

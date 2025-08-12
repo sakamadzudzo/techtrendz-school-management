@@ -1,90 +1,69 @@
-import React, { useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Input,
-  Button,
-  Divider,
-} from "@heroui/react";
+import { ChangePassword } from "@/components/ChangePassword";
+import { Card, CardBody, Tab, Tabs } from "@heroui/react";
+import React from "react";
+
+type SettingsPart = {
+  key: "" | "PASSWORD" | "MENU";
+  title: string;
+  description: string;
+  content?: React.ReactNode;
+};
 
 export default function Settings() {
-  const [current, setCurrent] = useState("");
-  const [newPass, setNewPass] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [message, setMessage] = useState<string | null>(null);
-
-  const handleChangePassword = (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage(null);
-
-    if (newPass !== confirm) {
-      setMessage("New passwords do not match.");
-      return;
-    }
-    // TODO: Call API to change password
-    setMessage("Password changed successfully!");
-    setCurrent("");
-    setNewPass("");
-    setConfirm("");
-  };
+  const sections: SettingsPart[] = [
+    {
+      key: "",
+      title: "Pick one",
+      description: "Pick a section to work on",
+      content: <Default />,
+    },
+    {
+      key: "PASSWORD",
+      title: "Change Password",
+      description: "Change your password here",
+      content: <ChangePassword />,
+    },
+    {
+      key: "MENU",
+      title: "Menu Setup",
+      description: "Set up the database driven menus",
+    },
+  ];
 
   return (
-    <div className="max-w-xl mx-auto mt-10 space-y-8">
-      <Card>
-        <CardHeader>
-          <p className="text-xl font-bold">Settings</p>
-        </CardHeader>
-        <Divider />
-        <CardBody>
-          {/* Change Password Section */}
-          <section>
-            <p className="text-lg font-semibold mb-4">Change Password</p>
-            <form onSubmit={handleChangePassword} className="space-y-4">
-              <Input
-                label="Current Password"
-                type="password"
-                value={current}
-                onValueChange={setCurrent}
-                required
-                variant="underlined"
-              />
-              <Input
-                label="New Password"
-                type="password"
-                value={newPass}
-                onValueChange={setNewPass}
-                required
-                variant="underlined"
-              />
-              <Input
-                label="Confirm New Password"
-                type="password"
-                value={confirm}
-                onValueChange={setConfirm}
-                required
-                variant="underlined"
-              />
-              <Button type="submit" color="primary">
-                Change Password
-              </Button>
-              {message && <p className="text-danger mt-2">{message}</p>}
-            </form>
-          </section>
-        </CardBody>
-      </Card>
-
-      {/* Add more settings sections below as needed */}
-      <Card>
-        <CardHeader>
-          <p className="text-lg font-semibold">Other Settings</p>
-        </CardHeader>
-        <Divider />
-        <CardBody>
-          <p className="text-neutral-500">More settings coming soon...</p>
-        </CardBody>
-      </Card>
+    <div className="flex grow px-2 overflow-hidden">
+      <div className="flex-col h-full w-full overflow-auto pt-0.5 pb-2">
+        <Tabs
+          aria-label="settings-sections"
+          isVertical={true}
+          className="h-full"
+          classNames={{ tabWrapper: "h-full" }}
+        >
+          {sections.map((section) => (
+            <Tab
+              key={section.key}
+              title={section.title}
+              className="w-full h-full"
+            >
+              {section.content && (
+                <Card className="w-full h-full">
+                  <CardBody className="w-full h-full">
+                    {section.content}
+                  </CardBody>
+                </Card>
+              )}
+            </Tab>
+          ))}
+        </Tabs>
+      </div>
     </div>
   );
 }
+
+const Default = () => {
+  return (
+    <div className="w-full h-full flex items-center justify-center">
+      Pick a section to work on
+    </div>
+  );
+};

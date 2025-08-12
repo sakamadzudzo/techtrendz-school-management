@@ -16,7 +16,8 @@ async function saveExtraCurricular(extraCurricularDto: any, authHeader: any) {
     headers: { "Content-Type": "application/json", ...authHeader },
     body: JSON.stringify(extraCurricularDto),
   });
-  if (!res.ok) throw new ApiError("Extra curricular creation failed", res.status);
+  if (!res.ok)
+    throw new ApiError("Extra curricular creation failed", res.status);
   return res.json();
 }
 
@@ -31,7 +32,8 @@ async function getExtraCurriculars(authHeader: any, query: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching extra curriculars failed", res.status);
+  if (!res.ok)
+    throw new ApiError("Fetching extra curriculars failed", res.status);
   return res.json();
 }
 
@@ -50,7 +52,8 @@ async function getExtraCurricularsByFilter(authHeader: any, query: any) {
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
-  if (!res.ok) throw new ApiError("Fetching extra curriculars failed", res.status);
+  if (!res.ok)
+    throw new ApiError("Fetching extra curriculars failed", res.status);
   return res.json();
 }
 
@@ -73,13 +76,23 @@ async function getExtraCurricularsByFilter(authHeader: any, query: any) {
 //   return res.json();
 // }
 
-async function getExtraCurricularById(extraCurricularId: string, authHeader: any) {
+async function getExtraCurricularById(
+  extraCurricularId: string,
+  authHeader: any
+) {
   const params = new URLSearchParams({ id: extraCurricularId }).toString();
   const res = await fetch(`${API_BASE}/get/one?` + params, {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching extra curricular failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching extra curricular failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -104,7 +117,10 @@ async function getExtraCurricularsByExample(
     }
   );
   if (!res.ok)
-    throw new ApiError("Fetching extra curriculars by example failed", res.status);
+    throw new ApiError(
+      "Fetching extra curriculars by example failed",
+      res.status
+    );
   return res.json();
 }
 
@@ -137,7 +153,10 @@ export default async function handler(
         return res.status(200).json(data);
       }
       if (action === "one" && extraCurricularId) {
-        const data = await getExtraCurricularById(extraCurricularId as string, authHeader);
+        const data = await getExtraCurricularById(
+          extraCurricularId as string,
+          authHeader
+        );
         return res.status(200).json(data);
       }
       if (action === "filtered") {

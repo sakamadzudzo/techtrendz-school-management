@@ -36,7 +36,7 @@ export function useExtraCurricularsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC"
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -93,14 +93,29 @@ export function useExtraCurricularById(extraCurricularId: string | undefined) {
   const shouldFetch = !!extraCurricularId && !!token;
   const { data, error, mutate } = useSWR(
     shouldFetch
-      ? [`/api/extra-curricular?action=one&extraCurricularId=${extraCurricularId}`, token]
+      ? [
+          `/api/extra-curricular?action=one&extraCurricularId=${extraCurricularId}`,
+          token,
+        ]
       : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
+
+  let errorMessage: string | undefined = undefined;
+  let statusCode: number | undefined = undefined;
+  if (error instanceof ApiError) {
+    errorMessage = error.message;
+    statusCode = error.statusCode;
+  } else if (error && error.message) {
+    errorMessage = error.message;
+  }
+
   return {
     extraCurricular: data as ExtraCurricular,
     isLoading: shouldFetch && !error && !data,
-    isError: error,
+    isError: !!error,
+    errorMessage,
+    statusCode,
     mutate,
   };
 }

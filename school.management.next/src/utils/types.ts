@@ -281,9 +281,9 @@ export type UserView = {
   linkedin: string;
   username: string;
   password: string;
-  verified: string;
-  enabled: string;
-  changePassword: string;
+  verified: boolean;
+  enabled: boolean;
+  changePassword: boolean;
   roles: string[];
   status: string;
   datestamp: Date | string;
@@ -317,4 +317,13 @@ export enum Salutation {
   REV = "REV",
   SNR = "SNR",
   JNR = "JNR",
+}
+
+export enum Role {
+  ADMIN = "ADMIN",
+  TEACHER = "TEACHER",
+  STUDENT = "STUDENT",
+  PARENT = "PARENT",
+  STAFF = "STAFF",
+  GUEST = "GUEST",
 }

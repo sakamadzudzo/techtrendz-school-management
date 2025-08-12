@@ -93,10 +93,22 @@ export function useSchoolById(schoolId: string | undefined) {
     shouldFetch ? [`/api/school?action=one&schoolId=${schoolId}`, token] : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
+
+  let errorMessage: string | undefined = undefined;
+  let statusCode: number | undefined = undefined;
+  if (error instanceof ApiError) {
+    errorMessage = error.message;
+    statusCode = error.statusCode;
+  } else if (error && error.message) {
+    errorMessage = error.message;
+  }
+
   return {
     school: data as School,
     isLoading: shouldFetch && !error && !data,
-    isError: error,
+    isError: !!error,
+    errorMessage,
+    statusCode,
     mutate,
   };
 }

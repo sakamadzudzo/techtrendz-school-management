@@ -6,13 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.Person;
 import zw.co.techtrendz.school.management.api.repository.PersonRepository;
 import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -32,7 +35,11 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person getById(Long id) {
-        return this.personRepository.findById(id).orElse(null);
+        Optional<Person> person = this.personRepository.findById(id);
+        if (person.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Person with id '%d' was not found", id));
+        }
+        return person.get();
     }
 
     @Override

@@ -6,13 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.Subject;
 import zw.co.techtrendz.school.management.api.repository.SubjectRepository;
 import zw.co.techtrendz.school.management.api.service.SubjectService;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubjectServiceImpl implements SubjectService {
@@ -32,7 +35,11 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Subject getById(Long id) {
-        return this.subjectRepository.findById(id).orElse(null);
+        Optional<Subject> subject = this.subjectRepository.findById(id);
+        if (subject.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Subject with id '%d' was not found", id));
+        }
+        return subject.get();
     }
 
     @Override

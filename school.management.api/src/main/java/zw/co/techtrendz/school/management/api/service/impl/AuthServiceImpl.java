@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         String token = this.jwtUtil.generateToken(authDto.getUsername(), fingerprint, authDto.isRememberMe(), user.getRoles());
         Map<String, Object> principal = new HashMap<>();
         principal.put("token", token);
-        principal.put("user", this.getUserViewFromUser(user));
+        principal.put("user", AppUtils.userToDto(user));
         return ResponseEntity.ok(principal);
     }
 
@@ -105,29 +105,5 @@ public class AuthServiceImpl implements AuthService {
         AppUtils.validateUser(user, this.userService);
         this.userService.save(user);
         return ResponseEntity.ok("User registered successfully");
-    }
-
-    private UserViewDto getUserViewFromUser(User user) {
-        UserViewDto userViewDto = new UserViewDto();
-
-        String name = "";
-        if (user.getPerson() != null) {
-            name = user.getPerson().getFullname();
-        }
-        userViewDto.setName(name);
-        userViewDto.setUsername(user.getUsername());
-        userViewDto.setEmail(user.getPerson() != null ? user.getPerson().getEmail() : null);
-        userViewDto.setMobileNumber(user.getPerson() != null ? user.getPerson().getMobileNumber() : null);
-        userViewDto.setMobileNumber2(user.getPerson() != null ? user.getPerson().getMobileNumber2() : null);
-        userViewDto.setTelNumber(user.getPerson() != null ? user.getPerson().getTelNumber() : null);
-        userViewDto.setWhatsapp(user.getPerson() != null ? user.getPerson().getWhatsapp() : null);
-        userViewDto.setFacebook(user.getPerson() != null ? user.getPerson().getFacebook() : null);
-        userViewDto.setLinkedin(user.getPerson() != null ? user.getPerson().getLinkedin() : null);
-        userViewDto.setVerified(user.getVerified());
-        userViewDto.setEnabled(user.getEnabled());
-        userViewDto.setChangePassword(user.getChangePassword());
-        userViewDto.setRoles(user.getRoles());
-
-        return userViewDto;
     }
 }

@@ -1,8 +1,15 @@
 import React from "react";
-import { Avatar, Dropdown, DropdownMenu, DropdownItem, DropdownTrigger } from "@heroui/react";
+import {
+  Avatar,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  DropdownTrigger,
+} from "@heroui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/slices/authSlice";
 import { getInitials } from "@/utils/helpers";
+import { GearIcon, SignOutIcon, UserIcon } from "@phosphor-icons/react";
 
 export default function AvatarDropdown() {
   const dispatch = useDispatch();
@@ -22,13 +29,28 @@ export default function AvatarDropdown() {
         </Avatar>
       </DropdownTrigger>
       <DropdownMenu className={`text-foreground `}>
-        <DropdownItem as="a" href="/profile" key={"profile"}>
+        <DropdownItem
+          as="a"
+          href={`/user/one?id=${user?.id}`}
+          key={"profile"}
+          endContent={<UserIcon weight="thin" size={25} />}
+        >
           Profile
         </DropdownItem>
-        <DropdownItem as="a" href="/settings" key={"settings"}>
+        <DropdownItem
+          as="a"
+          href="/settings"
+          key={"settings"}
+          endContent={<GearIcon weight="thin" size={25} />}
+        >
           Settings
         </DropdownItem>
-        <DropdownItem color="danger" onClick={() => dispatch(logout())} key={"logout"}>
+        <DropdownItem
+          color="danger"
+          onClick={() => dispatch(logout())}
+          key={"logout"}
+          endContent={<SignOutIcon weight="thin" size={25} />}
+        >
           Logout
         </DropdownItem>
       </DropdownMenu>

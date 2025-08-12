@@ -77,6 +77,7 @@ type MyTableProps = {
   filterValue?: string;
   setFilterValue?: React.Dispatch<React.SetStateAction<string>>;
   searchBox?: boolean;
+  addFunction?: () => void;
 };
 
 export default function MyTable(props: MyTableProps) {
@@ -111,6 +112,7 @@ export default function MyTable(props: MyTableProps) {
     filterValue,
     setFilterValue,
     searchBox = true,
+    addFunction = () => {},
   } = props;
 
   const isStripped = true;
@@ -323,7 +325,11 @@ export default function MyTable(props: MyTableProps) {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />}>
+            <Button
+              color="primary"
+              endContent={<PlusIcon />}
+              onPress={addFunction}
+            >
               Add New
             </Button>
           </div>

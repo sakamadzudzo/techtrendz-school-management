@@ -12,14 +12,42 @@ import { formatDate } from "@/utils/helpers";
 import MyChip from "@/components/MyChip";
 import TeacherViewCard from "@/components/TeacherViewCard";
 import SubjectViewCard from "@/components/SubjectViewCard";
+import React, { useEffect } from "react";
+import { Wrapper } from "@/components/Wrapper";
 
-export default function OneClassroomYearPage() {
+export default function OneClassroomYearPage({
+  incrementLoading,
+  decrementLoading,
+}: {
+  incrementLoading: () => void;
+  decrementLoading: () => void;
+}) {
   const searchParams = useSearchParams();
+  const [fetchStarted, setFetchStarted] = React.useState(false);
   const id: string | null = searchParams.get("id");
-  const { classroomYear, isLoading, isError } = useClassroomYearById(id!);
+  const { classroomYear, isLoading, isError, errorMessage, statusCode } =
+    useClassroomYearById(id!);
+
+  useEffect(() => {
+    // If we have an id and are loading, mark fetch as started
+    if (id && isLoading && !fetchStarted) {
+      setFetchStarted(true);
+      incrementLoading();
+    }
+    // If fetch was started and isLoading is now false, decrement
+    if (fetchStarted && !isLoading) {
+      decrementLoading();
+      setFetchStarted(false); // Reset for next fetch
+    }
+    // eslint-disable-next-line
+  }, [id, isLoading]);
 
   return (
-    <div className="grow overflow-auto">
+    <Wrapper
+      hasData={!!classroomYear}
+      error={errorMessage}
+      statusCode={statusCode}
+    >
       <div aria-label="Page buttons" className="w-full flex justify-end gap-4">
         <Button
           color="primary"
@@ -100,6 +128,6 @@ export default function OneClassroomYearPage() {
             ))}
         </AccordionItem>
       </Accordion>
-    </div>
+    </Wrapper>
   );
 }

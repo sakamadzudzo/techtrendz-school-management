@@ -3,11 +3,7 @@ import MyNavbar, { MyDropdown } from "./MyNavbar";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
-export default function Navbar_Parent({
-  setLoading,
-}: {
-  setLoading: (loading: boolean) => void;
-}) {
+export default function Navbar_Parent() {
 
   const menuItems: MyDropdown[] = [
   { label: "Home", href: "/", className: "" },

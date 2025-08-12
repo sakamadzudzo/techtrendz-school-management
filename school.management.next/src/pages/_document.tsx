@@ -4,8 +4,10 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <title>TechTrendz - School Management</title>
-        <meta name="description" content="Welcome to TechTrendz school management." />
+        <meta
+          name="description"
+          content="Welcome to TechTrendz school management."
+        />
       </Head>
       <body>
         <Main />

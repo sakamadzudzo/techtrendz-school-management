@@ -59,10 +59,10 @@ export default function MyNavbar({ menuItems, hasAvatar }: MyNavbarProps) {
       onMenuOpenChange={setIsMenuOpen}
       classNames={{
         item: [
-          "flex",
-          "relative",
-          "h-full",
-          "items-center",
+          "md:flex",
+          "md:relative",
+          "md:h-full",
+          "md:items-center",
           "data-[active=true]:after:content-['']",
           "data-[active=true]:after:absolute",
           "data-[active=true]:after:bottom-0",
@@ -193,20 +193,13 @@ function renderMobileMenu(
         className={`cursor-pointer pl-${depth * 4} ${item.className}`}
       >
         <Button
-          // as={Link}
+          as={Link}
           color={item.color}
           href={item.href}
           onPress={() => setOpenDropdown(null)}
           variant={item.variant}
         >
-          <Link
-            className="w-full"
-            color={item.color === "default" ? "foreground" : item.color}
-            href={item.href}
-            size="lg"
-          >
-            {item.label}
-          </Link>
+          {item.label}
         </Button>
       </NavbarItem>
     ) : (

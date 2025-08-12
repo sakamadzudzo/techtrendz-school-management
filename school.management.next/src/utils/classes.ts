@@ -1,4 +1,4 @@
-import { Salutation, Status } from "./types";
+import { Role, Salutation, Status } from "./types";
 
 export class ApiError extends Error {
   statusCode: number;
@@ -70,3 +70,5 @@ export function defaultPage<T>(): Page<T> {
 export const statuses = Object.values(Status).sort();
 
 export const salutations = Object.values(Salutation).sort();
+
+export const roles = Object.values(Role).sort();

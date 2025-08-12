@@ -6,13 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.ExtraCurricular;
 import zw.co.techtrendz.school.management.api.repository.ExtraCurricularRepository;
 import zw.co.techtrendz.school.management.api.service.ExtraCurricularService;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ExtraCurricularServiceImpl implements ExtraCurricularService {
@@ -32,7 +35,11 @@ public class ExtraCurricularServiceImpl implements ExtraCurricularService {
 
     @Override
     public ExtraCurricular getById(Long id) {
-        return this.extraCurricularRepository.findById(id).orElse(null);
+        Optional<ExtraCurricular> extraCurricular = this.extraCurricularRepository.findById(id);
+        if (extraCurricular.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Extra curricular with id '%d' was not found", id));
+        }
+        return extraCurricular.get();
     }
 
     @Override

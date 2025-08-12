@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.security;
 
+import zw.co.techtrendz.school.management.api.service.JwtBlacklistService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import zw.co.techtrendz.school.management.api.service.JwtBlacklistService;
 import zw.co.techtrendz.school.management.api.utility.AppUtils;
 
 import java.io.IOException;
@@ -41,19 +41,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if (this.jwtBlacklistService.isTokenBlacklisted(token)) {
                     SecurityContextHolder.clearContext();
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
-                    response.getWriter().write("Token is blacklisted");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\": \"Token is blacklisted\"}");
+                    response.getWriter().flush();
                     Logger.getLogger(JwtAuthenticationFilter.class.getName()).log(Level.WARNING, "Token is blacklisted");
-                    return;
+                    return; // Stop further processing
                 } else if (this.jwtUtil.validateToken(token, fingerprint)) {
                     String username = this.jwtUtil.extractUsername(token);
                     Claims claims = this.jwtUtil.extractAllClaims(token);
                     List<String> roles = (List<String>) claims.get("roles", List.class);
                     List<SimpleGrantedAuthority> authorities = roles
                             .stream()
-                            .map(role ->
-                                    new SimpleGrantedAuthority("ROLE_" + role.toUpperCase())
-                            )
+                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
                             .toList();
 
                     UsernamePasswordAuthenticationToken authentication =
@@ -61,8 +61,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
-                    response.getWriter().write("Token validation failed");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\": \"Token validation failed\"}");
+                    response.getWriter().flush();
                     Logger.getLogger(JwtAuthenticationFilter.class.getName()).log(Level.WARNING, "Token validation failed");
                     return;
                 }
@@ -70,9 +72,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
         } catch (Exception e) {
             if (response.getStatus() == HttpServletResponse.SC_OK) {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // Default to 500 if no status is set
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-            response.getWriter().write("Unexpected error occurred");
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Unexpected error occurred\"}");
+            response.getWriter().flush();
             Logger.getLogger(JwtAuthenticationFilter.class.getName()).log(Level.SEVERE, "Unexpected error occurred", e);
         }
     }

@@ -79,7 +79,14 @@ async function getClassroomById(classroomId: string, authHeader: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching classroom failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching classroom failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 

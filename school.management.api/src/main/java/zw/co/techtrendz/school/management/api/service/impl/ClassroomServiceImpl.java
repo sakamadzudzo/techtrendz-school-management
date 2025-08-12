@@ -6,13 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.Classroom;
 import zw.co.techtrendz.school.management.api.repository.ClassroomRepository;
 import zw.co.techtrendz.school.management.api.service.ClassroomService;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClassroomServiceImpl implements ClassroomService {
@@ -32,7 +35,11 @@ public class ClassroomServiceImpl implements ClassroomService {
 
     @Override
     public Classroom getById(Long id) {
-        return this.classroomRepository.findById(id).orElse(null);
+        Optional<Classroom> classroom = this.classroomRepository.findById(id);
+        if (classroom.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Classroom with id '%d' was not found", id));
+        }
+        return classroom.get();
     }
 
     @Override

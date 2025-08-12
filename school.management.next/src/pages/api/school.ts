@@ -93,7 +93,14 @@ async function getSchoolById(schoolId: string, authHeader: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching school failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching school failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -136,11 +143,7 @@ export default async function handler(
         return res.status(201).json(data);
       }
       if (action === "example") {
-        const data = await getSchoolsByExample(
-          req.body,
-          authHeader,
-          req.query
-        );
+        const data = await getSchoolsByExample(req.body, authHeader, req.query);
         return res.status(200).json(data);
       }
     }

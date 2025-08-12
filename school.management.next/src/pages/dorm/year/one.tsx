@@ -4,14 +4,38 @@ import { useSearchParams } from "next/navigation";
 import { PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { formatDate } from "@/utils/helpers";
 import MyChip from "@/components/MyChip";
+import { Wrapper } from "@/components/Wrapper";
+import React, { useEffect } from "react";
 
-export default function OneDormYearPage() {
+export default function OneDormYearPage({
+  incrementLoading,
+  decrementLoading,
+}: {
+  incrementLoading: () => void;
+  decrementLoading: () => void;
+}) {
   const searchParams = useSearchParams();
+  const [fetchStarted, setFetchStarted] = React.useState(false);
   const id: string | null = searchParams.get("id");
-  const { dormYear, isLoading, isError } = useDormYearById(id!);
+  const { dormYear, isLoading, isError, errorMessage, statusCode } =
+    useDormYearById(id!);
+
+  useEffect(() => {
+    // If we have an id and are loading, mark fetch as started
+    if (id && isLoading && !fetchStarted) {
+      setFetchStarted(true);
+      incrementLoading();
+    }
+    // If fetch was started and isLoading is now false, decrement
+    if (fetchStarted && !isLoading) {
+      decrementLoading();
+      setFetchStarted(false); // Reset for next fetch
+    }
+    // eslint-disable-next-line
+  }, [id, isLoading]);
 
   return (
-    <div className="grow overflow-auto">
+    <Wrapper hasData={!!dormYear} error={errorMessage} statusCode={statusCode}>
       <div aria-label="Page buttons" className="w-full flex justify-end gap-4">
         <Button
           color="primary"
@@ -45,7 +69,10 @@ export default function OneDormYearPage() {
         <div className="info-row">
           <div className="info-row-title">Linked School:</div>
           <div className="info-row-content">
-            <Link href={`/school/one?id=${dormYear?.dorm?.school?.id}`} isExternal>
+            <Link
+              href={`/school/one?id=${dormYear?.dorm?.school?.id}`}
+              isExternal
+            >
               {dormYear?.dorm?.school?.name}
             </Link>
           </div>
@@ -68,9 +95,11 @@ export default function OneDormYearPage() {
         <Spacer x={4} y={4} />
         <div className="info-row">
           <div className="info-row-title">Date Created/Modified:</div>
-          <div className="info-row-content">{formatDate(dormYear?.datestamp)}</div>
+          <div className="info-row-content">
+            {formatDate(dormYear?.datestamp)}
+          </div>
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 }

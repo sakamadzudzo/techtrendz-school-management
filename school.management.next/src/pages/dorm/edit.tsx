@@ -19,9 +19,11 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 export default function DormEdit({
-  setLoading,
+  incrementLoading,
+  decrementLoading,
 }: {
-  setLoading: (loading: boolean) => void;
+  incrementLoading: () => void;
+  decrementLoading: () => void;
 }) {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
@@ -72,7 +74,7 @@ export default function DormEdit({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    setLoading(true);
+    incrementLoading();
 
     try {
       const res = await fetch("/api/dorm?action=save", {
@@ -94,11 +96,11 @@ export default function DormEdit({
       } else if (data?.id) {
         router.push(`/dorm/one?id=${data?.id}`);
       }
-      setLoading(false);
+      decrementLoading();
     } catch (err: any) {
       setError("Network error");
       setStatusCode(err.status || 500);
-      setLoading(false);
+      decrementLoading();
     }
   };
 
@@ -157,7 +159,7 @@ export default function DormEdit({
               })
             }
           >
-            {schools.map((school) => (
+            {schools?.map((school) => (
               <SelectItem key={school.id}>{school.name}</SelectItem>
             ))}
           </Select>

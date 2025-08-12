@@ -97,10 +97,22 @@ export function useTeacherById(teacherId: string | undefined) {
       : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
+
+  let errorMessage: string | undefined = undefined;
+  let statusCode: number | undefined = undefined;
+  if (error instanceof ApiError) {
+    errorMessage = error.message;
+    statusCode = error.statusCode;
+  } else if (error && error.message) {
+    errorMessage = error.message;
+  }
+
   return {
     teacher: data as TeacherView,
     isLoading: shouldFetch && !error && !data,
-    isError: error,
+    isError: !!error,
+    errorMessage,
+    statusCode,
     mutate,
   };
 }

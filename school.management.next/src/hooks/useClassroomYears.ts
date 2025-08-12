@@ -36,7 +36,7 @@ export function useClassroomYearsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC"
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -93,14 +93,29 @@ export function useClassroomYearById(classroomYearId: string | undefined) {
   const shouldFetch = !!classroomYearId && !!token;
   const { data, error, mutate } = useSWR(
     shouldFetch
-      ? [`/api/classroom-year?action=one&classroomYearId=${classroomYearId}`, token]
+      ? [
+          `/api/classroom-year?action=one&classroomYearId=${classroomYearId}`,
+          token,
+        ]
       : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
+
+  let errorMessage: string | undefined = undefined;
+  let statusCode: number | undefined = undefined;
+  if (error instanceof ApiError) {
+    errorMessage = error.message;
+    statusCode = error.statusCode;
+  } else if (error && error.message) {
+    errorMessage = error.message;
+  }
+
   return {
     classroomYear: data as ClassroomView,
     isLoading: shouldFetch && !error && !data,
-    isError: error,
+    isError: !!error,
+    errorMessage,
+    statusCode,
     mutate,
   };
 }

@@ -11,6 +11,7 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
+import { SignInIcon, XIcon } from "@phosphor-icons/react";
 
 const salutations = ["MR", "MRS", "MS", "DR", "PROF"];
 const roles = ["ADMIN", "TEACHER", "PARENT", "STUDENT"];
@@ -18,11 +19,13 @@ const roles = ["ADMIN", "TEACHER", "PARENT", "STUDENT"];
 export default function RegisterModal({
   isOpen,
   onOpenChange,
-  setLoading,
+  incrementLoading,
+  decrementLoading,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  setLoading: (loading: boolean) => void;
+  incrementLoading: () => void;
+  decrementLoading: () => void;
 }) {
   const [form, setForm] = useState({
     username: "",
@@ -44,7 +47,7 @@ export default function RegisterModal({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    incrementLoading();
 
     // Build the JSON object as per your API
     const payload = {
@@ -77,7 +80,7 @@ export default function RegisterModal({
     };
 
     setTimeout(() => {
-      setLoading(false);
+      decrementLoading();
       setSubmitted(payload);
       onOpenChange(false);
     }, 2000);
@@ -207,7 +210,12 @@ export default function RegisterModal({
                 <SelectItem key={r}>{r}</SelectItem>
               ))}
             </Select>
-            <Button type="submit" color="primary" className="w-full">
+            <Button
+              type="submit"
+              color="primary"
+              className="w-full"
+              endContent={<SignInIcon weight="thin" size={25} />}
+            >
               Register
             </Button>
           </Form>
@@ -217,6 +225,7 @@ export default function RegisterModal({
             color="danger"
             className="w-full"
             onPress={() => onOpenChange(false)}
+            endContent={<XIcon weight="thin" size={25} />}
           >
             Cancel
           </Button>

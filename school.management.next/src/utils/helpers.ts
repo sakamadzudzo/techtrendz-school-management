@@ -1,3 +1,5 @@
+import { Person, User, UserView } from "./types";
+
 export function capitalize(s: string) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
 }
@@ -83,3 +85,33 @@ export const sanitizeForWhatsapp = (phone: string) => {
 };
 
 export const API_URL = "http://localhost:4002";
+
+export const userViewToUser = (dto: UserView) => {
+  const user: User = {} as User;
+  const person: Person = {} as Person;
+
+  person.id = dto.personId;
+  person.salutation = dto.salutation;
+  person.firstName = dto.firstName;
+  person.otherNames = dto.otherNames;
+  person.lastName = dto.lastName;
+  person.email = dto.email;
+  person.mobileNumber = dto.mobileNumber;
+  person.mobileNumber2 = dto.mobileNumber2;
+  person.telNumber = dto.telNumber;
+  person.whatsapp = dto.whatsapp;
+  person.facebook = dto.facebook;
+  person.linkedin = dto.linkedin;
+  person.dateOfBirth = dto.dateOfBirth;
+  user.person = person;
+
+  user.id = dto.id;
+  user.username = dto.username;
+  user.password = dto.password;
+  user.verified = dto.verified;
+  user.enabled = dto.enabled;
+  user.changePassword = dto.changePassword;
+  user.roles = dto.roles;
+
+  return user;
+};

@@ -36,12 +36,10 @@ export function useUsersAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC"
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
-    shouldFetch
-      ? [`/api/user?action=all&${params.toString()}`, token]
-      : null,
+    shouldFetch ? [`/api/user?action=all&${params.toString()}`, token] : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
   return {
@@ -92,15 +90,25 @@ export function useUserById(userId: string | undefined) {
   const token = useSelector((state: RootState) => state.auth.token);
   const shouldFetch = !!userId && !!token;
   const { data, error, mutate } = useSWR(
-    shouldFetch
-      ? [`/api/user?action=one&userId=${userId}`, token]
-      : null,
+    shouldFetch ? [`/api/user?action=one&userId=${userId}`, token] : null,
     ([url, token]) => fetcherWithAuth(url, token)
   );
+
+  let errorMessage: string | undefined = undefined;
+  let statusCode: number | undefined = undefined;
+  if (error instanceof ApiError) {
+    errorMessage = error.message;
+    statusCode = error.statusCode;
+  } else if (error && error.message) {
+    errorMessage = error.message;
+  }
+
   return {
     user: data as UserView,
     isLoading: shouldFetch && !error && !data,
-    isError: error,
+    isError: !!error,
+    errorMessage,
+    statusCode,
     mutate,
   };
 }

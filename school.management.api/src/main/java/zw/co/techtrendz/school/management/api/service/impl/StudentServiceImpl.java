@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.Student;
 import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
@@ -120,15 +122,19 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentDto getViewById(Long id) {
         StudentDto studentDto = this.studentQueryService.getStudentDetails(id);
-        StudentClassDto classroom = studentDto.getClassroom();
-        classroom
-                .setSubjects(
-                        this.subjectYearQueryService
-                                .getSubjectYears(
-                                        Collections.singletonList(classroom.getId())
-                                )
-                );
-        studentDto.setClassroom(classroom);
+        if (studentDto != null) {
+            StudentClassDto classroom = studentDto.getClassroom();
+            classroom
+                    .setSubjects(
+                            this.subjectYearQueryService
+                                    .getSubjectYears(
+                                            Collections.singletonList(classroom.getId())
+                                    )
+                    );
+            studentDto.setClassroom(classroom);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Student with id '%d' was not found", id));
+        }
         return studentDto;
     }
 

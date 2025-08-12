@@ -10,12 +10,14 @@ import Navbar_Guest from "@/components/Navbar-Guest";
 import Navbar_Staff from "@/components/Navbar-Staff";
 import Navbar_Parent from "@/components/Navbar-Parent";
 import { rehydrate } from "@/store/slices/authSlice";
+import Head from "next/head";
 
 function AppContent({
   Component,
   pageProps,
   darkMode,
-  setLoading,
+  incrementLoading,
+  decrementLoading,
   saveDarkMode,
   loading,
 }: any) {
@@ -34,12 +36,17 @@ function AppContent({
     }
   }, [dispatch]);
 
-  let navbar = <Navbar_Guest setLoading={setLoading} />;
+  let navbar = (
+    <Navbar_Guest
+      incrementLoading={incrementLoading}
+      decrementLoading={decrementLoading}
+    />
+  );
   if (token && user) {
     if (user.roles.includes("PARENT")) {
-      navbar = <Navbar_Parent setLoading={setLoading} />;
+      navbar = <Navbar_Parent />;
     } else {
-      navbar = <Navbar_Staff setLoading={setLoading} />;
+      navbar = <Navbar_Staff />;
     }
   }
 
@@ -47,17 +54,32 @@ function AppContent({
     <main
       className={`text-foreground bg-background h-full w-full relative flex flex-col`}
     >
+      <Head>
+        <title>TechTrendz - School Management</title>
+      </Head>
       <ThemeSwitcher saveDarkMode={saveDarkMode} darkMode={darkMode} />
       {navbar}
       <Loading isOpen={loading} />
-      <Component {...pageProps} setLoading={setLoading} />
+      <Component
+        {...pageProps}
+        incrementLoading={incrementLoading}
+        decrementLoading={decrementLoading}
+      />
     </main>
   );
 }
 
 export default function App({ Component, pageProps }: AppProps) {
   const [darkMode, setDarkMode] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(0);
+
+  const incrementLoading = () => {
+    setLoading((prev) => prev + 1);
+  };
+
+  const decrementLoading = () => {
+    setLoading((prev) => prev - 1);
+  };
 
   const saveDarkMode = (darkMode: boolean) => {
     setDarkMode(darkMode);
@@ -88,9 +110,10 @@ export default function App({ Component, pageProps }: AppProps) {
           Component={Component}
           pageProps={pageProps}
           darkMode={darkMode}
-          setLoading={setLoading}
+          incrementLoading={incrementLoading}
+          decrementLoading={decrementLoading}
           saveDarkMode={saveDarkMode}
-          loading={loading}
+          loading={loading !== 0}
         />
       </Provider>
     </HeroUIProvider>

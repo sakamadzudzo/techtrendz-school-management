@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -48,4 +49,6 @@ public interface UserService {
     public void disableUser(Long id);
 
     public void verifyUser(Long id);
+
+    public void changePassword(String currentPassword, String newPassword, HttpServletRequest request);
 }

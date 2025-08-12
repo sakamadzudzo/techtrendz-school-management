@@ -4,14 +4,39 @@ import { useSearchParams } from "next/navigation";
 import { PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { formatDate } from "@/utils/helpers";
 import MyChip from "@/components/MyChip";
+import { Wrapper } from "@/components/Wrapper";
+import React, { useEffect } from "react";
+import dorm from "../api/dorm";
 
-export default function OneClassroomPage() {
+export default function OneClassroomPage({
+  incrementLoading,
+  decrementLoading,
+}: {
+  incrementLoading: () => void;
+  decrementLoading: () => void;
+}) {
   const searchParams = useSearchParams();
+  const [fetchStarted, setFetchStarted] = React.useState(false);
   const id: string | null = searchParams.get("id");
-  const { classroom, isLoading, isError } = useClassroomById(id!);
+  const { classroom, isLoading, isError, errorMessage, statusCode } =
+    useClassroomById(id!);
+
+  useEffect(() => {
+    // If we have an id and are loading, mark fetch as started
+    if (id && isLoading && !fetchStarted) {
+      setFetchStarted(true);
+      incrementLoading();
+    }
+    // If fetch was started and isLoading is now false, decrement
+    if (fetchStarted && !isLoading) {
+      decrementLoading();
+      setFetchStarted(false); // Reset for next fetch
+    }
+    // eslint-disable-next-line
+  }, [id, isLoading]);
 
   return (
-    <div className="grow overflow-auto">
+    <Wrapper hasData={!!classroom} error={errorMessage} statusCode={statusCode}>
       <div aria-label="Page buttons" className="w-full flex justify-end gap-4">
         <Button
           color="primary"
@@ -54,6 +79,6 @@ export default function OneClassroomPage() {
           </div>
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 }

@@ -79,15 +79,18 @@ async function getUserById(userId: string, authHeader: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching user failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching user failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
-async function getUsersByExample(
-  exampleDto: any,
-  authHeader: any,
-  query: any
-) {
+async function getUsersByExample(exampleDto: any, authHeader: any, query: any) {
   const params = new URLSearchParams();
   if (query.page) params.append("page", query.page);
   if (query.size) params.append("size", query.size);
@@ -108,6 +111,22 @@ async function getUsersByExample(
   return res.json();
 }
 
+async function changePassword(passwordDto: any, authHeader: any) {
+  const res = await fetch(`${API_BASE}/change-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeader },
+    body: JSON.stringify(passwordDto),
+  });
+  if (!res.ok) {
+    const response = await res.json();
+    throw new ApiError(
+      response?.message || response?.error || "Password change failed",
+      res.status
+    );
+  }
+  return res;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -122,11 +141,11 @@ export default async function handler(
         return res.status(201).json(data);
       }
       if (action === "example") {
-        const data = await getUsersByExample(
-          req.body,
-          authHeader,
-          req.query
-        );
+        const data = await getUsersByExample(req.body, authHeader, req.query);
+        return res.status(200).json(data);
+      }
+      if (action === "change-password") {
+        const data = await changePassword(req.body, authHeader);
         return res.status(200).json(data);
       }
     }

@@ -31,7 +31,8 @@ async function getClassroomYears(authHeader: any, query: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching classroom years failed", res.status);
+  if (!res.ok)
+    throw new ApiError("Fetching classroom years failed", res.status);
   return res.json();
 }
 
@@ -50,7 +51,8 @@ async function getClassroomYearsByFilter(authHeader: any, query: any) {
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
-  if (!res.ok) throw new ApiError("Fetching classroom years failed", res.status);
+  if (!res.ok)
+    throw new ApiError("Fetching classroom years failed", res.status);
   return res.json();
 }
 
@@ -79,7 +81,14 @@ async function getClassroomYearById(classroomYearId: string, authHeader: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching classroom years failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching classroom year failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -104,7 +113,10 @@ async function getClassroomYearsByExample(
     }
   );
   if (!res.ok)
-    throw new ApiError("Fetching classroom years by example failed", res.status);
+    throw new ApiError(
+      "Fetching classroom years by example failed",
+      res.status
+    );
   return res.json();
 }
 
@@ -137,7 +149,10 @@ export default async function handler(
         return res.status(200).json(data);
       }
       if (action === "one" && classroomYearId) {
-        const data = await getClassroomYearById(classroomYearId as string, authHeader);
+        const data = await getClassroomYearById(
+          classroomYearId as string,
+          authHeader
+        );
         return res.status(200).json(data);
       }
       if (action === "filtered") {

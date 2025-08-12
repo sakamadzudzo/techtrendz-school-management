@@ -1,11 +1,13 @@
 package zw.co.techtrendz.school.management.api.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import zw.co.techtrendz.school.management.api.dto.PasswordDto;
 import zw.co.techtrendz.school.management.api.entity.User;
 import zw.co.techtrendz.school.management.api.service.UserService;
 import zw.co.techtrendz.school.management.api.view.UserDto;
@@ -103,5 +105,10 @@ public class UserController {
     @GetMapping("/get/exists/by/phone")
     public boolean getUserExistsByPhone(@RequestParam String phone) {
         return this.userService.existsByPhoneNumber(phone);
+    }
+
+    @PostMapping("/change-password")
+    public void changePassword(@RequestBody PasswordDto passwordDto, HttpServletRequest request) {
+        this.userService.changePassword(passwordDto.getCurrentPassword(), passwordDto.getNewPassword(), request);
     }
 }

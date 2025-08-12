@@ -5,11 +5,7 @@ import RegisterModal from "./RegisterModal";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
-export default function Navbar_Staff({
-  setLoading,
-}: {
-  setLoading: (loading: boolean) => void;
-}) {
+export default function Navbar_Staff() {
   const { token, user } = useSelector((state: any) => state.auth);
   const [rawMenuItems, setRawMenuItems] = React.useState<MyDropdown[]>([]);
   const [menuItems, setMenuItems] = React.useState<MyDropdown[]>([]);

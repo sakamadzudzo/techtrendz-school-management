@@ -2,7 +2,7 @@ package zw.co.techtrendz.school.management.api.utility;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.security.core.token.Sha512DigestUtils;
 import zw.co.techtrendz.school.management.api.entity.Person;
 import zw.co.techtrendz.school.management.api.entity.User;
 import zw.co.techtrendz.school.management.api.enums.Salutation;
@@ -10,7 +10,11 @@ import zw.co.techtrendz.school.management.api.exception.UserCreationException;
 import zw.co.techtrendz.school.management.api.service.UserService;
 import zw.co.techtrendz.school.management.api.view.UserDto;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.util.List;
+import java.util.Random;
 
 public class AppUtils {
 
@@ -19,7 +23,7 @@ public class AppUtils {
         String userAgent = request.getHeader("User-Agent");
         String language = request.getHeader("Accept-Language");
 
-        return DigestUtils.sha256Hex(ip + userAgent + language);
+        return Sha512DigestUtils.shaHex(ip + userAgent + language);
     }
 
     public static String getClientIp(HttpServletRequest request) {
@@ -114,6 +118,41 @@ public class AppUtils {
         return user;
     }
 
+    public static UserDto userToDto(User user) {
+        if (user == null) {
+            return null;
+        }
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
+        userDto.setPassword(user.getPassword());
+        userDto.setVerified(user.getVerified());
+        userDto.setEnabled(user.getEnabled());
+        userDto.setChangePassword(user.getChangePassword());
+        userDto.setRoles(user.getRoles());
+        userDto.setStatus(user.getStatus());
+        userDto.setDatestamp(user.getDatestamp());
+
+        Person person = user.getPerson();
+        if (person != null) {
+            userDto.setPersonId(person.getId());
+            userDto.setSalutation(person.getSalutation());
+            userDto.setFirstName(person.getFirstName());
+            userDto.setOtherNames(person.getOtherNames());
+            userDto.setLastName(person.getLastName());
+            userDto.setDateOfBirth(person.getDateOfBirth());
+            userDto.setEmail(person.getEmail());
+            userDto.setMobileNumber(person.getMobileNumber());
+            userDto.setMobileNumber2(person.getMobileNumber2());
+            userDto.setTelNumber(person.getTelNumber());
+            userDto.setWhatsapp(person.getWhatsapp());
+            userDto.setFacebook(person.getFacebook());
+            userDto.setLinkedin(person.getLinkedin());
+        }
+
+        return userDto;
+    }
+
     public static <T> BooleanExpression getBooleanExpression(String filter, BooleanExpression predicate, Class<T> entityClass, String alias, List<String> skipFields) {
         for (var field : entityClass.getDeclaredFields()) {
             field.setAccessible(true); // Ensure private fields are accessible
@@ -131,5 +170,45 @@ public class AppUtils {
             }
         }
         return predicate;
+    }
+
+    public static LocalDate getRandom(LocalDate start, LocalDate end) {
+        int year = AppUtils.getRandom(start.getYear(), end.getYear() + 1);
+        int month;
+
+        if (start.getYear() == end.getYear()) {
+            month = AppUtils.getRandom(start.getMonthValue(), end.getMonthValue() + 1);
+        } else if (year == start.getYear()) {
+            month = AppUtils.getRandom(start.getMonthValue(), 13);
+        } else if (year == end.getYear()) {
+            month = AppUtils.getRandom(1, end.getMonthValue() + 1);
+        } else {
+            month = AppUtils.getRandom(1, 13);
+        }
+
+        int day;
+        Month selectedMonth = Month.of(month);
+
+        if (selectedMonth == Month.FEBRUARY) {
+            day = AppUtils.getRandom(1, Year.isLeap(year) ? 30 : 29); // 30 exclusive
+        } else {
+            day = AppUtils.getRandom(1, selectedMonth.length(Year.isLeap(year)) + 1);
+        }
+
+        LocalDate randomDate = LocalDate.of(year, month, day);
+
+        if (randomDate.isBefore(start)) {
+            return start;
+        } else if (randomDate.isAfter(end)) {
+            return end;
+        } else {
+            return randomDate;
+        }
+    }
+
+
+    public static int getRandom(int min, int max) {
+        Random random = new Random();
+        return random.nextInt(max - min) + min;
     }
 }

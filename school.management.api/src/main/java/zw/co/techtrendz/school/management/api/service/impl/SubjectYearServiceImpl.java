@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.entity.SubjectYear;
 import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
 import zw.co.techtrendz.school.management.api.repository.SubjectYearRepository;
@@ -91,7 +93,11 @@ public class SubjectYearServiceImpl implements SubjectYearService {
 
     @Override
     public SubjectYearDto getViewById(Long id) {
-        return this.subjectYearQueryService.getSubjectYearDetails(id);
+        SubjectYearDto subjectYearDto = this.subjectYearQueryService.getSubjectYearDetails(id);
+        if (subjectYearDto == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Subject year with id '%d' was not found", id));
+        }
+        return subjectYearDto;
     }
 
     @Override

@@ -27,11 +27,7 @@ export default function AllUsersPage() {
   let isError;
 
   if (searchValue) {
-    ({
-      users,
-      isLoading,
-      isError,
-    } = useUsersAllByFilter({
+    ({ users, isLoading, isError } = useUsersAllByFilter({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -39,11 +35,7 @@ export default function AllUsersPage() {
       filter: searchValue,
     }));
   } else {
-    ({
-      users,
-      isLoading,
-      isError,
-    } = useUsersAll({
+    ({ users, isLoading, isError } = useUsersAll({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -171,6 +163,10 @@ export default function AllUsersPage() {
     setPage(1);
   };
 
+  const addNew = () => {
+    router.push("/user/edit");
+  };
+
   return (
     <MyTable
       columns={columns}
@@ -195,6 +191,7 @@ export default function AllUsersPage() {
       nextPage={nextPage}
       prevPage={prevPage}
       onRowAction={viewOne}
+      addFunction={addNew}
     />
   );
 }

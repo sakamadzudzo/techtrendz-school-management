@@ -79,7 +79,14 @@ async function getClassroomYearById(subjectYearId: string, authHeader: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching subject years failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching subject year failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -137,7 +144,10 @@ export default async function handler(
         return res.status(200).json(data);
       }
       if (action === "one" && subjectYearId) {
-        const data = await getClassroomYearById(subjectYearId as string, authHeader);
+        const data = await getClassroomYearById(
+          subjectYearId as string,
+          authHeader
+        );
         return res.status(200).json(data);
       }
       if (action === "filtered") {

@@ -12,8 +12,6 @@ import zw.co.techtrendz.school.management.api.service.UserService;
 @Component
 public class AuditUserListener implements RevisionListener {
 
-    //    @Autowired
-//    private UserService userService;
     private static ApplicationContext applicationContext;
 
     @Autowired
