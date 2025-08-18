@@ -71,6 +71,7 @@ export default function OneUserPage() {
           color="primary"
           endContent={<PencilSimpleLineIcon weight="thin" size={34} />}
           href={`/user/edit?id=${user?.id}`}
+          as={Link}
         >
           Edit
         </Button>

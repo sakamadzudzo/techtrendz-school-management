@@ -1,4 +1,4 @@
-import { Person, User, UserView } from "./types";
+import { Person, Teacher, TeacherView, User, UserView } from "./types";
 
 export function capitalize(s: string) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
@@ -41,7 +41,7 @@ export const formatDate = (date: Date | string, withTime: boolean = true) => {
 
   // Check if time is not midnight (00:00:00)
   const hasTime =
-    d.getHours() !== 0 ?? d.getMinutes() !== 0 ?? d.getSeconds() !== 0;
+    d.getHours() !== 0 || d.getMinutes() !== 0 || d.getSeconds() !== 0;
 
   const dateStr = `${dayOfWeek}, ${dayWithOrdinal} of ${month}, ${year}`;
   if (hasTime && withTime) {
@@ -114,4 +114,36 @@ export const userViewToUser = (dto: UserView) => {
   user.roles = dto.roles;
 
   return user;
+};
+
+export const teacherViewToTeacher = (dto: TeacherView) => {
+  const teacher: Teacher = {} as Teacher;
+  const person: Person = {} as Person;
+
+  person.id = dto.id;
+  person.salutation = dto.salutation;
+  person.firstName = dto.firstName;
+  person.otherNames = dto.otherNames;
+  person.lastName = dto.lastName;
+  person.email = dto.email;
+  person.mobileNumber = dto.mobileNumber;
+  person.mobileNumber2 = dto.mobileNumber2;
+  person.telNumber = dto.telNumber;
+  person.whatsapp = dto.whatsapp;
+  person.facebook = dto.facebook;
+  person.linkedin = dto.linkedin;
+  person.dateOfBirth = dto.dateOfBirth;
+  person.status = dto.status;
+  person.datestamp = dto.datestamp;
+  person.name = dto.name;
+  person.fullname = dto.fullname;
+  person.avatarUrl = dto.avatarUrl;
+  person.imagesUrls = dto.imagesUrls;
+
+  teacher.id = dto.id;
+  teacher.person = person;
+  teacher.datestamp = dto.datestamp;
+  teacher.status = dto.status;
+
+  return teacher;
 };

@@ -34,7 +34,11 @@ export default function UserEdit({
   const [updateUsername, setUpdateUsername] = React.useState(false);
 
   useEffect(() => {
-    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
   }, [isError]);
 
   const editMsg: React.ReactNode = (
@@ -92,9 +96,11 @@ export default function UserEdit({
       const data = await res.json();
 
       if (!res.ok) {
-        // const data = await res.json();
-        setError(data.error ?? "Sving user failed");
-        setStatusCode(res.status ?? 500);
+        const err = data.error ?? "Sving teacher failed";
+        const code = res.status ?? 500;
+        setError(err);
+        setStatusCode(code);
+        useToastError({ error: err, statusCode: code });
         return;
       } else if (data?.id) {
         router.push(`/user/one?id=${data?.id}`);
@@ -103,6 +109,7 @@ export default function UserEdit({
     } catch (err: any) {
       setError("Network error");
       setStatusCode(err.status ?? 500);
+      useToastError({ error: "Network error", statusCode: err.status ?? 500 });
       decrementLoading();
     }
   };
