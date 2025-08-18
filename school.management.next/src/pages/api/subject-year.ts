@@ -10,17 +10,24 @@ function getAuthHeader(req: NextApiRequest) {
   return auth ? { Authorization: auth } : {};
 }
 
-async function saveClassroomYear(subjectYearDto: any, authHeader: any) {
+async function saveSubjectYear(subjectYearDto: any, authHeader: any) {
   const res = await fetch(`${API_BASE}/save`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
     body: JSON.stringify(subjectYearDto),
   });
-  if (!res.ok) throw new ApiError("Classroom year creation failed", res.status);
+  if (!res.ok) {
+    let backendError = "Subject year creation failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
-async function getClassroomYears(authHeader: any, query: any) {
+async function getSubjectYears(authHeader: any, query: any) {
   const params = new URLSearchParams();
   if (query.page) params.append("page", query.page);
   if (query.size) params.append("size", query.size);
@@ -31,11 +38,18 @@ async function getClassroomYears(authHeader: any, query: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching subject years failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching subject years failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
-async function getClassroomYearsByFilter(authHeader: any, query: any) {
+async function getSubjectYearsByFilter(authHeader: any, query: any) {
   const params = new URLSearchParams();
   if (query.page) params.append("page", query.page);
   if (query.size) params.append("size", query.size);
@@ -50,30 +64,37 @@ async function getClassroomYearsByFilter(authHeader: any, query: any) {
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
-  if (!res.ok) throw new ApiError("Fetching subject years failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching subject years failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
-// async function updateClassroomYear(subjectYearId: string, subjectYearDto: any, authHeader: any) {
+// async function updateSubjectYear(subjectYearId: string, subjectYearDto: any, authHeader: any) {
 //   const res = await fetch(`${API_BASE}/update/${subjectYearId}`, {
 //     method: "PUT",
 //     headers: { "Content-Type": "application/json", ...authHeader },
 //     body: JSON.stringify(subjectYearDto),
 //   });
-//   if (!res.ok) throw new ApiError("Classroom year update failed", res.status);
+//   if (!res.ok) throw new ApiError("Subject year update failed", res.status);
 //   return res.json();
 // }
 
-// async function deleteClassroomYear(subjectYearId: string, authHeader: any) {
+// async function deleteSubjectYear(subjectYearId: string, authHeader: any) {
 //   const res = await fetch(`${API_BASE}/delete/${subjectYearId}`, {
 //     method: "DELETE",
 //     headers: { "Content-Type": "application/json", ...authHeader },
 //   });
-//   if (!res.ok) throw new ApiError("Classroom year deletion failed", res.status);
+//   if (!res.ok) throw new ApiError("Subject year deletion failed", res.status);
 //   return res.json();
 // }
 
-async function getClassroomYearById(subjectYearId: string, authHeader: any) {
+async function getSubjectYearById(subjectYearId: string, authHeader: any) {
   const params = new URLSearchParams({ id: subjectYearId }).toString();
   const res = await fetch(`${API_BASE}/view/get/one?` + params, {
     method: "GET",
@@ -83,14 +104,14 @@ async function getClassroomYearById(subjectYearId: string, authHeader: any) {
     let backendError = "Fetching subject year failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message || errorBody.error || backendError;
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
   return res.json();
 }
 
-async function getClassroomYearsByExample(
+async function getSubjectYearsByExample(
   exampleDto: any,
   authHeader: any,
   query: any
@@ -110,8 +131,14 @@ async function getClassroomYearsByExample(
       body: JSON.stringify(exampleDto),
     }
   );
-  if (!res.ok)
-    throw new ApiError("Fetching subject years by example failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching subject years by example failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -125,11 +152,11 @@ export default async function handler(
 
     if (req.method === "POST") {
       if (action === "save") {
-        const data = await saveClassroomYear(req.body, authHeader);
+        const data = await saveSubjectYear(req.body, authHeader);
         return res.status(201).json(data);
       }
       if (action === "example") {
-        const data = await getClassroomYearsByExample(
+        const data = await getSubjectYearsByExample(
           req.body,
           authHeader,
           req.query
@@ -140,32 +167,32 @@ export default async function handler(
 
     if (req.method === "GET") {
       if (action === "all") {
-        const data = await getClassroomYears(authHeader, req.query);
+        const data = await getSubjectYears(authHeader, req.query);
         return res.status(200).json(data);
       }
       if (action === "one" && subjectYearId) {
-        const data = await getClassroomYearById(
+        const data = await getSubjectYearById(
           subjectYearId as string,
           authHeader
         );
         return res.status(200).json(data);
       }
       if (action === "filtered") {
-        const data = await getClassroomYearsByFilter(authHeader, req.query);
+        const data = await getSubjectYearsByFilter(authHeader, req.query);
         return res.status(200).json(data);
       }
     }
 
     // if (req.method === "PUT") {
     //   if (subjectYearId) {
-    //     const data = await updateClassroomYear(subjectYearId as string, req.body, authHeader);
+    //     const data = await updateSubjectYear(subjectYearId as string, req.body, authHeader);
     //     return res.status(200).json(data);
     //   }
     // }
 
     // if (req.method === "DELETE") {
     //   if (subjectYearId) {
-    //     const data = await deleteClassroomYear(subjectYearId as string, authHeader);
+    //     const data = await deleteSubjectYear(subjectYearId as string, authHeader);
     //     return res.status(200).json(data);
     //   }
     // }
@@ -175,10 +202,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message || "Internal server error" });
+        .json({ error: err.message ?? "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message || "Internal server error" });
+      .json({ error: err.message ?? "Internal server error" });
   }
 }

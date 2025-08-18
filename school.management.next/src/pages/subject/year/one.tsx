@@ -12,11 +12,17 @@ import MyChip from "@/components/MyChip";
 import SubjectViewCard from "@/components/SubjectViewCard";
 import TeacherViewCard from "@/components/TeacherViewCard";
 import classroomYear from "@/pages/api/classroom-year";
+import useToastError from "@/hooks/toasts/ToastError";
+import { useEffect } from "react";
 
 export default function OneSubjectYearPage() {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
   const { subjectYear, isLoading, isError } = useSubjectYearById(id!);
+
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
 
   return (
     <div className="grow overflow-auto">

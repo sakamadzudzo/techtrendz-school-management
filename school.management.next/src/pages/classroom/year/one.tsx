@@ -14,6 +14,7 @@ import TeacherViewCard from "@/components/TeacherViewCard";
 import SubjectViewCard from "@/components/SubjectViewCard";
 import React, { useEffect } from "react";
 import { Wrapper } from "@/components/Wrapper";
+import useToastError from "@/hooks/toasts/ToastError";
 
 export default function OneClassroomYearPage({
   incrementLoading,
@@ -41,6 +42,10 @@ export default function OneClassroomYearPage({
     }
     // eslint-disable-next-line
   }, [id, isLoading]);
+
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
 
   return (
     <Wrapper

@@ -1,6 +1,6 @@
 import Loading from "@/components/Loading";
 import "@/styles/globals.css";
-import { HeroUIProvider } from "@heroui/react";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import type { AppProps } from "next/app";
 import React, { useEffect } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -60,6 +60,19 @@ function AppContent({
       <ThemeSwitcher saveDarkMode={saveDarkMode} darkMode={darkMode} />
       {navbar}
       <Loading isOpen={loading} />
+      <ToastProvider
+        toastProps={{
+          radius: "full",
+          color: "primary",
+          variant: "flat",
+          timeout: 1000,
+          hideIcon: true,
+          classNames: {
+            closeButton:
+              "opacity-100 absolute right-4 top-1/2 -translate-y-1/2",
+          },
+        }}
+      />
       <Component
         {...pageProps}
         incrementLoading={incrementLoading}

@@ -36,7 +36,7 @@ export function useUsersAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
+    direction: direction ?? "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch ? [`/api/user?action=all&${params.toString()}`, token] : null,
@@ -69,8 +69,8 @@ export function useUsersAllByFilter({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
-    filter: filter || "",
+    direction: direction ?? "DESC",
+    filter: filter ?? "",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -106,7 +106,7 @@ export function useUserById(userId: string | undefined) {
   return {
     user: data as UserView,
     isLoading: shouldFetch && !error && !data,
-    isError: !!error,
+    isError: error,
     errorMessage,
     statusCode,
     mutate,

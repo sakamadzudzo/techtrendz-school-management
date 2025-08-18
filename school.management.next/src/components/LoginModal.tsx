@@ -14,6 +14,7 @@ import { setCredentials } from "../store/slices/authSlice";
 import { useRouter } from "next/navigation";
 import InlineError from "./InlineError";
 import { SignInIcon, XIcon } from "@phosphor-icons/react";
+import useToastError from "@/hooks/toasts/ToastError";
 
 export default function LoginModal({
   isOpen,
@@ -52,8 +53,12 @@ export default function LoginModal({
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error || "Login failed");
-        setStatusCode(res.status || 500);
+        setError(data.error ?? "Login failed");
+        setStatusCode(res.status ?? 500);
+        useToastError({
+          error: data.error ?? "Login failed",
+          statusCode: res.status ?? 500,
+        });
         decrementLoading();
         return;
       }
@@ -68,7 +73,8 @@ export default function LoginModal({
       // router.push("/");
     } catch (err: any) {
       setError("Network error");
-      setStatusCode(err.status || 500);
+      setStatusCode(err.status ?? 500);
+      useToastError({ error: "Network error", statusCode: err.status ?? 500 });
       decrementLoading();
     }
   };

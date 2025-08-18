@@ -1,4 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
+import useToastError from "@/hooks/toasts/ToastError";
 import { useUsersAll, useUsersAllByFilter } from "@/hooks/useUsers";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
@@ -68,14 +69,18 @@ export default function AllUsersPage() {
     }
   }, [users]);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const rows = React.useMemo(() => {
     if (!users) return [];
-    return (users.content || []).map((row: any) => ({
+    return (users.content ?? []).map((row: any) => ({
       ...row,
-      key: row.id || row._id || row.name,
-      "person.firstName": row.person?.firstName || row.firstName,
-      "person.otherNames": row.person?.otherNames || row.otherNames,
-      "person.lastName": row.person?.lastName || row.lastName,
+      key: row.id ?? row._id ?? row.name,
+      "person.firstName": row.person?.firstName ?? row.firstName,
+      "person.otherNames": row.person?.otherNames ?? row.otherNames,
+      "person.lastName": row.person?.lastName ?? row.lastName,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

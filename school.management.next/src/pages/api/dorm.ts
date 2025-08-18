@@ -16,7 +16,14 @@ async function saveDorm(dormDto: any, authHeader: any) {
     headers: { "Content-Type": "application/json", ...authHeader },
     body: JSON.stringify(dormDto),
   });
-  if (!res.ok) throw new ApiError("Dorm creation failed", res.status);
+  if (!res.ok) {
+    let backendError = "Dorm creation failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -31,7 +38,14 @@ async function getDorms(authHeader: any, query: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching dorms failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching dorms failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -50,7 +64,14 @@ async function getDormsByFilter(authHeader: any, query: any) {
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
-  if (!res.ok) throw new ApiError("Fetching dorms failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching dorms failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -83,7 +104,7 @@ async function getDormById(dormId: string, authHeader: any) {
     let backendError = "Fetching dorm failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message || errorBody.error || backendError;
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -106,8 +127,14 @@ async function getDormsByExample(exampleDto: any, authHeader: any, query: any) {
       body: JSON.stringify(exampleDto),
     }
   );
-  if (!res.ok)
-    throw new ApiError("Fetching dorms by example failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching dorms by example failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -164,10 +191,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message || "Internal server error" });
+        .json({ error: err.message ?? "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message || "Internal server error" });
+      .json({ error: err.message ?? "Internal server error" });
   }
 }

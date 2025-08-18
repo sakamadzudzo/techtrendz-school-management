@@ -36,7 +36,7 @@ export function useDormsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
+    direction: direction ?? "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch ? [`/api/dorm?action=all&${params.toString()}`, token] : null,
@@ -69,8 +69,8 @@ export function useDormsAllByFilter({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
-    filter: filter || "",
+    direction: direction ?? "DESC",
+    filter: filter ?? "",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -106,7 +106,7 @@ export function useDormById(dormId: string | undefined) {
   return {
     dorm: data as DormView,
     isLoading: shouldFetch && !error && !data,
-    isError: !!error,
+    isError: error,
     errorMessage,
     statusCode,
     mutate,

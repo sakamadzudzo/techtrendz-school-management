@@ -1,9 +1,11 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
+import useToastError from "@/hooks/toasts/ToastError";
 import { useSchoolById } from "@/hooks/useSchools";
 import { RootState } from "@/store/store";
 import { School } from "@/utils/types";
 import { Form, Button, Input, Textarea } from "@heroui/react";
+import { ChalkboardIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -32,8 +34,15 @@ export default function SchoolEdit({
   const router = useRouter();
   const { school: oldSchool, isLoading, isError } = useSchoolById(id!);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const editMsg: React.ReactNode = (
     <div className="w-full">
+      <div className="w-full flex justify-center">
+        <ChalkboardIcon weight="thin" size={150} />
+      </div>
       <div className="font-bold text-lg w-full flex justify-center">
         Editing school:
       </div>
@@ -45,6 +54,9 @@ export default function SchoolEdit({
 
   const newMsg: React.ReactNode = (
     <div className="w-full">
+      <div className="w-full flex justify-center">
+        <ChalkboardIcon weight="thin" size={150} />
+      </div>
       <div className="font-bold text-lg w-full flex justify-center">
         Creating school:
       </div>
@@ -77,9 +89,11 @@ export default function SchoolEdit({
       const data = await res.json();
 
       if (!res.ok) {
-        // const data = await res.json();
-        setError(data.error || "Sving school failed");
-        setStatusCode(res.status || 500);
+        const err: string = data.error ?? "Sving school failed";
+        const code: number = res.status ?? 500;
+        setError(err);
+        setStatusCode(code);
+        useToastError({ error: err, statusCode: code });
         return;
       } else if (data?.id) {
         router.push(`/school/one?id=${data?.id}`);
@@ -87,7 +101,8 @@ export default function SchoolEdit({
       decrementLoading();
     } catch (err: any) {
       setError("Network error");
-      setStatusCode(err.status || 500);
+      setStatusCode(err.status ?? 500);
+      useToastError({ error: "Network error", statusCode: err.status ?? 500 });
       decrementLoading();
     }
   };
@@ -106,7 +121,7 @@ export default function SchoolEdit({
             name="name"
             placeholder="Enter the school name"
             type="text"
-            value={school.name || ""}
+            value={school.name ?? ""}
             onValueChange={(e) => setSchool({ ...school, name: e })}
             size="sm"
             variant="underlined"
@@ -118,7 +133,7 @@ export default function SchoolEdit({
             name="email"
             placeholder="Enter your e-mail address"
             type="email"
-            value={school.email || ""}
+            value={school.email ?? ""}
             onValueChange={(e) => setSchool({ ...school, email: e })}
             size="sm"
             variant="underlined"
@@ -130,7 +145,7 @@ export default function SchoolEdit({
             name="telNumber"
             placeholder="Enter tel number"
             type="text"
-            value={school.telNumber || ""}
+            value={school.telNumber ?? ""}
             onValueChange={(e) => setSchool({ ...school, telNumber: e })}
             size="sm"
             variant="underlined"
@@ -141,7 +156,7 @@ export default function SchoolEdit({
             name="cell1"
             placeholder="Enter first cell number"
             type="text"
-            value={school.mobileNumber || ""}
+            value={school.mobileNumber ?? ""}
             onValueChange={(e) => setSchool({ ...school, mobileNumber: e })}
             size="sm"
             variant="underlined"
@@ -152,7 +167,7 @@ export default function SchoolEdit({
             name="cell2"
             placeholder="Enter second cell number"
             type="text"
-            value={school.mobileNumber2 || ""}
+            value={school.mobileNumber2 ?? ""}
             onValueChange={(e) => setSchool({ ...school, mobileNumber2: e })}
             size="sm"
             variant="underlined"
@@ -163,7 +178,7 @@ export default function SchoolEdit({
             name="address"
             placeholder="Enter the school's address"
             type="text"
-            value={school.address || ""}
+            value={school.address ?? ""}
             onValueChange={(e) => setSchool({ ...school, address: e })}
             size="sm"
             variant="underlined"
@@ -174,7 +189,7 @@ export default function SchoolEdit({
             name="website"
             placeholder="Enter the school's website"
             type="url"
-            value={school.website || ""}
+            value={school.website ?? ""}
             onValueChange={(e) => setSchool({ ...school, website: e })}
             size="sm"
             variant="underlined"

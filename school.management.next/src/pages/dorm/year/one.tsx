@@ -6,6 +6,7 @@ import { formatDate } from "@/utils/helpers";
 import MyChip from "@/components/MyChip";
 import { Wrapper } from "@/components/Wrapper";
 import React, { useEffect } from "react";
+import useToastError from "@/hooks/toasts/ToastError";
 
 export default function OneDormYearPage({
   incrementLoading,
@@ -33,6 +34,10 @@ export default function OneDormYearPage({
     }
     // eslint-disable-next-line
   }, [id, isLoading]);
+
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
 
   return (
     <Wrapper hasData={!!dormYear} error={errorMessage} statusCode={statusCode}>

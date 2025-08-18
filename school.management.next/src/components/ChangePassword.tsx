@@ -5,6 +5,9 @@ import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineSuccess from "./InlineSuccess";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import useToastError from "@/hooks/toasts/ToastError";
+import useToastSuccess from "@/hooks/toasts/ToastSuccess";
+import { PasswordIcon } from "@phosphor-icons/react";
 
 export const ChangePassword = () => {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -48,15 +51,11 @@ export const ChangePassword = () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Password change failed");
-        setStatusCode(res.status || 500);
-        addToast({
-          closeIcon: true,
-          title: res.status || 500,
-          description: data.error || "Password change failed",
-          timeout: 2500,
-          variant: "flat",
-          color: "danger",
+        setError(data.error ?? "Password change failed");
+        setStatusCode(res.status ?? 500);
+        useToastError({
+          error: data.error ?? "Password change failed",
+          statusCode: res.status ?? 500,
         });
         return;
       }
@@ -65,23 +64,26 @@ export const ChangePassword = () => {
       setNewPassword("");
       setConfirmPassword("");
       setMessage("Password changed successfully!");
-      setStatusCode(res.status || 200);
-      addToast({
-        closeIcon: true,
-        title: "Success",
-        description: message,
-        timeout: 2500,
-        variant: "flat",
-        color: "success",
+      setStatusCode(res.status ?? 200);
+      useToastSuccess({
+        description: "Password changed successfully!",
+        statusCode: res.status ?? 200,
       });
     } catch (err: any) {
       setError("Network error");
-      setStatusCode(err.status || 500);
+      setStatusCode(err.status ?? 500);
+      useToastError({
+        error: "Network error",
+        statusCode: err.status ?? 500,
+      });
     }
   };
 
   const msg = (
     <div className="w-full">
+      <div className="w-full flex justify-center">
+        <PasswordIcon weight="thin" size={150} />
+      </div>
       <div className="font-bold text-lg w-full flex justify-center">
         Change Password
       </div>

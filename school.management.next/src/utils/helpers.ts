@@ -41,7 +41,7 @@ export const formatDate = (date: Date | string, withTime: boolean = true) => {
 
   // Check if time is not midnight (00:00:00)
   const hasTime =
-    d.getHours() !== 0 || d.getMinutes() !== 0 || d.getSeconds() !== 0;
+    d.getHours() !== 0 ?? d.getMinutes() !== 0 ?? d.getSeconds() !== 0;
 
   const dateStr = `${dayOfWeek}, ${dayWithOrdinal} of ${month}, ${year}`;
   if (hasTime && withTime) {

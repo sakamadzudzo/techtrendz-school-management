@@ -36,7 +36,7 @@ export function useDormYearsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
+    direction: direction ?? "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -71,8 +71,8 @@ export function useDormYearsAllByFilter({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
-    filter: filter || "",
+    direction: direction ?? "DESC",
+    filter: filter ?? "",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -110,7 +110,7 @@ export function useDormYearById(dormYearId: string | undefined) {
   return {
     dormYear: data as DormYear,
     isLoading: shouldFetch && !error && !data,
-    isError: !!error,
+    isError: error,
     errorMessage,
     statusCode,
     mutate,

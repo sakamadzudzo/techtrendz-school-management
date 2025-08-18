@@ -19,8 +19,14 @@ async function saveExtraCurricularYear(
     headers: { "Content-Type": "application/json", ...authHeader },
     body: JSON.stringify(extraCurricularYearDto),
   });
-  if (!res.ok)
-    throw new ApiError("Extra curricular year creation failed", res.status);
+  if (!res.ok) {
+    let backendError = "Extra curricular year creation failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -35,8 +41,14 @@ async function getExtraCurricularYears(authHeader: any, query: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok)
-    throw new ApiError("Fetching extra curricular years failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching extra curricular years failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -55,8 +67,14 @@ async function getExtraCurricularYearsByFilter(authHeader: any, query: any) {
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
-  if (!res.ok)
-    throw new ApiError("Fetching extra curricular years failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching extra curricular years failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -92,7 +110,7 @@ async function getExtraCurricularYearById(
     let backendError = "Fetching extra curricular year failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message || errorBody.error || backendError;
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -119,11 +137,14 @@ async function getExtraCurricularYearsByExample(
       body: JSON.stringify(exampleDto),
     }
   );
-  if (!res.ok)
-    throw new ApiError(
-      "Fetching extra curricular years by example failed",
-      res.status
-    );
+  if (!res.ok) {
+    let backendError = "Fetching extra curricular years by example failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -190,10 +211,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message || "Internal server error" });
+        .json({ error: err.message ?? "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message || "Internal server error" });
+      .json({ error: err.message ?? "Internal server error" });
   }
 }

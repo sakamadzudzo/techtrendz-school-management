@@ -36,7 +36,7 @@ export function useSubjectYearsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
+    direction: direction ?? "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -71,8 +71,8 @@ export function useSubjectYearsAllByFilter({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction || "DESC",
-    filter: filter || "",
+    direction: direction ?? "DESC",
+    filter: filter ?? "",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -110,7 +110,7 @@ export function useSubjectYearById(subjectYearId: string | undefined) {
   return {
     subjectYear: data as SubjectView,
     isLoading: shouldFetch && !error && !data,
-    isError: !!error,
+    isError: error,
     errorMessage,
     statusCode,
     mutate,

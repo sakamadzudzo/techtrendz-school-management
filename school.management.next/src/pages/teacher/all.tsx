@@ -1,4 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
+import useToastError from "@/hooks/toasts/ToastError";
 import { useTeachersAll, useTeachersAllByFilter } from "@/hooks/useTeachers";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
@@ -69,16 +70,20 @@ export default function AllTeachersPage() {
     }
   }, [teachers]);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const rows = React.useMemo(() => {
     if (!teachers) return [];
-    return (teachers.content || []).map((row: TeacherView | any) => ({
+    return (teachers.content ?? []).map((row: TeacherView | any) => ({
       ...row,
-      key: row.id || row._id || row.name,
-      "person.firstName": row.person?.firstName || row.firstName,
-      "person.otherNames": row.person?.otherNames || row.otherNames,
-      "person.lastName": row.person?.lastName || row.lastName,
-      classes: row.classrooms?.length || 0,
-      subjects: row.subjects?.length || 0,
+      key: row.id ?? row._id ?? row.name,
+      "person.firstName": row.person?.firstName ?? row.firstName,
+      "person.otherNames": row.person?.otherNames ?? row.otherNames,
+      "person.lastName": row.person?.lastName ?? row.lastName,
+      classes: row.classrooms?.length ?? 0,
+      subjects: row.subjects?.length ?? 0,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

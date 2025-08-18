@@ -1,4 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
+import useToastError from "@/hooks/toasts/ToastError";
 import { useSubjectsAll, useSubjectsAllByFilter } from "@/hooks/useSubjects";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
@@ -27,11 +28,7 @@ export default function AllSubjectsPage() {
   let isError;
 
   if (searchValue) {
-    ({
-      subjects,
-      isLoading,
-      isError,
-    } = useSubjectsAllByFilter({
+    ({ subjects, isLoading, isError } = useSubjectsAllByFilter({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -39,11 +36,7 @@ export default function AllSubjectsPage() {
       filter: searchValue,
     }));
   } else {
-    ({
-      subjects,
-      isLoading,
-      isError,
-    } = useSubjectsAll({
+    ({ subjects, isLoading, isError } = useSubjectsAll({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -76,11 +69,15 @@ export default function AllSubjectsPage() {
     }
   }, [subjects]);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const rows = React.useMemo(() => {
     if (!subjects) return [];
-    return (subjects.content || []).map((row: any) => ({
+    return (subjects.content ?? []).map((row: any) => ({
       ...row,
-      key: row.id || row._id || row.name,
+      key: row.id ?? row._id ?? row.name,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

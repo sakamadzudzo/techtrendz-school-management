@@ -16,7 +16,14 @@ async function saveClassroom(classroomDto: any, authHeader: any) {
     headers: { "Content-Type": "application/json", ...authHeader },
     body: JSON.stringify(classroomDto),
   });
-  if (!res.ok) throw new ApiError("Classroom creation failed", res.status);
+  if (!res.ok) {
+    let backendError = "Classroom creation failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -31,7 +38,14 @@ async function getClassrooms(authHeader: any, query: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching classrooms failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching classrooms failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -50,7 +64,14 @@ async function getClassroomsByFilter(authHeader: any, query: any) {
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
-  if (!res.ok) throw new ApiError("Fetching classrooms failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching classrooms failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -83,7 +104,7 @@ async function getClassroomById(classroomId: string, authHeader: any) {
     let backendError = "Fetching classroom failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message || errorBody.error || backendError;
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -110,8 +131,14 @@ async function getClassroomsByExample(
       body: JSON.stringify(exampleDto),
     }
   );
-  if (!res.ok)
-    throw new ApiError("Fetching classrooms by example failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching classrooms by example failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -172,10 +199,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message || "Internal server error" });
+        .json({ error: err.message ?? "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message || "Internal server error" });
+      .json({ error: err.message ?? "Internal server error" });
   }
 }

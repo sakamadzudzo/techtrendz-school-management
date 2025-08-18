@@ -4,11 +4,17 @@ import { useSearchParams } from "next/navigation";
 import { PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { formatDate } from "@/utils/helpers";
 import MyChip from "@/components/MyChip";
+import useToastError from "@/hooks/toasts/ToastError";
+import { useEffect } from "react";
 
 export default function OneSchoolPage() {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
   const { school, isLoading, isError } = useSchoolById(id!);
+
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
 
   return (
     <div className="grow overflow-auto">

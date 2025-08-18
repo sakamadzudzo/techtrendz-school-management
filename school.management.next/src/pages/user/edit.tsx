@@ -10,6 +10,8 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { userViewToUser } from "@/utils/helpers";
 import { roles } from "@/utils/classes";
+import { FloppyDiskIcon, UserIcon, UserPlusIcon } from "@phosphor-icons/react";
+import useToastError from "@/hooks/toasts/ToastError";
 
 export default function UserEdit({
   incrementLoading,
@@ -31,8 +33,15 @@ export default function UserEdit({
   const [updatePassword, setUpdatePassword] = React.useState(false);
   const [updateUsername, setUpdateUsername] = React.useState(false);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const editMsg: React.ReactNode = (
     <div className="w-full">
+      <div className="w-full flex justify-center">
+        <UserIcon weight="thin" size={150} />
+      </div>
       <div className="font-bold text-lg w-full flex justify-center">
         Editing user:
       </div>
@@ -42,6 +51,9 @@ export default function UserEdit({
 
   const newMsg: React.ReactNode = (
     <div className="w-full">
+      <div className="w-full flex justify-center">
+        <UserPlusIcon weight="thin" size={150} />
+      </div>
       <div className="font-bold text-lg w-full flex justify-center">
         Creating user:
       </div>
@@ -81,8 +93,8 @@ export default function UserEdit({
 
       if (!res.ok) {
         // const data = await res.json();
-        setError(data.error || "Sving user failed");
-        setStatusCode(res.status || 500);
+        setError(data.error ?? "Sving user failed");
+        setStatusCode(res.status ?? 500);
         return;
       } else if (data?.id) {
         router.push(`/user/one?id=${data?.id}`);
@@ -90,7 +102,7 @@ export default function UserEdit({
       decrementLoading();
     } catch (err: any) {
       setError("Network error");
-      setStatusCode(err.status || 500);
+      setStatusCode(err.status ?? 500);
       decrementLoading();
     }
   };
@@ -111,7 +123,7 @@ export default function UserEdit({
                     aria-label="update-username"
                     color="primary"
                     size="sm"
-                    isSelected={updateUsername || false}
+                    isSelected={updateUsername ?? false}
                     onValueChange={(e) => setUpdateUsername(e.valueOf())}
                   >
                     Update username?
@@ -124,7 +136,7 @@ export default function UserEdit({
                   name="username"
                   placeholder="Enter username"
                   type="text"
-                  value={user.username || ""}
+                  value={user.username ?? ""}
                   onValueChange={(e) => setUser({ ...user, username: e })}
                   size="sm"
                   variant="underlined"
@@ -141,7 +153,7 @@ export default function UserEdit({
                     aria-label="update-password"
                     color="primary"
                     size="sm"
-                    isSelected={updatePassword || false}
+                    isSelected={updatePassword ?? false}
                     onValueChange={(e) => setUpdatePassword(e.valueOf())}
                   >
                     Update password?
@@ -153,7 +165,7 @@ export default function UserEdit({
                   name="password"
                   placeholder="Enter password (leave blank to keep unchanged)"
                   type="password"
-                  value={user.password || ""}
+                  value={user.password ?? ""}
                   onValueChange={(e) => setUser({ ...user, password: e })}
                   size="sm"
                   variant="underlined"
@@ -166,7 +178,7 @@ export default function UserEdit({
             name="salutation"
             placeholder="Enter salutation"
             type="text"
-            value={user.person?.salutation || ""}
+            value={user.person?.salutation ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, salutation: e } })
             }
@@ -178,7 +190,7 @@ export default function UserEdit({
             name="firstName"
             placeholder="Enter first name"
             type="text"
-            value={user.person?.firstName || ""}
+            value={user.person?.firstName ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, firstName: e } })
             }
@@ -190,7 +202,7 @@ export default function UserEdit({
             name="otherNames"
             placeholder="Enter other names"
             type="text"
-            value={user.person?.otherNames || ""}
+            value={user.person?.otherNames ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, otherNames: e } })
             }
@@ -202,7 +214,7 @@ export default function UserEdit({
             name="lastName"
             placeholder="Enter last name"
             type="text"
-            value={user.person?.lastName || ""}
+            value={user.person?.lastName ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, lastName: e } })
             }
@@ -214,7 +226,7 @@ export default function UserEdit({
             name="email"
             placeholder="Enter email"
             type="email"
-            value={user.person?.email || ""}
+            value={user.person?.email ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, email: e } })
             }
@@ -226,7 +238,7 @@ export default function UserEdit({
             name="mobileNumber"
             placeholder="Enter mobile number"
             type="text"
-            value={user.person?.mobileNumber || ""}
+            value={user.person?.mobileNumber ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, mobileNumber: e } })
             }
@@ -238,7 +250,7 @@ export default function UserEdit({
             name="mobileNumber2"
             placeholder="Enter secondary mobile number"
             type="text"
-            value={user.person?.mobileNumber2 || ""}
+            value={user.person?.mobileNumber2 ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, mobileNumber2: e } })
             }
@@ -250,7 +262,7 @@ export default function UserEdit({
             name="telNumber"
             placeholder="Enter telephone number"
             type="text"
-            value={user.person?.telNumber || ""}
+            value={user.person?.telNumber ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, telNumber: e } })
             }
@@ -262,7 +274,7 @@ export default function UserEdit({
             name="whatsapp"
             placeholder="Enter WhatsApp number"
             type="text"
-            value={user.person?.whatsapp || ""}
+            value={user.person?.whatsapp ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, whatsapp: e } })
             }
@@ -274,7 +286,7 @@ export default function UserEdit({
             name="facebook"
             placeholder="Enter Facebook profile"
             type="text"
-            value={user.person?.facebook || ""}
+            value={user.person?.facebook ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, facebook: e } })
             }
@@ -286,7 +298,7 @@ export default function UserEdit({
             name="linkedin"
             placeholder="Enter LinkedIn profile"
             type="text"
-            value={user.person?.linkedin || ""}
+            value={user.person?.linkedin ?? ""}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, linkedin: e } })
             }
@@ -315,7 +327,7 @@ export default function UserEdit({
           />
           <Select
             label="Roles"
-            selectedKeys={user.roles || []}
+            selectedKeys={user.roles ?? []}
             variant="underlined"
             selectionMode="multiple"
             onSelectionChange={(keys) =>
@@ -331,7 +343,7 @@ export default function UserEdit({
               aria-label="Verified"
               color="primary"
               size="sm"
-              isSelected={user.verified || false}
+              isSelected={user.verified ?? false}
               onValueChange={(e) => setUser({ ...user, verified: e.valueOf() })}
             >
               Verified
@@ -340,7 +352,7 @@ export default function UserEdit({
               aria-label="Enabled"
               color="primary"
               size="sm"
-              isSelected={user.enabled || false}
+              isSelected={user.enabled ?? false}
               onValueChange={(e) => setUser({ ...user, enabled: e.valueOf() })}
             >
               Enabled
@@ -349,7 +361,7 @@ export default function UserEdit({
               aria-label="Change Password"
               color="primary"
               size="sm"
-              isSelected={user.changePassword || false}
+              isSelected={user.changePassword ?? false}
               onValueChange={(e) =>
                 setUser({ ...user, changePassword: e.valueOf() })
               }
@@ -358,7 +370,12 @@ export default function UserEdit({
             </Switch>
           </div>
         </div>
-        <Button type="submit" color="primary" className="w-full px-5">
+        <Button
+          type="submit"
+          color="primary"
+          className="w-full px-5"
+          endContent={<FloppyDiskIcon weight="thin" size={25} />}
+        >
           Save
         </Button>
       </Form>

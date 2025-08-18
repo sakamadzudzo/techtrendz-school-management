@@ -15,10 +15,10 @@ export const PlusIcon = ({
       aria-hidden="true"
       fill="none"
       focusable="false"
-      height={size || height}
+      height={size ?? height}
       role="presentation"
       viewBox="0 0 24 24"
-      width={size || width}
+      width={size ?? width}
       {...props}
     >
       <g
@@ -46,10 +46,10 @@ export const VerticalDotsIcon = ({
       aria-hidden="true"
       fill="none"
       focusable="false"
-      height={size || height}
+      height={size ?? height}
       role="presentation"
       viewBox="0 0 24 24"
-      width={size || width}
+      width={size ?? width}
       {...props}
     >
       <path

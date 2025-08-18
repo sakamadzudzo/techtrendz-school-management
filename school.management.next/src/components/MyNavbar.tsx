@@ -136,7 +136,7 @@ function renderDesktopMenu(items: MyDropdown[], depth = 0) {
       <NavbarItem
         key={item.label}
         className={item.className}
-        isActive={item.isActive || false}
+        isActive={item.isActive ?? false}
       >
         <Button
           as={Link}
@@ -154,7 +154,7 @@ function renderDesktopMenu(items: MyDropdown[], depth = 0) {
         as={Link}
         href={item.href}
         className={item.className}
-        isActive={item.isActive || false}
+        isActive={item.isActive ?? false}
       >
         {item.label}
       </NavbarItem>

@@ -1,4 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
+import useToastError from "@/hooks/toasts/ToastError";
 import { useSchoolsAll, useSchoolsAllByFilter } from "@/hooks/useSchools";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
@@ -27,11 +28,7 @@ export default function AllSchoolsPage() {
   let isError;
 
   if (searchValue) {
-    ({
-      schools,
-      isLoading,
-      isError,
-    } = useSchoolsAllByFilter({
+    ({ schools, isLoading, isError } = useSchoolsAllByFilter({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -39,11 +36,7 @@ export default function AllSchoolsPage() {
       filter: searchValue,
     }));
   } else {
-    ({
-      schools,
-      isLoading,
-      isError,
-    } = useSchoolsAll({
+    ({ schools, isLoading, isError } = useSchoolsAll({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -76,11 +69,15 @@ export default function AllSchoolsPage() {
     }
   }, [schools]);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const rows = React.useMemo(() => {
     if (!schools) return [];
-    return (schools.content || []).map((row: any) => ({
+    return (schools.content ?? []).map((row: any) => ({
       ...row,
-      key: row.id || row._id || row.name,
+      key: row.id ?? row._id ?? row.name,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

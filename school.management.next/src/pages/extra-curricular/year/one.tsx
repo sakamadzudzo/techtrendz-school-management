@@ -13,12 +13,18 @@ import MyChip from "@/components/MyChip";
 import { formatDate } from "@/utils/helpers";
 import TeacherViewCard from "@/components/TeacherViewCard";
 import StudentViewCard from "@/components/StudentViewCard";
+import useToastError from "@/hooks/toasts/ToastError";
+import { useEffect } from "react";
 
 export default function OneExtraCurricularYearPage() {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
   const { extraCurricularYear, isLoading, isError } =
     useExtraCurricularYearById(id!);
+
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
 
   return (
     <div className="grow overflow-auto">

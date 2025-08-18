@@ -1,4 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
+import useToastError from "@/hooks/toasts/ToastError";
 import {
   useExtraCurricularYearsAll,
   useExtraCurricularYearsAllByFilter,
@@ -30,23 +31,16 @@ export default function AllExtraCurricularYearsPage() {
   let isError;
 
   if (searchValue) {
-    ({
-      extraCurricularYears,
-      isLoading,
-      isError,
-    } = useExtraCurricularYearsAllByFilter({
-      page: page - 1,
-      size,
-      sort: sortDescriptor.column.toString(),
-      direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
-      filter: searchValue,
-    }));
+    ({ extraCurricularYears, isLoading, isError } =
+      useExtraCurricularYearsAllByFilter({
+        page: page - 1,
+        size,
+        sort: sortDescriptor.column.toString(),
+        direction: sortDescriptor.direction === "ascending" ? "ASC" : "DESC",
+        filter: searchValue,
+      }));
   } else {
-    ({
-      extraCurricularYears,
-      isLoading,
-      isError,
-    } = useExtraCurricularYearsAll({
+    ({ extraCurricularYears, isLoading, isError } = useExtraCurricularYearsAll({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -79,15 +73,20 @@ export default function AllExtraCurricularYearsPage() {
     }
   }, [extraCurricularYears]);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const rows = React.useMemo(() => {
     if (!extraCurricularYears) return [];
-    return (extraCurricularYears.content || []).map((row: any) => ({
+    return (extraCurricularYears.content ?? []).map((row: any) => ({
       ...row,
-      key: row.id || row._id || row.name,
-      "extraCurricular.name": row.extraCurricular?.name || row.name,
-      "extraCurricular.description": row.extraCurricular?.description || row.description,
-      facilitators: row.facilitators?.length || 0,
-      students: row.students?.length || 0,
+      key: row.id ?? row._id ?? row.name,
+      "extraCurricular.name": row.extraCurricular?.name ?? row.name,
+      "extraCurricular.description":
+        row.extraCurricular?.description ?? row.description,
+      facilitators: row.facilitators?.length ?? 0,
+      students: row.students?.length ?? 0,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

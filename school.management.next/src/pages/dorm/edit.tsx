@@ -1,5 +1,6 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
+import useToastError from "@/hooks/toasts/ToastError";
 import { useDormById } from "@/hooks/useDorms";
 import { useSchoolsList } from "@/hooks/useSchools";
 import { RootState } from "@/store/store";
@@ -13,6 +14,7 @@ import {
   SelectItem,
   SharedSelection,
 } from "@heroui/react";
+import { HouseLineIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -48,6 +50,9 @@ export default function DormEdit({
 
   const editMsg: React.ReactNode = (
     <div className="w-full">
+      <div className="w-full flex justify-center">
+        <HouseLineIcon weight="thin" size={150} />
+      </div>
       <div className="font-bold text-lg w-full flex justify-center">
         Editing dorm:
       </div>
@@ -57,6 +62,9 @@ export default function DormEdit({
 
   const newMsg: React.ReactNode = (
     <div className="w-full">
+      <div className="w-full flex justify-center">
+        <HouseLineIcon weight="thin" size={150} />
+      </div>
       <div className="font-bold text-lg w-full flex justify-center">
         Creating dorm:
       </div>
@@ -69,6 +77,22 @@ export default function DormEdit({
   useEffect(() => {
     if (oldDorm) setDorm(oldDorm);
   }, [id, oldDorm]);
+
+  useEffect(() => {
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
+  }, [isError]);
+
+  useEffect(() => {
+    schoolsErorr &&
+      useToastError({
+        error: schoolsErorr?.message,
+        statusCode: schoolsErorr?.statusCode,
+      });
+  }, [schoolsErorr]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -90,8 +114,8 @@ export default function DormEdit({
 
       if (!res.ok) {
         // const data = await res.json();
-        setError(data.error || "Sving dorm failed");
-        setStatusCode(res.status || 500);
+        setError(data.error ?? "Sving dorm failed");
+        setStatusCode(res.status ?? 500);
         return;
       } else if (data?.id) {
         router.push(`/dorm/one?id=${data?.id}`);
@@ -99,7 +123,7 @@ export default function DormEdit({
       decrementLoading();
     } catch (err: any) {
       setError("Network error");
-      setStatusCode(err.status || 500);
+      setStatusCode(err.status ?? 500);
       decrementLoading();
     }
   };
@@ -118,7 +142,7 @@ export default function DormEdit({
             name="name"
             placeholder="Enter the dorm name"
             type="text"
-            value={dorm.name || ""}
+            value={dorm.name ?? ""}
             onValueChange={(e) => setDorm({ ...dorm, name: e })}
             size="sm"
             variant="underlined"
@@ -130,7 +154,7 @@ export default function DormEdit({
             name="description"
             placeholder="Enter your dorm's description"
             type="text"
-            value={dorm.description || ""}
+            value={dorm.description ?? ""}
             onValueChange={(e) => setDorm({ ...dorm, description: e })}
             size="sm"
             variant="underlined"
@@ -142,7 +166,7 @@ export default function DormEdit({
             name="address"
             placeholder="Enter your dorm's address"
             type="text"
-            value={dorm.address || ""}
+            value={dorm.address ?? ""}
             onValueChange={(e) => setDorm({ ...dorm, address: e })}
             size="sm"
             variant="underlined"

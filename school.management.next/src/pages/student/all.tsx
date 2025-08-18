@@ -1,4 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
+import useToastError from "@/hooks/toasts/ToastError";
 import { useStudentsAll, useStudentsAllByFilter } from "@/hooks/useStudents";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
@@ -27,11 +28,7 @@ export default function AllStudentsPage() {
   let isError;
 
   if (searchValue) {
-    ({
-       students,
-      isLoading,
-      isError,
-    } = useStudentsAllByFilter({
+    ({ students, isLoading, isError } = useStudentsAllByFilter({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -39,11 +36,7 @@ export default function AllStudentsPage() {
       filter: searchValue,
     }));
   } else {
-    ({
-      students,
-      isLoading,
-      isError,
-    } = useStudentsAll({
+    ({ students, isLoading, isError } = useStudentsAll({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -76,14 +69,18 @@ export default function AllStudentsPage() {
     }
   }, [students]);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const rows = React.useMemo(() => {
     if (!students) return [];
-    return (students.content || []).map((row: any) => ({
+    return (students.content ?? []).map((row: any) => ({
       ...row,
-      key: row.id || row._id || row.name,
-      "person.firstName": row.person?.firstName || row.firstName,
-      "person.otherNames": row.person?.otherNames || row.otherNames,
-      "person.lastName": row.person?.lastName || row.lastName,
+      key: row.id ?? row._id ?? row.name,
+      "person.firstName": row.person?.firstName ?? row.firstName,
+      "person.otherNames": row.person?.otherNames ?? row.otherNames,
+      "person.lastName": row.person?.lastName ?? row.lastName,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

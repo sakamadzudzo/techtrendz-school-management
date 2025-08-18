@@ -4,11 +4,17 @@ import { useSearchParams } from "next/navigation";
 import { PencilSimpleLineIcon } from "@phosphor-icons/react";
 import { formatDate } from "@/utils/helpers";
 import MyChip from "@/components/MyChip";
+import useToastError from "@/hooks/toasts/ToastError";
+import { useEffect } from "react";
 
 export default function OneExtraCurricularPage() {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
   const { extraCurricular, isLoading, isError } = useExtraCurricularById(id!);
+
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
 
   return (
     <div className="grow overflow-auto">
@@ -49,7 +55,9 @@ export default function OneExtraCurricularPage() {
         <Spacer x={4} y={4} />
         <div className="info-row">
           <div className="info-row-title">Date Created/Modified:</div>
-          <div className="info-row-content">{formatDate(extraCurricular?.datestamp)}</div>
+          <div className="info-row-content">
+            {formatDate(extraCurricular?.datestamp)}
+          </div>
         </div>
       </div>
     </div>

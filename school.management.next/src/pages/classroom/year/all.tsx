@@ -1,4 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
+import useToastError from "@/hooks/toasts/ToastError";
 import {
   useClassroomYearsAll,
   useClassroomYearsAllByFilter,
@@ -71,14 +72,18 @@ export default function AllClassroomYearsPage() {
     }
   }, [classroomYears]);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const rows = React.useMemo(() => {
     if (!classroomYears) return [];
-    return (classroomYears.content || []).map((row: any) => ({
+    return (classroomYears.content ?? []).map((row: any) => ({
       ...row,
-      key: row.id || row._id || row.name,
-      "classroom.name": row.classroom?.name || row.name,
-      "classroom.description": row.classroom?.description || row.description,
-      subjects: row.classroom?.subjects?.length || row.subjects?.length || 0,
+      key: row.id ?? row._id ?? row.name,
+      "classroom.name": row.classroom?.name ?? row.name,
+      "classroom.description": row.classroom?.description ?? row.description,
+      subjects: row.classroom?.subjects?.length ?? row.subjects?.length ?? 0,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

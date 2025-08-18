@@ -20,25 +20,30 @@ import {
   ChalkboardTeacherIcon,
   FolderSimpleIcon,
 } from "@phosphor-icons/react";
-import React from "react";
+import React, { useEffect } from "react";
 import SubjectViewCard from "@/components/SubjectViewCard";
+import useToastError from "@/hooks/toasts/ToastError";
 
 export default function OneTeacherPage() {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
   const { teacher, isLoading, isError } = useTeacherById(id!);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const hasContactInfo: boolean = React.useMemo(() => {
     return !!(
-      teacher?.email ||
-      teacher?.mobileNumber ||
-      teacher?.mobileNumber2 ||
+      teacher?.email ??
+      teacher?.mobileNumber ??
+      teacher?.mobileNumber2 ??
       teacher?.telNumber
     );
   }, [teacher]);
 
   const hasSocials: boolean = React.useMemo(() => {
-    return !!(teacher?.whatsapp || teacher?.linkedin || teacher?.facebook);
+    return !!(teacher?.whatsapp ?? teacher?.linkedin ?? teacher?.facebook);
   }, [teacher]);
 
   const disabledKeys: string[] = React.useMemo(() => {
@@ -92,7 +97,7 @@ export default function OneTeacherPage() {
                     className="cursor-pointer w-full h-full"
                   >
                     {!teacher?.avatarUrl &&
-                      getInitials(teacher?.name || "User")}
+                      getInitials(teacher?.name ?? "User")}
                   </Avatar>
                 )}
               </div>

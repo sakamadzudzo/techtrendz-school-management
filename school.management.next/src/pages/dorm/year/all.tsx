@@ -1,4 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
+import useToastError from "@/hooks/toasts/ToastError";
 import { useDormYearsAll, useDormYearsAllByFilter } from "@/hooks/useDormYears";
 import { statuses } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
@@ -27,11 +28,7 @@ export default function AllDormYearsPage() {
   let isError;
 
   if (searchValue) {
-    ({
-      dormYears,
-      isLoading,
-      isError,
-    } = useDormYearsAllByFilter({
+    ({ dormYears, isLoading, isError } = useDormYearsAllByFilter({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -39,11 +36,7 @@ export default function AllDormYearsPage() {
       filter: searchValue,
     }));
   } else {
-    ({
-      dormYears,
-      isLoading,
-      isError,
-    } = useDormYearsAll({
+    ({ dormYears, isLoading, isError } = useDormYearsAll({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -76,14 +69,18 @@ export default function AllDormYearsPage() {
     }
   }, [dormYears]);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const rows = React.useMemo(() => {
     if (!dormYears) return [];
-    return (dormYears.content || []).map((row: any) => ({
+    return (dormYears.content ?? []).map((row: any) => ({
       ...row,
-      key: row.id || row._id || row.name,
-      "dorm.name": row.dorm?.name || row.name,
-      "dorm.description": row.dorm?.description || row.description,
-      "dorm.address": row.dorm?.address || row.address,
+      key: row.id ?? row._id ?? row.name,
+      "dorm.name": row.dorm?.name ?? row.name,
+      "dorm.description": row.dorm?.description ?? row.description,
+      "dorm.address": row.dorm?.address ?? row.address,
       "dorm.school.name": row.dorm.school?.name,
       datestamp: formatDate(row.datestamp),
       actions: [

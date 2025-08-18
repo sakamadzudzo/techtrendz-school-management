@@ -16,7 +16,14 @@ async function saveUser(userDto: any, authHeader: any) {
     headers: { "Content-Type": "application/json", ...authHeader },
     body: JSON.stringify(userDto),
   });
-  if (!res.ok) throw new ApiError("User creation failed", res.status);
+  if (!res.ok) {
+    let backendError = "User creation failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -31,7 +38,14 @@ async function getUsers(authHeader: any, query: any) {
     method: "GET",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
-  if (!res.ok) throw new ApiError("Fetching users failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching users failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -50,7 +64,14 @@ async function getUsersByFilter(authHeader: any, query: any) {
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
-  if (!res.ok) throw new ApiError("Fetching users failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching users failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -83,7 +104,7 @@ async function getUserById(userId: string, authHeader: any) {
     let backendError = "Fetching user failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message || errorBody.error || backendError;
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -106,8 +127,14 @@ async function getUsersByExample(exampleDto: any, authHeader: any, query: any) {
       body: JSON.stringify(exampleDto),
     }
   );
-  if (!res.ok)
-    throw new ApiError("Fetching users by example failed", res.status);
+  if (!res.ok) {
+    let backendError = "Fetching users by example failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
   return res.json();
 }
 
@@ -120,7 +147,7 @@ async function changePassword(passwordDto: any, authHeader: any) {
   if (!res.ok) {
     const response = await res.json();
     throw new ApiError(
-      response?.message || response?.error || "Password change failed",
+      response?.message ?? response?.error ?? "Password change failed",
       res.status
     );
   }
@@ -184,10 +211,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message || "Internal server error" });
+        .json({ error: err.message ?? "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message || "Internal server error" });
+      .json({ error: err.message ?? "Internal server error" });
   }
 }

@@ -1,10 +1,6 @@
 import MyChip from "@/components/MyChip";
 import { useStudentById } from "@/hooks/useStudents";
-import {
-  formatDate,
-  getInitials,
-  sanitizeForWhatsapp,
-} from "@/utils/helpers";
+import { formatDate, getInitials, sanitizeForWhatsapp } from "@/utils/helpers";
 import {
   Accordion,
   AccordionItem,
@@ -25,11 +21,17 @@ import {
   PencilSimpleLineIcon,
 } from "@phosphor-icons/react";
 import SubjectViewCard from "@/components/SubjectViewCard";
+import useToastError from "@/hooks/toasts/ToastError";
+import { useEffect } from "react";
 
 export default function OneStudentPage() {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
   const { student, isLoading, isError } = useStudentById(id!);
+
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
 
   return (
     <div className="grow overflow-auto">
@@ -68,7 +70,7 @@ export default function OneStudentPage() {
                     className="cursor-pointer w-full h-full"
                   >
                     {!student?.avatarUrl &&
-                      getInitials(student?.name || "User")}
+                      getInitials(student?.name ?? "User")}
                   </Avatar>
                 )}
               </div>
@@ -140,30 +142,22 @@ export default function OneStudentPage() {
           <div className="flex flex-col px-4">
             <div className="info-row">
               <div className="info-row-title">Salutation:</div>
-              <div className="info-row-content">
-                {student?.salutation}
-              </div>
+              <div className="info-row-content">{student?.salutation}</div>
             </div>
             <Spacer x={4} y={4} />
             <div className="info-row">
               <div className="info-row-title">First Name:</div>
-              <div className="info-row-content">
-                {student?.firstName}
-              </div>
+              <div className="info-row-content">{student?.firstName}</div>
             </div>
             <Spacer x={4} y={4} />
             <div className="info-row">
               <div className="info-row-title">Other Names:</div>
-              <div className="info-row-content">
-                {student?.otherNames}
-              </div>
+              <div className="info-row-content">{student?.otherNames}</div>
             </div>
             <Spacer x={4} y={4} />
             <div className="info-row">
               <div className="info-row-title">Last Name:</div>
-              <div className="info-row-content">
-                {student?.lastName}
-              </div>
+              <div className="info-row-content">{student?.lastName}</div>
             </div>
             <Spacer x={4} y={4} />
             <div className="info-row">
@@ -193,10 +187,7 @@ export default function OneStudentPage() {
                     {student?.mobileNumber2 ? "Cell 1" : "Cell"}
                   </div>
                   <div className="info-row-content">
-                    <Link
-                      isExternal
-                      href={`tel:${student?.mobileNumber}`}
-                    >
+                    <Link isExternal href={`tel:${student?.mobileNumber}`}>
                       {student?.mobileNumber}
                     </Link>
                   </div>
@@ -209,10 +200,7 @@ export default function OneStudentPage() {
                 <div className="info-row">
                   <div className="info-row-title">Cell 2:</div>
                   <div className="info-row-content">
-                    <Link
-                      isExternal
-                      href={`tel:${student?.mobileNumber2}`}
-                    >
+                    <Link isExternal href={`tel:${student?.mobileNumber2}`}>
                       {student?.mobileNumber2}
                     </Link>
                   </div>
@@ -343,9 +331,7 @@ export default function OneStudentPage() {
             <Spacer x={4} y={4} />
             <div className="info-row">
               <div className="info-row-title">Dorm Address:</div>
-              <div className="info-row-content">
-                {student?.dorm?.address}
-              </div>
+              <div className="info-row-content">{student?.dorm?.address}</div>
             </div>
             <Spacer x={4} y={4} />
             <div className="info-row">

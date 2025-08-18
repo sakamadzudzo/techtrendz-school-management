@@ -1,4 +1,5 @@
 import MyTable, { Column } from "@/components/MyTable";
+import useToastError from "@/hooks/toasts/ToastError";
 import {
   useExtraCurricularsAll,
   useExtraCurricularsAllByFilter,
@@ -30,11 +31,7 @@ export default function AllExtraCurricularsPage() {
   let isError;
 
   if (searchValue) {
-    ({
-      extraCurriculars,
-      isLoading,
-      isError,
-    } = useExtraCurricularsAllByFilter({
+    ({ extraCurriculars, isLoading, isError } = useExtraCurricularsAllByFilter({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -42,11 +39,7 @@ export default function AllExtraCurricularsPage() {
       filter: searchValue,
     }));
   } else {
-    ({
-      extraCurriculars,
-      isLoading,
-      isError,
-    } = useExtraCurricularsAll({
+    ({ extraCurriculars, isLoading, isError } = useExtraCurricularsAll({
       page: page - 1,
       size,
       sort: sortDescriptor.column.toString(),
@@ -79,11 +72,15 @@ export default function AllExtraCurricularsPage() {
     }
   }, [extraCurriculars]);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const rows = React.useMemo(() => {
     if (!extraCurriculars) return [];
-    return (extraCurriculars.content || []).map((row: any) => ({
+    return (extraCurriculars.content ?? []).map((row: any) => ({
       ...row,
-      key: row.id || row._id || row.name,
+      key: row.id ?? row._id ?? row.name,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

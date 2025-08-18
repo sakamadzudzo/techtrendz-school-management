@@ -22,25 +22,30 @@ import {
   CheckIcon,
   XIcon,
 } from "@phosphor-icons/react";
-import React from "react";
+import React, { useEffect } from "react";
 import SubjectViewCard from "@/components/SubjectViewCard";
+import useToastError from "@/hooks/toasts/ToastError";
 
 export default function OneUserPage() {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
   const { user, isLoading, isError } = useUserById(id!);
 
+  useEffect(() => {
+    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+  }, [isError]);
+
   const hasContactInfo: boolean = React.useMemo(() => {
     return !!(
-      user?.email ||
-      user?.mobileNumber ||
-      user?.mobileNumber2 ||
+      user?.email ??
+      user?.mobileNumber ??
+      user?.mobileNumber2 ??
       user?.telNumber
     );
   }, [user]);
 
   const hasSocials: boolean = React.useMemo(() => {
-    return !!(user?.whatsapp || user?.linkedin || user?.facebook);
+    return !!(user?.whatsapp ?? user?.linkedin ?? user?.facebook);
   }, [user]);
 
   const disabledKeys: string[] = React.useMemo(() => {
@@ -98,7 +103,7 @@ export default function OneUserPage() {
                     color="primary"
                     className="cursor-pointer w-full h-full"
                   >
-                    {!user?.avatarUrl && getInitials(user?.name || "User")}
+                    {!user?.avatarUrl && getInitials(user?.name ?? "User")}
                   </Avatar>
                 )}
               </div>
