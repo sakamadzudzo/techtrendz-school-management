@@ -11,11 +11,12 @@ import zw.co.techtrendz.school.management.api.service.ClassroomYearService;
 import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/classroom/year")
 public class ClassroomYearController {
-    
+
     @Autowired
     private ClassroomYearService classroomYearService;
 
@@ -69,5 +70,10 @@ public class ClassroomYearController {
     @GetMapping("/view/get/all/by/filter")
     public Page<ClassroomYearDto> getAllClassroomYearViewsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.classroomYearService.getViewAllByFilter(page, size, sortBy, sortDir, filter);
+    }
+
+    @GetMapping("/dropdown/get/all")
+    public List<Map<String, Object>> getAllClassroomYearForDropdown() {
+        return this.classroomYearService.getAllClassroomYearForDropdown();
     }
 }

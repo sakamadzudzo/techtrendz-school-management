@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.service.impl;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -22,6 +23,7 @@ import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -141,6 +143,11 @@ public class ClassroomYearServiceImpl implements ClassroomYearService {
             Page<ClassroomYearDto> classroomYearDtoPage = this.classroomYearQueryService.getAllClassroomYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return getClassroomYearClassesAndSubjects(classroomYearDtoPage);
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllClassroomYearForDropdown() {
+        return this.classroomYearQueryService.getAllClassroomYearForDropdown();
     }
 
     private Page<ClassroomYearDto> getClassroomYearClassesAndSubjects(Page<ClassroomYearDto> classroomYearDtoPage) {

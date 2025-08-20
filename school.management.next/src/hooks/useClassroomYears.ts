@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { useSelector } from "react-redux";
 import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
-import { Classroom, ClassroomView } from "@/utils/types";
+import { Classroom, ClassroomView, YearDropdown } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -147,6 +147,23 @@ export function useClassroomYearsByExample(exampleDto: any) {
   return {
     classroomYears: data as Page<ClassroomView>,
     isLoading: !!exampleDto && !!token && !error && !data,
+    isError: error,
+    mutate,
+  };
+}
+
+export function useClassroomYearsDropdown() {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!token;
+  const { data, error, mutate } = useSWR(
+    shouldFetch
+      ? [`/api/classroom-year?action=dropdown`, token]
+      : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+  return {
+    classroomYears: data as YearDropdown[],
+    isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
   };

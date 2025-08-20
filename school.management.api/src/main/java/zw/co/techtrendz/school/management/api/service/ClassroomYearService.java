@@ -7,10 +7,11 @@ import zw.co.techtrendz.school.management.api.entity.ClassroomYear;
 import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface ClassroomYearService {
-    
+
     public ClassroomYear save(ClassroomYear classroomYear);
 
     public List<ClassroomYear> saveAll(List<ClassroomYear> classroomYears);
@@ -30,4 +31,6 @@ public interface ClassroomYearService {
     public Page<ClassroomYearDto> getViewAllByExample(ClassroomYear classroomYear, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<ClassroomYearDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
+
+    public List<Map<String, Object>> getAllClassroomYearForDropdown();
 }

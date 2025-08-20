@@ -23,6 +23,7 @@ import zw.co.techtrendz.school.management.api.view.StudentDto;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -138,6 +139,11 @@ public class DormYearServiceImpl implements DormYearService {
             Page<DormYearDto> dormDtoPage = this.dormYearQueryService.getAllDormYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return this.getDormStudents(dormDtoPage);
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllDormYearForDropdown() {
+        return this.dormYearQueryService.getAllDormYearForDropdown();
     }
 
     private Page<DormYearDto> getDormStudents(Page<DormYearDto> dormDtoPage) {

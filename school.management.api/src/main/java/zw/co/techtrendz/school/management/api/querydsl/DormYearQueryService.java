@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.querydsl;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -14,7 +15,11 @@ import zw.co.techtrendz.school.management.api.utility.ViewProjectionUtils;
 import zw.co.techtrendz.school.management.api.view.DormYearDto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class DormYearQueryService {
@@ -96,6 +101,36 @@ public class DormYearQueryService {
         long total = queryFactory.selectFrom(dormYear).where(QuerydslUtils.toPredicate(example, DormYear.class, "dormYear")).fetchCount();
 
         return new PageImpl<>(dormYearDtoList, pageable, total);
+    }
+
+    public List<Map<String, Object>> getAllDormYearForDropdown() {
+        QDormYear dormYear = QDormYear.dormYear;
+
+        List<String> sortBy = List.of("dorm.name");
+        Sort.Direction sortDir = Sort.Direction.ASC;
+        List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
+
+        List<Tuple> results = queryFactory
+                .select(
+                        dormYear.id,
+                        dormYear.calendarYear,
+                        dormYear.dorm.name
+                )
+                .from(dormYear)
+                .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
+                .fetch();
+
+        return results.stream()
+                .map(tuple -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", tuple.get(dormYear.id));
+                    map.put("calendarYear", tuple.get(dormYear.calendarYear));
+                    map.put("name", tuple.get(dormYear.dorm.name));
+                    return map;
+                })
+                .collect(Collectors.toCollection(
+                        CopyOnWriteArrayList::new
+                ));
     }
 
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {

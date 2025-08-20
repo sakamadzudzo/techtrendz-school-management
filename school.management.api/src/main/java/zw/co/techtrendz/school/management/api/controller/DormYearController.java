@@ -11,6 +11,7 @@ import zw.co.techtrendz.school.management.api.service.DormYearService;
 import zw.co.techtrendz.school.management.api.view.DormYearDto;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/dorm/year")
@@ -49,5 +50,10 @@ public class DormYearController {
     @GetMapping("/get/all/by/filter")
     public Page<DormYear> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.dormYearService.getAllByFilter(page, size, sortBy, sortDir, filter);
+    }
+
+    @GetMapping("/dropdown/get/all")
+    public List<Map<String, Object>> getAllDormYearForDropdown() {
+        return this.dormYearService.getAllDormYearForDropdown();
     }
 }

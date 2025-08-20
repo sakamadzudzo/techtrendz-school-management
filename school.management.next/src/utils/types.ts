@@ -327,3 +327,9 @@ export enum Role {
   STAFF = "STAFF",
   GUEST = "GUEST",
 }
+
+export type YearDropdown = {
+  id: number;
+  name: string;
+  calendarYear?: number;
+}

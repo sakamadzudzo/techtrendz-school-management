@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.querydsl;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -14,7 +15,11 @@ import zw.co.techtrendz.school.management.api.utility.ViewProjectionUtils;
 import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class ClassroomYearQueryService {
@@ -97,6 +102,37 @@ public class ClassroomYearQueryService {
 
         return new PageImpl<>(classroomYearDtoList, pageable, total);
     }
+
+    public List<Map<String, Object>> getAllClassroomYearForDropdown() {
+        QClassroomYear classroomYear = QClassroomYear.classroomYear;
+
+        List<String> sortBy = List.of("classroom.name");
+        Sort.Direction sortDir = Sort.Direction.ASC;
+        List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
+
+        List<Tuple> results = queryFactory
+                .select(
+                        classroomYear.id,
+                        classroomYear.calendarYear,
+                        classroomYear.classroom.name
+                )
+                .from(classroomYear)
+                .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
+                .fetch();
+
+        return results.stream()
+                .map(tuple -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", tuple.get(classroomYear.id));
+                    map.put("calendarYear", tuple.get(classroomYear.calendarYear));
+                    map.put("name", tuple.get(classroomYear.classroom.name));
+                    return map;
+                })
+                .collect(Collectors.toCollection(
+                        CopyOnWriteArrayList::new
+                ));
+    }
+
 
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {
         // Build sorting order

@@ -7,6 +7,7 @@ import zw.co.techtrendz.school.management.api.entity.DormYear;
 import zw.co.techtrendz.school.management.api.view.DormYearDto;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface DormYearService {
@@ -30,4 +31,6 @@ public interface DormYearService {
     public Page<DormYearDto> getViewAllByExample(DormYear dormYear, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<DormYearDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
+
+    public List<Map<String, Object>> getAllDormYearForDropdown();
 }

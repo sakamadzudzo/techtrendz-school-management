@@ -1,4 +1,12 @@
-import { Person, Teacher, TeacherView, User, UserView } from "./types";
+import {
+  Person,
+  Student,
+  StudentView,
+  Teacher,
+  TeacherView,
+  User,
+  UserView,
+} from "./types";
 
 export function capitalize(s: string) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
@@ -146,4 +154,41 @@ export const teacherViewToTeacher = (dto: TeacherView) => {
   teacher.status = dto.status;
 
   return teacher;
+};
+
+export const studentViewToStudent = (dto: StudentView) => {
+  const student = {} as Student;
+  const person = {} as Person;
+
+  person.id = dto.id;
+  person.salutation = dto.salutation;
+  person.firstName = dto.firstName;
+  person.otherNames = dto.otherNames;
+  person.lastName = dto.lastName;
+  person.email = dto.email;
+  person.mobileNumber = dto.mobileNumber;
+  person.mobileNumber2 = dto.mobileNumber2;
+  person.telNumber = dto.telNumber;
+  person.whatsapp = dto.whatsapp;
+  person.facebook = dto.facebook;
+  person.linkedin = dto.linkedin;
+  person.dateOfBirth = dto.dateOfBirth;
+  person.status = dto.status;
+  person.datestamp = dto.datestamp;
+  person.name = dto.name;
+  person.fullname = dto.fullname;
+  person.avatarUrl = dto.avatarUrl;
+  person.imagesUrls = dto.imagesUrls;
+
+  student.id = dto.id;
+  student.person = person;
+  student.datestamp = dto.datestamp;
+  student.status = dto.status;
+  student.startYear = dto.startYear;
+  student.endYear = dto.endYear;
+  student.classroom = dto.classroom as any;
+  student.dorm = dto.dorm as any;
+  student.school = dto.school as any;
+
+  return student;
 };

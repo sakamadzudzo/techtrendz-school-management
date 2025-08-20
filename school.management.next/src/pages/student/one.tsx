@@ -40,6 +40,7 @@ export default function OneStudentPage() {
           color="primary"
           endContent={<PencilSimpleLineIcon weight="thin" size={34} />}
           href={`/student/edit?id=${student?.id}`}
+          as={Link}
         >
           Edit
         </Button>

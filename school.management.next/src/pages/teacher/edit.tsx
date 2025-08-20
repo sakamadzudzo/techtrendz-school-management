@@ -306,53 +306,6 @@ export default function TeacherEdit({
             size="sm"
             variant="underlined"
           />
-          {/* <Select
-            label="Roles"
-            selectedKeys={teacher.roles ?? []}
-            variant="underlined"
-            selectionMode="multiple"
-            onSelectionChange={(keys) =>
-              setTeacher({ ...teacher, roles: Array.from(keys) as string[] })
-            }
-          >
-            {roles?.map((role) => (
-              <SelectItem key={role}>{role}</SelectItem>
-            ))}
-          </Select>
-          <div className="flex gap-4">
-            <Switch
-              aria-label="Verified"
-              color="primary"
-              size="sm"
-              isSelected={teacher.verified ?? false}
-              onValueChange={(e) =>
-                setTeacher({ ...teacher, verified: e.valueOf() })
-              }
-            >
-              Verified
-            </Switch>
-            <Switch
-              aria-label="Enabled"
-              color="primary"
-              size="sm"
-              isSelected={teacher.enabled ?? false}
-              onValueChange={(e) =>
-                setTeacher({ ...teacher, enabled: e.valueOf() })
-              }
-            >
-              Enabled
-            </Switch>
-            <Switch
-              aria-label="Change Password"
-              color="primary"
-              size="sm"
-              isSelected={teacher.changePassword ?? false}
-              onValueChange={(e) =>
-                setTeacher({ ...teacher, changePassword: e.valueOf() })
-              }
-            >
-              Change Password
-            </Switch> */}
         </div>
         <Button
           type="submit"
