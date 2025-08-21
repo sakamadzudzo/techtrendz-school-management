@@ -262,6 +262,7 @@ export type ExtraCurricularYearView = {
   description: string;
   facilitators: TeacherView[];
   students: StudentView[];
+  extraCurricularId: number;
 };
 
 export type UserView = {

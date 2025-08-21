@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.ClassroomYear;
 import zw.co.techtrendz.school.management.api.querydsl.ClassroomYearQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
@@ -146,7 +147,7 @@ public class ClassroomYearServiceImpl implements ClassroomYearService {
     }
 
     @Override
-    public List<Map<String, Object>> getAllClassroomYearForDropdown() {
+    public List<YearDropdown> getAllClassroomYearForDropdown() {
         return this.classroomYearQueryService.getAllClassroomYearForDropdown();
     }
 

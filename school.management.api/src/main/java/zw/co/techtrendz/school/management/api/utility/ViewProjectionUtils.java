@@ -353,7 +353,8 @@ public class ViewProjectionUtils {
                 extraCurricularYear.datestamp,
                 extraCurricularYear.status,
                 new NullExpression<>(List.class),
-                new NullExpression<>(List.class)
+                new NullExpression<>(List.class),
+                extraCurricularYear.extraCurricular.id
         );
     }
 

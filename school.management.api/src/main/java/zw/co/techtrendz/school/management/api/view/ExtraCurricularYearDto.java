@@ -28,4 +28,6 @@ public class ExtraCurricularYearDto {
     private List<TeacherDto> facilitators;
 
     private List<StudentDto> students;
+
+    private Long extraCurricularId;
 }

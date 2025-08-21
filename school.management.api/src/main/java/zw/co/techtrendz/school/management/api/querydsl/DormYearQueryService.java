@@ -8,6 +8,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.DormYear;
 import zw.co.techtrendz.school.management.api.entity.QDormYear;
 import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
@@ -103,7 +104,7 @@ public class DormYearQueryService {
         return new PageImpl<>(dormYearDtoList, pageable, total);
     }
 
-    public List<Map<String, Object>> getAllDormYearForDropdown() {
+    public List<YearDropdown> getAllDormYearForDropdown() {
         QDormYear dormYear = QDormYear.dormYear;
 
         List<String> sortBy = List.of("dorm.name");
@@ -122,11 +123,11 @@ public class DormYearQueryService {
 
         return results.stream()
                 .map(tuple -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("id", tuple.get(dormYear.id));
-                    map.put("calendarYear", tuple.get(dormYear.calendarYear));
-                    map.put("name", tuple.get(dormYear.dorm.name));
-                    return map;
+                    YearDropdown dto = new YearDropdown();
+                    dto.setId(tuple.get(dormYear.id));
+                    dto.setCalendarYear(tuple.get(dormYear.calendarYear));
+                    dto.setName(tuple.get(dormYear.dorm.name));
+                    return dto;
                 })
                 .collect(Collectors.toCollection(
                         CopyOnWriteArrayList::new

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.DormYear;
 import zw.co.techtrendz.school.management.api.querydsl.DormYearQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
@@ -142,7 +143,7 @@ public class DormYearServiceImpl implements DormYearService {
     }
 
     @Override
-    public List<Map<String, Object>> getAllDormYearForDropdown() {
+    public List<YearDropdown> getAllDormYearForDropdown() {
         return this.dormYearQueryService.getAllDormYearForDropdown();
     }
 

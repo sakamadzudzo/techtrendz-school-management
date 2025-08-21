@@ -1,4 +1,6 @@
 import {
+  ExtraCurricular,
+  ExtraCurricularYearView,
   Person,
   Student,
   StudentView,
@@ -215,4 +217,22 @@ export const studentViewToStudent = (dto: StudentView) => {
   student.school = dto.school as any;
 
   return student;
+};
+
+export const extraCurricularYearViewToExtraCurricularYear = (
+  dto: ExtraCurricularYearView
+) => {
+  return {
+    id: dto.id,
+    status: dto.status,
+    datestamp: dto.datestamp,
+    calendarYear: dto.calendarYear,
+    extraCurricular: { id: dto.extraCurricularId } as ExtraCurricular,
+    facilitators: (Array.isArray(dto.facilitators)
+      ? dto.facilitators.map(teacherViewToTeacher)
+      : []) as Teacher[],
+    students: (Array.isArray(dto.students)
+      ? dto.students.map(studentViewToStudent)
+      : []) as Student[],
+  };
 };

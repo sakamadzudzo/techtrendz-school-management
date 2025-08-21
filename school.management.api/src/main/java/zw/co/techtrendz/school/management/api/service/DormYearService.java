@@ -3,6 +3,7 @@ package zw.co.techtrendz.school.management.api.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.DormYear;
 import zw.co.techtrendz.school.management.api.view.DormYearDto;
 
@@ -32,5 +33,5 @@ public interface DormYearService {
 
     public Page<DormYearDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 
-    public List<Map<String, Object>> getAllDormYearForDropdown();
+    public List<YearDropdown> getAllDormYearForDropdown();
 }

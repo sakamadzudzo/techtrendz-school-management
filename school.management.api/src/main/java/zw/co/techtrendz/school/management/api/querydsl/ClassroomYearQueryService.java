@@ -8,6 +8,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.ClassroomYear;
 import zw.co.techtrendz.school.management.api.entity.QClassroomYear;
 import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
@@ -15,9 +16,7 @@ import zw.co.techtrendz.school.management.api.utility.ViewProjectionUtils;
 import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -103,7 +102,7 @@ public class ClassroomYearQueryService {
         return new PageImpl<>(classroomYearDtoList, pageable, total);
     }
 
-    public List<Map<String, Object>> getAllClassroomYearForDropdown() {
+    public List<YearDropdown> getAllClassroomYearForDropdown() {
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
 
         List<String> sortBy = List.of("classroom.name");
@@ -122,11 +121,11 @@ public class ClassroomYearQueryService {
 
         return results.stream()
                 .map(tuple -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("id", tuple.get(classroomYear.id));
-                    map.put("calendarYear", tuple.get(classroomYear.calendarYear));
-                    map.put("name", tuple.get(classroomYear.classroom.name));
-                    return map;
+                    YearDropdown dto = new YearDropdown();
+                    dto.setId(tuple.get(classroomYear.id));
+                    dto.setCalendarYear(tuple.get(classroomYear.calendarYear));
+                    dto.setName(tuple.get(classroomYear.classroom.name));
+                    return dto;
                 })
                 .collect(Collectors.toCollection(
                         CopyOnWriteArrayList::new

@@ -151,3 +151,30 @@ export function useExtraCurricularsByExample(exampleDto: any) {
     mutate,
   };
 }
+
+export function useExtraCurricularsList({
+  sort,
+  direction,
+}: {
+  sort?: string;
+  direction?: "ASC" | "DESC";
+}) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!token;
+  const params = new URLSearchParams({
+    sort: sort ? `${sort}` : "",
+    direction: direction ?? "DESC",
+  });
+  const { data, error, mutate } = useSWR(
+    shouldFetch
+      ? [`/api/extra-curricular?action=list&${params.toString()}`, token]
+      : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+  return {
+    extraCurriculars: data as ExtraCurricular[],
+    isLoading: shouldFetch && !error && !data,
+    isError: error,
+    mutate,
+  };
+}

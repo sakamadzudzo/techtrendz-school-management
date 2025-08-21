@@ -52,6 +52,15 @@ public class ExtraCurricularServiceImpl implements ExtraCurricularService {
     }
 
     @Override
+    public List<ExtraCurricular> getAllList(List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.extraCurricularRepository.findAll(Sort.by(sortDir, sortFields));
+    }
+
+    @Override
     public Page<ExtraCurricular> getAllByExample(ExtraCurricular extraCurricular, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (extraCurricular == null) {
             return this.getAll(page, size, sortBy, sortDir);

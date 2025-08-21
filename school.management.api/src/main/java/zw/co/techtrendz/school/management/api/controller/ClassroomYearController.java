@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.ClassroomYear;
 import zw.co.techtrendz.school.management.api.service.ClassroomYearService;
 import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
@@ -73,7 +74,7 @@ public class ClassroomYearController {
     }
 
     @GetMapping("/dropdown/get/all")
-    public List<Map<String, Object>> getAllClassroomYearForDropdown() {
+    public List<YearDropdown> getAllClassroomYearForDropdown() {
         return this.classroomYearService.getAllClassroomYearForDropdown();
     }
 }

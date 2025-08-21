@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.Student;
 import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
@@ -171,6 +172,11 @@ public class StudentServiceImpl implements StudentService {
             Page<StudentDto> studentDtoPage = this.studentQueryService.getAllStudentDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return this.getClassroomSubjects(studentDtoPage);
         }
+    }
+
+    @Override
+    public List<YearDropdown> getAllStudentsForDropdown() {
+        return this.studentQueryService.getAllStudentsForDropdown();
     }
 
     private Page<StudentDto> getClassroomSubjects(Page<StudentDto> studentDtoPage) {

@@ -3,6 +3,7 @@ package zw.co.techtrendz.school.management.api.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.Teacher;
 import zw.co.techtrendz.school.management.api.view.TeacherDto;
 
@@ -30,4 +31,6 @@ public interface TeacherService {
     public Page<TeacherDto> getViewAllByExample(Teacher teacher, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<TeacherDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
+
+    public List<YearDropdown> getAllTeachersForDropdown();
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.Student;
 import zw.co.techtrendz.school.management.api.service.StudentService;
 import zw.co.techtrendz.school.management.api.view.StudentDto;
@@ -74,5 +75,10 @@ public class StudentController {
     @GetMapping("/view/get/all/by/filter")
     public Page<StudentDto> getAllStudentViewsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.studentService.getViewAllByFilter(page, size, sortBy, sortDir, filter);
+    }
+
+    @GetMapping("/dropdown/get/all")
+    public List<YearDropdown> getAllStudentsForDropdown() {
+        return this.studentService.getAllStudentsForDropdown();
     }
 }

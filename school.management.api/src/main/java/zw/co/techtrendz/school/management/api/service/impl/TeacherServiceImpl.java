@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.Teacher;
 import zw.co.techtrendz.school.management.api.querydsl.TeacherQueryService;
 import zw.co.techtrendz.school.management.api.repository.TeacherRepository;
@@ -146,6 +147,11 @@ public class TeacherServiceImpl implements TeacherService {
             Page<TeacherDto> teacherDtoPage = this.teacherQueryService.getAllTeacherDetailsByPredicate(page, size, sortBy, sortDir, predicate);
             return getTeacherClassesAndSubjects(teacherDtoPage);
         }
+    }
+
+    @Override
+    public List<YearDropdown> getAllTeachersForDropdown() {
+        return this.teacherQueryService.getAllTeachersForDropdown();
     }
 
     private Page<TeacherDto> getTeacherClassesAndSubjects(Page<TeacherDto> teacherDtoPage) {

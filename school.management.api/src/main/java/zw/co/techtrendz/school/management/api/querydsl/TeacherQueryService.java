@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.querydsl;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -7,7 +8,9 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.*;
+import zw.co.techtrendz.school.management.api.utility.AppUtils;
 import zw.co.techtrendz.school.management.api.utility.QuerydslUtils;
 import zw.co.techtrendz.school.management.api.utility.ViewProjectionUtils;
 import zw.co.techtrendz.school.management.api.view.ClassroomYearDto;
@@ -16,6 +19,8 @@ import zw.co.techtrendz.school.management.api.view.TeacherDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class TeacherQueryService {
@@ -149,6 +154,38 @@ public class TeacherQueryService {
                 .join(teacher.extraCurricularYears, extraCurricularYear)
                 .where(extraCurricularYear.id.in(extraCurricularIds))
                 .fetch();
+    }
+
+    public List<YearDropdown> getAllTeachersForDropdown() {
+        QTeacher teacher = QTeacher.teacher;
+
+        List<String> sortBy = List.of("person.lastName");
+        Sort.Direction sortDir = Sort.Direction.ASC;
+        List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
+
+        List<Tuple> results = queryFactory
+                .select(
+                        teacher.id,
+                        teacher.person.salutation,
+                        teacher.person.firstName,
+                        teacher.person.otherNames,
+                        teacher.person.lastName
+                )
+                .from(teacher)
+                .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
+                .fetch();
+
+        return results.stream()
+                .map(tuple -> {
+                    String name = AppUtils.getFullname(tuple.get(teacher.person.salutation), tuple.get(teacher.person.firstName), tuple.get(teacher.person.otherNames), tuple.get(teacher.person.lastName));
+                    YearDropdown dto = new YearDropdown();
+                    dto.setId(tuple.get(teacher.id));
+                    dto.setName(name);
+                    return dto;
+                })
+                .collect(Collectors.toCollection(
+                        CopyOnWriteArrayList::new
+                ));
     }
 
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {

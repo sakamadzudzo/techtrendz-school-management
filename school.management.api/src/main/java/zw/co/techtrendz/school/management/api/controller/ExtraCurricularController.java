@@ -49,4 +49,9 @@ public class ExtraCurricularController {
     public Page<ExtraCurricular> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.extraCurricularService.getAllByFilter(page, size, sortBy, sortDir, filter);
     }
+
+    @GetMapping("/get/all/list")
+    public List<ExtraCurricular> getAllExtraCurricularsList(@RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.extraCurricularService.getAllList(sortBy, sortDir);
+    }
 }
