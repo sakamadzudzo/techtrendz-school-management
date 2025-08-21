@@ -70,7 +70,11 @@ export default function AllStudentsPage() {
   }, [students]);
 
   useEffect(() => {
-    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
   }, [isError]);
 
   const rows = React.useMemo(() => {
@@ -173,6 +177,10 @@ export default function AllStudentsPage() {
     setPage(1);
   };
 
+  const addNew = () => {
+    router.push("/student/edit");
+  };
+
   return (
     <MyTable
       columns={columns}
@@ -197,6 +205,7 @@ export default function AllStudentsPage() {
       nextPage={nextPage}
       prevPage={prevPage}
       onRowAction={viewOne}
+      addFunction={addNew}
     />
   );
 }

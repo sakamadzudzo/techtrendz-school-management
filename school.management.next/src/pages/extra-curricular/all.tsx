@@ -73,7 +73,11 @@ export default function AllExtraCurricularsPage() {
   }, [extraCurriculars]);
 
   useEffect(() => {
-    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
   }, [isError]);
 
   const rows = React.useMemo(() => {
@@ -158,6 +162,10 @@ export default function AllExtraCurricularsPage() {
     setPage(1);
   };
 
+  const addNew = () => {
+    router.push("/extra-curricular/edit");
+  };
+
   return (
     <MyTable
       columns={columns}
@@ -182,6 +190,7 @@ export default function AllExtraCurricularsPage() {
       nextPage={nextPage}
       prevPage={prevPage}
       onRowAction={viewOne}
+      addFunction={addNew}
     />
   );
 }

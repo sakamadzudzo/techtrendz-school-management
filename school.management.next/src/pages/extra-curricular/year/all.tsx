@@ -74,7 +74,11 @@ export default function AllExtraCurricularYearsPage() {
   }, [extraCurricularYears]);
 
   useEffect(() => {
-    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
   }, [isError]);
 
   const rows = React.useMemo(() => {
@@ -179,6 +183,10 @@ export default function AllExtraCurricularYearsPage() {
     setPage(1);
   };
 
+  const addNew = () => {
+    router.push("/extra-curricular/year/edit");
+  };
+
   return (
     <MyTable
       columns={columns}
@@ -203,6 +211,7 @@ export default function AllExtraCurricularYearsPage() {
       nextPage={nextPage}
       prevPage={prevPage}
       onRowAction={viewOne}
+      addFunction={addNew}
     />
   );
 }
