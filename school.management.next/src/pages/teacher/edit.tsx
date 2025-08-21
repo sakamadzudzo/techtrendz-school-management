@@ -2,7 +2,7 @@ import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
 import { useTeacherById } from "@/hooks/useTeachers";
 import { RootState } from "@/store/store";
-import { Teacher } from "@/utils/types";
+import { Errors, Teacher } from "@/utils/types";
 import { Form, Button, Input, Select, SelectItem, Switch } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -16,6 +16,7 @@ import {
 } from "@phosphor-icons/react";
 import useToastError from "@/hooks/toasts/ToastError";
 import { teacherViewToTeacher } from "@/utils/helpers";
+import { emailRegex, emailError, phoneNumberRegex } from "@/utils/helpers";
 
 export default function TeacherEdit({
   incrementLoading,
@@ -29,6 +30,9 @@ export default function TeacherEdit({
   const [error, setError] = React.useState<string | null>(null);
   const [statusCode, setStatusCode] = React.useState(0);
   const [teacher, setTeacher] = React.useState<Teacher>({} as Teacher);
+  const [errors, setErrors] = React.useState<Errors<Teacher, string>>(
+    {} as Errors<Teacher, string>
+  );
   const token = useSelector((state: RootState) => state.auth.token);
   const router = useRouter();
   const { teacher: oldTeacher, isLoading, isError } = useTeacherById(id!);
@@ -73,11 +77,78 @@ export default function TeacherEdit({
     if (oldTeacher) setTeacher(teacherViewToTeacher(oldTeacher));
   }, [id, oldTeacher]);
 
+  const validate = () => {
+    setErrors({} as Errors<Teacher, string>);
+    let tempErrors: Errors<Teacher, string> = {} as Errors<Teacher, string>;
+
+    if (!teacher?.person?.salutation) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, salutation: "Salutation is required" },
+      };
+    }
+    if (!teacher?.person?.firstName) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, firstName: "First name is required" },
+      };
+    }
+    if (!teacher?.person?.lastName) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, lastName: "Last name is required" },
+      };
+    }
+    if (!teacher?.person?.email) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, email: "Email is required" },
+      };
+    } else {
+      if (!emailRegex.test(teacher?.person?.email)) {
+        tempErrors = {
+          ...tempErrors,
+          person: { ...tempErrors?.person, email: emailError },
+        };
+      }
+    }
+    if (!teacher?.person?.dateOfBirth) {
+      tempErrors = {
+        ...tempErrors,
+        person: {
+          ...tempErrors?.person,
+          dateOfBirth: "Date of birth is required",
+        },
+      };
+    }
+    setErrors(tempErrors);
+    return (
+      Object.keys(tempErrors).length === 0 &&
+      Object.keys(tempErrors?.person || {}).length === 0
+    );
+  };
+
+  const changeNumbers = (field: string, value: string) => {
+    if (!phoneNumberRegex.test(value)) {
+      setErrors({
+        ...errors,
+        person: { ...errors.person, [field]: "Invalid phone number" },
+      });
+    } else {
+      setTeacher({ ...teacher, person: { ...teacher.person, [field]: value } });
+    }
+  };
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setStatusCode(0);
     incrementLoading();
+
+    if (!validate()) {
+      decrementLoading();
+      return;
+    }
 
     try {
       const res = await fetch("/api/teacher?action=save", {
@@ -103,9 +174,9 @@ export default function TeacherEdit({
       }
       decrementLoading();
     } catch (err: any) {
-      setError("Network error");
+      setError("Network/Server error");
       setStatusCode(err.status ?? 500);
-      useToastError({ error: "Network error", statusCode: err.status ?? 500 });
+      useToastError({ error: "Network/Server error", statusCode: err.status ?? 500 });
       decrementLoading();
     }
   };
@@ -124,6 +195,8 @@ export default function TeacherEdit({
             placeholder="Enter salutation"
             type="text"
             value={teacher.person?.salutation ?? ""}
+            errorMessage={errors?.person?.salutation}
+            isInvalid={!!errors?.person?.salutation}
             onValueChange={(e) =>
               setTeacher({
                 ...teacher,
@@ -139,6 +212,8 @@ export default function TeacherEdit({
             placeholder="Enter first name"
             type="text"
             value={teacher.person?.firstName ?? ""}
+            errorMessage={errors?.person?.firstName}
+            isInvalid={!!errors?.person?.firstName}
             onValueChange={(e) =>
               setTeacher({
                 ...teacher,
@@ -154,6 +229,8 @@ export default function TeacherEdit({
             placeholder="Enter other names"
             type="text"
             value={teacher.person?.otherNames ?? ""}
+            errorMessage={errors?.person?.otherNames}
+            isInvalid={!!errors?.person?.otherNames}
             onValueChange={(e) =>
               setTeacher({
                 ...teacher,
@@ -169,6 +246,8 @@ export default function TeacherEdit({
             placeholder="Enter last name"
             type="text"
             value={teacher.person?.lastName ?? ""}
+            errorMessage={errors?.person?.lastName}
+            isInvalid={!!errors?.person?.lastName}
             onValueChange={(e) =>
               setTeacher({
                 ...teacher,
@@ -184,6 +263,8 @@ export default function TeacherEdit({
             placeholder="Enter email"
             type="email"
             value={teacher.person?.email ?? ""}
+            errorMessage={errors?.person?.email}
+            isInvalid={!!errors?.person?.email}
             onValueChange={(e) =>
               setTeacher({
                 ...teacher,
@@ -199,12 +280,9 @@ export default function TeacherEdit({
             placeholder="Enter mobile number"
             type="text"
             value={teacher.person?.mobileNumber ?? ""}
-            onValueChange={(e) =>
-              setTeacher({
-                ...teacher,
-                person: { ...teacher.person, mobileNumber: e },
-              })
-            }
+            errorMessage={errors?.person?.mobileNumber}
+            isInvalid={!!errors?.person?.mobileNumber}
+            onValueChange={(e) => changeNumbers("mobileNumber", e)}
             size="sm"
             variant="underlined"
           />
@@ -214,12 +292,9 @@ export default function TeacherEdit({
             placeholder="Enter secondary mobile number"
             type="text"
             value={teacher.person?.mobileNumber2 ?? ""}
-            onValueChange={(e) =>
-              setTeacher({
-                ...teacher,
-                person: { ...teacher.person, mobileNumber2: e },
-              })
-            }
+            errorMessage={errors?.person?.mobileNumber2}
+            isInvalid={!!errors?.person?.mobileNumber2}
+            onValueChange={(e) => changeNumbers("mobileNumber2", e)}
             size="sm"
             variant="underlined"
           />
@@ -229,12 +304,9 @@ export default function TeacherEdit({
             placeholder="Enter telephone number"
             type="text"
             value={teacher.person?.telNumber ?? ""}
-            onValueChange={(e) =>
-              setTeacher({
-                ...teacher,
-                person: { ...teacher.person, telNumber: e },
-              })
-            }
+            errorMessage={errors?.person?.telNumber}
+            isInvalid={!!errors?.person?.telNumber}
+            onValueChange={(e) => changeNumbers("telNumber", e)}
             size="sm"
             variant="underlined"
           />
@@ -244,12 +316,9 @@ export default function TeacherEdit({
             placeholder="Enter WhatsApp number"
             type="text"
             value={teacher.person?.whatsapp ?? ""}
-            onValueChange={(e) =>
-              setTeacher({
-                ...teacher,
-                person: { ...teacher.person, whatsapp: e },
-              })
-            }
+            errorMessage={errors?.person?.whatsapp}
+            isInvalid={!!errors?.person?.whatsapp}
+            onValueChange={(e) => changeNumbers("whatsapp", e)}
             size="sm"
             variant="underlined"
           />
@@ -259,6 +328,8 @@ export default function TeacherEdit({
             placeholder="Enter Facebook profile"
             type="text"
             value={teacher.person?.facebook ?? ""}
+            errorMessage={errors?.person?.facebook}
+            isInvalid={!!errors?.person?.facebook}
             onValueChange={(e) =>
               setTeacher({
                 ...teacher,
@@ -274,6 +345,8 @@ export default function TeacherEdit({
             placeholder="Enter LinkedIn profile"
             type="text"
             value={teacher.person?.linkedin ?? ""}
+            errorMessage={errors?.person?.linkedin}
+            isInvalid={!!errors?.person?.linkedin}
             onValueChange={(e) =>
               setTeacher({
                 ...teacher,
@@ -297,6 +370,8 @@ export default function TeacherEdit({
                       .substring(0, 10)
                 : ""
             }
+            errorMessage={errors?.person?.dateOfBirth}
+            isInvalid={!!errors?.person?.dateOfBirth}
             onValueChange={(e) =>
               setTeacher({
                 ...teacher,

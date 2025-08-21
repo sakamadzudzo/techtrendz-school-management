@@ -3,8 +3,9 @@ import InlineError from "@/components/InlineError";
 import useToastError from "@/hooks/toasts/ToastError";
 import { useSchoolById } from "@/hooks/useSchools";
 import { RootState } from "@/store/store";
-import { School } from "@/utils/types";
+import { Errors, School } from "@/utils/types";
 import { Form, Button, Input, Textarea } from "@heroui/react";
+import { emailRegex, emailError, phoneNumberRegex } from "@/utils/helpers";
 import { ChalkboardIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -30,12 +31,19 @@ export default function SchoolEdit({
   const [address, setAddress] = React.useState("");
   const [website, setWebsite] = React.useState("");
   const [school, setSchool] = React.useState<School>({} as School);
+  const [errors, setErrors] = React.useState<Errors<School, string>>(
+    {} as Errors<School, string>
+  );
   const token = useSelector((state: RootState) => state.auth.token);
   const router = useRouter();
   const { school: oldSchool, isLoading, isError } = useSchoolById(id!);
 
   useEffect(() => {
-    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
   }, [isError]);
 
   const editMsg: React.ReactNode = (
@@ -70,11 +78,65 @@ export default function SchoolEdit({
     if (oldSchool) setSchool(oldSchool);
   }, [id, oldSchool]);
 
+  const validate = () => {
+    setErrors({} as Errors<School, string>);
+    let tempErrors: Errors<School, string> = {} as Errors<School, string>;
+
+    if (!school.name || school.name.trim() === "") {
+      tempErrors = { ...tempErrors, name: "School name is required" };
+    }
+    if (!school.email || school.email.trim() === "") {
+      tempErrors = { ...tempErrors, email: "Email is required" };
+    } else if (!emailRegex.test(school.email)) {
+      tempErrors = { ...tempErrors, email: emailError };
+    }
+    if (!school.telNumber || school.telNumber.trim() === "") {
+      tempErrors = { ...tempErrors, telNumber: "Tel number is required" };
+    } else if (!phoneNumberRegex.test(school.telNumber)) {
+      tempErrors = { ...tempErrors, telNumber: "Invalid telephone number" };
+    }
+    if (!school.mobileNumber || school.mobileNumber.trim() === "") {
+      tempErrors = {
+        ...tempErrors,
+        mobileNumber: "First cell number is required",
+      };
+    } else if (!phoneNumberRegex.test(school.mobileNumber)) {
+      tempErrors = { ...tempErrors, mobileNumber: "Invalid cell number" };
+    }
+    if (!school.mobileNumber2 || school.mobileNumber2.trim() === "") {
+      tempErrors = {
+        ...tempErrors,
+        mobileNumber2: "Second cell number is required",
+      };
+    } else if (!phoneNumberRegex.test(school.mobileNumber2)) {
+      tempErrors = { ...tempErrors, mobileNumber2: "Invalid cell number" };
+    }
+    if (!school.address || school.address.trim() === "") {
+      tempErrors = { ...tempErrors, address: "Address is required" };
+    }
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  };
+
+  const changeNumbers = (field: string, value: string) => {
+    if (!phoneNumberRegex.test(value)) {
+      setErrors({ ...errors, [field]: "Invalid phone number" });
+    } else {
+      setSchool({ ...school, [field]: value });
+    }
+  };
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setStatusCode(0);
     incrementLoading();
+
+    if (!validate()) {
+      decrementLoading();
+      return;
+    }
 
     try {
       const res = await fetch("/api/school?action=save", {
@@ -100,9 +162,9 @@ export default function SchoolEdit({
       }
       decrementLoading();
     } catch (err: any) {
-      setError("Network error");
+      setError("Network/Server error");
       setStatusCode(err.status ?? 500);
-      useToastError({ error: "Network error", statusCode: err.status ?? 500 });
+      useToastError({ error: "Network/Server error", statusCode: err.status ?? 500 });
       decrementLoading();
     }
   };
@@ -122,6 +184,8 @@ export default function SchoolEdit({
             placeholder="Enter the school name"
             type="text"
             value={school.name ?? ""}
+            errorMessage={errors?.name}
+            isInvalid={!!errors?.name}
             onValueChange={(e) => setSchool({ ...school, name: e })}
             size="sm"
             variant="underlined"
@@ -134,6 +198,8 @@ export default function SchoolEdit({
             placeholder="Enter your e-mail address"
             type="email"
             value={school.email ?? ""}
+            errorMessage={errors?.email}
+            isInvalid={!!errors?.email}
             onValueChange={(e) => setSchool({ ...school, email: e })}
             size="sm"
             variant="underlined"
@@ -146,7 +212,9 @@ export default function SchoolEdit({
             placeholder="Enter tel number"
             type="text"
             value={school.telNumber ?? ""}
-            onValueChange={(e) => setSchool({ ...school, telNumber: e })}
+            errorMessage={errors?.telNumber}
+            isInvalid={!!errors?.telNumber}
+            onValueChange={(e) => changeNumbers("telNumber", e)}
             size="sm"
             variant="underlined"
           />
@@ -157,7 +225,9 @@ export default function SchoolEdit({
             placeholder="Enter first cell number"
             type="text"
             value={school.mobileNumber ?? ""}
-            onValueChange={(e) => setSchool({ ...school, mobileNumber: e })}
+            errorMessage={errors?.mobileNumber}
+            isInvalid={!!errors?.mobileNumber}
+            onValueChange={(e) => changeNumbers("mobileNumber", e)}
             size="sm"
             variant="underlined"
           />
@@ -168,7 +238,9 @@ export default function SchoolEdit({
             placeholder="Enter second cell number"
             type="text"
             value={school.mobileNumber2 ?? ""}
-            onValueChange={(e) => setSchool({ ...school, mobileNumber2: e })}
+            errorMessage={errors?.mobileNumber2}
+            isInvalid={!!errors?.mobileNumber2}
+            onValueChange={(e) => changeNumbers("mobileNumber2", e)}
             size="sm"
             variant="underlined"
           />
@@ -179,6 +251,8 @@ export default function SchoolEdit({
             placeholder="Enter the school's address"
             type="text"
             value={school.address ?? ""}
+            errorMessage={errors?.address}
+            isInvalid={!!errors?.address}
             onValueChange={(e) => setSchool({ ...school, address: e })}
             size="sm"
             variant="underlined"

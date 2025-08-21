@@ -4,7 +4,7 @@ import useToastError from "@/hooks/toasts/ToastError";
 import { useDormById } from "@/hooks/useDorms";
 import { useSchoolsList } from "@/hooks/useSchools";
 import { RootState } from "@/store/store";
-import { Dorm } from "@/utils/types";
+import { Errors, Dorm } from "@/utils/types";
 import {
   Form,
   Button,
@@ -14,6 +14,7 @@ import {
   SelectItem,
   SharedSelection,
 } from "@heroui/react";
+import { phoneNumberRegex } from "@/utils/helpers";
 import { HouseLineIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -31,14 +32,10 @@ export default function DormEdit({
   const id: string | null = searchParams.get("id");
   const [error, setError] = React.useState<string | null>(null);
   const [statusCode, setStatusCode] = React.useState(0);
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [telNumber, setTelNumber] = React.useState("");
-  const [mobileNumber, setMobileNumber] = React.useState("");
-  const [mobileNumber2, setMobileNumber2] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [website, setWebsite] = React.useState("");
   const [dorm, setDorm] = React.useState<Dorm>({} as Dorm);
+  const [errors, setErrors] = React.useState<Errors<Dorm, string>>(
+    {} as Errors<Dorm, string>
+  );
   const token = useSelector((state: RootState) => state.auth.token);
   const router = useRouter();
   const { dorm: oldDorm, isLoading, isError } = useDormById(id!);
@@ -94,11 +91,50 @@ export default function DormEdit({
       });
   }, [schoolsErorr]);
 
+  const validate = () => {
+    setErrors({} as Errors<Dorm, string>);
+    let tempErrors: Errors<Dorm, string> = {} as Errors<Dorm, string>;
+
+    if (!dorm.name || dorm.name.trim() === "") {
+      tempErrors = { ...tempErrors, name: "Dorm name is required" };
+    }
+    if (!dorm.description || dorm.description.trim() === "") {
+      tempErrors = { ...tempErrors, description: "Description is required" };
+    }
+    if (!dorm.address || dorm.address.trim() === "") {
+      tempErrors = { ...tempErrors, address: "Address is required" };
+    }
+    if (!dorm.school || !dorm.school.id) {
+      tempErrors = {
+        ...tempErrors,
+        school: { ...tempErrors.school, general: "School is required" },
+      };
+    }
+    setErrors(tempErrors);
+    return (
+      Object.keys(tempErrors).length === 0 &&
+      Object.keys(tempErrors.school || {}).length === 0
+    );
+  };
+
+  const changeNumbers = (field: string, value: string) => {
+    if (!phoneNumberRegex.test(value)) {
+      setErrors({ ...errors, [field]: "Invalid phone number" });
+    } else {
+      setDorm({ ...dorm, [field]: value });
+    }
+  };
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setStatusCode(0);
     incrementLoading();
+
+    if (!validate()) {
+      decrementLoading();
+      return;
+    }
 
     try {
       const res = await fetch("/api/dorm?action=save", {
@@ -122,7 +158,7 @@ export default function DormEdit({
       }
       decrementLoading();
     } catch (err: any) {
-      setError("Network error");
+      setError("Network/Server error");
       setStatusCode(err.status ?? 500);
       decrementLoading();
     }
@@ -143,6 +179,8 @@ export default function DormEdit({
             placeholder="Enter the dorm name"
             type="text"
             value={dorm.name ?? ""}
+            errorMessage={errors?.name}
+            isInvalid={!!errors?.name}
             onValueChange={(e) => setDorm({ ...dorm, name: e })}
             size="sm"
             variant="underlined"
@@ -155,6 +193,8 @@ export default function DormEdit({
             placeholder="Enter your dorm's description"
             type="text"
             value={dorm.description ?? ""}
+            errorMessage={errors?.description}
+            isInvalid={!!errors?.description}
             onValueChange={(e) => setDorm({ ...dorm, description: e })}
             size="sm"
             variant="underlined"
@@ -167,6 +207,8 @@ export default function DormEdit({
             placeholder="Enter your dorm's address"
             type="text"
             value={dorm.address ?? ""}
+            errorMessage={errors?.address}
+            isInvalid={!!errors?.address}
             onValueChange={(e) => setDorm({ ...dorm, address: e })}
             size="sm"
             variant="underlined"
@@ -175,6 +217,8 @@ export default function DormEdit({
           <Select
             label="School"
             selectedKeys={dorm?.school?.id ? [String(dorm.school.id)] : []}
+            errorMessage={errors?.school?.general}
+            isInvalid={!!errors?.school?.general}
             variant="underlined"
             onSelectionChange={(keys) =>
               setDorm({

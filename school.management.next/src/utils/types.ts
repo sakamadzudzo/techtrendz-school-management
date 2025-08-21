@@ -332,4 +332,10 @@ export type YearDropdown = {
   id: number;
   name: string;
   calendarYear?: number;
-}
+};
+
+export type Errors<T, V> = {
+  [K in keyof T]: T[K] extends object ? Errors<T[K], V> : V;
+} & {
+  general?: string;
+};

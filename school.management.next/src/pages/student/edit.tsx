@@ -2,7 +2,7 @@ import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
 import { useStudentById } from "@/hooks/useStudents";
 import { RootState } from "@/store/store";
-import { Student } from "@/utils/types";
+import { Errors, Student } from "@/utils/types";
 import {
   Form,
   Button,
@@ -11,6 +11,8 @@ import {
   Select,
   Autocomplete,
   AutocompleteItem,
+  DateRangePicker,
+  SharedSelection,
 } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -18,7 +20,12 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FloppyDiskIcon, StudentIcon } from "@phosphor-icons/react";
 import useToastError from "@/hooks/toasts/ToastError";
-import { studentViewToStudent } from "@/utils/helpers";
+import {
+  emailError,
+  emailRegex,
+  phoneNumberRegex,
+  studentViewToStudent,
+} from "@/utils/helpers";
 import { useClassroomYearsDropdown } from "@/hooks/useClassroomYears";
 import { useDormYearsDropdown } from "@/hooks/useDormYears";
 import { useSchoolsList } from "@/hooks/useSchools";
@@ -33,6 +40,9 @@ export default function StudentEdit({
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
   const [error, setError] = React.useState<string | null>(null);
+  const [errors, setErrors] = React.useState<Errors<Student, string>>(
+    {} as Errors<Student, string>
+  );
   const [statusCode, setStatusCode] = React.useState(0);
   const [student, setStudent] = React.useState<Student>({} as Student);
   const token = useSelector((state: RootState) => state.auth.token);
@@ -110,11 +120,72 @@ export default function StudentEdit({
     if (oldStudent) setStudent(studentViewToStudent(oldStudent));
   }, [id, oldStudent]);
 
+  const validate = () => {
+    setErrors({} as Errors<Student, string>);
+    let tempErrors: Errors<Student, string> = {} as Errors<Student, string>;
+
+    if (!student?.startYear) {
+      tempErrors = { ...tempErrors, startYear: "Start year is required" };
+    }
+    if (!student?.endYear) {
+      tempErrors = { ...tempErrors, endYear: "End year is required" };
+    }
+
+    if (!student?.person?.salutation) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, salutation: "Salutation is required" },
+      };
+    }
+    if (!student?.person?.firstName) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, firstName: "First name is required" },
+      };
+    }
+    if (!student?.person?.lastName) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, lastName: "Last name is required" },
+      };
+    }
+    if (!student?.person?.email) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, email: "Email is required" },
+      };
+    } else {
+      if (!emailRegex.test(student?.person?.email)) {
+        tempErrors = {
+          ...tempErrors,
+          person: { ...tempErrors?.person, email: emailError },
+        };
+      }
+    }
+    if (!student?.person?.dateOfBirth) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, dateOfBirth: "Date of birth is required" },
+      };
+    }
+
+    setErrors(tempErrors);
+    return (
+      Object.keys(tempErrors).length === 0 &&
+      Object.keys(tempErrors?.person || {}).length === 0
+    );
+  };
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setStatusCode(0);
     incrementLoading();
+
+    if (!validate) {
+      decrementLoading();
+      return;
+    }
 
     try {
       const res = await fetch("/api/student?action=save", {
@@ -140,10 +211,46 @@ export default function StudentEdit({
       }
       decrementLoading();
     } catch (err: any) {
-      setError("Network error");
+      setError("Network/Server error");
       setStatusCode(err.status ?? 500);
-      useToastError({ error: "Network error", statusCode: err.status ?? 500 });
+      useToastError({ error: "Network/Server error", statusCode: err.status ?? 500 });
       decrementLoading();
+    }
+  };
+
+  const changeStudyDuration = (field: string, value: SharedSelection) => {
+    if (field.toLowerCase() === "startyear") {
+      setErrors({ ...errors, startYear: "" });
+      if (Number(value.currentKey) > Number(student.endYear)) {
+        setErrors({
+          ...errors,
+          startYear: "Start year must be earlier than end year",
+        });
+      } else {
+        setStudent({ ...student, startYear: value.currentKey! });
+      }
+    }
+    if (field.toLowerCase() === "endyear") {
+      setErrors({ ...errors, endYear: "" });
+      if (Number(value.currentKey) < Number(student.startYear)) {
+        setErrors({
+          ...errors,
+          endYear: "End year must be later than start year",
+        });
+      } else {
+        setStudent({ ...student, endYear: value.currentKey! });
+      }
+    }
+  };
+
+  const changeNumbers = (field: string, value: string) => {
+    if (!phoneNumberRegex.test(value)) {
+      setErrors({ ...errors, person: { ...errors.person, [field]: value } });
+    } else {
+      setStudent({
+        ...student,
+        person: { ...student.person, mobileNumber: value },
+      });
     }
   };
 
@@ -161,6 +268,8 @@ export default function StudentEdit({
             placeholder="Enter salutation"
             type="text"
             value={student.person?.salutation ?? ""}
+            errorMessage={errors?.person?.salutation}
+            isInvalid={!!errors?.person?.salutation}
             onValueChange={(e) =>
               setStudent({
                 ...student,
@@ -176,6 +285,8 @@ export default function StudentEdit({
             placeholder="Enter first name"
             type="text"
             value={student.person?.firstName ?? ""}
+            errorMessage={errors?.person?.firstName}
+            isInvalid={!!errors?.person?.firstName}
             onValueChange={(e) =>
               setStudent({
                 ...student,
@@ -191,6 +302,8 @@ export default function StudentEdit({
             placeholder="Enter other names"
             type="text"
             value={student.person?.otherNames ?? ""}
+            errorMessage={errors?.person?.otherNames}
+            isInvalid={!!errors?.person?.otherNames}
             onValueChange={(e) =>
               setStudent({
                 ...student,
@@ -206,6 +319,8 @@ export default function StudentEdit({
             placeholder="Enter last name"
             type="text"
             value={student.person?.lastName ?? ""}
+            errorMessage={errors?.person?.lastName}
+            isInvalid={!!errors?.person?.lastName}
             onValueChange={(e) =>
               setStudent({
                 ...student,
@@ -221,6 +336,8 @@ export default function StudentEdit({
             placeholder="Enter email"
             type="email"
             value={student.person?.email ?? ""}
+            errorMessage={errors?.person?.email}
+            isInvalid={!!errors?.person?.email}
             onValueChange={(e) =>
               setStudent({
                 ...student,
@@ -236,12 +353,9 @@ export default function StudentEdit({
             placeholder="Enter mobile number"
             type="text"
             value={student.person?.mobileNumber ?? ""}
-            onValueChange={(e) =>
-              setStudent({
-                ...student,
-                person: { ...student.person, mobileNumber: e },
-              })
-            }
+            errorMessage={errors?.person?.mobileNumber}
+            isInvalid={!!errors?.person?.mobileNumber}
+            onValueChange={(e) => changeNumbers("mobileNumber", e)}
             size="sm"
             variant="underlined"
           />
@@ -251,12 +365,9 @@ export default function StudentEdit({
             placeholder="Enter secondary mobile number"
             type="text"
             value={student.person?.mobileNumber2 ?? ""}
-            onValueChange={(e) =>
-              setStudent({
-                ...student,
-                person: { ...student.person, mobileNumber2: e },
-              })
-            }
+            errorMessage={errors?.person?.mobileNumber2}
+            isInvalid={!!errors?.person?.mobileNumber2}
+            onValueChange={(e) => changeNumbers("mobileNumber2", e)}
             size="sm"
             variant="underlined"
           />
@@ -266,12 +377,9 @@ export default function StudentEdit({
             placeholder="Enter telephone number"
             type="text"
             value={student.person?.telNumber ?? ""}
-            onValueChange={(e) =>
-              setStudent({
-                ...student,
-                person: { ...student.person, telNumber: e },
-              })
-            }
+            errorMessage={errors?.person?.telNumber}
+            isInvalid={!!errors?.person?.telNumber}
+            onValueChange={(e) => changeNumbers("telNumber", e)}
             size="sm"
             variant="underlined"
           />
@@ -281,12 +389,9 @@ export default function StudentEdit({
             placeholder="Enter WhatsApp number"
             type="text"
             value={student.person?.whatsapp ?? ""}
-            onValueChange={(e) =>
-              setStudent({
-                ...student,
-                person: { ...student.person, whatsapp: e },
-              })
-            }
+            errorMessage={errors?.person?.whatsapp}
+            isInvalid={!!errors?.person?.whatsapp}
+            onValueChange={(e) => changeNumbers("whatsapp", e)}
             size="sm"
             variant="underlined"
           />
@@ -296,6 +401,8 @@ export default function StudentEdit({
             placeholder="Enter Facebook profile"
             type="text"
             value={student.person?.facebook ?? ""}
+            errorMessage={errors?.person?.facebook}
+            isInvalid={!!errors?.person?.facebook}
             onValueChange={(e) =>
               setStudent({
                 ...student,
@@ -311,6 +418,8 @@ export default function StudentEdit({
             placeholder="Enter LinkedIn profile"
             type="text"
             value={student.person?.linkedin ?? ""}
+            errorMessage={errors?.person?.linkedin}
+            isInvalid={!!errors?.person?.linkedin}
             onValueChange={(e) =>
               setStudent({
                 ...student,
@@ -334,6 +443,8 @@ export default function StudentEdit({
                       .substring(0, 10)
                 : ""
             }
+            errorMessage={errors?.person?.dateOfBirth}
+            isInvalid={!!errors?.person?.dateOfBirth}
             onValueChange={(e) =>
               setStudent({
                 ...student,
@@ -343,16 +454,40 @@ export default function StudentEdit({
             size="sm"
             variant="underlined"
           />
-          <div className="w-full flex">
-            {/* 
-              Use 'Date Range Picker' to pick out start and end years
-              Only show years without month and date 
-            */}
+          <div className="w-full flex gap-5">
+            <Select
+              label="Start Year"
+              variant="underlined"
+              selectedKeys={[String(student.startYear)]}
+              errorMessage={errors.startYear}
+              isInvalid={!!errors.startYear}
+              onSelectionChange={(e) => changeStudyDuration("startYear", e)}
+            >
+              {[...Array(31).keys()].map((i) => {
+                const year = (new Date().getFullYear() - 15 + i).toString();
+                return <SelectItem key={year}>{year}</SelectItem>;
+              })}
+            </Select>
+            <Select
+              label="End Year"
+              variant="underlined"
+              selectedKeys={[String(student.endYear)]}
+              errorMessage={errors.endYear}
+              isInvalid={!!errors.endYear}
+              onSelectionChange={(e) => changeStudyDuration("endYear", e)}
+            >
+              {[...Array(31).keys()].map((i) => {
+                const year = (new Date().getFullYear() - 15 + i).toString();
+                return <SelectItem key={year}>{year}</SelectItem>;
+              })}
+            </Select>
           </div>
           <Autocomplete
             label="Classroom"
             selectedKey={String(student?.classroom?.id)}
             placeholder="Select classroom"
+            errorMessage={errors?.classroom?.general}
+            isInvalid={!!errors?.classroom?.general}
             variant="underlined"
             isVirtualized={true}
             onSelectionChange={(key) =>
@@ -377,6 +512,8 @@ export default function StudentEdit({
             label="Dorm"
             selectedKey={String(student?.dorm?.id)}
             placeholder="Select dorm"
+            errorMessage={errors?.dorm?.general}
+            isInvalid={!!errors?.dorm?.general}
             variant="underlined"
             isVirtualized={true}
             onSelectionChange={(key) =>
@@ -402,6 +539,8 @@ export default function StudentEdit({
             selectedKeys={
               student?.school?.id ? [String(student.school.id)] : []
             }
+            errorMessage={errors?.school?.general}
+            isInvalid={!!errors?.school?.general}
             variant="underlined"
             onSelectionChange={(keys) =>
               setStudent({

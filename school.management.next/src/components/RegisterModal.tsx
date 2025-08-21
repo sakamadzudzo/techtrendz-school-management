@@ -12,6 +12,12 @@ import {
   SelectItem,
 } from "@heroui/react";
 import { SignInIcon, XIcon } from "@phosphor-icons/react";
+import {
+  emailRegex,
+  emailError,
+  phoneNumberRegex,
+  phoneNumberError,
+} from "@/utils/helpers";
 
 const salutations = ["MR", "MRS", "MS", "DR", "PROF"];
 const roles = ["ADMIN", "TEACHER", "PARENT", "STUDENT"];
@@ -39,14 +45,65 @@ export default function RegisterModal({
     dateOfBirth: "",
     role: "ADMIN",
   });
+  const [errors, setErrors] = useState<any>({ person: {} });
   const [submitted, setSubmitted] = useState<any>(null);
 
   const handleChange = (key: string, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const validate = () => {
+    setErrors({ person: {} });
+    let tempErrors: any = { person: {} };
+
+    // Username
+    if (!form.username) tempErrors.username = "Username is required";
+    // Password
+    if (!form.password) tempErrors.password = "Password is required";
+    // Person fields
+    if (!form.salutation)
+      tempErrors.person = {
+        ...tempErrors.person,
+        salutation: "Salutation is required",
+      };
+    if (!form.firstName)
+      tempErrors.person = {
+        ...tempErrors.person,
+        firstName: "First name is required",
+      };
+    if (!form.lastName)
+      tempErrors.person = {
+        ...tempErrors.person,
+        lastName: "Last name is required",
+      };
+    if (!form.email) {
+      tempErrors.person = { ...tempErrors.person, email: "Email is required" };
+    } else if (!emailRegex.test(form.email)) {
+      tempErrors.person = { ...tempErrors.person, email: emailError };
+    }
+    if (form.mobileNumber && !phoneNumberRegex.test(form.mobileNumber)) {
+      tempErrors.person = {
+        ...tempErrors.person,
+        mobileNumber: phoneNumberError,
+      };
+    }
+    if (!form.dateOfBirth)
+      tempErrors.person = {
+        ...tempErrors.person,
+        dateOfBirth: "Date of birth is required",
+      };
+    if (!form.role) tempErrors.role = "Role is required";
+
+    setErrors(tempErrors);
+    return (
+      Object.keys(tempErrors).length === 0 &&
+      Object.keys(tempErrors?.person || {}).length === 0
+    );
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validate()) return;
     incrementLoading();
 
     // Build the JSON object as per your API
@@ -79,13 +136,26 @@ export default function RegisterModal({
       roles: [form.role],
     };
 
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/auth?action=register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setErrors({ api: data.error || "Registration failed" });
+      } else {
+        setSubmitted(payload);
+        onOpenChange(false);
+      }
+    } catch (e) {
+      setErrors({ api: "Network/Server error" });
+    } finally {
       decrementLoading();
-      setSubmitted(payload);
-      onOpenChange(false);
-    }, 2000);
-
-    // Here you would POST `payload` to your register endpoint
+    }
   };
 
   return (
@@ -112,6 +182,8 @@ export default function RegisterModal({
               name="username"
               placeholder="Enter username"
               value={form.username}
+              errorMessage={errors?.username}
+              isInvalid={!!errors?.username}
               onValueChange={(v) => handleChange("username", v)}
               size="sm"
               variant="underlined"
@@ -123,6 +195,8 @@ export default function RegisterModal({
               type="password"
               placeholder="Enter password"
               value={form.password}
+              errorMessage={errors?.password}
+              isInvalid={!!errors?.password}
               onValueChange={(v) => handleChange("password", v)}
               size="sm"
               variant="underlined"
@@ -131,6 +205,8 @@ export default function RegisterModal({
               className="text-foreground"
               label="Salutation"
               selectedKeys={[form.salutation]}
+              errorMessage={errors?.person?.salutation}
+              isInvalid={!!errors?.person?.salutation}
               variant="underlined"
               onSelectionChange={(keys) =>
                 handleChange("salutation", Array.from(keys)[0] as string)
@@ -146,6 +222,8 @@ export default function RegisterModal({
               name="firstName"
               placeholder="Enter first name"
               value={form.firstName}
+              errorMessage={errors?.person?.firstName}
+              isInvalid={!!errors?.person?.firstName}
               onValueChange={(v) => handleChange("firstName", v)}
               size="sm"
               variant="underlined"
@@ -155,6 +233,8 @@ export default function RegisterModal({
               name="otherNames"
               placeholder="Enter other names"
               value={form.otherNames}
+              errorMessage={errors?.person?.otherNames}
+              isInvalid={!!errors?.person?.otherNames}
               onValueChange={(v) => handleChange("otherNames", v)}
               size="sm"
               variant="underlined"
@@ -165,6 +245,8 @@ export default function RegisterModal({
               name="lastName"
               placeholder="Enter last name"
               value={form.lastName}
+              errorMessage={errors?.person?.lastName}
+              isInvalid={!!errors?.person?.lastName}
               onValueChange={(v) => handleChange("lastName", v)}
               size="sm"
               variant="underlined"
@@ -176,6 +258,8 @@ export default function RegisterModal({
               type="email"
               placeholder="Enter email"
               value={form.email}
+              errorMessage={errors?.person?.email}
+              isInvalid={!!errors?.person?.email}
               onValueChange={(v) => handleChange("email", v)}
               size="sm"
               variant="underlined"
@@ -185,6 +269,8 @@ export default function RegisterModal({
               name="mobileNumber"
               placeholder="Enter mobile number"
               value={form.mobileNumber}
+              errorMessage={errors?.person?.mobileNumber}
+              isInvalid={!!errors?.person?.mobileNumber}
               onValueChange={(v) => handleChange("mobileNumber", v)}
               size="sm"
               variant="underlined"
@@ -194,6 +280,8 @@ export default function RegisterModal({
               name="dateOfBirth"
               type="date"
               value={form.dateOfBirth}
+              errorMessage={errors?.person?.dateOfBirth}
+              isInvalid={!!errors?.person?.dateOfBirth}
               onValueChange={(v) => handleChange("dateOfBirth", v)}
               size="sm"
               variant="underlined"
@@ -201,6 +289,8 @@ export default function RegisterModal({
             <Select
               label="Role"
               selectedKeys={[form.role]}
+              errorMessage={errors?.role}
+              isInvalid={!!errors?.role}
               variant="underlined"
               onSelectionChange={(keys) =>
                 handleChange("role", Array.from(keys)[0] as string)

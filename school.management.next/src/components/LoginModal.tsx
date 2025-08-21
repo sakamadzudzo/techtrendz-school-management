@@ -72,9 +72,9 @@ export default function LoginModal({
       onOpenChange(false);
       // router.push("/");
     } catch (err: any) {
-      setError("Network error");
+      setError("Network/Server error");
       setStatusCode(err.status ?? 500);
-      useToastError({ error: "Network error", statusCode: err.status ?? 500 });
+      useToastError({ error: "Network/Server error", statusCode: err.status ?? 500 });
       decrementLoading();
     }
   };

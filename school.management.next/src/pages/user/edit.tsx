@@ -2,13 +2,14 @@ import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
 import { useUserById } from "@/hooks/useUsers";
 import { RootState } from "@/store/store";
-import { User } from "@/utils/types";
+import { Errors, User } from "@/utils/types";
 import { Form, Button, Input, Select, SelectItem, Switch } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { userViewToUser } from "@/utils/helpers";
+import { emailRegex, emailError, phoneNumberRegex } from "@/utils/helpers";
 import { roles } from "@/utils/classes";
 import { FloppyDiskIcon, UserIcon, UserPlusIcon } from "@phosphor-icons/react";
 import useToastError from "@/hooks/toasts/ToastError";
@@ -32,6 +33,9 @@ export default function UserEdit({
   const { user: oldUser, isLoading, isError } = useUserById(id!);
   const [updatePassword, setUpdatePassword] = React.useState(false);
   const [updateUsername, setUpdateUsername] = React.useState(false);
+  const [errors, setErrors] = React.useState<Errors<User, string>>(
+    {} as Errors<User, string>
+  );
 
   useEffect(() => {
     isError &&
@@ -77,11 +81,78 @@ export default function UserEdit({
     }
   }, [principal]);
 
+  const validate = () => {
+    setErrors({} as Errors<User, string>);
+    let tempErrors: Errors<User, string> = {} as Errors<User, string>;
+
+    if (!user?.person?.salutation) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, salutation: "Salutation is required" },
+      };
+    }
+    if (!user?.person?.firstName) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, firstName: "First name is required" },
+      };
+    }
+    if (!user?.person?.lastName) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, lastName: "Last name is required" },
+      };
+    }
+    if (!user?.person?.email) {
+      tempErrors = {
+        ...tempErrors,
+        person: { ...tempErrors?.person, email: "Email is required" },
+      };
+    } else {
+      if (!emailRegex.test(user?.person?.email)) {
+        tempErrors = {
+          ...tempErrors,
+          person: { ...tempErrors?.person, email: emailError },
+        };
+      }
+    }
+    if (!user?.person?.dateOfBirth) {
+      tempErrors = {
+        ...tempErrors,
+        person: {
+          ...tempErrors?.person,
+          dateOfBirth: "Date of birth is required",
+        },
+      };
+    }
+    setErrors(tempErrors);
+    return (
+      Object.keys(tempErrors).length === 0 &&
+      Object.keys(tempErrors?.person || {}).length === 0
+    );
+  };
+
+  const changeNumbers = (field: string, value: string) => {
+    if (!phoneNumberRegex.test(value)) {
+      setErrors({
+        ...errors,
+        person: { ...errors.person, [field]: "Invalid phone number" },
+      });
+    } else {
+      setUser({ ...user, person: { ...user.person, [field]: value } });
+    }
+  };
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setStatusCode(0);
     incrementLoading();
+
+    if (!validate()) {
+      decrementLoading();
+      return;
+    }
 
     try {
       const res = await fetch("/api/user?action=save", {
@@ -107,9 +178,9 @@ export default function UserEdit({
       }
       decrementLoading();
     } catch (err: any) {
-      setError("Network error");
+      setError("Network/Server error");
       setStatusCode(err.status ?? 500);
-      useToastError({ error: "Network error", statusCode: err.status ?? 500 });
+      useToastError({ error: "Network/Server error", statusCode: err.status ?? 500 });
       decrementLoading();
     }
   };
@@ -186,6 +257,8 @@ export default function UserEdit({
             placeholder="Enter salutation"
             type="text"
             value={user.person?.salutation ?? ""}
+            errorMessage={errors?.person?.salutation}
+            isInvalid={!!errors?.person?.salutation}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, salutation: e } })
             }
@@ -198,6 +271,8 @@ export default function UserEdit({
             placeholder="Enter first name"
             type="text"
             value={user.person?.firstName ?? ""}
+            errorMessage={errors?.person?.firstName}
+            isInvalid={!!errors?.person?.firstName}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, firstName: e } })
             }
@@ -210,6 +285,8 @@ export default function UserEdit({
             placeholder="Enter other names"
             type="text"
             value={user.person?.otherNames ?? ""}
+            errorMessage={errors?.person?.otherNames}
+            isInvalid={!!errors?.person?.otherNames}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, otherNames: e } })
             }
@@ -222,6 +299,8 @@ export default function UserEdit({
             placeholder="Enter last name"
             type="text"
             value={user.person?.lastName ?? ""}
+            errorMessage={errors?.person?.lastName}
+            isInvalid={!!errors?.person?.lastName}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, lastName: e } })
             }
@@ -234,6 +313,8 @@ export default function UserEdit({
             placeholder="Enter email"
             type="email"
             value={user.person?.email ?? ""}
+            errorMessage={errors?.person?.email}
+            isInvalid={!!errors?.person?.email}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, email: e } })
             }
@@ -246,9 +327,9 @@ export default function UserEdit({
             placeholder="Enter mobile number"
             type="text"
             value={user.person?.mobileNumber ?? ""}
-            onValueChange={(e) =>
-              setUser({ ...user, person: { ...user.person, mobileNumber: e } })
-            }
+            errorMessage={errors?.person?.mobileNumber}
+            isInvalid={!!errors?.person?.mobileNumber}
+            onValueChange={(e) => changeNumbers("mobileNumber", e)}
             size="sm"
             variant="underlined"
           />
@@ -258,9 +339,9 @@ export default function UserEdit({
             placeholder="Enter secondary mobile number"
             type="text"
             value={user.person?.mobileNumber2 ?? ""}
-            onValueChange={(e) =>
-              setUser({ ...user, person: { ...user.person, mobileNumber2: e } })
-            }
+            errorMessage={errors?.person?.mobileNumber2}
+            isInvalid={!!errors?.person?.mobileNumber2}
+            onValueChange={(e) => changeNumbers("mobileNumber2", e)}
             size="sm"
             variant="underlined"
           />
@@ -270,9 +351,9 @@ export default function UserEdit({
             placeholder="Enter telephone number"
             type="text"
             value={user.person?.telNumber ?? ""}
-            onValueChange={(e) =>
-              setUser({ ...user, person: { ...user.person, telNumber: e } })
-            }
+            errorMessage={errors?.person?.telNumber}
+            isInvalid={!!errors?.person?.telNumber}
+            onValueChange={(e) => changeNumbers("telNumber", e)}
             size="sm"
             variant="underlined"
           />
@@ -282,9 +363,9 @@ export default function UserEdit({
             placeholder="Enter WhatsApp number"
             type="text"
             value={user.person?.whatsapp ?? ""}
-            onValueChange={(e) =>
-              setUser({ ...user, person: { ...user.person, whatsapp: e } })
-            }
+            errorMessage={errors?.person?.whatsapp}
+            isInvalid={!!errors?.person?.whatsapp}
+            onValueChange={(e) => changeNumbers("whatsapp", e)}
             size="sm"
             variant="underlined"
           />
@@ -294,6 +375,8 @@ export default function UserEdit({
             placeholder="Enter Facebook profile"
             type="text"
             value={user.person?.facebook ?? ""}
+            errorMessage={errors?.person?.facebook}
+            isInvalid={!!errors?.person?.facebook}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, facebook: e } })
             }
@@ -306,6 +389,8 @@ export default function UserEdit({
             placeholder="Enter LinkedIn profile"
             type="text"
             value={user.person?.linkedin ?? ""}
+            errorMessage={errors?.person?.linkedin}
+            isInvalid={!!errors?.person?.linkedin}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, linkedin: e } })
             }
@@ -326,6 +411,8 @@ export default function UserEdit({
                       .substring(0, 10)
                 : ""
             }
+            errorMessage={errors?.person?.dateOfBirth}
+            isInvalid={!!errors?.person?.dateOfBirth}
             onValueChange={(e) =>
               setUser({ ...user, person: { ...user.person, dateOfBirth: e } })
             }
@@ -337,6 +424,8 @@ export default function UserEdit({
             selectedKeys={user.roles ?? []}
             variant="underlined"
             selectionMode="multiple"
+            errorMessage={errors?.roles}
+            isInvalid={!!errors?.roles}
             onSelectionChange={(keys) =>
               setUser({ ...user, roles: Array.from(keys) as string[] })
             }
