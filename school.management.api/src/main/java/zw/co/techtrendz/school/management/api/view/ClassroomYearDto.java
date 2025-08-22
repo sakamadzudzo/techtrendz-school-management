@@ -30,4 +30,6 @@ public class ClassroomYearDto {
     private LocalDateTime datestamp;
 
     private Status status;
+
+    private Long classroomId;
 }

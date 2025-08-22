@@ -78,6 +78,7 @@ export type ClassroomYear = {
   classroom: Classroom;
   calendarYear: number;
   subjects: SubjectYear[];
+  homeroomTeacher: Teacher;
 };
 
 export type Dorm = {
@@ -149,7 +150,6 @@ export type DormYear = {
   id: number;
   dorm: Dorm;
   calendarYear: number;
-  school: School;
 };
 
 export type TeacherView = {
@@ -186,6 +186,7 @@ export type ClassroomView = {
   subjects: SubjectView[];
   datestamp: Date | string;
   status: string;
+  classroomId: number;
 };
 
 export type SubjectView = {
@@ -204,6 +205,7 @@ export type SubjectView = {
   classroomId: number;
   datestamp: Date | string;
   status: string;
+  subjectId: number;
 };
 
 export type StudentView = {
@@ -240,6 +242,10 @@ export type DormYearView = {
   address: string;
   calendarYear: number;
   linkedSchool: string;
+  students: StudentView[];
+  dormId: number;
+  status: string;
+  datestamp: Date | string;
 };
 
 export type SchoolView = {
@@ -251,6 +257,8 @@ export type SchoolView = {
   mobileNumber2: string;
   address: string;
   website: string;
+  status: string;
+  datestamp: Date | string;
 };
 
 export type ExtraCurricularYearView = {

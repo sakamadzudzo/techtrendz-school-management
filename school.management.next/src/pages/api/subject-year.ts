@@ -142,6 +142,22 @@ async function getSubjectYearsByExample(
   return res.json();
 }
 
+async function getSubjectYearsDropdown(authHeader: any) {
+  const res = await fetch(`${API_BASE}/dropdown/get/all`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json", ...authHeader },
+  });
+  if (!res.ok) {
+    let backendError = "Fetching subject years failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message ?? errorBody.error ?? backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
+  return res.json();
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -179,6 +195,10 @@ export default async function handler(
       }
       if (action === "filtered") {
         const data = await getSubjectYearsByFilter(authHeader, req.query);
+        return res.status(200).json(data);
+      }
+      if (action === "dropdown") {
+        const data = await getSubjectYearsDropdown(authHeader);
         return res.status(200).json(data);
       }
     }

@@ -3,6 +3,9 @@ package zw.co.techtrendz.school.management.api.view;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import zw.co.techtrendz.school.management.api.enums.Status;
+
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +27,8 @@ public class SchoolDto {
     private String address;
 
     private String website;
+
+    private Status status;
+
+    private LocalDateTime datestamp;
 }

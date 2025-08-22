@@ -50,4 +50,10 @@ public class DormController {
     public Page<DormDto> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.dormService.getViewAllByFilter(page, size, sortBy, sortDir, filter);
     }
+
+
+    @GetMapping("/get/all/list")
+    public List<Dorm> getAllDormsList(@RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.dormService.getAllList(sortBy, sortDir);
+    }
 }

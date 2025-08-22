@@ -120,8 +120,11 @@ export default function ExtraCurricularEdit({
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? "Saving extra-curricular failed");
-        setStatusCode(res.status ?? 500);
+        const err = data.error ?? "Saving extra curricula failed";
+        const code = res.status ?? 500;
+        setError(err);
+        setStatusCode(code);
+        useToastError({ error: err, statusCode: code });
         return;
       } else if (data?.id) {
         router.push(`/extra-curricular/one?id=${data?.id}`);

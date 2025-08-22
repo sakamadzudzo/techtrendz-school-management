@@ -70,7 +70,11 @@ export default function AllDormsPage() {
   }, [dorms]);
 
   useEffect(() => {
-    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
   }, [isError]);
 
   const rows = React.useMemo(() => {
@@ -166,6 +170,10 @@ export default function AllDormsPage() {
     setPage(1);
   };
 
+  const addNew = () => {
+    router.push("/dorm/edit");
+  };
+
   return (
     <MyTable
       columns={columns}
@@ -190,6 +198,7 @@ export default function AllDormsPage() {
       nextPage={nextPage}
       prevPage={prevPage}
       onRowAction={viewOne}
+      addFunction={addNew}
     />
   );
 }

@@ -70,7 +70,11 @@ export default function AllSubjectsPage() {
   }, [subjects]);
 
   useEffect(() => {
-    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
   }, [isError]);
 
   const rows = React.useMemo(() => {
@@ -160,6 +164,10 @@ export default function AllSubjectsPage() {
     setPage(1);
   };
 
+  const addNew = () => {
+    router.push("/subject/edit");
+  };
+
   return (
     <MyTable
       columns={columns}
@@ -184,6 +192,7 @@ export default function AllSubjectsPage() {
       nextPage={nextPage}
       prevPage={prevPage}
       onRowAction={viewOne}
+      addFunction={addNew}
     />
   );
 }

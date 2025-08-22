@@ -166,6 +166,10 @@ export default function AllClassroomsPage() {
     setPage(1);
   };
 
+  const addNew = () => {
+    router.push("/classroom/edit");
+  };
+
   return (
     <MyTable
       columns={columns}
@@ -190,6 +194,7 @@ export default function AllClassroomsPage() {
       nextPage={nextPage}
       prevPage={prevPage}
       onRowAction={viewOne}
+      addFunction={addNew}
     />
   );
 }

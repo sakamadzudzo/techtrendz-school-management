@@ -21,8 +21,6 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-// get dropdown lists for extra curriculars, students, facilitators
-
 export default function ExtraCurricularYearEdit({
   incrementLoading,
   decrementLoading,
@@ -205,8 +203,11 @@ export default function ExtraCurricularYearEdit({
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Saving extra-curricular year failed");
-        setStatusCode(res.status ?? 500);
+        const err = data.error ?? "Saving extra curricular year failed";
+        const code = res.status ?? 500;
+        setError(err);
+        setStatusCode(code);
+        useToastError({ error: err, statusCode: code });
         return;
       } else if (data?.id) {
         router.push(`/extra-curricular/year/one?id=${data?.id}`);

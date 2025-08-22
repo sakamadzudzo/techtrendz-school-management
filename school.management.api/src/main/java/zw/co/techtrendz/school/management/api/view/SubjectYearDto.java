@@ -42,4 +42,6 @@ public class SubjectYearDto {
     private LocalDateTime datestamp;
 
     private Status status;
+
+    private Long subjectId;
 }

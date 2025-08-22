@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { useSelector } from "react-redux";
 import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
-import { DormYear, YearDropdown } from "@/utils/types";
+import { DormYear, DormYearView, YearDropdown } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -108,7 +108,7 @@ export function useDormYearById(dormYearId: string | undefined) {
   }
 
   return {
-    dormYear: data as DormYear,
+    dormYear: data as DormYearView,
     isLoading: shouldFetch && !error && !data,
     isError: error,
     errorMessage,

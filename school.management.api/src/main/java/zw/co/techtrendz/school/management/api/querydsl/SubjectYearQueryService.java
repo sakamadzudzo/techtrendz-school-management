@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.querydsl;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -7,6 +8,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.QClassroomYear;
 import zw.co.techtrendz.school.management.api.entity.QSubjectYear;
 import zw.co.techtrendz.school.management.api.entity.SubjectYear;
@@ -16,6 +18,8 @@ import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class SubjectYearQueryService {
@@ -110,6 +114,36 @@ public class SubjectYearQueryService {
         long total = queryFactory.selectFrom(subjectYear).where(QuerydslUtils.toPredicate(example, SubjectYear.class, "subjectYear")).fetchCount();
 
         return new PageImpl<>(subjectYearDtoList, pageable, total);
+    }
+
+    public List<YearDropdown> getAllSubjectYearForDropdown() {
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
+
+        List<String> sortBy = List.of("subject.name");
+        Sort.Direction sortDir = Sort.Direction.ASC;
+        List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
+
+        List<Tuple> results = queryFactory
+                .select(
+                        subjectYear.id,
+                        subjectYear.calendarYear,
+                        subjectYear.subject.name
+                )
+                .from(subjectYear)
+                .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
+                .fetch();
+
+        return results.stream()
+                .map(tuple -> {
+                    YearDropdown dto = new YearDropdown();
+                    dto.setId(tuple.get(subjectYear.id));
+                    dto.setCalendarYear(tuple.get(subjectYear.calendarYear));
+                    dto.setName(tuple.get(subjectYear.subject.name));
+                    return dto;
+                })
+                .collect(Collectors.toCollection(
+                        CopyOnWriteArrayList::new
+                ));
     }
 
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {

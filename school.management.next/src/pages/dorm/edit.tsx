@@ -149,9 +149,12 @@ export default function DormEdit({
       const data = await res.json();
 
       if (!res.ok) {
-        // const data = await res.json();
-        setError(data.error ?? "Sving dorm failed");
-        setStatusCode(res.status ?? 500);
+        const err = data.error ?? "Saving dorm failed";
+        const code = res.status ?? 500;
+        setError(err);
+        setStatusCode(code);
+        useToastError({ error: err, statusCode: code });
+        decrementLoading();
         return;
       } else if (data?.id) {
         router.push(`/dorm/one?id=${data?.id}`);

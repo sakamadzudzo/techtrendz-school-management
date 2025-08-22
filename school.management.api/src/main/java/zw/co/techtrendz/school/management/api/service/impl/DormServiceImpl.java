@@ -55,6 +55,15 @@ public class DormServiceImpl implements DormService {
     }
 
     @Override
+    public List<Dorm> getAllList(List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.dormRepository.findAll(Sort.by(sortDir, sortFields));
+    }
+
+    @Override
     public Page<Dorm> getAllByExample(Dorm dorm, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (dorm == null) {
             return this.getAll(page, size, sortBy, sortDir);

@@ -171,6 +171,10 @@ export default function AllSubjectYearsPage() {
     setPage(1);
   };
 
+  const addNew = () => {
+    router.push("/subject/year/edit");
+  };
+
   return (
     <MyTable
       columns={columns}
@@ -195,6 +199,7 @@ export default function AllSubjectYearsPage() {
       nextPage={nextPage}
       prevPage={prevPage}
       onRowAction={viewOne}
+      addFunction={addNew}
     />
   );
 }

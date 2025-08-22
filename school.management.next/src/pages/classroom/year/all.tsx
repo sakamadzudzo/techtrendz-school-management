@@ -73,7 +73,11 @@ export default function AllClassroomYearsPage() {
   }, [classroomYears]);
 
   useEffect(() => {
-    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
   }, [isError]);
 
   const rows = React.useMemo(() => {
@@ -171,6 +175,10 @@ export default function AllClassroomYearsPage() {
     setPage(1);
   };
 
+  const addNew = () => {
+    router.push("/classroom/year/edit");
+  };
+
   return (
     <MyTable
       columns={columns}
@@ -195,6 +203,7 @@ export default function AllClassroomYearsPage() {
       nextPage={nextPage}
       prevPage={prevPage}
       onRowAction={viewOne}
+      addFunction={addNew}
     />
   );
 }

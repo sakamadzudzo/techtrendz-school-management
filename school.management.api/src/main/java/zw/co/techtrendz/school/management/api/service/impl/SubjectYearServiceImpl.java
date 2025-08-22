@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.SubjectYear;
 import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
 import zw.co.techtrendz.school.management.api.repository.SubjectYearRepository;
@@ -134,5 +135,10 @@ public class SubjectYearServiceImpl implements SubjectYearService {
 
             return this.subjectYearQueryService.getAllSubjectYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
         }
+    }
+
+    @Override
+    public List<YearDropdown> getAllSubjectYearForDropdown() {
+        return this.subjectYearQueryService.getAllSubjectYearForDropdown();
     }
 }

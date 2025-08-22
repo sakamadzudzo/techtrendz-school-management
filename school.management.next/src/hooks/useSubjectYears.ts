@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { useSelector } from "react-redux";
 import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
-import { SubjectView } from "@/utils/types";
+import { SubjectView, YearDropdown } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -144,6 +144,21 @@ export function useSubjectYearsByExample(exampleDto: any) {
   return {
     subjectYears: data as Page<SubjectView>,
     isLoading: !!exampleDto && !!token && !error && !data,
+    isError: error,
+    mutate,
+  };
+}
+
+export function useSubjectYearsDropdown() {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!token;
+  const { data, error, mutate } = useSWR(
+    shouldFetch ? [`/api/subject-year?action=dropdown`, token] : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+  return {
+    subjectYears: data as YearDropdown[],
+    isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
   };

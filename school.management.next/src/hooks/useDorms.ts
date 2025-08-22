@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { useSelector } from "react-redux";
 import { ApiError, Page } from "../utils/classes";
 import { RootState } from "./../store/store"; // Adjust path if needed
-import { DormView } from "@/utils/types";
+import { Dorm, DormView } from "@/utils/types";
 
 const fetcherWithAuth = (url: string, token?: string) =>
   fetch(url, {
@@ -140,6 +140,31 @@ export function useDormsByExample(exampleDto: any) {
   return {
     dorms: data as Page<DormView>,
     isLoading: !!exampleDto && !!token && !error && !data,
+    isError: error,
+    mutate,
+  };
+}
+
+export function useDormsList({
+  sort,
+  direction,
+}: {
+  sort?: string;
+  direction?: "ASC" | "DESC";
+}) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!token;
+  const params = new URLSearchParams({
+    sort: sort ? `${sort}` : "",
+    direction: direction ?? "DESC",
+  });
+  const { data, error, mutate } = useSWR(
+    shouldFetch ? [`/api/dorm?action=list&${params.toString()}`, token] : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+  return {
+    dorms: data as Dorm[],
+    isLoading: shouldFetch && !error && !data,
     isError: error,
     mutate,
   };

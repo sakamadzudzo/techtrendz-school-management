@@ -1,9 +1,18 @@
 import {
+  Classroom,
+  ClassroomView,
+  ClassroomYear,
+  Dorm,
+  DormYear,
+  DormYearView,
   ExtraCurricular,
+  ExtraCurricularYear,
   ExtraCurricularYearView,
   Person,
   Student,
   StudentView,
+  Subject,
+  SubjectYear,
   Teacher,
   TeacherView,
   User,
@@ -120,7 +129,7 @@ export const phoneNumberRegex =
 export const phoneNumberError =
   "Phone number must contain digits, and may include +, spaces, or dashes";
 
-export const userViewToUser = (dto: UserView) => {
+export const userViewToUser = (dto: UserView): User => {
   const user: User = {} as User;
   const person: Person = {} as Person;
 
@@ -146,11 +155,13 @@ export const userViewToUser = (dto: UserView) => {
   user.enabled = dto.enabled;
   user.changePassword = dto.changePassword;
   user.roles = dto.roles;
+  user.status = dto.status;
+  user.datestamp = dto.datestamp;
 
   return user;
 };
 
-export const teacherViewToTeacher = (dto: TeacherView) => {
+export const teacherViewToTeacher = (dto: TeacherView): Teacher => {
   const teacher: Teacher = {} as Teacher;
   const person: Person = {} as Person;
 
@@ -182,7 +193,7 @@ export const teacherViewToTeacher = (dto: TeacherView) => {
   return teacher;
 };
 
-export const studentViewToStudent = (dto: StudentView) => {
+export const studentViewToStudent = (dto: StudentView): Student => {
   const student = {} as Student;
   const person = {} as Person;
 
@@ -221,7 +232,7 @@ export const studentViewToStudent = (dto: StudentView) => {
 
 export const extraCurricularYearViewToExtraCurricularYear = (
   dto: ExtraCurricularYearView
-) => {
+): ExtraCurricularYear => {
   return {
     id: dto.id,
     status: dto.status,
@@ -234,5 +245,54 @@ export const extraCurricularYearViewToExtraCurricularYear = (
     students: (Array.isArray(dto.students)
       ? dto.students.map(studentViewToStudent)
       : []) as Student[],
+  };
+};
+
+export const dormYearViewToDormYear = (dto: DormYearView): DormYear => {
+  return {
+    id: dto.id,
+    calendarYear: dto.calendarYear,
+    dorm: { id: dto.dormId } as Dorm,
+    status: dto.status,
+    datestamp: dto.datestamp,
+  };
+};
+
+export const classroomViewToClassroomYear = (
+  dto: ClassroomView
+): ClassroomYear => {
+  return {
+    id: dto.id,
+    status: dto.status,
+    datestamp: dto.datestamp,
+    classroom: { id: dto.classroomId } as Classroom,
+    calendarYear: dto.calendarYear,
+    homeroomTeacher: teacherViewToTeacher(dto.teacher),
+    subjects: (Array.isArray(dto.subjects)
+      ? dto.subjects.map(subjectViewToSubjectYear)
+      : []) as SubjectYear[],
+  };
+};
+
+export const subjectViewToSubjectYear = (dto: any): SubjectYear => {
+  return {
+    id: dto.id,
+    status: dto.status,
+    datestamp: dto.datestamp,
+    calendarYear: dto.calendarYear,
+    subject: {
+      id: dto.subjectId,
+      status: dto.status,
+      datestamp: dto.datestamp,
+      name: dto.name,
+      description: dto.description,
+      code: dto.code,
+      syllabus: dto.syllabus,
+      curriculum: dto.curriculum,
+      level: dto.level,
+      type: dto.type,
+      category: dto.category,
+    },
+    teacher: teacherViewToTeacher(dto.teacher),
   };
 };
