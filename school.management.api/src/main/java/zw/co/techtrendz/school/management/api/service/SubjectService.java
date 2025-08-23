@@ -18,6 +18,8 @@ public interface SubjectService {
 
     public Page<Subject> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
+    public List<Subject> getAllList(List<String> sortBy, Sort.Direction sortDir);
+
     public Page<Subject> getAllByExample(Subject subject, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<Subject> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);

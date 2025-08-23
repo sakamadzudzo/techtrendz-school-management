@@ -50,7 +50,7 @@ export type Subject = {
   syllabus: string;
   curriculum: string;
   level: string;
-  type: string;
+  type: SubjectType;
   category: string;
 };
 
@@ -335,6 +335,14 @@ export enum Role {
   PARENT = "PARENT",
   STAFF = "STAFF",
   GUEST = "GUEST",
+}
+
+export enum SubjectType {
+  CORE = "Core",
+  ELECTIVE = "Elective",
+  AP = "Advanced Placement",
+  PHYSICAL = "Physical",
+  OTHER = "Other",
 }
 
 export type YearDropdown = {

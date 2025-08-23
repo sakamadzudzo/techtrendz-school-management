@@ -148,3 +148,30 @@ export function useSubjectsByExample(exampleDto: any) {
     mutate,
   };
 }
+
+export function useSubjectsList({
+  sort,
+  direction,
+}: {
+  sort?: string;
+  direction?: "ASC" | "DESC";
+}) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!token;
+  const params = new URLSearchParams({
+    sort: sort ? `${sort}` : "",
+    direction: direction ?? "DESC",
+  });
+  const { data, error, mutate } = useSWR(
+    shouldFetch
+      ? [`/api/subject?action=list&${params.toString()}`, token]
+      : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+  return {
+    subjects: data as Subject[],
+    isLoading: shouldFetch && !error && !data,
+    isError: error,
+    mutate,
+  };
+}

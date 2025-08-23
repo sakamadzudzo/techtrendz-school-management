@@ -52,6 +52,15 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    public List<Subject> getAllList(List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.subjectRepository.findAll(Sort.by(sortDir, sortFields));
+    }
+
+    @Override
     public Page<Subject> getAllByExample(Subject subject, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (subject == null) {
             return this.getAll(page, size, sortBy, sortDir);

@@ -49,4 +49,9 @@ public class SubjectController {
     public Page<Subject> getAllClassroomsByFilter(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir, @RequestParam(defaultValue = "", required = false) String filter) {
         return this.subjectService.getAllByFilter(page, size, sortBy, sortDir, filter);
     }
+
+    @GetMapping("/get/all/list")
+    public List<Subject> getAllSubjectsList(@RequestParam(defaultValue = "name") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+        return this.subjectService.getAllList(sortBy, sortDir);
+    }
 }
