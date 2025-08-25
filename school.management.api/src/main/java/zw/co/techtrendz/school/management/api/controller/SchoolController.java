@@ -15,8 +15,11 @@ import java.util.List;
 @RequestMapping("/school")
 public class SchoolController {
 
-    @Autowired
-    private SchoolService schoolService;
+    private final SchoolService schoolService;
+
+    public SchoolController(SchoolService schoolService) {
+        this.schoolService = schoolService;
+    }
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")

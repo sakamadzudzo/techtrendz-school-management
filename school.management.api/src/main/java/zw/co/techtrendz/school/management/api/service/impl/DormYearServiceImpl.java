@@ -31,12 +31,15 @@ import java.util.stream.Collectors;
 @Service
 public class DormYearServiceImpl implements DormYearService {
 
-    @Autowired
-    private DormYearRepository dormYearRepository;
-    @Autowired
-    private DormYearQueryService dormYearQueryService;
-    @Autowired
-    private StudentQueryService studentQueryService;
+    private final DormYearRepository dormYearRepository;
+    private final DormYearQueryService dormYearQueryService;
+    private final StudentQueryService studentQueryService;
+
+    public DormYearServiceImpl(DormYearRepository dormYearRepository, DormYearQueryService dormYearQueryService, StudentQueryService studentQueryService) {
+        this.dormYearRepository = dormYearRepository;
+        this.dormYearQueryService = dormYearQueryService;
+        this.studentQueryService = studentQueryService;
+    }
 
     @Override
     public DormYear save(DormYear dormYear) {

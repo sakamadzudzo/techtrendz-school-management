@@ -1,6 +1,5 @@
 package zw.co.techtrendz.school.management.api.utility;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Sort;
@@ -25,32 +24,49 @@ import java.util.stream.Collectors;
 @Component
 public class DummyDataRunner {
 
-    @Autowired
-    private ClassroomService classroomService;
-    @Autowired
-    private ClassroomYearService classroomYearService;
-    @Autowired
-    private DormService dormService;
-    @Autowired
-    private DormYearService dormYearService;
-    @Autowired
-    private ExtraCurricularService extraCurricularService;
-    @Autowired
-    private ExtraCurricularYearService extraCurricularYearService;
-    @Autowired
-    private PersonService personService;
-    @Autowired
-    private SchoolService schoolService;
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private SubjectService subjectService;
-    @Autowired
-    private SubjectYearService subjectYearService;
-    @Autowired
-    private TeacherService teacherService;
-    @Autowired
-    private UserService userService;
+    private final ClassroomService classroomService;
+    private final ClassroomYearService classroomYearService;
+    private final DormService dormService;
+    private final DormYearService dormYearService;
+    private final ExtraCurricularService extraCurricularService;
+    private final ExtraCurricularYearService extraCurricularYearService;
+    private final PersonService personService;
+    private final SchoolService schoolService;
+    private final StudentService studentService;
+    private final SubjectService subjectService;
+    private final SubjectYearService subjectYearService;
+    private final TeacherService teacherService;
+    private final UserService userService;
+
+    public DummyDataRunner(
+            ClassroomService classroomService,
+            ClassroomYearService classroomYearService,
+            DormService dormService,
+            DormYearService dormYearService,
+            ExtraCurricularService extraCurricularService,
+            ExtraCurricularYearService extraCurricularYearService,
+            PersonService personService,
+            SchoolService schoolService,
+            StudentService studentService,
+            SubjectService subjectService,
+            SubjectYearService subjectYearService,
+            TeacherService teacherService,
+            UserService userService
+    ) {
+        this.classroomService = classroomService;
+        this.classroomYearService = classroomYearService;
+        this.dormService = dormService;
+        this.dormYearService = dormYearService;
+        this.extraCurricularService = extraCurricularService;
+        this.extraCurricularYearService = extraCurricularYearService;
+        this.personService = personService;
+        this.schoolService = schoolService;
+        this.studentService = studentService;
+        this.subjectService = subjectService;
+        this.subjectYearService = subjectYearService;
+        this.teacherService = teacherService;
+        this.userService = userService;
+    }
 
     @Bean
     public ApplicationRunner insertDummyData() {

@@ -16,8 +16,11 @@ import java.util.List;
 @RequestMapping("/misc")
 public class MiscController {
 
-    @Autowired
-    private MiscService miscService;
+    private final MiscService miscService;
+
+    public MiscController(MiscService miscService) {
+        this.miscService = miscService;
+    }
 
     @GetMapping("/roles")
     public List<Role> getRoles() {

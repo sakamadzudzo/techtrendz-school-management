@@ -2,7 +2,6 @@ package zw.co.techtrendz.school.management.api.service.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,14 +28,17 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PersonService personService;
-    @Autowired
-    private UserQueryService userQueryService;
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final UserRepository userRepository;
+    private final PersonService personService;
+    private final UserQueryService userQueryService;
+    private final JwtUtil jwtUtil;
+
+    public UserServiceImpl(UserRepository userRepository, PersonService personService, UserQueryService userQueryService, JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.personService = personService;
+        this.userQueryService = userQueryService;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     public User save(User user) {

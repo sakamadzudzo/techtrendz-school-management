@@ -16,8 +16,11 @@ import java.util.List;
 @RequestMapping("/dorm")
 public class DormController {
 
-    @Autowired
-    private DormService dormService;
+    private final DormService dormService;
+
+    public DormController(DormService dormService) {
+        this.dormService = dormService;
+    }
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")

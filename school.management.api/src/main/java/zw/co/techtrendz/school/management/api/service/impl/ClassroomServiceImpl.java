@@ -20,8 +20,11 @@ import java.util.Optional;
 @Service
 public class ClassroomServiceImpl implements ClassroomService {
 
-    @Autowired
-    private ClassroomRepository classroomRepository;
+    private final ClassroomRepository classroomRepository;
+
+    public ClassroomServiceImpl(ClassroomRepository classroomRepository) {
+        this.classroomRepository = classroomRepository;
+    }
 
     @Override
     public Classroom save(Classroom classroom) {

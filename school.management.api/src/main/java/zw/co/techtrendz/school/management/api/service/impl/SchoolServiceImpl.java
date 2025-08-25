@@ -20,8 +20,11 @@ import java.util.Optional;
 @Service
 public class SchoolServiceImpl implements SchoolService {
 
-    @Autowired
-    private SchoolRepository schoolRepository;
+    private final SchoolRepository schoolRepository;
+
+    public SchoolServiceImpl(SchoolRepository schoolRepository) {
+        this.schoolRepository = schoolRepository;
+    }
 
     @Override
     public School save(School school) {

@@ -25,10 +25,13 @@ import java.util.List;
 @Service
 public class DormServiceImpl implements DormService {
 
-    @Autowired
-    private DormRepository dormRepository;
-    @Autowired
-    private DormQueryService dormQueryService;
+    private final DormRepository dormRepository;
+    private final DormQueryService dormQueryService;
+
+    public DormServiceImpl(DormRepository dormRepository, DormQueryService dormQueryService) {
+        this.dormRepository = dormRepository;
+        this.dormQueryService = dormQueryService;
+    }
 
     @Override
     public Dorm save(Dorm dorm) {

@@ -1,7 +1,6 @@
 package zw.co.techtrendz.school.management.api.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,8 +14,11 @@ import java.util.List;
 @RequestMapping("/classroom")
 public class ClassroomController {
 
-    @Autowired
-    private ClassroomService classroomService;
+    private final ClassroomService classroomService;
+
+    public ClassroomController(ClassroomService classroomService) {
+        this.classroomService = classroomService;
+    }
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")

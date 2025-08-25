@@ -22,14 +22,17 @@ import java.util.Map;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private JwtBlacklistService jwtBlacklistService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PersonService personService;
+    private final JwtUtil jwtUtil;
+    private final JwtBlacklistService jwtBlacklistService;
+    private final UserService userService;
+    private final PersonService personService;
+
+    public AuthServiceImpl(JwtUtil jwtUtil, JwtBlacklistService jwtBlacklistService, UserService userService, PersonService personService) {
+        this.jwtUtil = jwtUtil;
+        this.jwtBlacklistService = jwtBlacklistService;
+        this.userService = userService;
+        this.personService = personService;
+    }
 
 
     @Override

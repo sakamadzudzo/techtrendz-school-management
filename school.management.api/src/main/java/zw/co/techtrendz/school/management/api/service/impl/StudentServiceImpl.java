@@ -32,14 +32,17 @@ import java.util.stream.Collectors;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private PersonService personService;
-    @Autowired
-    private StudentQueryService studentQueryService;
-    @Autowired
-    private SubjectYearQueryService subjectYearQueryService;
+    private final StudentRepository studentRepository;
+    private final PersonService personService;
+    private final StudentQueryService studentQueryService;
+    private final SubjectYearQueryService subjectYearQueryService;
+
+    public StudentServiceImpl(StudentRepository studentRepository, PersonService personService, StudentQueryService studentQueryService, SubjectYearQueryService subjectYearQueryService) {
+        this.studentRepository = studentRepository;
+        this.personService = personService;
+        this.studentQueryService = studentQueryService;
+        this.subjectYearQueryService = subjectYearQueryService;
+    }
 
     @Override
     public Student save(Student student) {

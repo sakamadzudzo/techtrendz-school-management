@@ -2,7 +2,6 @@ package zw.co.techtrendz.school.management.api.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,14 +20,17 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private JwtBlacklistService jwtBlacklistService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private AuthService authService;
+    private final JwtUtil jwtUtil;
+    private final JwtBlacklistService jwtBlacklistService;
+    private final UserService userService;
+    private final AuthService authService;
+
+    public AuthController(JwtUtil jwtUtil, JwtBlacklistService jwtBlacklistService, UserService userService, AuthService authService) {
+        this.jwtUtil = jwtUtil;
+        this.jwtBlacklistService = jwtBlacklistService;
+        this.userService = userService;
+        this.authService = authService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody @Valid AuthDto authDto, HttpServletRequest request) {

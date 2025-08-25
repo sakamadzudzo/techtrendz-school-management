@@ -17,8 +17,11 @@ import java.util.List;
 @RequestMapping("/subject/year")
 public class SubjectYearController {
 
-    @Autowired
-    private SubjectYearService subjectYearService;
+    private final SubjectYearService subjectYearService;
+
+    public SubjectYearController(SubjectYearService subjectYearService) {
+        this.subjectYearService = subjectYearService;
+    }
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")

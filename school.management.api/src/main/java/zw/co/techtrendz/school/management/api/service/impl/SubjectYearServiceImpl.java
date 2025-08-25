@@ -25,10 +25,13 @@ import java.util.List;
 @Service
 public class SubjectYearServiceImpl implements SubjectYearService {
 
-    @Autowired
-    private SubjectYearRepository subjectYearRepository;
-    @Autowired
-    private SubjectYearQueryService subjectYearQueryService;
+    private final SubjectYearRepository subjectYearRepository;
+    private final SubjectYearQueryService subjectYearQueryService;
+
+    public SubjectYearServiceImpl(SubjectYearRepository subjectYearRepository, SubjectYearQueryService subjectYearQueryService) {
+        this.subjectYearRepository = subjectYearRepository;
+        this.subjectYearQueryService = subjectYearQueryService;
+    }
 
     @Override
     public SubjectYear save(SubjectYear subjectYear) {

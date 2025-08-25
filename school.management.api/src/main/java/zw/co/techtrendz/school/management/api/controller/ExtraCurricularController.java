@@ -15,8 +15,11 @@ import java.util.List;
 @RequestMapping("/extra-curricular")
 public class ExtraCurricularController {
 
-    @Autowired
-    private ExtraCurricularService extraCurricularService;
+    private final ExtraCurricularService extraCurricularService;
+
+    public ExtraCurricularController(ExtraCurricularService extraCurricularService) {
+        this.extraCurricularService = extraCurricularService;
+    }
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STAFF')")

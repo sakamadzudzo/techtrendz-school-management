@@ -16,8 +16,11 @@ import java.util.List;
 @RequestMapping("/extra-curricular/year")
 public class ExtraCurricularYearController {
 
-    @Autowired
-    private ExtraCurricularYearService extraCurricularYearService;
+    private final ExtraCurricularYearService extraCurricularYearService;
+
+    public ExtraCurricularYearController(ExtraCurricularYearService extraCurricularYearService) {
+        this.extraCurricularYearService = extraCurricularYearService;
+    }
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STAFF')")

@@ -18,8 +18,11 @@ import java.util.Map;
 @RequestMapping("/dorm/year")
 public class DormYearController {
 
-    @Autowired
-    private DormYearService dormYearService;
+    private final DormYearService dormYearService;
+
+    public DormYearController(DormYearService dormYearService) {
+        this.dormYearService = dormYearService;
+    }
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN') or hasRole('STAFF')")

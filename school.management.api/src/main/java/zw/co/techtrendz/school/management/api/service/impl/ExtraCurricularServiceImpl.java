@@ -20,8 +20,11 @@ import java.util.Optional;
 @Service
 public class ExtraCurricularServiceImpl implements ExtraCurricularService {
 
-    @Autowired
-    private ExtraCurricularRepository extraCurricularRepository;
+    private final ExtraCurricularRepository extraCurricularRepository;
+
+    public ExtraCurricularServiceImpl(ExtraCurricularRepository extraCurricularRepository) {
+        this.extraCurricularRepository = extraCurricularRepository;
+    }
 
     @Override
     public ExtraCurricular save(ExtraCurricular extraCurricular) {

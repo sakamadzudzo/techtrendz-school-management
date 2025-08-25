@@ -31,14 +31,21 @@ import java.util.stream.Collectors;
 @Service
 public class ExtraCurricularYearServiceImpl implements ExtraCurricularYearService {
 
-    @Autowired
-    private ExtraCurricularYearRepository extraCurricularYearRepository;
-    @Autowired
-    private ExtraCurricularYearQueryService extraCurricularYearQueryService;
-    @Autowired
-    private TeacherQueryService teacherQueryService;
-    @Autowired
-    private StudentQueryService studentQueryService;
+    private final ExtraCurricularYearRepository extraCurricularYearRepository;
+    private final ExtraCurricularYearQueryService extraCurricularYearQueryService;
+    private final TeacherQueryService teacherQueryService;
+    private final StudentQueryService studentQueryService;
+
+    public ExtraCurricularYearServiceImpl(
+            ExtraCurricularYearRepository extraCurricularYearRepository,
+            ExtraCurricularYearQueryService extraCurricularYearQueryService,
+            TeacherQueryService teacherQueryService,
+            StudentQueryService studentQueryService) {
+        this.extraCurricularYearRepository = extraCurricularYearRepository;
+        this.extraCurricularYearQueryService = extraCurricularYearQueryService;
+        this.teacherQueryService = teacherQueryService;
+        this.studentQueryService = studentQueryService;
+    }
 
     @Override
     public ExtraCurricularYear save(ExtraCurricularYear extraCurricularYear) {

@@ -30,12 +30,15 @@ import java.util.stream.Collectors;
 @Service
 public class TeacherServiceImpl implements TeacherService {
 
-    @Autowired
-    private TeacherRepository teacherRepository;
-    @Autowired
-    private PersonService personService;
-    @Autowired
-    private TeacherQueryService teacherQueryService;
+    private final TeacherRepository teacherRepository;
+    private final PersonService personService;
+    private final TeacherQueryService teacherQueryService;
+
+    public TeacherServiceImpl(TeacherRepository teacherRepository, PersonService personService, TeacherQueryService teacherQueryService) {
+        this.teacherRepository = teacherRepository;
+        this.personService = personService;
+        this.teacherQueryService = teacherQueryService;
+    }
 
     @Override
     public Teacher save(Teacher teacher) {

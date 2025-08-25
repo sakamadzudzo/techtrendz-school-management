@@ -31,12 +31,15 @@ import java.util.stream.Collectors;
 @Service
 public class ClassroomYearServiceImpl implements ClassroomYearService {
 
-    @Autowired
-    private ClassroomYearRepository classroomYearRepository;
-    @Autowired
-    private ClassroomYearQueryService classroomYearQueryService;
-    @Autowired
-    private SubjectYearQueryService subjectYearQueryService;
+    private final ClassroomYearRepository classroomYearRepository;
+    private final ClassroomYearQueryService classroomYearQueryService;
+    private final SubjectYearQueryService subjectYearQueryService;
+
+    public ClassroomYearServiceImpl(ClassroomYearRepository classroomYearRepository, ClassroomYearQueryService classroomYearQueryService, SubjectYearQueryService subjectYearQueryService) {
+        this.classroomYearRepository = classroomYearRepository;
+        this.classroomYearQueryService = classroomYearQueryService;
+        this.subjectYearQueryService = subjectYearQueryService;
+    }
 
     @Override
     public ClassroomYear save(ClassroomYear classroomYear) {

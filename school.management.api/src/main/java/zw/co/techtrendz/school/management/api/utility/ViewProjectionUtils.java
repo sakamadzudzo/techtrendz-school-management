@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.utility;
 
+import co.elastic.clients.util.DateTime;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Projections;
@@ -437,6 +438,26 @@ public class ViewProjectionUtils {
                 user.roles,
                 user.status,
                 user.datestamp
+        );
+    }
+
+    public static ConstructorExpression<Work> getWorkProjection() {
+        QWork work = QWork.work;
+
+        return Projections.constructor(Work.class,
+                work.id,
+                work.type,
+                work.status,
+                work.datestamp,
+                Projections.constructor(SubjectYear.class,
+                        work.subject.id,
+                        new NullExpression<>(Integer.class), // calendarYear
+                        new NullExpression<>(Subject.class), // subject
+                        new NullExpression<>(Teacher.class),   // teacher
+                        new NullExpression<>(List.class),   // classrooms
+                        new NullExpression<>(String.class), // status
+                        new NullExpression<>(DateTime.class)  // datestamp
+                )
         );
     }
 }

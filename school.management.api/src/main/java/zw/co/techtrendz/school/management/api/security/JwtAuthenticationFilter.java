@@ -23,11 +23,13 @@ import java.util.logging.Logger;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
+    private final JwtBlacklistService jwtBlacklistService;
 
-    @Autowired
-    private JwtBlacklistService jwtBlacklistService;
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, JwtBlacklistService jwtBlacklistService) {
+        this.jwtUtil = jwtUtil;
+        this.jwtBlacklistService = jwtBlacklistService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

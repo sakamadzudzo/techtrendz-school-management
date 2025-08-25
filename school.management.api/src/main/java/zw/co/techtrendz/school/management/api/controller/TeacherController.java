@@ -17,8 +17,11 @@ import java.util.List;
 @RequestMapping("/teacher")
 public class TeacherController {
 
-    @Autowired
-    private TeacherService teacherService;
+    private final TeacherService teacherService;
+
+    public TeacherController(TeacherService teacherService) {
+        this.teacherService = teacherService;
+    }
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN')")
