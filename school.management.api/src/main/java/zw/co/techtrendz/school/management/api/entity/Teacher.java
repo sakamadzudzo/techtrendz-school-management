@@ -1,6 +1,7 @@
 package zw.co.techtrendz.school.management.api.entity;
 
 import com.querydsl.core.annotations.QueryEntity;
+import com.querydsl.core.annotations.QueryInit;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -22,6 +23,7 @@ public class Teacher extends Base {
     private Long id;
 
     @ManyToOne
+    @QueryInit("*.*")
     private Person person;
 
     @ManyToMany(mappedBy = "facilitators")

@@ -16,7 +16,7 @@ import {
   PencilSimpleLineIcon,
   PhoneIcon,
   BriefcaseIcon,
-  ShareNetworkIcon,
+  ShareNetcourseworkIcon,
   ChalkboardTeacherIcon,
   FolderSimpleIcon,
   CheckIcon,
@@ -233,7 +233,7 @@ export default function OneUserPage() {
           aria-label="Online Presence"
           title="Online Presence"
           subtitle="Professional or social links."
-          startContent={<ShareNetworkIcon weight="thin" size={34} />}
+          startContent={<ShareNetcourseworkIcon weight="thin" size={34} />}
         >
           {user?.whatsapp && (
             <>

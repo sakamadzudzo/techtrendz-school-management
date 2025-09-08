@@ -15,6 +15,8 @@ import zw.co.techtrendz.school.management.api.entity.Student;
 import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
 import zw.co.techtrendz.school.management.api.repository.StudentRepository;
+import zw.co.techtrendz.school.management.api.service.ActivityPointService;
+import zw.co.techtrendz.school.management.api.service.MarkService;
 import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.service.StudentService;
 import zw.co.techtrendz.school.management.api.utility.AppUtils;
@@ -36,12 +38,22 @@ public class StudentServiceImpl implements StudentService {
     private final PersonService personService;
     private final StudentQueryService studentQueryService;
     private final SubjectYearQueryService subjectYearQueryService;
+    private final ActivityPointService activityPointService;
+    private final MarkService markService;
 
-    public StudentServiceImpl(StudentRepository studentRepository, PersonService personService, StudentQueryService studentQueryService, SubjectYearQueryService subjectYearQueryService) {
+    public StudentServiceImpl(
+            StudentRepository studentRepository,
+            PersonService personService,
+            StudentQueryService studentQueryService,
+            SubjectYearQueryService subjectYearQueryService,
+            ActivityPointService activityPointService,
+            MarkService markService) {
         this.studentRepository = studentRepository;
         this.personService = personService;
         this.studentQueryService = studentQueryService;
         this.subjectYearQueryService = subjectYearQueryService;
+        this.activityPointService = activityPointService;
+        this.markService = markService;
     }
 
     @Override

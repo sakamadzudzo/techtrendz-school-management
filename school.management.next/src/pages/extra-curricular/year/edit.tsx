@@ -155,13 +155,13 @@ export default function ExtraCurricularYearEdit({
       };
     }
     if (
-      !extraCurricularYear.facilitators ||
-      extraCurricularYear.facilitators.length === 0
+      !extraCurricularYear?.facilitators ||
+      extraCurricularYear?.facilitators.length === 0
     ) {
       tempErrors = {
         ...tempErrors,
         facilitators: {
-          ...tempErrors.facilitators,
+          ...tempErrors?.facilitators,
           general: "At least one facilitator is required",
         },
       };
@@ -214,7 +214,7 @@ export default function ExtraCurricularYearEdit({
       }
       decrementLoading();
     } catch (err: any) {
-      setError("Network/Server error");
+      setError("Netcoursework/Server error");
       setStatusCode(err.status ?? 500);
       decrementLoading();
     }
@@ -317,7 +317,7 @@ export default function ExtraCurricularYearEdit({
             ))}
           </Select>
         </div>
-        <Button type="submit" color="primary" className="w-full px-5">
+        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
           Save
         </Button>
       </Form>

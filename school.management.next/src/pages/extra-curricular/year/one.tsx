@@ -2,12 +2,11 @@ import { useExtraCurricularYearById } from "@/hooks/useExtraCurricularYears";
 import { Accordion, AccordionItem, Button, Spacer } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import {
-  IdentificationCardIcon,
-  UserFocusIcon,
   StudentIcon,
   PencilSimpleLineIcon,
   ChalkboardTeacherIcon,
   InfoIcon,
+  ExamIcon,
 } from "@phosphor-icons/react";
 import MyChip from "@/components/MyChip";
 import { formatDate } from "@/utils/helpers";
@@ -23,12 +22,22 @@ export default function OneExtraCurricularYearPage() {
     useExtraCurricularYearById(id!);
 
   useEffect(() => {
-    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
   }, [isError]);
 
   return (
     <div className="grow overflow-auto">
       <div aria-label="Page buttons" className="w-full flex justify-end gap-4">
+        <Button
+          color="primary"
+          endContent={<ExamIcon weight="thin" size={34} />}
+        >
+          Grade
+        </Button>
         <Button
           color="primary"
           endContent={<PencilSimpleLineIcon weight="thin" size={34} />}
@@ -93,8 +102,8 @@ export default function OneExtraCurricularYearPage() {
           subtitle="Teachers overseeing the extra curricular activity"
           startContent={<ChalkboardTeacherIcon weight="thin" size={34} />}
         >
-          {extraCurricularYear.facilitators &&
-            extraCurricularYear.facilitators.map((facilitator) => (
+          {extraCurricularYear?.facilitators &&
+            extraCurricularYear?.facilitators.map((facilitator) => (
               <TeacherViewCard teacher={facilitator} />
             ))}
         </AccordionItem>
@@ -105,8 +114,8 @@ export default function OneExtraCurricularYearPage() {
           subtitle="Students participating in the extra curricular activity"
           startContent={<StudentIcon weight="thin" size={34} />}
         >
-          {extraCurricularYear.students &&
-            extraCurricularYear.students.map((student) => (
+          {extraCurricularYear?.students &&
+            extraCurricularYear?.students.map((student) => (
               <StudentViewCard student={student} />
             ))}
         </AccordionItem>

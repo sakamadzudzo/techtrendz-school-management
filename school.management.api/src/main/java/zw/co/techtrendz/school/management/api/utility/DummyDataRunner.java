@@ -5,10 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import zw.co.techtrendz.school.management.api.entity.*;
-import zw.co.techtrendz.school.management.api.enums.Role;
-import zw.co.techtrendz.school.management.api.enums.Salutation;
-import zw.co.techtrendz.school.management.api.enums.Status;
-import zw.co.techtrendz.school.management.api.enums.SubjectType;
+import zw.co.techtrendz.school.management.api.enums.*;
 import zw.co.techtrendz.school.management.api.service.*;
 
 import java.time.LocalDate;
@@ -37,6 +34,7 @@ public class DummyDataRunner {
     private final SubjectYearService subjectYearService;
     private final TeacherService teacherService;
     private final UserService userService;
+    private final CourseworkService courseworkService;
 
     public DummyDataRunner(
             ClassroomService classroomService,
@@ -51,7 +49,8 @@ public class DummyDataRunner {
             SubjectService subjectService,
             SubjectYearService subjectYearService,
             TeacherService teacherService,
-            UserService userService
+            UserService userService,
+            CourseworkService courseworkService
     ) {
         this.classroomService = classroomService;
         this.classroomYearService = classroomYearService;
@@ -66,6 +65,7 @@ public class DummyDataRunner {
         this.subjectYearService = subjectYearService;
         this.teacherService = teacherService;
         this.userService = userService;
+        this.courseworkService = courseworkService;
     }
 
     @Bean
@@ -91,6 +91,7 @@ public class DummyDataRunner {
         this.dummyStudent();
         this.dummyExtraCurricular();
         this.dummyExtraCurricularYear();
+        this.dummyCoursework();
     }
 
     private void dummyPersons() {
@@ -568,5 +569,18 @@ public class DummyDataRunner {
         }
 
         this.extraCurricularYearService.saveAll(extraCurricularYears);
+    }
+
+    private void dummyCoursework() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy courseworks...");
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy coursework for subject year 64...");
+
+        List<Coursework> courseworks = new ArrayList<>();
+
+        courseworks.add(new Coursework(null, "Assignment 1", CourseworkType.ASSIGNMENT, new SubjectYear(64), 100.0F, 70.0F));
+        courseworks.add(new Coursework(null, "Assignment 2", CourseworkType.ASSIGNMENT, new SubjectYear(64), 100.0F, 70.0F));
+        courseworks.add(new Coursework(null, "Quiz 1", CourseworkType.QUIZ, new SubjectYear(64), 100.0F, 50.0F));
+
+        this.courseworkService.saveAll(courseworks);
     }
 }

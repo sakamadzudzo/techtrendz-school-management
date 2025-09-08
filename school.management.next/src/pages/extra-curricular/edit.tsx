@@ -131,7 +131,7 @@ export default function ExtraCurricularEdit({
       }
       decrementLoading();
     } catch (err: any) {
-      setError("Network/Server error");
+      setError("Netcoursework/Server error");
       setStatusCode(err.status ?? 500);
       decrementLoading();
     }
@@ -178,7 +178,7 @@ export default function ExtraCurricularEdit({
             className="placeholder:text-ellipsis"
           />
         </div>
-        <Button type="submit" color="primary" className="w-full px-5">
+        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
           Save
         </Button>
       </Form>

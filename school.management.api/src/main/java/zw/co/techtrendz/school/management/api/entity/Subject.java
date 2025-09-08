@@ -42,4 +42,9 @@ public class Subject extends Base {
     public Subject(long id) {
         this.id = id;
     }
+
+    public Subject(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

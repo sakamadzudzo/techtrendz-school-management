@@ -152,7 +152,7 @@ export default function RegisterModal({
         onOpenChange(false);
       }
     } catch (e) {
-      setErrors({ api: "Network/Server error" });
+      setErrors({ api: "Netcoursework/Server error" });
     } finally {
       decrementLoading();
     }

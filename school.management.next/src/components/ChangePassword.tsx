@@ -70,10 +70,10 @@ export const ChangePassword = () => {
         statusCode: res.status ?? 200,
       });
     } catch (err: any) {
-      setError("Network/Server error");
+      setError("Netcoursework/Server error");
       setStatusCode(err.status ?? 500);
       useToastError({
-        error: "Network/Server error",
+        error: "Netcoursework/Server error",
         statusCode: err.status ?? 500,
       });
     }

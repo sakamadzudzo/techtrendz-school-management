@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.entity;
 
+import com.querydsl.core.annotations.QueryInit;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -20,11 +21,13 @@ public class SubjectYear extends Base{
     private Long id;
 
     @ManyToOne
+    @QueryInit("*.*")
     private Subject subject;
 
     private Integer calendarYear;
 
     @ManyToOne
+    @QueryInit("*.*")
     private Teacher teacher;
 
     @ManyToMany(mappedBy = "subjects")

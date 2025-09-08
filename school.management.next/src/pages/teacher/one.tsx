@@ -16,7 +16,7 @@ import {
   PencilSimpleLineIcon,
   PhoneIcon,
   BriefcaseIcon,
-  ShareNetworkIcon,
+  ShareNetcourseworkIcon,
   ChalkboardTeacherIcon,
   FolderSimpleIcon,
 } from "@phosphor-icons/react";
@@ -244,7 +244,7 @@ export default function OneTeacherPage() {
           aria-label="Online Presence"
           title="Online Presence"
           subtitle="Professional or social links."
-          startContent={<ShareNetworkIcon weight="thin" size={34} />}
+          startContent={<ShareNetcourseworkIcon weight="thin" size={34} />}
         >
           {teacher?.whatsapp && (
             <>

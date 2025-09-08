@@ -1,7 +1,6 @@
 package zw.co.techtrendz.school.management.api.service.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,26 +10,32 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import zw.co.techtrendz.school.management.api.dto.YearDropdown;
+import zw.co.techtrendz.school.management.api.entity.Coursework;
 import zw.co.techtrendz.school.management.api.entity.SubjectYear;
 import zw.co.techtrendz.school.management.api.querydsl.SubjectYearQueryService;
 import zw.co.techtrendz.school.management.api.repository.SubjectYearRepository;
 import zw.co.techtrendz.school.management.api.service.SubjectYearService;
+import zw.co.techtrendz.school.management.api.service.CourseworkService;
 import zw.co.techtrendz.school.management.api.utility.AppUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class SubjectYearServiceImpl implements SubjectYearService {
 
     private final SubjectYearRepository subjectYearRepository;
     private final SubjectYearQueryService subjectYearQueryService;
+    private final CourseworkService courseworkService;
 
-    public SubjectYearServiceImpl(SubjectYearRepository subjectYearRepository, SubjectYearQueryService subjectYearQueryService) {
+    public SubjectYearServiceImpl(SubjectYearRepository subjectYearRepository, SubjectYearQueryService subjectYearQueryService, CourseworkService courseworkService) {
         this.subjectYearRepository = subjectYearRepository;
         this.subjectYearQueryService = subjectYearQueryService;
+        this.courseworkService = courseworkService;
     }
 
     @Override
@@ -100,13 +105,16 @@ public class SubjectYearServiceImpl implements SubjectYearService {
         SubjectYearDto subjectYearDto = this.subjectYearQueryService.getSubjectYearDetails(id);
         if (subjectYearDto == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Subject year with id '%d' was not found", id));
+        } else {
+            subjectYearDto.setCourseworks(this.courseworkService.getAllBySubjectId(subjectYearDto.getId()));
         }
         return subjectYearDto;
     }
 
     @Override
     public Page<SubjectYearDto> getViewAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
-        return this.subjectYearQueryService.getAllSubjectYearDetails(page, size, sortBy, sortDir);
+        Page<SubjectYearDto> subjectYearDtoPage = this.subjectYearQueryService.getAllSubjectYearDetails(page, size, sortBy, sortDir);
+        return this.getCourseworksForSubjectYearDto(subjectYearDtoPage);
     }
 
     @Override
@@ -120,7 +128,8 @@ public class SubjectYearServiceImpl implements SubjectYearService {
                 sortBy.add("subject.name");
             }
 
-            return this.subjectYearQueryService.getAllSubjectYearDetailsByExample(page, size, sortBy, sortDir, example);
+            Page<SubjectYearDto> subjectYearDtoPage = this.subjectYearQueryService.getAllSubjectYearDetailsByExample(page, size, sortBy, sortDir, example);
+            return this.getCourseworksForSubjectYearDto(subjectYearDtoPage);
         }
     }
 
@@ -136,12 +145,40 @@ public class SubjectYearServiceImpl implements SubjectYearService {
                 sortBy.add("subject.name");
             }
 
-            return this.subjectYearQueryService.getAllSubjectYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
+            Page<SubjectYearDto> subjectYearDtoPage = this.subjectYearQueryService.getAllSubjectYearDetailsByPredicate(page, size, sortBy, sortDir, predicate);
+            return this.getCourseworksForSubjectYearDto(subjectYearDtoPage);
         }
     }
 
     @Override
     public List<YearDropdown> getAllSubjectYearForDropdown() {
         return this.subjectYearQueryService.getAllSubjectYearForDropdown();
+    }
+
+    private Page<SubjectYearDto> getCourseworksForSubjectYearDto(Page<SubjectYearDto> subjectYearDtoPage) {
+        List<Long> ids = subjectYearDtoPage
+                .getContent()
+                .stream()
+                .map(SubjectYearDto::getId)
+                .collect(
+                        Collectors
+                                .toCollection(
+                                        CopyOnWriteArrayList::new
+                                )
+                );
+        List<Coursework> courseworks = this.courseworkService.getAllBySubjectIds(ids);
+
+        return subjectYearDtoPage
+                .map(dto -> {
+                    List<Coursework> subjectCourseworks = courseworks
+                            .stream()
+                            .filter(w ->
+                                    w.getSubject().getId().equals(dto.getId())
+                            ).collect(
+                                    Collectors.toCollection(CopyOnWriteArrayList::new)
+                            );
+                    dto.setCourseworks(subjectCourseworks);
+                    return dto;
+                });
     }
 }

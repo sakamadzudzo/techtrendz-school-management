@@ -1,6 +1,15 @@
 import { sanitizeForWhatsapp } from "@/utils/helpers";
 import { StudentView } from "@/utils/types";
-import { Card, CardBody, Spacer, Link, Divider, CardHeader } from "@heroui/react";
+import {
+  Card,
+  CardBody,
+  Spacer,
+  Link,
+  Divider,
+  CardHeader,
+  CardFooter,
+  Button,
+} from "@heroui/react";
 import MyChip from "./MyChip";
 
 export default function StudentViewCard({ student }: { student: StudentView }) {

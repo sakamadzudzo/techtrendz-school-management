@@ -162,9 +162,9 @@ export default function SchoolEdit({
       }
       decrementLoading();
     } catch (err: any) {
-      setError("Network/Server error");
+      setError("Netcoursework/Server error");
       setStatusCode(err.status ?? 500);
-      useToastError({ error: "Network/Server error", statusCode: err.status ?? 500 });
+      useToastError({ error: "Netcoursework/Server error", statusCode: err.status ?? 500 });
       decrementLoading();
     }
   };
@@ -269,7 +269,7 @@ export default function SchoolEdit({
             variant="underlined"
           />
         </div>
-        <Button type="submit" color="primary" className="w-full px-5">
+        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
           Save
         </Button>
       </Form>

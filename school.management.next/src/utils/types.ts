@@ -206,6 +206,7 @@ export type SubjectView = {
   datestamp: Date | string;
   status: string;
   subjectId: number;
+  courseworks: Coursework[];
 };
 
 export type StudentView = {
@@ -301,6 +302,47 @@ export type UserView = {
   avatarUrl: string;
   imagesUrls: string[];
 };
+
+export type Coursework = {
+  id: number;
+  title: string;
+  type: CourseworkType;
+  subject: SubjectYear;
+  status: string;
+  datestamp: Date | string;
+  subjectName: string;
+  total: number;
+  passMark: number;
+  marks?: Mark[];
+};
+
+export type Mark = {
+  id: number;
+  coursework: Coursework;
+  student: Student;
+  mark: number;
+  subjectName: string;
+  status: string;
+  datestamp: Date | string;
+};
+
+export type ActivityPoint = {
+  id: number;
+  extraCurricularYear: ExtraCurricularYear;
+  student: Student;
+  passPercentage: number;
+  percentage: number;
+  status: string;
+  datestamp: Date | string;
+};
+
+export enum CourseworkType {
+  ASSIGNMENT = "ASSIGNMENT",
+  QUIZ = "QUIZ",
+  TEST = "TEST",
+  PRACTICAL = "PRACTICAL",
+  EXTRA = "EXTRA",
+}
 
 export enum Status {
   ACTIVE = "ACTIVE",

@@ -14,7 +14,7 @@ export default function Settings() {
     {
       key: "",
       title: "Pick one",
-      description: "Pick a section to work on",
+      description: "Pick a section to coursework on",
       content: <Default />,
     },
     {
@@ -63,7 +63,7 @@ export default function Settings() {
 const Default = () => {
   return (
     <div className="w-full h-full flex items-center justify-center">
-      Pick a section to work on
+      Pick a section to coursework on
     </div>
   );
 };

@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Audited
-public class Student extends Base{
+public class Student extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +43,10 @@ public class Student extends Base{
 
     public Student(long id) {
         this.id = id;
+    }
+
+    public Student(Long id, Person person) {
+        this.id = id;
+        this.person = person;
     }
 }

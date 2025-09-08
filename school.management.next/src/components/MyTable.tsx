@@ -67,6 +67,7 @@ type MyTableProps = {
   prevPage?: React.Dispatch<React.SetStateAction<number>>;
   setSize?: React.Dispatch<React.SetStateAction<number>>;
   statusOptions?: string[];
+  statusCol?: string;
   columns: Column[];
   rows?: any[];
   sortDescriptor?: SortDescriptor;
@@ -102,6 +103,7 @@ export default function MyTable(props: MyTableProps) {
     prevPage,
     setSize,
     statusOptions,
+    statusCol,
     columns,
     rows,
     sortDescriptor,
@@ -239,8 +241,10 @@ export default function MyTable(props: MyTableProps) {
       Array.from(statusFilter).length !== statusOptions?.length
     ) {
       filtered = filtered.filter((row) => {
-        if (!("status" in row)) return true;
-        return Array.from(statusFilter).includes(row.status);
+        if (!(statusCol ?? "status" in row)) return true;
+        return Array.from(statusFilter).includes(
+          statusCol ? row[statusCol] : row.status
+        );
       });
     }
 

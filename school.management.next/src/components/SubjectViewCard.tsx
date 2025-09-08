@@ -8,7 +8,9 @@ import {
   Spacer,
   CardFooter,
   Link,
+  Button,
 } from "@heroui/react";
+import { BookOpenTextIcon } from "@phosphor-icons/react";
 
 export default function SubjectViewCard({ subject }: { subject: SubjectView }) {
   if (subject) {
@@ -182,6 +184,14 @@ export default function SubjectViewCard({ subject }: { subject: SubjectView }) {
           <div className="info-row">
             <div className="info-row-title">Calendar Year:</div>
             <div className="info-row-content">{subject?.calendarYear}</div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              color="primary"
+              endContent={<BookOpenTextIcon weight="thin" size={34} />}
+            >
+              View Marks
+            </Button>
           </div>
         </CardFooter>
       </Card>

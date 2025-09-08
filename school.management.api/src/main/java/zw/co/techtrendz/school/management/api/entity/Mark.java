@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import zw.co.techtrendz.school.management.api.enums.Grade;
+import zw.co.techtrendz.school.management.api.enums.Status;
+
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -19,48 +22,63 @@ public class Mark extends Base {
     private Long id;
 
     @ManyToOne
-    private Work work;
+    private Coursework coursework;
 
     @ManyToOne
     private Student student;
 
-    private Float total;
-
-    private Float passMark;
-
     private Float mark;
 
+    public Mark(Long id, Coursework coursework, Student student, Float mark, Status status, LocalDateTime datestamp) {
+        this(id, coursework, student, mark);
+        this.setStatus(status);
+        this.setDatestamp(datestamp);
+    }
+
+    public Mark(long id) {
+        this.id = id;
+    }
+
+    public String getSubjectName() {
+        String name = "";
+        if (this.coursework != null) {
+            name = this.coursework.getSubjectName();
+        }
+
+        return name;
+    }
+
     public Grade getGrade() {
-        if (mark == null) {
+        if (mark == null || coursework == null || coursework.getTotal() == null) {
             return Grade.U;
         }
-        if (mark >= 95) {
+        if (mark / coursework.getTotal() >= 95) {
             return Grade.A_P;
-        } else if (mark >= 90) {
+        } else if (mark / coursework.getTotal() >= 90) {
             return Grade.A;
-        } else if (mark >= 85) {
+        } else if (mark / coursework.getTotal() >= 85) {
             return Grade.A_M;
-        } else if (mark >= 80) {
+        } else if (mark / coursework.getTotal() >= 80) {
             return Grade.B_P;
-        } else if (mark >= 75) {
+        } else if (mark / coursework.getTotal() >= 75) {
             return Grade.B;
-        } else if (mark >= 70) {
+        } else if (mark / coursework.getTotal() >= 70) {
             return Grade.B_M;
-        } else if (mark >= 65) {
+        } else if (mark / coursework.getTotal() >= 65) {
             return Grade.C_P;
-        } else if (mark >= 60) {
+        } else if (mark / coursework.getTotal() >= 60) {
             return Grade.C;
-        } else if (mark >= 55) {
+        } else if (mark / coursework.getTotal() >= 55) {
             return Grade.C_M;
-        } else if (mark >= 50) {
+        } else if (mark / coursework.getTotal() >= 50) {
             return Grade.D_P;
-        } else if (mark >= 40) {
+        } else if (mark / coursework.getTotal() >= 40) {
             return Grade.D;
-        } else if (mark >= 35) {
+        } else if (mark / coursework.getTotal() >= 35) {
             return Grade.D_M;
-        } else if (mark >= 30) {
+        } else if (mark / coursework.getTotal() >= 30) {
             return Grade.E;
-        } else if (mark >= 15) {
+        } else if (mark / coursework.getTotal() >= 15) {
             return Grade.F;
         } else {
             return Grade.U;

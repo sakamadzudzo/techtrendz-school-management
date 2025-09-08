@@ -3,10 +3,12 @@ package zw.co.techtrendz.school.management.api.view;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import zw.co.techtrendz.school.management.api.entity.Coursework;
 import zw.co.techtrendz.school.management.api.enums.Status;
 import zw.co.techtrendz.school.management.api.enums.SubjectType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -44,4 +46,6 @@ public class SubjectYearDto {
     private Status status;
 
     private Long subjectId;
+
+    private List<Coursework> courseworks;
 }

@@ -5,8 +5,12 @@ import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Projections;
 import zw.co.techtrendz.school.management.api.entity.*;
+import zw.co.techtrendz.school.management.api.enums.Status;
+import zw.co.techtrendz.school.management.api.enums.CourseworkType;
 import zw.co.techtrendz.school.management.api.view.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ViewProjectionUtils {
@@ -117,7 +121,8 @@ public class ViewProjectionUtils {
                 new NullExpression<>(Long.class),
                 subjectYear.datestamp,
                 subjectYear.status,
-                subjectYear.subject.id
+                subjectYear.subject.id,
+                new NullExpression<>(List.class)
         );
     }
 
@@ -160,7 +165,8 @@ public class ViewProjectionUtils {
                 classroomYear.id,
                 subjectYear.datestamp,
                 subjectYear.status,
-                subjectYear.subject.id
+                subjectYear.subject.id,
+                new NullExpression<>(List.class)
         );
     }
 
@@ -203,7 +209,8 @@ public class ViewProjectionUtils {
                 new NullExpression<>(Long.class),
                 subjectYear.datestamp,
                 subjectYear.status,
-                subjectYear.subject.id
+                subjectYear.subject.id,
+                new NullExpression<>(List.class)
         );
     }
 
@@ -441,23 +448,112 @@ public class ViewProjectionUtils {
         );
     }
 
-    public static ConstructorExpression<Work> getWorkProjection() {
-        QWork work = QWork.work;
+    public static ConstructorExpression<Coursework> getCourseworkProjection() {
+        QCoursework coursework = QCoursework.coursework;
 
-        return Projections.constructor(Work.class,
-                work.id,
-                work.type,
-                work.status,
-                work.datestamp,
+        return Projections.constructor(Coursework.class,
+                coursework.id,
+                coursework.title,
+                coursework.type,
                 Projections.constructor(SubjectYear.class,
-                        work.subject.id,
-                        new NullExpression<>(Integer.class), // calendarYear
-                        new NullExpression<>(Subject.class), // subject
-                        new NullExpression<>(Teacher.class),   // teacher
-                        new NullExpression<>(List.class),   // classrooms
-                        new NullExpression<>(String.class), // status
-                        new NullExpression<>(DateTime.class)  // datestamp
-                )
+                        coursework.subject.id,
+                        Projections.constructor(Subject.class,
+                                coursework.subject.subject.id,
+                                coursework.subject.subject.name),
+                        new NullExpression<>(Integer.class),
+                        new NullExpression<>(Teacher.class),
+                        new NullExpression<>(List.class)
+                ),
+                coursework.total,
+                coursework.passMark,
+                coursework.status,
+                coursework.datestamp
+        );
+    }
+
+    public static ConstructorExpression<Mark> getMarkProjection() {
+        QMark mark = QMark.mark1;
+
+        return Projections.constructor((Mark.class),
+                mark.id,
+                Projections.constructor(Coursework.class,
+                        mark.coursework.id,
+                        new NullExpression<>(String.class),
+                        new NullExpression<>(CourseworkType.class),
+                        Projections.constructor(SubjectYear.class,
+                                mark.coursework.subject.id,
+                                new NullExpression<>(Subject.class),
+                                new NullExpression<>(Integer.class),
+                                new NullExpression<>(Teacher.class),
+                                new NullExpression<>(List.class)
+                        ),
+                        mark.coursework.total,
+                        mark.coursework.passMark,
+                        mark.coursework.status,
+                        mark.coursework.datestamp
+                ),
+                Projections.constructor(Student.class,
+                        mark.student.id,
+                        Projections.constructor(Person.class,
+                                mark.student.person.id,
+                                mark.student.person.salutation,
+                                mark.student.person.firstName,
+                                mark.student.person.otherNames,
+                                mark.student.person.lastName,
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(LocalDate.class)
+                        )
+                ),
+                mark.mark,
+                mark.status,
+                mark.datestamp
+        );
+    }
+
+    public static ConstructorExpression<ActivityPoint> getActivityPoints() {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return Projections.constructor(ActivityPoint.class,
+                activityPoint.id,
+                Projections.constructor(ExtraCurricularYear.class,
+                        activityPoint.extraCurricularYear.id,
+                        new NullExpression<>(Integer.class),
+                        new NullExpression<>(ExtraCurricular.class),
+                        new NullExpression<>(List.class),
+                        new NullExpression<>(List.class)
+                ),
+                Projections.constructor(Student.class,
+                        activityPoint.student.id,
+                        Projections.constructor(Person.class,
+                                activityPoint.student.person.id,
+                                activityPoint.student.person.salutation,
+                                activityPoint.student.person.firstName,
+                                activityPoint.student.person.otherNames,
+                                activityPoint.student.person.lastName,
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(LocalDate.class)
+                        ),
+                        new NullExpression<>(Integer.class),
+                        new NullExpression<>(Integer.class),
+                        new NullExpression<>(ClassroomYear.class),
+                        new NullExpression<>(ExtraCurricularYear.class),
+                        new NullExpression<>(DormYear.class),
+                        new NullExpression<>(School.class)
+                ),
+                activityPoint.passPercentage,
+                activityPoint.percentage
         );
     }
 }
