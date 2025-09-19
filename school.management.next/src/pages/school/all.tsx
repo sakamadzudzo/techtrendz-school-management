@@ -75,9 +75,9 @@ export default function AllSchoolsPage() {
 
   const rows = React.useMemo(() => {
     if (!schools) return [];
-    return (schools.content ?? []).map((row: any) => ({
+    return (schools.content || []).map((row: any) => ({
       ...row,
-      key: row.id ?? row._id ?? row.name,
+      key: row.id || row._id || row.name,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

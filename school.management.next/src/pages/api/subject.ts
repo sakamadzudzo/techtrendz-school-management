@@ -20,7 +20,7 @@ async function saveSubject(subjectDto: any, authHeader: any) {
     let backendError = "Subject creation failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -42,7 +42,7 @@ async function getSubjects(authHeader: any, query: any) {
     let backendError = "Fetching subjects failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -62,7 +62,7 @@ async function getSubjectsList(authHeader: any, query: any) {
     let backendError = "Fetching subjects failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -88,7 +88,7 @@ async function getSubjectsByFilter(authHeader: any, query: any) {
     let backendError = "Fetching subjects failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -124,7 +124,7 @@ async function getSubjectById(subjectId: string, authHeader: any) {
     let backendError = "Fetching subject failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -155,7 +155,7 @@ async function getSubjectsByExample(
     let backendError = "Fetching subjects by example failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -223,10 +223,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message ?? "Internal server error" });
+        .json({ error: err.message || "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message ?? "Internal server error" });
+      .json({ error: err.message || "Internal server error" });
   }
 }

@@ -36,7 +36,7 @@ export function useClassroomYearsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction ?? "DESC",
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -71,8 +71,8 @@ export function useClassroomYearsAllByFilter({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction ?? "DESC",
-    filter: filter ?? "",
+    direction: direction || "DESC",
+    filter: filter || "",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch

@@ -5,7 +5,7 @@ import { useClassroomById } from "@/hooks/useClassrooms";
 import { RootState } from "@/store/store";
 import { Errors, Classroom } from "@/utils/types";
 import { Form, Button, Input, Textarea } from "@heroui/react";
-import { PaletteIcon } from "@phosphor-icons/react";
+import { FloppyDiskIcon, PaletteIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -105,20 +105,19 @@ export default function ClassroomEdit({
       });
       const data = await res.json();
       if (!res.ok) {
-        const err = data.error ?? "Saving classroom failed";
-        const code = res.status ?? 500;
+        const err = data.error || "Saving classroom failed";
+        const code = res.status || 500;
         setError(err);
         setStatusCode(code);
         useToastError({ error: err, statusCode: code });
-        decrementLoading();
         return;
       } else if (data?.id) {
         router.push(`/classroom/one?id=${data?.id}`);
       }
-      decrementLoading();
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
+    } finally {
       decrementLoading();
     }
   };
@@ -137,7 +136,7 @@ export default function ClassroomEdit({
             name="name"
             placeholder="Enter the classroom name"
             type="text"
-            value={classroom.name ?? ""}
+            value={classroom.name || ""}
             errorMessage={errors?.name}
             isInvalid={!!errors?.name}
             onValueChange={(e) => setClassroom({ ...classroom, name: e })}
@@ -151,7 +150,7 @@ export default function ClassroomEdit({
             name="description"
             placeholder="Enter classroom description"
             type="text"
-            value={classroom.description ?? ""}
+            value={classroom.description || ""}
             errorMessage={errors?.description}
             isInvalid={!!errors?.description}
             onValueChange={(e) =>
@@ -162,7 +161,13 @@ export default function ClassroomEdit({
             className="placeholder:text-ellipsis"
           />
         </div>
-        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
+        <Button
+          type="submit"
+          color="primary"
+          className="button"
+          onPress={validate}
+          endContent={<FloppyDiskIcon weight="thin" size={25} />}
+        >
           Save
         </Button>
       </Form>

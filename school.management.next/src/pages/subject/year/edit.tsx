@@ -7,7 +7,7 @@ import { RootState } from "@/store/store";
 import { Errors, SubjectYear, Subject, Teacher } from "@/utils/types";
 import { subjectViewToSubjectYear } from "@/utils/helpers";
 import { Form, Button, Select, SelectItem } from "@heroui/react";
-import { PaletteIcon } from "@phosphor-icons/react";
+import { FloppyDiskIcon, PaletteIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -130,16 +130,16 @@ export default function SubjectYearEdit({
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Saving subject year failed");
-        setStatusCode(res.status ?? 500);
+        setError(data.error || "Saving subject year failed");
+        setStatusCode(res.status || 500);
         return;
       } else if (data?.id) {
         router.push(`/subject/year/one?id=${data?.id}`);
       }
-      decrementLoading();
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
+    } finally {
       decrementLoading();
     }
   };
@@ -215,7 +215,13 @@ export default function SubjectYearEdit({
             })}
           </Select>
         </div>
-        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
+        <Button
+          type="submit"
+          color="primary"
+          className="button"
+          onPress={validate}
+          endContent={<FloppyDiskIcon weight="thin" size={25} />}
+        >
           Save
         </Button>
       </Form>

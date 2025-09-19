@@ -12,11 +12,11 @@ import { formatDate } from "@/utils/helpers";
 import MyChip from "@/components/MyChip";
 import TeacherViewCard from "@/components/TeacherViewCard";
 import useToastError from "@/hooks/toasts/ToastError";
-import { useEffect, useState } from "react";
-import CourseworkViewCard from "@/components/CourseworkViewCard";
+import { useEffect, useMemo, useState } from "react";
 import { ViewCourseworks } from "@/components/ViewCourseworks";
 import { AddCoursework } from "@/components/AddCoursework";
 import { Coursework } from "@/utils/types";
+import { useStudentsDropdownForSubject } from "@/hooks/useStudents";
 
 export default function OneSubjectYearPage({
   incrementLoading,
@@ -27,10 +27,15 @@ export default function OneSubjectYearPage({
 }) {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
-  const { subjectYear, isLoading, isError } = useSubjectYearById(id!);
+  let { subjectYear, isLoading, isError, mutate } = useSubjectYearById(id!);
   const [viewCourseworksOpen, setViewCourseworksOpen] = useState(false);
   const [addCourseworksOpen, setAddCourseworksOpen] = useState(false);
   const [coursework, setCoursework] = useState<Coursework>({} as Coursework);
+  const {
+    students,
+    isLoading: studentsLoading,
+    isError: studentsError,
+  } = useStudentsDropdownForSubject(id ? id : undefined);
 
   useEffect(() => {
     isError &&
@@ -40,20 +45,30 @@ export default function OneSubjectYearPage({
       });
   }, [isError]);
 
+  useEffect(() => {
+    studentsError &&
+      useToastError({
+        error: studentsError?.message,
+        statusCode: studentsError?.statusCode,
+      });
+  }, [studentsError]);
+
   return (
     <>
       <ViewCourseworks
         courseworks={subjectYear?.courseworks}
-        key={`view-courseworks-on-subject`}
+        key={`view-courseworks-on-subject-${isLoading}`}
         isOpen={viewCourseworksOpen}
         onOpenChange={setViewCourseworksOpen}
         subjectName={subjectYear?.name}
         subjectId={subjectYear?.id}
+        students={students}
         incrementLoading={incrementLoading}
         decrementLoading={decrementLoading}
         addCourseworksOpen={addCourseworksOpen}
         setAddCourseworksOpen={setAddCourseworksOpen}
         setEditCoursework={setCoursework}
+        reloadTrigger={mutate}
       />
       <AddCoursework
         key={`${
@@ -67,6 +82,7 @@ export default function OneSubjectYearPage({
         subjectYearId={subjectYear?.id}
         incrementLoading={incrementLoading}
         decrementLoading={decrementLoading}
+        reloadTrigger={mutate}
         coursework={coursework}
       />
       <div className="grow overflow-auto">

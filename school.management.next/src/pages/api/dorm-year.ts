@@ -20,7 +20,7 @@ async function saveDormYear(dormYearDto: any, authHeader: any) {
     let backendError = "Dorm year creation failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -42,7 +42,7 @@ async function getDormYears(authHeader: any, query: any) {
     let backendError = "Fetching dorm years failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -68,7 +68,7 @@ async function getDormYearsByFilter(authHeader: any, query: any) {
     let backendError = "Fetching dorm years failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -104,7 +104,7 @@ async function getDormYearById(dormYearId: string, authHeader: any) {
     let backendError = "Fetching dorm year failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -135,7 +135,7 @@ async function getDormYearsByExample(
     let backendError = "Fetching dorm years by example failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -151,7 +151,7 @@ async function getDormYearsDropdown(authHeader: any) {
     let backendError = "Fetching dorm years failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -219,10 +219,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message ?? "Internal server error" });
+        .json({ error: err.message || "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message ?? "Internal server error" });
+      .json({ error: err.message || "Internal server error" });
   }
 }

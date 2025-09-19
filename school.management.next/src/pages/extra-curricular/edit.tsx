@@ -5,7 +5,7 @@ import { useExtraCurricularById } from "@/hooks/useExtraCurriculars";
 import { RootState } from "@/store/store";
 import { Errors, ExtraCurricular } from "@/utils/types";
 import { Form, Button, Input, Textarea } from "@heroui/react";
-import { PaletteIcon } from "@phosphor-icons/react";
+import { FloppyDiskIcon, PaletteIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -120,8 +120,8 @@ export default function ExtraCurricularEdit({
       const data = await res.json();
 
       if (!res.ok) {
-        const err = data.error ?? "Saving extra curricula failed";
-        const code = res.status ?? 500;
+        const err = data.error || "Saving extra curricula failed";
+        const code = res.status || 500;
         setError(err);
         setStatusCode(code);
         useToastError({ error: err, statusCode: code });
@@ -129,10 +129,10 @@ export default function ExtraCurricularEdit({
       } else if (data?.id) {
         router.push(`/extra-curricular/one?id=${data?.id}`);
       }
-      decrementLoading();
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
+    } finally {
       decrementLoading();
     }
   };
@@ -151,7 +151,7 @@ export default function ExtraCurricularEdit({
             name="name"
             placeholder="Enter activity name"
             type="text"
-            value={extraCurricular.name ?? ""}
+            value={extraCurricular.name || ""}
             errorMessage={errors?.name}
             isInvalid={!!errors?.name}
             onValueChange={(e) =>
@@ -167,7 +167,7 @@ export default function ExtraCurricularEdit({
             name="description"
             placeholder="Enter description"
             type="text"
-            value={extraCurricular.description ?? ""}
+            value={extraCurricular.description || ""}
             errorMessage={errors?.description}
             isInvalid={!!errors?.description}
             onValueChange={(e) =>
@@ -178,7 +178,13 @@ export default function ExtraCurricularEdit({
             className="placeholder:text-ellipsis"
           />
         </div>
-        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
+        <Button
+          type="submit"
+          color="primary"
+          className="button"
+          onPress={validate}
+          endContent={<FloppyDiskIcon weight="thin" size={25} />}
+        >
           Save
         </Button>
       </Form>

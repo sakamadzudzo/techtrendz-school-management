@@ -71,7 +71,7 @@ export default function OneStudentPage() {
                     className="cursor-pointer w-full h-full"
                   >
                     {!student?.avatarUrl &&
-                      getInitials(student?.name ?? "User")}
+                      getInitials(student?.name || "User")}
                   </Avatar>
                 )}
               </div>

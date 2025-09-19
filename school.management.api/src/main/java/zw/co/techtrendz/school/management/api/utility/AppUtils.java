@@ -47,10 +47,10 @@ public class AppUtils {
         if (user.getPerson().getEmail() == null || user.getPerson().getEmail().isEmpty()) {
             throw new UserCreationException("Email cannot be null or empty");
         }
-        if (userService.existsByEmail(user.getPerson().getEmail())) {
+        if (userService.existsByEmail(user.getPerson().getEmail(), user.getId())) {
             throw new UserCreationException("Email already in use");
         }
-        if (userService.existsByUsername(user.getUsername())) {
+        if (userService.existsByUsername(user.getUsername(), user.getId())) {
             throw new UserCreationException("Username already in use");
         }
     }

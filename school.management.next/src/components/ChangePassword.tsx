@@ -51,11 +51,11 @@ export const ChangePassword = () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Password change failed");
-        setStatusCode(res.status ?? 500);
+        setError(data.error || "Password change failed");
+        setStatusCode(res.status || 500);
         useToastError({
-          error: data.error ?? "Password change failed",
-          statusCode: res.status ?? 500,
+          error: data.error || "Password change failed",
+          statusCode: res.status || 500,
         });
         return;
       }
@@ -64,17 +64,17 @@ export const ChangePassword = () => {
       setNewPassword("");
       setConfirmPassword("");
       setMessage("Password changed successfully!");
-      setStatusCode(res.status ?? 200);
+      setStatusCode(res.status || 200);
       useToastSuccess({
         description: "Password changed successfully!",
-        statusCode: res.status ?? 200,
+        statusCode: res.status || 200,
       });
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
       useToastError({
-        error: "Netcoursework/Server error",
-        statusCode: err.status ?? 500,
+        error: "Network/Server error",
+        statusCode: err.status || 500,
       });
     }
   };

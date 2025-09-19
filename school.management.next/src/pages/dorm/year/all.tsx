@@ -79,12 +79,12 @@ export default function AllDormYearsPage() {
 
   const rows = React.useMemo(() => {
     if (!dormYears) return [];
-    return (dormYears.content ?? []).map((row: any) => ({
+    return (dormYears.content || []).map((row: any) => ({
       ...row,
-      key: row.id ?? row._id ?? row.name,
-      "dorm.name": row.dorm?.name ?? row.name,
-      "dorm.description": row.dorm?.description ?? row.description,
-      "dorm.address": row.dorm?.address ?? row.address,
+      key: row.id || row._id || row.name,
+      "dorm.name": row.dorm?.name || row.name,
+      "dorm.description": row.dorm?.description || row.description,
+      "dorm.address": row.dorm?.address || row.address,
       "dorm.school.name": row.dorm.school?.name,
       datestamp: formatDate(row.datestamp),
       actions: [

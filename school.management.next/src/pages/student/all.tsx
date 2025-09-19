@@ -79,12 +79,12 @@ export default function AllStudentsPage() {
 
   const rows = React.useMemo(() => {
     if (!students) return [];
-    return (students.content ?? []).map((row: any) => ({
+    return (students.content || []).map((row: any) => ({
       ...row,
-      key: row.id ?? row._id ?? row.name,
-      "person.firstName": row.person?.firstName ?? row.firstName,
-      "person.otherNames": row.person?.otherNames ?? row.otherNames,
-      "person.lastName": row.person?.lastName ?? row.lastName,
+      key: row.id || row._id || row.name,
+      "person.firstName": row.person?.firstName || row.firstName,
+      "person.otherNames": row.person?.otherNames || row.otherNames,
+      "person.lastName": row.person?.lastName || row.lastName,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

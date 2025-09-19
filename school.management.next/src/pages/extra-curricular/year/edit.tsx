@@ -15,7 +15,7 @@ import {
   Student,
 } from "@/utils/types";
 import { Form, Button, Input, Select, SelectItem } from "@heroui/react";
-import { PaletteIcon } from "@phosphor-icons/react";
+import { FloppyDiskIcon, PaletteIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -203,8 +203,8 @@ export default function ExtraCurricularYearEdit({
       });
       const data = await res.json();
       if (!res.ok) {
-        const err = data.error ?? "Saving extra curricular year failed";
-        const code = res.status ?? 500;
+        const err = data.error || "Saving extra curricular year failed";
+        const code = res.status || 500;
         setError(err);
         setStatusCode(code);
         useToastError({ error: err, statusCode: code });
@@ -212,10 +212,10 @@ export default function ExtraCurricularYearEdit({
       } else if (data?.id) {
         router.push(`/extra-curricular/year/one?id=${data?.id}`);
       }
-      decrementLoading();
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
+    } finally {
       decrementLoading();
     }
   };
@@ -273,7 +273,7 @@ export default function ExtraCurricularYearEdit({
           <Select
             label="Facilitators"
             selectedKeys={
-              extraCurricularYear?.facilitators?.map((t) => String(t.id)) ?? []
+              extraCurricularYear?.facilitators?.map((t) => String(t.id)) || []
             }
             errorMessage={errors?.facilitators?.general}
             isInvalid={!!errors?.facilitators?.general}
@@ -296,7 +296,7 @@ export default function ExtraCurricularYearEdit({
           <Select
             label="Students"
             selectedKeys={
-              extraCurricularYear?.students?.map((s) => String(s.id)) ?? []
+              extraCurricularYear?.students?.map((s) => String(s.id)) || []
             }
             errorMessage={errors?.students?.general}
             isInvalid={!!errors?.students?.general}
@@ -317,7 +317,13 @@ export default function ExtraCurricularYearEdit({
             ))}
           </Select>
         </div>
-        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
+        <Button
+          type="submit"
+          color="primary"
+          className="button"
+          onPress={validate}
+          endContent={<FloppyDiskIcon weight="thin" size={25} />}
+        >
           Save
         </Button>
       </Form>

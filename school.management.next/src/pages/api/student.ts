@@ -20,7 +20,7 @@ async function saveStudent(studentDto: any, authHeader: any) {
     let backendError = "Student creation failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -42,7 +42,7 @@ async function getStudents(authHeader: any, query: any) {
     let backendError = "Fetching students failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -68,7 +68,7 @@ async function getStudentsByFilter(authHeader: any, query: any) {
     let backendError = "Fetching students failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -104,7 +104,7 @@ async function getStudentById(studentId: string, authHeader: any) {
     let backendError = "Fetching student failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -135,7 +135,24 @@ async function getStudentsByExample(
     let backendError = "Fetching students by example failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
+  return res.json();
+}
+
+async function getStudentsDropdownByExample(authHeader: any, exampleDto: any) {
+  const res = await fetch(`${API_BASE}/dropdown/get/all/by/example`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeader },
+    body: JSON.stringify(exampleDto),
+  });
+  if (!res.ok) {
+    let backendError = "Fetching students failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -151,7 +168,52 @@ async function getStudentsDropdown(authHeader: any) {
     let backendError = "Fetching students failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
+  return res.json();
+}
+
+async function getStudentsDropdownForSubject(authHeader: any, query: any) {
+  const params = new URLSearchParams();
+  if (query.subjectYearId) params.append("subjectYearId", query.subjectYearId);
+
+  const res = await fetch(
+    `${API_BASE}/dropdown/get/all/for/subject?${params.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json", ...authHeader },
+    }
+  );
+  if (!res.ok) {
+    let backendError = "Fetching students failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
+    } catch {}
+    throw new ApiError(backendError, res.status);
+  }
+  return res.json();
+}
+
+async function getStudentsDropdownForClassroom(authHeader: any, query: any) {
+  const params = new URLSearchParams();
+  if (query.classroomYearId)
+    params.append("classroomYearId", query.classroomYearId);
+
+  const res = await fetch(
+    `${API_BASE}/dropdown/get/all/for/classroom?${params.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json", ...authHeader },
+    }
+  );
+  if (!res.ok) {
+    let backendError = "Fetching students failed";
+    try {
+      const errorBody = await res.json();
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -179,6 +241,10 @@ export default async function handler(
         );
         return res.status(200).json(data);
       }
+      if (action === "dropdown") {
+        const data = await getStudentsDropdownByExample(req.body, authHeader);
+        return res.status(200).json(data);
+      }
     }
 
     if (req.method === "GET") {
@@ -196,6 +262,17 @@ export default async function handler(
       }
       if (action === "dropdown") {
         const data = await getStudentsDropdown(authHeader);
+        return res.status(200).json(data);
+      }
+      if (action === "subject") {
+        const data = await getStudentsDropdownForSubject(authHeader, req.query);
+        return res.status(200).json(data);
+      }
+      if (action === "classroom") {
+        const data = await getStudentsDropdownForClassroom(
+          authHeader,
+          req.query
+        );
         return res.status(200).json(data);
       }
     }
@@ -219,10 +296,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message ?? "Internal server error" });
+        .json({ error: err.message || "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message ?? "Internal server error" });
+      .json({ error: err.message || "Internal server error" });
   }
 }

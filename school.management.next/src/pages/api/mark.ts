@@ -19,7 +19,7 @@ async function saveMark(markDto: any, authHeader: any) {
     let backendError = "Mark creation failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -36,7 +36,7 @@ async function saveAllMarks(marksDto: any[], authHeader: any) {
     let backendError = "Bulk mark creation failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -53,7 +53,7 @@ async function getMarkById(markId: string, authHeader: any) {
     let backendError = "Fetching mark failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -69,7 +69,7 @@ async function getAllMarks(authHeader: any) {
     let backendError = "Fetching all marks failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -86,7 +86,7 @@ async function getAllMarksByCourseworkId(courseworkId: string, authHeader: any) 
     let backendError = "Fetching marks by coursework failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -103,7 +103,7 @@ async function getAllMarksByStudentId(studentId: string, authHeader: any) {
     let backendError = "Fetching marks by student failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -120,7 +120,7 @@ async function getAllMarksBySubjectId(subjectId: string, authHeader: any) {
     let backendError = "Fetching marks by subject failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -141,7 +141,7 @@ async function getAllMarksBySubjectIdByCourseworkId(
     let backendError = "Fetching marks by subject and coursework failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -165,7 +165,7 @@ async function getAllMarksByStudentIdBySubjectId(
     let backendError = "Fetching marks by student and subject failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -186,7 +186,7 @@ async function getMarkByStudentIdByCourseworkId(
     let backendError = "Fetching mark by student and coursework failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -210,7 +210,7 @@ async function getAllMarksBySubjectIdByCourseworkType(
     let backendError = "Fetching marks by subject and coursework type failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -234,7 +234,7 @@ async function getAllMarksByStudentIdByCourseworkType(
     let backendError = "Fetching marks by student and coursework type failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -260,7 +260,7 @@ async function getAllMarksByStudentIdBySubjectIdByCourseworkType(
       "Fetching marks by student, subject, and coursework type failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -378,10 +378,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message ?? "Internal server error" });
+        .json({ error: err.message || "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message ?? "Internal server error" });
+      .json({ error: err.message || "Internal server error" });
   }
 }

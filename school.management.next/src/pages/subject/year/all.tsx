@@ -78,9 +78,9 @@ export default function AllSubjectYearsPage() {
 
   const rows = React.useMemo(() => {
     if (!subjectYears) return [];
-    return (subjectYears.content ?? []).map((row: any) => ({
+    return (subjectYears.content || []).map((row: any) => ({
       ...row,
-      key: row.id ?? row._id ?? row.name,
+      key: row.id || row._id || row.name,
       "subject.name": row.name,
       "subject.code": row.code,
       "subject.description": row.description,

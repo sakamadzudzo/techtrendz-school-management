@@ -163,8 +163,8 @@ export default function TeacherEdit({
       const data = await res.json();
 
       if (!res.ok) {
-        const err = data.error ?? "Sving teacher failed";
-        const code = res.status ?? 500;
+        const err = data.error || "Sving teacher failed";
+        const code = res.status || 500;
         setError(err);
         setStatusCode(code);
         useToastError({ error: err, statusCode: code });
@@ -172,11 +172,14 @@ export default function TeacherEdit({
       } else if (data?.id) {
         router.push(`/teacher/one?id=${data?.id}`);
       }
-      decrementLoading();
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
-      useToastError({ error: "Netcoursework/Server error", statusCode: err.status ?? 500 });
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
+      useToastError({
+        error: "Network/Server error",
+        statusCode: err.status || 500,
+      });
+    } finally {
       decrementLoading();
     }
   };
@@ -194,7 +197,7 @@ export default function TeacherEdit({
             name="salutation"
             placeholder="Enter salutation"
             type="text"
-            value={teacher.person?.salutation ?? ""}
+            value={teacher.person?.salutation || ""}
             errorMessage={errors?.person?.salutation}
             isInvalid={!!errors?.person?.salutation}
             onValueChange={(e) =>
@@ -211,7 +214,7 @@ export default function TeacherEdit({
             name="firstName"
             placeholder="Enter first name"
             type="text"
-            value={teacher.person?.firstName ?? ""}
+            value={teacher.person?.firstName || ""}
             errorMessage={errors?.person?.firstName}
             isInvalid={!!errors?.person?.firstName}
             onValueChange={(e) =>
@@ -228,7 +231,7 @@ export default function TeacherEdit({
             name="otherNames"
             placeholder="Enter other names"
             type="text"
-            value={teacher.person?.otherNames ?? ""}
+            value={teacher.person?.otherNames || ""}
             errorMessage={errors?.person?.otherNames}
             isInvalid={!!errors?.person?.otherNames}
             onValueChange={(e) =>
@@ -245,7 +248,7 @@ export default function TeacherEdit({
             name="lastName"
             placeholder="Enter last name"
             type="text"
-            value={teacher.person?.lastName ?? ""}
+            value={teacher.person?.lastName || ""}
             errorMessage={errors?.person?.lastName}
             isInvalid={!!errors?.person?.lastName}
             onValueChange={(e) =>
@@ -262,7 +265,7 @@ export default function TeacherEdit({
             name="email"
             placeholder="Enter email"
             type="email"
-            value={teacher.person?.email ?? ""}
+            value={teacher.person?.email || ""}
             errorMessage={errors?.person?.email}
             isInvalid={!!errors?.person?.email}
             onValueChange={(e) =>
@@ -279,7 +282,7 @@ export default function TeacherEdit({
             name="mobileNumber"
             placeholder="Enter mobile number"
             type="text"
-            value={teacher.person?.mobileNumber ?? ""}
+            value={teacher.person?.mobileNumber || ""}
             errorMessage={errors?.person?.mobileNumber}
             isInvalid={!!errors?.person?.mobileNumber}
             onValueChange={(e) => changeNumbers("mobileNumber", e)}
@@ -291,7 +294,7 @@ export default function TeacherEdit({
             name="mobileNumber2"
             placeholder="Enter secondary mobile number"
             type="text"
-            value={teacher.person?.mobileNumber2 ?? ""}
+            value={teacher.person?.mobileNumber2 || ""}
             errorMessage={errors?.person?.mobileNumber2}
             isInvalid={!!errors?.person?.mobileNumber2}
             onValueChange={(e) => changeNumbers("mobileNumber2", e)}
@@ -303,7 +306,7 @@ export default function TeacherEdit({
             name="telNumber"
             placeholder="Enter telephone number"
             type="text"
-            value={teacher.person?.telNumber ?? ""}
+            value={teacher.person?.telNumber || ""}
             errorMessage={errors?.person?.telNumber}
             isInvalid={!!errors?.person?.telNumber}
             onValueChange={(e) => changeNumbers("telNumber", e)}
@@ -315,7 +318,7 @@ export default function TeacherEdit({
             name="whatsapp"
             placeholder="Enter WhatsApp number"
             type="text"
-            value={teacher.person?.whatsapp ?? ""}
+            value={teacher.person?.whatsapp || ""}
             errorMessage={errors?.person?.whatsapp}
             isInvalid={!!errors?.person?.whatsapp}
             onValueChange={(e) => changeNumbers("whatsapp", e)}
@@ -327,7 +330,7 @@ export default function TeacherEdit({
             name="facebook"
             placeholder="Enter Facebook profile"
             type="text"
-            value={teacher.person?.facebook ?? ""}
+            value={teacher.person?.facebook || ""}
             errorMessage={errors?.person?.facebook}
             isInvalid={!!errors?.person?.facebook}
             onValueChange={(e) =>
@@ -344,7 +347,7 @@ export default function TeacherEdit({
             name="linkedin"
             placeholder="Enter LinkedIn profile"
             type="text"
-            value={teacher.person?.linkedin ?? ""}
+            value={teacher.person?.linkedin || ""}
             errorMessage={errors?.person?.linkedin}
             isInvalid={!!errors?.person?.linkedin}
             onValueChange={(e) =>
@@ -385,7 +388,7 @@ export default function TeacherEdit({
         <Button
           type="submit"
           color="primary"
-          className="w-full px-5"
+          className="button"
           endContent={<FloppyDiskIcon weight="thin" size={25} />}
         >
           Save

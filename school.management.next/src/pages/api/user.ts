@@ -20,7 +20,7 @@ async function saveUser(userDto: any, authHeader: any) {
     let backendError = "User creation failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -42,7 +42,7 @@ async function getUsers(authHeader: any, query: any) {
     let backendError = "Fetching users failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -68,7 +68,7 @@ async function getUsersByFilter(authHeader: any, query: any) {
     let backendError = "Fetching users failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -104,7 +104,7 @@ async function getUserById(userId: string, authHeader: any) {
     let backendError = "Fetching user failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -131,7 +131,7 @@ async function getUsersByExample(exampleDto: any, authHeader: any, query: any) {
     let backendError = "Fetching users by example failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -147,7 +147,7 @@ async function changePassword(passwordDto: any, authHeader: any) {
   if (!res.ok) {
     const response = await res.json();
     throw new ApiError(
-      response?.message ?? response?.error ?? "Password change failed",
+      response?.message || response?.error || "Password change failed",
       res.status
     );
   }
@@ -211,10 +211,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message ?? "Internal server error" });
+        .json({ error: err.message || "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message ?? "Internal server error" });
+      .json({ error: err.message || "Internal server error" });
   }
 }

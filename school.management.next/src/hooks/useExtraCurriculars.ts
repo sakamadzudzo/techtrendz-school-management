@@ -36,7 +36,7 @@ export function useExtraCurricularsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction ?? "DESC",
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -71,8 +71,8 @@ export function useExtraCurricularsAllByFilter({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction ?? "DESC",
-    filter: filter ?? "",
+    direction: direction || "DESC",
+    filter: filter || "",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -163,7 +163,7 @@ export function useExtraCurricularsList({
   const shouldFetch = !!token;
   const params = new URLSearchParams({
     sort: sort ? `${sort}` : "",
-    direction: direction ?? "DESC",
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch

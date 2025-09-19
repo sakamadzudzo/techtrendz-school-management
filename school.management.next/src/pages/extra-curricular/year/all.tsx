@@ -83,14 +83,14 @@ export default function AllExtraCurricularYearsPage() {
 
   const rows = React.useMemo(() => {
     if (!extraCurricularYears) return [];
-    return (extraCurricularYears.content ?? []).map((row: any) => ({
+    return (extraCurricularYears.content || []).map((row: any) => ({
       ...row,
-      key: row.id ?? row._id ?? row.name,
-      "extraCurricular.name": row.extraCurricular?.name ?? row.name,
+      key: row.id || row._id || row.name,
+      "extraCurricular.name": row.extraCurricular?.name || row.name,
       "extraCurricular.description":
-        row.extraCurricular?.description ?? row.description,
-      facilitators: row.facilitators?.length ?? 0,
-      students: row.students?.length ?? 0,
+        row.extraCurricular?.description || row.description,
+      facilitators: row.facilitators?.length || 0,
+      students: row.students?.length || 0,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

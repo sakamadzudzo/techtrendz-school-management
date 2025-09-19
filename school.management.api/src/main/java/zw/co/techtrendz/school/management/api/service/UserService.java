@@ -44,6 +44,12 @@ public interface UserService {
 
     public boolean existsByPhoneNumber(String phoneNumber);
 
+    public boolean existsByUsername(String username, Long id);
+
+    public boolean existsByEmail(String email, Long id);
+
+    public boolean existsByPhoneNumber(String phoneNumber, Long id);
+
     public void enableUser(Long id);
 
     public void disableUser(Long id);

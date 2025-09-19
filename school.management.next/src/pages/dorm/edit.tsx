@@ -15,7 +15,7 @@ import {
   SharedSelection,
 } from "@heroui/react";
 import { phoneNumberRegex } from "@/utils/helpers";
-import { HouseLineIcon } from "@phosphor-icons/react";
+import { FloppyDiskIcon, HouseLineIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -149,20 +149,19 @@ export default function DormEdit({
       const data = await res.json();
 
       if (!res.ok) {
-        const err = data.error ?? "Saving dorm failed";
-        const code = res.status ?? 500;
+        const err = data.error || "Saving dorm failed";
+        const code = res.status || 500;
         setError(err);
         setStatusCode(code);
         useToastError({ error: err, statusCode: code });
-        decrementLoading();
         return;
       } else if (data?.id) {
         router.push(`/dorm/one?id=${data?.id}`);
       }
-      decrementLoading();
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
+    } finally {
       decrementLoading();
     }
   };
@@ -181,7 +180,7 @@ export default function DormEdit({
             name="name"
             placeholder="Enter the dorm name"
             type="text"
-            value={dorm.name ?? ""}
+            value={dorm.name || ""}
             errorMessage={errors?.name}
             isInvalid={!!errors?.name}
             onValueChange={(e) => setDorm({ ...dorm, name: e })}
@@ -195,7 +194,7 @@ export default function DormEdit({
             name="description"
             placeholder="Enter your dorm's description"
             type="text"
-            value={dorm.description ?? ""}
+            value={dorm.description || ""}
             errorMessage={errors?.description}
             isInvalid={!!errors?.description}
             onValueChange={(e) => setDorm({ ...dorm, description: e })}
@@ -209,7 +208,7 @@ export default function DormEdit({
             name="address"
             placeholder="Enter your dorm's address"
             type="text"
-            value={dorm.address ?? ""}
+            value={dorm.address || ""}
             errorMessage={errors?.address}
             isInvalid={!!errors?.address}
             onValueChange={(e) => setDorm({ ...dorm, address: e })}
@@ -235,7 +234,13 @@ export default function DormEdit({
             ))}
           </Select>
         </div>
-        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
+        <Button
+          type="submit"
+          color="primary"
+          className="button"
+          onPress={validate}
+          endContent={<FloppyDiskIcon weight="thin" size={25} />}
+        >
           Save
         </Button>
       </Form>

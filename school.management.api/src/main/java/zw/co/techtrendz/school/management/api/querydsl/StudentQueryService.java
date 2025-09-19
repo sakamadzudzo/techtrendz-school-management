@@ -157,6 +157,111 @@ public class StudentQueryService {
                 ));
     }
 
+    public List<YearDropdown> getAllStudentsForDropdown(Example<Student> studentExample) {
+        QStudent student = QStudent.student;
+
+        List<String> sortBy = List.of("person.lastName");
+        Sort.Direction sortDir = Sort.Direction.ASC;
+        List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
+
+        List<Tuple> results = queryFactory
+                .select(
+                        student.id,
+                        student.person.salutation,
+                        student.person.firstName,
+                        student.person.otherNames,
+                        student.person.lastName
+                )
+                .from(student)
+                .where(QuerydslUtils.toPredicate(studentExample, Student.class, "student"))
+                .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
+                .fetch();
+
+        return results.stream()
+                .map(tuple -> {
+                    String name = AppUtils.getFullname(tuple.get(student.person.salutation), tuple.get(student.person.firstName), tuple.get(student.person.otherNames), tuple.get(student.person.lastName));
+                    YearDropdown dto = new YearDropdown();
+                    dto.setId(tuple.get(student.id));
+                    dto.setName(name);
+                    return dto;
+                })
+                .collect(Collectors.toCollection(
+                        CopyOnWriteArrayList::new
+                ));
+    }
+
+    public List<YearDropdown> getAllStudentsForSubject(long subjectYearId) {
+        QStudent student = QStudent.student;
+        QClassroomYear classroomYear = QClassroomYear.classroomYear;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
+
+        List<String> sortBy = List.of("person.lastName");
+        Sort.Direction sortDir = Sort.Direction.ASC;
+        List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
+
+        List<Tuple> results = queryFactory
+                .select(
+                        student.id,
+                        student.person.salutation,
+                        student.person.firstName,
+                        student.person.otherNames,
+                        student.person.lastName
+                )
+                .from(student)
+                .leftJoin(student.classroom, classroomYear)
+                .leftJoin(classroomYear.subjects, subjectYear)
+                .where(subjectYear.id.eq(subjectYearId))
+                .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
+                .fetch();
+
+        return results.stream()
+                .map(tuple -> {
+                    String name = AppUtils.getFullname(tuple.get(student.person.salutation), tuple.get(student.person.firstName), tuple.get(student.person.otherNames), tuple.get(student.person.lastName));
+                    YearDropdown dto = new YearDropdown();
+                    dto.setId(tuple.get(student.id));
+                    dto.setName(name);
+                    return dto;
+                })
+                .collect(Collectors.toCollection(
+                        CopyOnWriteArrayList::new
+                ));
+    }
+
+    public List<YearDropdown> getAllStudentsForClassroom(long classroomYearId) {
+        QStudent student = QStudent.student;
+        QClassroomYear classroomYear = QClassroomYear.classroomYear;
+
+        List<String> sortBy = List.of("person.lastName");
+        Sort.Direction sortDir = Sort.Direction.ASC;
+        List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
+
+        List<Tuple> results = queryFactory
+                .select(
+                        student.id,
+                        student.person.salutation,
+                        student.person.firstName,
+                        student.person.otherNames,
+                        student.person.lastName
+                )
+                .from(student)
+                .leftJoin(student.classroom, classroomYear)
+                .where(classroomYear.id.eq(classroomYearId))
+                .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
+                .fetch();
+
+        return results.stream()
+                .map(tuple -> {
+                    String name = AppUtils.getFullname(tuple.get(student.person.salutation), tuple.get(student.person.firstName), tuple.get(student.person.otherNames), tuple.get(student.person.lastName));
+                    YearDropdown dto = new YearDropdown();
+                    dto.setId(tuple.get(student.id));
+                    dto.setName(name);
+                    return dto;
+                })
+                .collect(Collectors.toCollection(
+                        CopyOnWriteArrayList::new
+                ));
+    }
+
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {
         // Build sorting order
         Order order = sortDir == Sort.Direction.ASC ? Order.ASC : Order.DESC;

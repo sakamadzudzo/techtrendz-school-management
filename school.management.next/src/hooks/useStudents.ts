@@ -36,7 +36,7 @@ export function useStudentsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction ?? "DESC",
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -71,8 +71,8 @@ export function useStudentsAllByFilter({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction ?? "DESC",
-    filter: filter ?? "",
+    direction: direction || "DESC",
+    filter: filter || "",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -160,6 +160,103 @@ export function useStudentsDropdown() {
     students: data as YearDropdown[],
     isLoading: shouldFetch && !error && !data,
     isError: error,
+    mutate,
+  };
+}
+
+export function useStudentsDropdownByExample(exampleDto: any) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const key =
+    exampleDto && token
+      ? [`/api/student?action=dropdown`, exampleDto, token]
+      : null;
+  const fetcherWithBody = async ([url, body, token]: [string, any, string]) => {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      throw new ApiError(
+        "Fetch failed: " + (await res.json()).error,
+        res.status
+      );
+    }
+    return res.json();
+  };
+  const { data, error, mutate } = useSWR(key, fetcherWithBody);
+  return {
+    students: data as YearDropdown[],
+    isLoading: !!exampleDto && !!token && !error && !data,
+    isError: error,
+    mutate,
+  };
+}
+
+export function useStudentsDropdownForSubject(
+  subjectYearId: string | undefined
+) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!subjectYearId && !!token;
+  const { data, error, mutate } = useSWR(
+    shouldFetch
+      ? [`/api/student?action=subject&subjectYearId=${subjectYearId}`, token]
+      : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+
+  let errorMessage: string | undefined = undefined;
+  let statusCode: number | undefined = undefined;
+  if (error instanceof ApiError) {
+    errorMessage = error.message;
+    statusCode = error.statusCode;
+  } else if (error && error.message) {
+    errorMessage = error.message;
+  }
+
+  return {
+    students: data as YearDropdown[],
+    isLoading: shouldFetch && !error && !data,
+    isError: error,
+    errorMessage,
+    statusCode,
+    mutate,
+  };
+}
+
+export function useStudentsDropdownForClassroom(
+  classroomYearId: string | undefined
+) {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const shouldFetch = !!classroomYearId && !!token;
+  const { data, error, mutate } = useSWR(
+    shouldFetch
+      ? [
+          `/api/student?action=classroom&classroomYearId=${classroomYearId}`,
+          token,
+        ]
+      : null,
+    ([url, token]) => fetcherWithAuth(url, token)
+  );
+
+  let errorMessage: string | undefined = undefined;
+  let statusCode: number | undefined = undefined;
+  if (error instanceof ApiError) {
+    errorMessage = error.message;
+    statusCode = error.statusCode;
+  } else if (error && error.message) {
+    errorMessage = error.message;
+  }
+
+  return {
+    students: data as YearDropdown[],
+    isLoading: shouldFetch && !error && !data,
+    isError: error,
+    errorMessage,
+    statusCode,
     mutate,
   };
 }

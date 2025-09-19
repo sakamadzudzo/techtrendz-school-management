@@ -16,7 +16,7 @@ import {
   PencilSimpleLineIcon,
   PhoneIcon,
   BriefcaseIcon,
-  ShareNetcourseworkIcon,
+  ShareNetworkIcon,
   ChalkboardTeacherIcon,
   FolderSimpleIcon,
   CheckIcon,
@@ -37,15 +37,15 @@ export default function OneUserPage() {
 
   const hasContactInfo: boolean = React.useMemo(() => {
     return !!(
-      user?.email ??
-      user?.mobileNumber ??
-      user?.mobileNumber2 ??
+      user?.email ||
+      user?.mobileNumber ||
+      user?.mobileNumber2 ||
       user?.telNumber
     );
   }, [user]);
 
   const hasSocials: boolean = React.useMemo(() => {
-    return !!(user?.whatsapp ?? user?.linkedin ?? user?.facebook);
+    return !!(user?.whatsapp || user?.linkedin || user?.facebook);
   }, [user]);
 
   const disabledKeys: string[] = React.useMemo(() => {
@@ -104,7 +104,7 @@ export default function OneUserPage() {
                     color="primary"
                     className="cursor-pointer w-full h-full"
                   >
-                    {!user?.avatarUrl && getInitials(user?.name ?? "User")}
+                    {!user?.avatarUrl && getInitials(user?.name || "User")}
                   </Avatar>
                 )}
               </div>
@@ -233,7 +233,7 @@ export default function OneUserPage() {
           aria-label="Online Presence"
           title="Online Presence"
           subtitle="Professional or social links."
-          startContent={<ShareNetcourseworkIcon weight="thin" size={34} />}
+          startContent={<ShareNetworkIcon weight="thin" size={34} />}
         >
           {user?.whatsapp && (
             <>

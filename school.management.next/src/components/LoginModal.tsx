@@ -53,11 +53,11 @@ export default function LoginModal({
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error ?? "Login failed");
-        setStatusCode(res.status ?? 500);
+        setError(data.error || "Login failed");
+        setStatusCode(res.status || 500);
         useToastError({
-          error: data.error ?? "Login failed",
-          statusCode: res.status ?? 500,
+          error: data.error || "Login failed",
+          statusCode: res.status || 500,
         });
         decrementLoading();
         return;
@@ -72,9 +72,9 @@ export default function LoginModal({
       onOpenChange(false);
       // router.push("/");
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
-      useToastError({ error: "Netcoursework/Server error", statusCode: err.status ?? 500 });
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
+      useToastError({ error: "Network/Server error", statusCode: err.status || 500 });
       decrementLoading();
     }
   };

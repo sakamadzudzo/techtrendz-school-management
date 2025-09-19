@@ -79,9 +79,9 @@ export default function AllSubjectsPage() {
 
   const rows = React.useMemo(() => {
     if (!subjects) return [];
-    return (subjects.content ?? []).map((row: any) => ({
+    return (subjects.content || []).map((row: any) => ({
       ...row,
-      key: row.id ?? row._id ?? row.name,
+      key: row.id || row._id || row.name,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

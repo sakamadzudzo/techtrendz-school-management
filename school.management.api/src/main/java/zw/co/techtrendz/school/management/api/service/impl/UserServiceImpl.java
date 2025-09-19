@@ -244,6 +244,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean existsByUsername(String username, Long id) {
+        if (id == null || id.equals(0L)) {
+            return this.existsByUsername(username);
+        }
+        BooleanExpression predicate = QuerydslUtils.exactMatch(User.class, "username", username, "user");
+        predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.exactMatch(User.class, "id", id, "user").not(), true);
+        UserDto userDto = this.userQueryService.getUserDetails(predicate);
+        return userDto != null && !userDto.getId().equals(0L);
+    }
+
+    @Override
+    public boolean existsByEmail(String email, Long id) {
+        if (id == null || id.equals(0L)) {
+            return this.existsByEmail(email);
+        }
+        BooleanExpression predicate = QuerydslUtils.exactMatch(User.class, "person.email", email, "user");
+        predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.exactMatch(User.class, "id", id, "user").not(), true);
+        UserDto userDto = this.userQueryService.getUserDetails(predicate);
+        return userDto != null && !userDto.getId().equals(0L);
+    }
+
+    @Override
+    public boolean existsByPhoneNumber(String phoneNumber, Long id) {
+        if (id == null || id.equals(0L)) {
+            return this.existsByPhoneNumber(phoneNumber);
+        }
+        BooleanExpression predicate = QuerydslUtils.exactMatch(User.class, "person.mobileNumber", phoneNumber, "user");
+        predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.exactMatch(User.class, "person.mobileNumber2", phoneNumber, "user"), false);
+        predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.exactMatch(User.class, "id", id, "user").not(), true);
+        UserDto userDto = this.userQueryService.getUserDetails(predicate);
+        return userDto != null && !userDto.getId().equals(0L);
+    }
+
+    @Override
     public void enableUser(Long id) {
         User user = this.userRepository.findById(id).orElse(null);
         if (user != null) {

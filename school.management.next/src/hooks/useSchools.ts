@@ -36,7 +36,7 @@ export function useSchoolsAll({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction ?? "DESC",
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch ? [`/api/school?action=all&${params.toString()}`, token] : null,
@@ -69,8 +69,8 @@ export function useSchoolsAllByFilter({
     page: String(page),
     size: String(size),
     sort: sort ? `${sort}` : "",
-    direction: direction ?? "DESC",
-    filter: filter ?? "",
+    direction: direction || "DESC",
+    filter: filter || "",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch
@@ -156,7 +156,7 @@ export function useSchoolsList({
   const shouldFetch = !!token;
   const params = new URLSearchParams({
     sort: sort ? `${sort}` : "",
-    direction: direction ?? "DESC",
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch

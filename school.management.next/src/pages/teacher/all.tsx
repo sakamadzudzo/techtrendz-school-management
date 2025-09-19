@@ -80,14 +80,14 @@ export default function AllTeachersPage() {
 
   const rows = React.useMemo(() => {
     if (!teachers) return [];
-    return (teachers.content ?? []).map((row: TeacherView | any) => ({
+    return (teachers.content || []).map((row: TeacherView | any) => ({
       ...row,
-      key: row.id ?? row._id ?? row.name,
-      "person.firstName": row.person?.firstName ?? row.firstName,
-      "person.otherNames": row.person?.otherNames ?? row.otherNames,
-      "person.lastName": row.person?.lastName ?? row.lastName,
-      classes: row.classrooms?.length ?? 0,
-      subjects: row.subjects?.length ?? 0,
+      key: row.id || row._id || row.name,
+      "person.firstName": row.person?.firstName || row.firstName,
+      "person.otherNames": row.person?.otherNames || row.otherNames,
+      "person.lastName": row.person?.lastName || row.lastName,
+      classes: row.classrooms?.length || 0,
+      subjects: row.subjects?.length || 0,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

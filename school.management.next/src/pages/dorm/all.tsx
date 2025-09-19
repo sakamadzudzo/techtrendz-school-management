@@ -79,9 +79,9 @@ export default function AllDormsPage() {
 
   const rows = React.useMemo(() => {
     if (!dorms) return [];
-    return (dorms.content ?? []).map((row: any) => ({
+    return (dorms.content || []).map((row: any) => ({
       ...row,
-      key: row.id ?? row._id ?? row.name,
+      key: row.id || row._id || row.name,
       "school.name": row.school?.name,
       datestamp: formatDate(row.datestamp),
       actions: [

@@ -194,6 +194,22 @@ public class StudentServiceImpl implements StudentService {
         return this.studentQueryService.getAllStudentsForDropdown();
     }
 
+    @Override
+    public List<YearDropdown> getAllStudentsForDropdown(Student student) {
+        Example<Student> studentExample = Example.of(student);
+        return this.studentQueryService.getAllStudentsForDropdown(studentExample);
+    }
+
+    @Override
+    public List<YearDropdown> getAllStudentsForSubjectYear(long subjectYearId) {
+        return this.studentQueryService.getAllStudentsForSubject(subjectYearId);
+    }
+
+    @Override
+    public List<YearDropdown> getAllStudentsForClassroomYear(long classroomYearId) {
+        return this.studentQueryService.getAllStudentsForClassroom(classroomYearId);
+    }
+
     private Page<StudentDto> getClassroomSubjects(Page<StudentDto> studentDtoPage) {
         List<Long> classroomIds = studentDtoPage.getContent().stream().map(student -> student.getClassroom().getId()).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
         List<SubjectYearDto> subjectYearDtoList = this.subjectYearQueryService.getSubjectYears(classroomIds);

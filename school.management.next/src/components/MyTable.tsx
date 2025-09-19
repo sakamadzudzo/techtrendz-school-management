@@ -79,6 +79,7 @@ type MyTableProps = {
   setFilterValue?: React.Dispatch<React.SetStateAction<string>>;
   searchBox?: boolean;
   addFunction?: () => void;
+  customAction?: React.ReactNode
 };
 
 export default function MyTable(props: MyTableProps) {
@@ -114,7 +115,8 @@ export default function MyTable(props: MyTableProps) {
     filterValue,
     setFilterValue,
     searchBox = true,
-    addFunction = () => {},
+    addFunction,
+    customAction
   } = props;
 
   const isStripped = true;
@@ -141,8 +143,8 @@ export default function MyTable(props: MyTableProps) {
     );
   }, [visibleColumns, columns]);
 
-  const actualSelectedKeys = selectedKeys ?? internalSelectedKeys;
-  const actualSetSelectedKeys = setSelectedKeys ?? setInternalSelectedKeys;
+  const actualSelectedKeys = selectedKeys || internalSelectedKeys;
+  const actualSetSelectedKeys = setSelectedKeys || setInternalSelectedKeys;
   const hasSearchFilter = Boolean(filterValue);
 
   const renderCell = React.useCallback((row: any, columnKey: React.Key) => {
@@ -241,7 +243,7 @@ export default function MyTable(props: MyTableProps) {
       Array.from(statusFilter).length !== statusOptions?.length
     ) {
       filtered = filtered.filter((row) => {
-        if (!(statusCol ?? "status" in row)) return true;
+        if (!(statusCol || "status" in row)) return true;
         return Array.from(statusFilter).includes(
           statusCol ? row[statusCol] : row.status
         );
@@ -280,31 +282,33 @@ export default function MyTable(props: MyTableProps) {
             </div>
           )}
           <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
-                  variant="flat"
+            {statusOptions?.length && (
+              <Dropdown>
+                <DropdownTrigger className="hidden sm:flex">
+                  <Button
+                    endContent={<ChevronDownIcon className="text-small" />}
+                    variant="flat"
+                  >
+                    Status
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  disallowEmptySelection
+                  aria-label="Statuses"
+                  closeOnSelect={false}
+                  selectedKeys={statusFilter}
+                  selectionMode="multiple"
+                  onSelectionChange={setStatusFilter}
                 >
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Statuses"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions! &&
-                  statusOptions.map((status) => (
-                    <DropdownItem key={status} className="capitalize">
-                      {capitalize(status)}
-                    </DropdownItem>
-                  ))}
-              </DropdownMenu>
-            </Dropdown>
+                  {statusOptions! &&
+                    statusOptions.map((status) => (
+                      <DropdownItem key={status} className="capitalize">
+                        {capitalize(status)}
+                      </DropdownItem>
+                    ))}
+                </DropdownMenu>
+              </Dropdown>
+            )}
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -329,13 +333,16 @@ export default function MyTable(props: MyTableProps) {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button
-              color="primary"
-              endContent={<PlusIcon />}
-              onPress={addFunction}
-            >
-              Add New
-            </Button>
+            {!!addFunction && (
+              <Button
+                color="primary"
+                endContent={<PlusIcon />}
+                onPress={addFunction}
+              >
+                Add New
+              </Button>
+            )}
+            {!!customAction && customAction}
           </div>
         </div>
         <div className="flex justify-between items-center">

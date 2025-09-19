@@ -26,6 +26,7 @@ type AddCourseworkProps = {
   onOpenChange: (open: boolean) => void;
   incrementLoading: () => void;
   decrementLoading: () => void;
+  reloadTrigger: () => void;
 };
 
 export const AddCoursework = ({
@@ -36,6 +37,7 @@ export const AddCoursework = ({
   onOpenChange,
   incrementLoading,
   decrementLoading,
+  reloadTrigger,
 }: AddCourseworkProps) => {
   const router = useRouter();
   const token = useSelector((state: RootState) => state.auth.token);
@@ -54,7 +56,7 @@ export const AddCoursework = ({
   }, [isOpen]);
 
   useEffect(() => {
-    setCoursework(currentCoursework ?? ({} as Coursework));
+    setCoursework(currentCoursework || ({} as Coursework));
   }, [currentCoursework]);
 
   const validate = () => {
@@ -120,20 +122,20 @@ export const AddCoursework = ({
       const data = await res.json();
 
       if (!res.ok) {
-        const err = data.error ?? "Saving coursework failed";
-        const code = res.status ?? 500;
+        const err = data.error || "Saving coursework failed";
+        const code = res.status || 500;
         setError(err);
         setStatusCode(code);
         useToastError({ error: err, statusCode: code });
         decrementLoading();
         return;
       } else if (data?.id) {
-        router.reload();
+        reloadTrigger();
       }
       decrementLoading();
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
       decrementLoading();
     }
   };
@@ -152,9 +154,14 @@ export const AddCoursework = ({
       className="text-foreground"
     >
       <ModalContent className="overflow-y-auto max-h-full">
-        <ModalHeader className="text-xl font-bold">{`${
-          coursework ? "Edit" : "Add"
-        } coursework to { ${subjectName} }`}</ModalHeader>
+        <ModalHeader className="text-xl font-bold">
+          {`${
+            coursework?.id ? "Edit" : "Add"
+          } coursework to { ${subjectName} }`}
+          <Button color="primary" variant="ghost" onPress={reloadTrigger}>
+            Test
+          </Button>
+        </ModalHeader>
         <ModalBody>
           <Form onSubmit={onSubmit} className="space-y-3">
             <Input
@@ -162,7 +169,7 @@ export const AddCoursework = ({
               label="Title"
               name="title"
               placeholder="Enter title"
-              value={coursework.title ?? ""}
+              value={coursework.title || ""}
               errorMessage={errors?.title}
               isInvalid={!!errors?.title}
               onValueChange={(e) => setCoursework({ ...coursework, title: e })}
@@ -194,7 +201,7 @@ export const AddCoursework = ({
               label="Total Mark"
               name="total"
               placeholder="Enter total mark"
-              value={String(coursework.total) ?? ""}
+              value={String(coursework.total) || ""}
               errorMessage={errors?.total}
               isInvalid={!!errors?.total}
               onValueChange={(e) =>
@@ -209,7 +216,7 @@ export const AddCoursework = ({
               label="Pass Mark"
               name="passMark"
               placeholder="Enter pass mark"
-              value={String(coursework.passMark) ?? ""}
+              value={String(coursework.passMark) || ""}
               errorMessage={errors?.passMark}
               isInvalid={!!errors?.passMark}
               onValueChange={(e) =>
@@ -222,7 +229,7 @@ export const AddCoursework = ({
             <Button
               type="submit"
               color="primary"
-              className="w-full px-5"
+              className="button"
               onPress={validate}
             >
               Save
@@ -230,7 +237,7 @@ export const AddCoursework = ({
             <Button
               type="button"
               color="danger"
-              className="w-full px-5"
+              className="button"
               onPress={() => onOpenChange(false)}
             >
               Cancel

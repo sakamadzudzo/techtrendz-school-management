@@ -1,4 +1,4 @@
-import { Coursework, Mark } from "@/utils/types";
+import { Coursework, Mark, YearDropdown } from "@/utils/types";
 import {
   Modal,
   ModalBody,
@@ -7,36 +7,43 @@ import {
   SortDescriptor,
 } from "@heroui/react";
 import MyTable, { Column } from "./MyTable";
-import React from "react";
+import React, { useEffect } from "react";
 import { courseworkTypes } from "@/utils/classes";
 import { formatDate } from "@/utils/helpers";
+import { ViewMarks } from "./ViewMarks";
 
 type ViewCourseworksProps = {
   courseworks?: Coursework[];
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
   subjectId: number;
   subjectName: string;
-  incrementLoading: () => void;
-  decrementLoading: () => void;
   addCourseworksOpen: boolean;
-  setAddCourseworksOpen: (open: boolean) => void;
   editCoursework?: Coursework;
+  students?: YearDropdown[];
+  onOpenChange: (open: boolean) => void;
+  decrementLoading: () => void;
+  incrementLoading: () => void;
+  setAddCourseworksOpen: (open: boolean) => void;
   setEditCoursework?: (coursework: Coursework) => void;
+  reloadTrigger: () => void;
 };
 
 export const ViewCourseworks = ({
   courseworks,
   isOpen,
-  onOpenChange,
   subjectName,
+  students,
+  onOpenChange,
   setAddCourseworksOpen,
   setEditCoursework,
+  incrementLoading,
+  decrementLoading,
+  reloadTrigger,
 }: ViewCourseworksProps) => {
   const page = 0,
     pages = 1,
-    total = courseworks?.length ?? 0,
-    size = courseworks?.length ?? 0,
+    total = courseworks?.length || 0,
+    size = courseworks?.length || 0,
     offset = 0,
     first = true,
     last = true,
@@ -46,6 +53,9 @@ export const ViewCourseworks = ({
     column: "title",
     direction: "ascending",
   });
+  const [currentCoursework, setCurrentCoursework] = React.useState<Coursework>(
+    {} as Coursework
+  );
   const [viewMarks, setViewMarks] = React.useState(false);
   const [marks, setMarks] = React.useState<Mark[]>([] as Mark[]);
 
@@ -72,6 +82,11 @@ export const ViewCourseworks = ({
         allowsSorting: true,
       },
       {
+        key: "graded",
+        label: "Graded",
+        allowsSorting: false,
+      },
+      {
         key: "actions",
         label: "Actions",
         allowsSorting: false,
@@ -96,13 +111,14 @@ export const ViewCourseworks = ({
       })
       .map((row: Coursework) => ({
         ...row,
-        key: row.id ?? row.title,
+        key: row.id || row.title,
         datestamp: formatDate(row.datestamp),
+        graded: `${Number(row?.marks?.length)} of ${Number(students?.length)}`,
         actions: [
           {
             label: "View Marks",
             function: () => {
-              setMarks(row.marks ?? []);
+              setMarks(row.marks || []);
               setViewMarks(true);
             },
           },
@@ -114,63 +130,91 @@ export const ViewCourseworks = ({
             },
             key: `edit-${row.id}`,
           },
+          {
+            label: "Grade",
+            function: () => {
+              setCurrentCoursework(row!);
+              setViewMarks(true);
+            },
+            key: `grade-${row.id}`,
+          },
         ],
       }));
   }, [courseworks, filterValue, sortDescriptor]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      hideCloseButton={false}
-      backdrop="blur"
-      radius="md"
-      shadow="md"
-      size="5xl"
-      classNames={{
-        wrapper: "py-2 overflow-hidden",
-      }}
-      className="text-foreground"
-    >
-      <ModalContent className="overflow-y-auto max-h-full">
-        <ModalHeader className="text-xl font-bold">{`View coursework for subject { ${subjectName} }`}</ModalHeader>
-        <ModalBody>
-          <MyTable
-            key={`courseworks-table`}
-            isHeaderSticky={true}
-            columns={columns}
-            rows={rows}
-            setPage={() => {}}
-            page={page}
-            pages={pages}
-            statusOptions={courseworkTypes}
-            statusCol="type"
-            sortDescriptor={sortDescriptor}
-            setSortDescriptor={setSortDescriptor}
-            filterValue={filterValue}
-            setFilterValue={setFilterValue}
-            searchBox={true}
-            search={() => setFilterValue(filterValue)}
-            isLoading={isLoading}
-            total={total}
-            size={size}
-            setSize={() => {}}
-            offset={offset}
-            first={first}
-            last={last}
-            nextPage={() => {}}
-            prevPage={() => {}}
-            onRowAction={(row) => {
-              setEditCoursework!(courseworks![row - 1]);
-              setAddCourseworksOpen(true);
-            }}
-            addFunction={() => {
-              setEditCoursework!({} as Coursework);
-              setAddCourseworksOpen(true);
-            }}
-          />
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+    <>
+      <ViewMarks
+        key={`view-marks-for-${currentCoursework?.id}`}
+        courseworkId={currentCoursework?.id || 0}
+        courseworkName={currentCoursework?.title || ""}
+        marks={currentCoursework?.marks || []}
+        students={students}
+        isOpen={viewMarks}
+        onOpenChange={setViewMarks}
+        incrementLoading={incrementLoading}
+        decrementLoading={decrementLoading}
+        reloadTrigger={reloadTrigger}
+      />
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        hideCloseButton={false}
+        backdrop="blur"
+        radius="md"
+        shadow="md"
+        size="5xl"
+        classNames={{
+          wrapper: "py-2 overflow-hidden",
+        }}
+        className="text-foreground"
+      >
+        <ModalContent className="overflow-y-auto max-h-full">
+          <ModalHeader className="text-xl font-bold">{`View coursework for subject { ${subjectName} }`}</ModalHeader>
+          <ModalBody>
+            <MyTable
+              key={`courseworks-table`}
+              isHeaderSticky={true}
+              columns={columns}
+              rows={rows}
+              setPage={() => {}}
+              page={page}
+              pages={pages}
+              statusOptions={courseworkTypes}
+              statusCol="type"
+              sortDescriptor={sortDescriptor}
+              setSortDescriptor={setSortDescriptor}
+              filterValue={filterValue}
+              setFilterValue={setFilterValue}
+              searchBox={true}
+              search={() => setFilterValue(filterValue)}
+              isLoading={isLoading}
+              total={total}
+              size={size}
+              setSize={() => {}}
+              offset={offset}
+              first={first}
+              last={last}
+              nextPage={() => {}}
+              prevPage={() => {}}
+              onRowAction={(row) => {
+                // setEditCoursework!(courseworks![row - 1]);
+                // setAddCourseworksOpen(true);
+                setCurrentCoursework(
+                  courseworks?.find(
+                    (work) => Number(work.id) === Number(row)
+                  ) || ({} as Coursework)
+                );
+                setViewMarks(true);
+              }}
+              addFunction={() => {
+                setEditCoursework!({} as Coursework);
+                setAddCourseworksOpen(true);
+              }}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };

@@ -82,9 +82,9 @@ export default function AllExtraCurricularsPage() {
 
   const rows = React.useMemo(() => {
     if (!extraCurriculars) return [];
-    return (extraCurriculars.content ?? []).map((row: any) => ({
+    return (extraCurriculars.content || []).map((row: any) => ({
       ...row,
-      key: row.id ?? row._id ?? row.name,
+      key: row.id || row._id || row.name,
       datestamp: formatDate(row.datestamp),
       actions: [
         {

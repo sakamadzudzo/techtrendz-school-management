@@ -6,7 +6,7 @@ import { RootState } from "@/store/store";
 import { Errors, School } from "@/utils/types";
 import { Form, Button, Input, Textarea } from "@heroui/react";
 import { emailRegex, emailError, phoneNumberRegex } from "@/utils/helpers";
-import { ChalkboardIcon } from "@phosphor-icons/react";
+import { ChalkboardIcon, FloppyDiskIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -151,8 +151,8 @@ export default function SchoolEdit({
       const data = await res.json();
 
       if (!res.ok) {
-        const err: string = data.error ?? "Sving school failed";
-        const code: number = res.status ?? 500;
+        const err: string = data.error || "Sving school failed";
+        const code: number = res.status || 500;
         setError(err);
         setStatusCode(code);
         useToastError({ error: err, statusCode: code });
@@ -160,11 +160,14 @@ export default function SchoolEdit({
       } else if (data?.id) {
         router.push(`/school/one?id=${data?.id}`);
       }
-      decrementLoading();
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
-      useToastError({ error: "Netcoursework/Server error", statusCode: err.status ?? 500 });
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
+      useToastError({
+        error: "Network/Server error",
+        statusCode: err.status || 500,
+      });
+    } finally {
       decrementLoading();
     }
   };
@@ -183,7 +186,7 @@ export default function SchoolEdit({
             name="name"
             placeholder="Enter the school name"
             type="text"
-            value={school.name ?? ""}
+            value={school.name || ""}
             errorMessage={errors?.name}
             isInvalid={!!errors?.name}
             onValueChange={(e) => setSchool({ ...school, name: e })}
@@ -197,7 +200,7 @@ export default function SchoolEdit({
             name="email"
             placeholder="Enter your e-mail address"
             type="email"
-            value={school.email ?? ""}
+            value={school.email || ""}
             errorMessage={errors?.email}
             isInvalid={!!errors?.email}
             onValueChange={(e) => setSchool({ ...school, email: e })}
@@ -211,7 +214,7 @@ export default function SchoolEdit({
             name="telNumber"
             placeholder="Enter tel number"
             type="text"
-            value={school.telNumber ?? ""}
+            value={school.telNumber || ""}
             errorMessage={errors?.telNumber}
             isInvalid={!!errors?.telNumber}
             onValueChange={(e) => changeNumbers("telNumber", e)}
@@ -224,7 +227,7 @@ export default function SchoolEdit({
             name="cell1"
             placeholder="Enter first cell number"
             type="text"
-            value={school.mobileNumber ?? ""}
+            value={school.mobileNumber || ""}
             errorMessage={errors?.mobileNumber}
             isInvalid={!!errors?.mobileNumber}
             onValueChange={(e) => changeNumbers("mobileNumber", e)}
@@ -237,7 +240,7 @@ export default function SchoolEdit({
             name="cell2"
             placeholder="Enter second cell number"
             type="text"
-            value={school.mobileNumber2 ?? ""}
+            value={school.mobileNumber2 || ""}
             errorMessage={errors?.mobileNumber2}
             isInvalid={!!errors?.mobileNumber2}
             onValueChange={(e) => changeNumbers("mobileNumber2", e)}
@@ -250,7 +253,7 @@ export default function SchoolEdit({
             name="address"
             placeholder="Enter the school's address"
             type="text"
-            value={school.address ?? ""}
+            value={school.address || ""}
             errorMessage={errors?.address}
             isInvalid={!!errors?.address}
             onValueChange={(e) => setSchool({ ...school, address: e })}
@@ -263,13 +266,19 @@ export default function SchoolEdit({
             name="website"
             placeholder="Enter the school's website"
             type="url"
-            value={school.website ?? ""}
+            value={school.website || ""}
             onValueChange={(e) => setSchool({ ...school, website: e })}
             size="sm"
             variant="underlined"
           />
         </div>
-        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
+        <Button
+          type="submit"
+          color="primary"
+          className="button"
+          onPress={validate}
+          endContent={<FloppyDiskIcon weight="thin" size={25} />}
+        >
           Save
         </Button>
       </Form>

@@ -7,7 +7,7 @@ import { useDormYearById } from "@/hooks/useDormYears";
 import { RootState } from "@/store/store";
 import { Errors, DormYear, Dorm, School } from "@/utils/types";
 import { Form, Button, Select, SelectItem } from "@heroui/react";
-import { HouseLineIcon } from "@phosphor-icons/react";
+import { FloppyDiskIcon, HouseLineIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -127,8 +127,8 @@ export default function DormYearEdit({
       });
       const data = await res.json();
       if (!res.ok) {
-        const err = data.error ?? "Saving dorm year failed";
-        const code = res.status ?? 500;
+        const err = data.error || "Saving dorm year failed";
+        const code = res.status || 500;
         setError(err);
         setStatusCode(code);
         useToastError({ error: err, statusCode: code });
@@ -136,10 +136,10 @@ export default function DormYearEdit({
       } else if (data?.id) {
         router.push(`/dorm/year/one?id=${data?.id}`);
       }
-      decrementLoading();
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
+    } finally {
       decrementLoading();
     }
   };
@@ -187,7 +187,13 @@ export default function DormYearEdit({
             })}
           </Select>
         </div>
-        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
+        <Button
+          type="submit"
+          color="primary"
+          className="button"
+          onPress={validate}
+          endContent={<FloppyDiskIcon weight="thin" size={25} />}
+        >
           Save
         </Button>
       </Form>

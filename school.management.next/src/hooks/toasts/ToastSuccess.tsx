@@ -15,7 +15,7 @@ export default function useToastSuccess({
     timeout: 4000,
     description: (
       <InlineSuccess
-        title={description ?? title ?? "Success"}
+        title={description || title || "Success"}
         statusCode={statusCode}
       />
     ),

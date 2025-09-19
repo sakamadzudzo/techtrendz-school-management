@@ -33,8 +33,8 @@ export function useCourseworksAll({
   const params = new URLSearchParams({
     page: String(page),
     size: String(size),
-    sort: sort ?? "",
-    direction: direction ?? "DESC",
+    sort: sort || "",
+    direction: direction || "DESC",
   });
   const { data, error, mutate } = useSWR(
     shouldFetch

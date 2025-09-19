@@ -15,7 +15,7 @@ export default function useToastError({
     timeout: 4000,
     description: (
       <InlineError
-        title={error ?? title ?? "Error occurred"}
+        title={error || title || "Error occurred"}
         statusCode={statusCode}
       />
     ),

@@ -13,7 +13,7 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
-import { PaletteIcon } from "@phosphor-icons/react";
+import { FloppyDiskIcon, PaletteIcon } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -121,16 +121,16 @@ export default function SubjectEdit({
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Saving subject failed");
-        setStatusCode(res.status ?? 500);
+        setError(data.error || "Saving subject failed");
+        setStatusCode(res.status || 500);
         return;
       } else if (data?.id) {
         router.push(`/subject/one?id=${data?.id}`);
       }
-      decrementLoading();
     } catch (err: any) {
-      setError("Netcoursework/Server error");
-      setStatusCode(err.status ?? 500);
+      setError(err.response.data.message || "Network/Server error");
+      setStatusCode(err.status || 500);
+    } finally {
       decrementLoading();
     }
   };
@@ -149,7 +149,7 @@ export default function SubjectEdit({
             name="name"
             placeholder="Enter subject name"
             type="text"
-            value={subject.name ?? ""}
+            value={subject.name || ""}
             errorMessage={errors?.name}
             isInvalid={!!errors?.name}
             onValueChange={(e) => setSubject({ ...subject, name: e })}
@@ -162,7 +162,7 @@ export default function SubjectEdit({
             label="Description"
             name="description"
             placeholder="Enter subject description"
-            value={subject.description ?? ""}
+            value={subject.description || ""}
             errorMessage={errors?.description}
             isInvalid={!!errors?.description}
             onValueChange={(e) => setSubject({ ...subject, description: e })}
@@ -176,7 +176,7 @@ export default function SubjectEdit({
             name="code"
             placeholder="Enter subject code"
             type="text"
-            value={subject.code ?? ""}
+            value={subject.code || ""}
             errorMessage={errors?.code}
             isInvalid={!!errors?.code}
             onValueChange={(e) => setSubject({ ...subject, code: e })}
@@ -188,7 +188,7 @@ export default function SubjectEdit({
             label="Syllabus"
             name="syllabus"
             placeholder="Enter subject syllabus"
-            value={subject.syllabus ?? ""}
+            value={subject.syllabus || ""}
             errorMessage={errors?.syllabus}
             isInvalid={!!errors?.syllabus}
             onValueChange={(e) => setSubject({ ...subject, syllabus: e })}
@@ -201,7 +201,7 @@ export default function SubjectEdit({
             label="Curriculum"
             name="curriculum"
             placeholder="Enter curriculum"
-            value={subject.curriculum ?? ""}
+            value={subject.curriculum || ""}
             errorMessage={errors?.curriculum}
             isInvalid={!!errors?.curriculum}
             onValueChange={(e) => setSubject({ ...subject, curriculum: e })}
@@ -215,7 +215,7 @@ export default function SubjectEdit({
             name="level"
             placeholder="Enter subject level"
             type="number"
-            value={subject.level ?? ""}
+            value={subject.level || ""}
             errorMessage={errors?.level}
             isInvalid={!!errors?.level}
             onValueChange={(e) => setSubject({ ...subject, level: e })}
@@ -250,7 +250,7 @@ export default function SubjectEdit({
             name="category"
             placeholder="Enter subject category"
             type="text"
-            value={subject.category ?? ""}
+            value={subject.category || ""}
             errorMessage={errors?.category}
             isInvalid={!!errors?.category}
             onValueChange={(e) => setSubject({ ...subject, category: e })}
@@ -258,7 +258,13 @@ export default function SubjectEdit({
             variant="underlined"
           />
         </div>
-        <Button type="submit" color="primary" className="w-full px-5" onPress={validate}>
+        <Button
+          type="submit"
+          color="primary"
+          className="button"
+          onPress={validate}
+          endContent={<FloppyDiskIcon weight="thin" size={25} />}
+        >
           Save
         </Button>
       </Form>

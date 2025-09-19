@@ -16,7 +16,7 @@ import {
   PencilSimpleLineIcon,
   PhoneIcon,
   BriefcaseIcon,
-  ShareNetcourseworkIcon,
+  ShareNetworkIcon,
   ChalkboardTeacherIcon,
   FolderSimpleIcon,
 } from "@phosphor-icons/react";
@@ -35,15 +35,15 @@ export default function OneTeacherPage() {
 
   const hasContactInfo: boolean = React.useMemo(() => {
     return !!(
-      teacher?.email ??
-      teacher?.mobileNumber ??
-      teacher?.mobileNumber2 ??
+      teacher?.email ||
+      teacher?.mobileNumber ||
+      teacher?.mobileNumber2 ||
       teacher?.telNumber
     );
   }, [teacher]);
 
   const hasSocials: boolean = React.useMemo(() => {
-    return !!(teacher?.whatsapp ?? teacher?.linkedin ?? teacher?.facebook);
+    return !!(teacher?.whatsapp || teacher?.linkedin || teacher?.facebook);
   }, [teacher]);
 
   const disabledKeys: string[] = React.useMemo(() => {
@@ -98,7 +98,7 @@ export default function OneTeacherPage() {
                     className="cursor-pointer w-full h-full"
                   >
                     {!teacher?.avatarUrl &&
-                      getInitials(teacher?.name ?? "User")}
+                      getInitials(teacher?.name || "User")}
                   </Avatar>
                 )}
               </div>
@@ -244,7 +244,7 @@ export default function OneTeacherPage() {
           aria-label="Online Presence"
           title="Online Presence"
           subtitle="Professional or social links."
-          startContent={<ShareNetcourseworkIcon weight="thin" size={34} />}
+          startContent={<ShareNetworkIcon weight="thin" size={34} />}
         >
           {teacher?.whatsapp && (
             <>

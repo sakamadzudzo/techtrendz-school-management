@@ -19,7 +19,7 @@ async function saveCoursework(courseworkDto: any, authHeader: any) {
     let backendError = "Coursework creation failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -36,7 +36,7 @@ async function saveAllCourseworks(courseworksDto: any[], authHeader: any) {
     let backendError = "Bulk coursework creation failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -53,7 +53,7 @@ async function getCourseworkById(courseworkId: string, authHeader: any) {
     let backendError = "Fetching coursework failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -69,7 +69,7 @@ async function getAllCourseworks(authHeader: any) {
     let backendError = "Fetching all courseworks failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -86,7 +86,7 @@ async function getAllCourseworksByType(type: string, authHeader: any) {
     let backendError = "Fetching courseworks by type failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -103,7 +103,7 @@ async function getAllCourseworksBySubjectId(subjectId: string, authHeader: any) 
     let backendError = "Fetching courseworks by subject failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -124,7 +124,7 @@ async function getAllCourseworksByTypeBySubject(
     let backendError = "Fetching courseworks by type and subject failed";
     try {
       const errorBody = await res.json();
-      backendError = errorBody.message ?? errorBody.error ?? backendError;
+      backendError = errorBody.message || errorBody.error || backendError;
     } catch {}
     throw new ApiError(backendError, res.status);
   }
@@ -185,10 +185,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message ?? "Internal server error" });
+        .json({ error: err.message || "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message ?? "Internal server error" });
+      .json({ error: err.message || "Internal server error" });
   }
 }

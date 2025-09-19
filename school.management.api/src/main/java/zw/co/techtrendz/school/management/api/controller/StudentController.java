@@ -71,7 +71,7 @@ public class StudentController {
     }
 
     @GetMapping("/view/get/all/by/example")
-    public Page<StudentDto> getAllStudentViewsByExample(@RequestBody @Valid Student student, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
+    public Page<StudentDto> getAllStudentViewsByExample(@RequestBody Student student, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "25") int size, @RequestParam(defaultValue = "person.lastName") List<String> sortBy, @RequestParam(defaultValue = "ASC") Sort.Direction sortDir) {
         return this.studentService.getViewAllByExample(student, page, size, sortBy, sortDir);
     }
 
@@ -83,5 +83,20 @@ public class StudentController {
     @GetMapping("/dropdown/get/all")
     public List<YearDropdown> getAllStudentsForDropdown() {
         return this.studentService.getAllStudentsForDropdown();
+    }
+
+    @PostMapping("/dropdown/get/all/by/example")
+    public List<YearDropdown> getAllStudentsForDropdown(@RequestBody Student student) {
+        return this.studentService.getAllStudentsForDropdown(student);
+    }
+
+    @GetMapping("/dropdown/get/all/for/subject")
+    public List<YearDropdown> getAllStudentsForSubject(@RequestParam long subjectYearId) {
+        return this.studentService.getAllStudentsForSubjectYear(subjectYearId);
+    }
+
+    @GetMapping("/dropdown/get/all/for/classroom")
+    public List<YearDropdown> getAllStudentsForClassroom(@RequestParam long classroomYearId) {
+        return this.studentService.getAllStudentsForClassroomYear(classroomYearId);
     }
 }

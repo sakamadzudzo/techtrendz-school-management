@@ -35,4 +35,10 @@ public interface StudentService {
     public Page<StudentDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 
     public List<YearDropdown> getAllStudentsForDropdown();
+
+    public List<YearDropdown> getAllStudentsForDropdown(Student student);
+
+    public List<YearDropdown> getAllStudentsForSubjectYear(long subjectYearId);
+
+    public List<YearDropdown> getAllStudentsForClassroomYear(long classroomYearId);
 }

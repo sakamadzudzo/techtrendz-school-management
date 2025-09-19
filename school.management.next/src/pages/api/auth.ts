@@ -3,7 +3,7 @@ import { ApiError } from "./../../utils/classes";
 import { API_URL } from "@/utils/helpers";
 
 // Example backend API base URL
-// const API_BASE = process.env.AUTH_API_BASE + "/auth" ?? "http://localhost:4002/auth";import { API_URL } from "@/utils/helpers";
+// const API_BASE = process.env.AUTH_API_BASE + "/auth" || "http://localhost:4002/auth";import { API_URL } from "@/utils/helpers";
 
 const API_BASE = API_URL + "/auth";
 
@@ -86,10 +86,10 @@ export default async function handler(
     if (err.statusCode) {
       return res
         .status(err.statusCode)
-        .json({ error: err.message ?? "Internal server error" });
+        .json({ error: err.message || "Internal server error" });
     }
     return res
       .status(500)
-      .json({ error: err.message ?? "Internal server error" });
+      .json({ error: err.message || "Internal server error" });
   }
 }

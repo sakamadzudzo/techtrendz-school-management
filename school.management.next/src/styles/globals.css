@@ -17,3 +17,7 @@ li {
 .info-row-content {
   @apply grow font-light flex
 }
+
+.button {
+  @apply w-full px-5 py-2
+}
