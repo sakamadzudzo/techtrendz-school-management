@@ -18,6 +18,8 @@ public interface ActivityPointService {
 
     public List<ActivityPoint> getAllByActivityId(long activityId);
 
+    public List<ActivityPoint> getAllByActivityIds(List<Long> activityIds);
+
     public List<ActivityPoint> getAllByStudentId(long studentId);
 
     public ActivityPoint getByStudentIdByActivityId(long studentId, long activityId);

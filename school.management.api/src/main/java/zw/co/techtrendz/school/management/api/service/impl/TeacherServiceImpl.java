@@ -24,6 +24,7 @@ import zw.co.techtrendz.school.management.api.view.TeacherDto;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<Teacher> saveAll(List<Teacher> teachers) {
-        return teachers.stream().map(this::save).toList();
+        return teachers.parallelStream().map(this::save).toList();
     }
 
     @Override
@@ -158,23 +159,19 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     private Page<TeacherDto> getTeacherClassesAndSubjects(Page<TeacherDto> teacherDtoPage) {
-        List<Long> teacherIds = teacherDtoPage.getContent().stream().map(TeacherDto::getId).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        List<Long> teacherIds = teacherDtoPage.getContent().parallelStream().map(TeacherDto::getId).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
         List<ClassroomYearDto> classroomYearDtoList = this.teacherQueryService.getClassroomYears(teacherIds);
         List<SubjectYearDto> subjectYearDtoList = this.teacherQueryService.getSubjectYears(teacherIds);
+        Map<Long, List<ClassroomYearDto>> mappedClassromYearDtoList = classroomYearDtoList
+                .parallelStream()
+                .collect(Collectors.groupingBy(ClassroomYearDto::getHomeroomTeacher));
+        Map<Long, List<SubjectYearDto>> mappedSubjectYearDtoList = subjectYearDtoList
+                .parallelStream()
+                .collect(Collectors.groupingBy(SubjectYearDto::getTeacherId));
+
         return teacherDtoPage.map(teacher -> {
-            teacher.setClassrooms(
-                    classroomYearDtoList
-                            .stream()
-                            .filter(classroom -> classroom
-                                    .getHomeroomTeacher()
-                                    .equals(teacher.getId()))
-                            .collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
-            teacher.setSubjects(subjectYearDtoList
-                    .stream()
-                    .filter(subject -> subject
-                            .getTeacherId()
-                            .equals(teacher.getId()))
-                    .collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
+            teacher.setClassrooms(mappedClassromYearDtoList.get(teacher.getId()));
+            teacher.setSubjects(mappedSubjectYearDtoList.get(teacher.getId()));
             return teacher;
         });
     }

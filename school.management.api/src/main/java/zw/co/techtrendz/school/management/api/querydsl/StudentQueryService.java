@@ -144,7 +144,7 @@ public class StudentQueryService {
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .fetch();
 
-        return results.stream()
+        return results.parallelStream()
                 .map(tuple -> {
                     String name = AppUtils.getFullname(tuple.get(student.person.salutation), tuple.get(student.person.firstName), tuple.get(student.person.otherNames), tuple.get(student.person.lastName));
                     YearDropdown dto = new YearDropdown();
@@ -177,7 +177,7 @@ public class StudentQueryService {
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .fetch();
 
-        return results.stream()
+        return results.parallelStream()
                 .map(tuple -> {
                     String name = AppUtils.getFullname(tuple.get(student.person.salutation), tuple.get(student.person.firstName), tuple.get(student.person.otherNames), tuple.get(student.person.lastName));
                     YearDropdown dto = new YearDropdown();
@@ -214,7 +214,7 @@ public class StudentQueryService {
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .fetch();
 
-        return results.stream()
+        return results.parallelStream()
                 .map(tuple -> {
                     String name = AppUtils.getFullname(tuple.get(student.person.salutation), tuple.get(student.person.firstName), tuple.get(student.person.otherNames), tuple.get(student.person.lastName));
                     YearDropdown dto = new YearDropdown();
@@ -249,7 +249,7 @@ public class StudentQueryService {
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .fetch();
 
-        return results.stream()
+        return results.parallelStream()
                 .map(tuple -> {
                     String name = AppUtils.getFullname(tuple.get(student.person.salutation), tuple.get(student.person.firstName), tuple.get(student.person.otherNames), tuple.get(student.person.lastName));
                     YearDropdown dto = new YearDropdown();

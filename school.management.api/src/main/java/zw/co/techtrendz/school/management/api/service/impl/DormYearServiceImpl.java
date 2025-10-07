@@ -48,7 +48,7 @@ public class DormYearServiceImpl implements DormYearService {
 
     @Override
     public List<DormYear> saveAll(List<DormYear> dormYears) {
-        return dormYears.stream().map(this::save).toList();
+        return dormYears.parallelStream().map(this::save).toList();
     }
 
     @Override
@@ -151,16 +151,14 @@ public class DormYearServiceImpl implements DormYearService {
     }
 
     private Page<DormYearDto> getDormStudents(Page<DormYearDto> dormDtoPage) {
-        List<Long> dormIds = dormDtoPage.getContent().stream().map(DormYearDto::getId).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        List<Long> dormIds = dormDtoPage.getContent().parallelStream().map(DormYearDto::getId).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
         List<StudentDto> studentDtoList = this.studentQueryService.getStudentsByDormId(dormIds);
+        Map<Long, List<StudentDto>> mappedStudentDtoList = studentDtoList
+                .parallelStream()
+                .collect(Collectors.groupingBy(StudentDto::getDormId));
+
         return dormDtoPage.map(dorm -> {
-            dorm.setStudents(
-                    studentDtoList
-                            .stream()
-                            .filter(student -> student
-                                    .getDormId()
-                                    .equals(dorm.getId()))
-                            .collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
+            dorm.setStudents(mappedStudentDtoList.get(dorm.getId()));
             return dorm;
         });
     }

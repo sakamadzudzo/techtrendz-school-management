@@ -169,9 +169,9 @@ export const ViewCourseworks = ({
         }}
         className="text-foreground"
       >
-        <ModalContent className="overflow-y-auto max-h-full">
+        <ModalContent className="h-full">
           <ModalHeader className="text-xl font-bold">{`View coursework for subject { ${subjectName} }`}</ModalHeader>
-          <ModalBody>
+          <ModalBody className="grow mt-4 overflow-hidden">
             <MyTable
               key={`courseworks-table`}
               isHeaderSticky={true}

@@ -10,11 +10,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import zw.co.techtrendz.school.management.api.entity.ActivityPoint;
 import zw.co.techtrendz.school.management.api.entity.ExtraCurricularYear;
 import zw.co.techtrendz.school.management.api.querydsl.ExtraCurricularYearQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.StudentQueryService;
 import zw.co.techtrendz.school.management.api.querydsl.TeacherQueryService;
 import zw.co.techtrendz.school.management.api.repository.ExtraCurricularYearRepository;
+import zw.co.techtrendz.school.management.api.service.ActivityPointService;
 import zw.co.techtrendz.school.management.api.service.ExtraCurricularYearService;
 import zw.co.techtrendz.school.management.api.utility.AppUtils;
 import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
@@ -22,10 +24,9 @@ import zw.co.techtrendz.school.management.api.view.ExtraCurricularYearDto;
 import zw.co.techtrendz.school.management.api.view.StudentDto;
 import zw.co.techtrendz.school.management.api.view.TeacherDto;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,16 +36,19 @@ public class ExtraCurricularYearServiceImpl implements ExtraCurricularYearServic
     private final ExtraCurricularYearQueryService extraCurricularYearQueryService;
     private final TeacherQueryService teacherQueryService;
     private final StudentQueryService studentQueryService;
+    private final ActivityPointService activityPointService;
 
     public ExtraCurricularYearServiceImpl(
             ExtraCurricularYearRepository extraCurricularYearRepository,
             ExtraCurricularYearQueryService extraCurricularYearQueryService,
             TeacherQueryService teacherQueryService,
-            StudentQueryService studentQueryService) {
+            StudentQueryService studentQueryService,
+            ActivityPointService activityPointService) {
         this.extraCurricularYearRepository = extraCurricularYearRepository;
         this.extraCurricularYearQueryService = extraCurricularYearQueryService;
         this.teacherQueryService = teacherQueryService;
         this.studentQueryService = studentQueryService;
+        this.activityPointService = activityPointService;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class ExtraCurricularYearServiceImpl implements ExtraCurricularYearServic
 
     @Override
     public List<ExtraCurricularYear> saveAll(List<ExtraCurricularYear> extraCurricularYears) {
-        return extraCurricularYears.stream().map(this::save).toList();
+        return extraCurricularYears.parallelStream().map(this::save).toList();
     }
 
     @Override
@@ -157,29 +161,32 @@ public class ExtraCurricularYearServiceImpl implements ExtraCurricularYearServic
     }
 
     private Page<ExtraCurricularYearDto> getExtraCurricularYearClassesAndSubjects(Page<ExtraCurricularYearDto> extraCurricularYearDtoPage) {
-        List<Long> extraCurricularYearIds = extraCurricularYearDtoPage.getContent().stream().map(ExtraCurricularYearDto::getId).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        List<Long> extraCurricularYearIds = extraCurricularYearDtoPage.getContent().parallelStream().map(ExtraCurricularYearDto::getId).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
         List<TeacherDto> facilitatorDtoList = this.teacherQueryService.getFacilitatorsByExtraCurricular(extraCurricularYearIds);
+        List<ActivityPoint> activityPointList = this.activityPointService.getAllByActivityIds(extraCurricularYearIds);
+        Map<Long, List<TeacherDto>> mappedFacilitatorList = facilitatorDtoList
+                .parallelStream()
+                .collect(Collectors.groupingBy(TeacherDto::getExtraCurricularYearId));
+        Map<Long, ActivityPoint> mappedActivityPointList = activityPointList
+                .parallelStream()
+                .collect(Collectors.toMap(
+                        a -> a.getStudent().getId(), Function.identity()
+                ));
         List<StudentDto> studentDtoList = this.studentQueryService.getStudentsByExtraCurricular(extraCurricularYearIds);
+        List<StudentDto> newStudentDtoList = studentDtoList
+                .parallelStream()
+                .map(s -> {
+                    s.setActivityPoint(mappedActivityPointList.get(s.getId()));
+                    return s;
+                })
+                .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        Map<Long, List<StudentDto>> mappedStudentDtoList = newStudentDtoList
+                .parallelStream()
+                .collect(Collectors.groupingBy(StudentDto::getExtraCurricularYearId));
+
         return extraCurricularYearDtoPage.map(extraCurricularYear -> {
-            extraCurricularYear.setFacilitators(
-                    facilitatorDtoList
-                            .stream()
-                            .filter(facilitator -> facilitator
-                                    .getExtraCurricularYearId()
-                                    .equals(extraCurricularYear.getId())
-                            )
-                            .collect(Collectors.toCollection(CopyOnWriteArrayList::new))
-            );
-            extraCurricularYear.setStudents(
-                    studentDtoList
-                            .stream()
-                            .filter(
-                                    student -> student
-                                            .getExtraCurricularYearId()
-                                            .equals(extraCurricularYear.getId())
-                            )
-                            .collect(Collectors.toCollection(CopyOnWriteArrayList::new))
-            );
+            extraCurricularYear.setFacilitators(mappedFacilitatorList.get(extraCurricularYear.getId()));
+            extraCurricularYear.setStudents(mappedStudentDtoList.get(extraCurricularYear.getId()));
             return extraCurricularYear;
         });
     }

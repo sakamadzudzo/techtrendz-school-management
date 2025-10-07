@@ -119,7 +119,7 @@ public class ClassroomYearQueryService {
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .fetch();
 
-        return results.stream()
+        return results.parallelStream()
                 .map(tuple -> {
                     YearDropdown dto = new YearDropdown();
                     dto.setId(tuple.get(classroomYear.id));

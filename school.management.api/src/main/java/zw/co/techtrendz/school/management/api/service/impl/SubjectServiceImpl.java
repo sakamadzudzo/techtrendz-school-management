@@ -32,7 +32,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<Subject> saveAll(List<Subject> subjects) {
-        return subjects.stream().map(this::save).toList();
+        return subjects.parallelStream().map(this::save).toList();
     }
 
     @Override

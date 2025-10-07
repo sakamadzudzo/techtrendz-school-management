@@ -40,7 +40,7 @@ public class DormServiceImpl implements DormService {
 
     @Override
     public List<Dorm> saveAll(List<Dorm> dorms) {
-        return dorms.stream().map(this::save).toList();
+        return dorms.parallelStream().map(this::save).toList();
     }
 
     @Override

@@ -330,10 +330,16 @@ export type ActivityPoint = {
   id: number;
   extraCurricularYear: ExtraCurricularYear;
   student: Student;
-  passPercentage: number;
-  percentage: number;
+  remarks: string;
+  ratings: Rating[];
   status: string;
   datestamp: Date | string;
+};
+
+export type Rating = {
+  id: number;
+  activityPoint: ActivityPoint;
+  rating: number;
 };
 
 export enum CourseworkType {

@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.ActivityPoint;
 import zw.co.techtrendz.school.management.api.entity.QActivityPoint;
+import zw.co.techtrendz.school.management.api.utility.ViewProjectionUtils;
 
 import java.util.List;
 
@@ -20,7 +21,9 @@ public class ActivityPointQueryService {
         QActivityPoint activityPoint = QActivityPoint.activityPoint;
 
         return queryFactory
-                .select(activityPoint)
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
                 .from(activityPoint)
                 .where(activityPoint.id.eq(id))
                 .fetchOne();
@@ -30,7 +33,9 @@ public class ActivityPointQueryService {
         QActivityPoint activityPoint = QActivityPoint.activityPoint;
 
         return queryFactory
-                .select(activityPoint)
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
                 .from(activityPoint)
                 .fetch();
     }
@@ -39,9 +44,23 @@ public class ActivityPointQueryService {
         QActivityPoint activityPoint = QActivityPoint.activityPoint;
 
         return queryFactory
-                .select(activityPoint)
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
                 .from(activityPoint)
                 .where(activityPoint.extraCurricularYear.id.eq(activityId))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByActivityIds(List<Long> activityIds) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.id.in(activityIds))
                 .fetch();
     }
 
@@ -49,7 +68,9 @@ public class ActivityPointQueryService {
         QActivityPoint activityPoint = QActivityPoint.activityPoint;
 
         return queryFactory
-                .select(activityPoint)
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
                 .from(activityPoint)
                 .where(activityPoint.student.id.eq(studentId))
                 .fetch();
@@ -59,7 +80,9 @@ public class ActivityPointQueryService {
         QActivityPoint activityPoint = QActivityPoint.activityPoint;
 
         return queryFactory
-                .select(activityPoint)
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
                 .from(activityPoint)
                 .where(activityPoint.student.id.eq(studentId)
                         .and(activityPoint.extraCurricularYear.id.eq(activityId)))

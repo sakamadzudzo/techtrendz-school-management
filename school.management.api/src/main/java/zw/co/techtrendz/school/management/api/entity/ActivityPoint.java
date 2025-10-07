@@ -5,6 +5,9 @@ import lombok.*;
 import org.hibernate.envers.Audited;
 import zw.co.techtrendz.school.management.api.enums.Grade;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Entity
@@ -24,48 +27,46 @@ public class ActivityPoint extends Base {
     @ManyToOne
     private Student student;
 
-    private Long passPercentage;
+    private String remarks;
 
-    private Long percentage;
+    @OneToMany
+    private List<Rating> ratings;
+
+    private Float getOveralRating() {
+        if (this.ratings != null && !this.ratings.isEmpty()) {
+            Double overalRating = this.ratings
+                    .parallelStream()
+                    .mapToDouble(Rating::getRating)
+                    .average()
+                    .orElse(0.0);
+            return overalRating.floatValue();
+        } else {
+            return 0.0F;
+        }
+    }
 
     public ActivityPoint(long id) {
         this.id = id;
     }
 
     public Grade getGrade() {
-        if (percentage == null) {
-            return Grade.U;
-        }
-        if (percentage >= 95) {
-            return Grade.A_P;
-        } else if (percentage >= 90) {
-            return Grade.A;
-        } else if (percentage >= 85) {
-            return Grade.A_M;
-        } else if (percentage >= 80) {
-            return Grade.B_P;
-        } else if (percentage >= 75) {
-            return Grade.B;
-        } else if (percentage >= 70) {
-            return Grade.B_M;
-        } else if (percentage >= 65) {
-            return Grade.C_P;
-        } else if (percentage >= 60) {
-            return Grade.C;
-        } else if (percentage >= 55) {
-            return Grade.C_M;
-        } else if (percentage >= 50) {
-            return Grade.D_P;
-        } else if (percentage >= 40) {
-            return Grade.D;
-        } else if (percentage >= 35) {
-            return Grade.D_M;
-        } else if (percentage >= 30) {
-            return Grade.E;
-        } else if (percentage >= 15) {
-            return Grade.F;
-        } else {
-            return Grade.U;
-        }
+        Float rating = this.getOveralRating();
+
+        if (rating.compareTo(95f) >= 0) return Grade.A_P;
+        else if (rating.compareTo(90f) >= 0) return Grade.A;
+        else if (rating.compareTo(85f) >= 0) return Grade.A_M;
+        else if (rating.compareTo(80f) >= 0) return Grade.B_P;
+        else if (rating.compareTo(75f) >= 0) return Grade.B;
+        else if (rating.compareTo(70f) >= 0) return Grade.B_M;
+        else if (rating.compareTo(65f) >= 0) return Grade.C_P;
+        else if (rating.compareTo(60f) >= 0) return Grade.C;
+        else if (rating.compareTo(55f) >= 0) return Grade.C_M;
+        else if (rating.compareTo(50f) >= 0) return Grade.D_P;
+        else if (rating.compareTo(40f) >= 0) return Grade.D;
+        else if (rating.compareTo(35f) >= 0) return Grade.D_M;
+        else if (rating.compareTo(30f) >= 0) return Grade.E;
+        else if (rating.compareTo(15f) >= 0) return Grade.F;
+        else return Grade.U;
     }
+
 }

@@ -48,7 +48,7 @@ public class ClassroomYearServiceImpl implements ClassroomYearService {
 
     @Override
     public List<ClassroomYear> saveAll(List<ClassroomYear> classroomYears) {
-        return classroomYears.stream().map(this::save).toList();
+        return classroomYears.parallelStream().map(this::save).toList();
     }
 
     @Override
@@ -155,15 +155,14 @@ public class ClassroomYearServiceImpl implements ClassroomYearService {
     }
 
     private Page<ClassroomYearDto> getClassroomYearClassesAndSubjects(Page<ClassroomYearDto> classroomYearDtoPage) {
-        List<Long> classroomYearIds = classroomYearDtoPage.getContent().stream().map(ClassroomYearDto::getId).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        List<Long> classroomYearIds = classroomYearDtoPage.getContent().parallelStream().map(ClassroomYearDto::getId).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
         List<SubjectYearDto> subjectYearDtoList = this.subjectYearQueryService.getSubjectYears(classroomYearIds);
+        Map<Long, List<SubjectYearDto>> mappedSubjectYearDtoList = subjectYearDtoList
+                .parallelStream()
+                .collect(Collectors.groupingBy(SubjectYearDto::getClassroomId));
+
         return classroomYearDtoPage.map(classroomYear -> {
-            classroomYear.setSubjects(subjectYearDtoList
-                    .stream()
-                    .filter(subject -> subject
-                            .getClassroomId()
-                            .equals(classroomYear.getId()))
-                    .collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
+            classroomYear.setSubjects(mappedSubjectYearDtoList.get(classroomYear.getId()));
             return classroomYear;
         });
     }

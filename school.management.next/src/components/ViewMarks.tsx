@@ -350,7 +350,7 @@ export const ViewMarks = ({
       }}
       className="text-foreground"
     >
-      <ModalContent className="h-full overflow-y-auto">
+      <ModalContent className="h-full">
         <ModalHeader className="text-xl font-bold flex justify-between">
           {`View/Edit marks for { ${courseworkName} }`}
           {hasChanges ? (
@@ -365,7 +365,7 @@ export const ViewMarks = ({
             </Button>
           ) : null}
         </ModalHeader>
-        <ModalBody className="grow">
+        <ModalBody className="grow mt-4 overflow-hidden">
           <MyTable
             key={`marks-table`}
             isHeaderSticky={true}
@@ -397,7 +397,6 @@ export const ViewMarks = ({
             }}
           />
         </ModalBody>
-        <ModalFooter></ModalFooter>
       </ModalContent>
     </Modal>
   );

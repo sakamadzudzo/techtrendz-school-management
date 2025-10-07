@@ -22,6 +22,7 @@ import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,7 @@ public class SubjectYearServiceImpl implements SubjectYearService {
 
     @Override
     public List<SubjectYear> saveAll(List<SubjectYear> subjectYears) {
-        return subjectYears.stream().map(this::save).toList();
+        return subjectYears.parallelStream().map(this::save).toList();
     }
 
     @Override
@@ -158,7 +159,7 @@ public class SubjectYearServiceImpl implements SubjectYearService {
     private Page<SubjectYearDto> getCourseworksForSubjectYearDto(Page<SubjectYearDto> subjectYearDtoPage) {
         List<Long> ids = subjectYearDtoPage
                 .getContent()
-                .stream()
+                .parallelStream()
                 .map(SubjectYearDto::getId)
                 .collect(
                         Collectors
@@ -167,17 +168,13 @@ public class SubjectYearServiceImpl implements SubjectYearService {
                                 )
                 );
         List<Coursework> courseworks = this.courseworkService.getAllBySubjectIds(ids);
+        Map<Long, List<Coursework>> mappedCourseworks = courseworks
+                .parallelStream()
+                .collect(Collectors.groupingBy(w -> w.getSubject().getId()));
 
         return subjectYearDtoPage
                 .map(dto -> {
-                    List<Coursework> subjectCourseworks = courseworks
-                            .stream()
-                            .filter(w ->
-                                    w.getSubject().getId().equals(dto.getId())
-                            ).collect(
-                                    Collectors.toCollection(CopyOnWriteArrayList::new)
-                            );
-                    dto.setCourseworks(subjectCourseworks);
+                    dto.setCourseworks(mappedCourseworks.get(dto.getId()));
                     return dto;
                 });
     }

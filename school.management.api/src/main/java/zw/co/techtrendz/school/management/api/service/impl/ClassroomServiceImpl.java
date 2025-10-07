@@ -33,7 +33,7 @@ public class ClassroomServiceImpl implements ClassroomService {
 
     @Override
     public List<Classroom> saveAll(List<Classroom> classrooms) {
-        return classrooms.stream().map(this::save).toList();
+        return classrooms.parallelStream().map(this::save).toList();
     }
 
     @Override

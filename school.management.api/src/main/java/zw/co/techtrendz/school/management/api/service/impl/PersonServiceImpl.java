@@ -32,7 +32,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<Person> saveAll(List<Person> persons) {
-        return persons.stream().map(this::save).toList();
+        return persons.parallelStream().map(this::save).toList();
     }
 
     @Override

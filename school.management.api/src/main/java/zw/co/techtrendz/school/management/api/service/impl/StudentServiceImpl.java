@@ -28,6 +28,7 @@ import zw.co.techtrendz.school.management.api.view.SubjectYearDto;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -66,7 +67,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> saveAll(List<Student> students) {
-        return students.stream().map(this::save).toList();
+        return students.parallelStream().map(this::save).toList();
     }
 
     @Override
@@ -211,16 +212,14 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private Page<StudentDto> getClassroomSubjects(Page<StudentDto> studentDtoPage) {
-        List<Long> classroomIds = studentDtoPage.getContent().stream().map(student -> student.getClassroom().getId()).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        List<Long> classroomIds = studentDtoPage.getContent().parallelStream().map(student -> student.getClassroom().getId()).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
         List<SubjectYearDto> subjectYearDtoList = this.subjectYearQueryService.getSubjectYears(classroomIds);
+        Map<Long, List<SubjectYearDto>> mappedSubjectYearDtoList = subjectYearDtoList
+                .parallelStream()
+                .collect(Collectors.groupingBy(SubjectYearDto::getClassroomId));
         return studentDtoPage.map(student -> {
             StudentClassDto classroom = student.getClassroom();
-            classroom.setSubjects(subjectYearDtoList
-                    .stream()
-                    .filter(subject -> subject
-                            .getClassroomId()
-                            .equals(classroom.getId()))
-                    .collect(Collectors.toCollection(CopyOnWriteArrayList::new)));
+            classroom.setSubjects(mappedSubjectYearDtoList.get(student.getId()));
             student.setClassroom(classroom);
             return student;
         });

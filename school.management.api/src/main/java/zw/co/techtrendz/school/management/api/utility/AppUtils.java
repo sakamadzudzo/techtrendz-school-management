@@ -10,6 +10,8 @@ import zw.co.techtrendz.school.management.api.exception.UserCreationException;
 import zw.co.techtrendz.school.management.api.service.UserService;
 import zw.co.techtrendz.school.management.api.view.UserDto;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
@@ -208,7 +210,43 @@ public class AppUtils {
 
 
     public static int getRandom(int min, int max) {
+        if (min >= max) {
+            throw new IllegalArgumentException("min must be less than max");
+        }
+
         Random random = new Random();
         return random.nextInt(max - min) + min;
+    }
+
+    public static float getRandom(float min, float max, int decimalPlaces) {
+        if (min >= max) {
+            throw new IllegalArgumentException("min must be less than max");
+        }
+        if (decimalPlaces < 0) {
+            throw new IllegalArgumentException("decimalPlaces must be non-negative");
+        }
+
+        Random random = new Random();
+        float raw = min + random.nextFloat() * (max - min);
+
+        return BigDecimal.valueOf(raw)
+                .setScale(decimalPlaces, RoundingMode.HALF_UP)
+                .floatValue();
+    }
+
+    public static double getRandom(double min, double max, int decimalPlaces) {
+        if (min >= max) {
+            throw new IllegalArgumentException("min must be less than max");
+        }
+        if (decimalPlaces < 0) {
+            throw new IllegalArgumentException("decimalPlaces must be non-negative");
+        }
+
+        Random random = new Random();
+        double raw = min + random.nextDouble() * (max - min);
+
+        return BigDecimal.valueOf(raw)
+                .setScale(decimalPlaces, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 }

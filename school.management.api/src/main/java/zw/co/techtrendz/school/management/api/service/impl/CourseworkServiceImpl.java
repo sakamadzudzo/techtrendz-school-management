@@ -12,6 +12,7 @@ import zw.co.techtrendz.school.management.api.service.MarkService;
 import zw.co.techtrendz.school.management.api.service.CourseworkService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -100,17 +101,14 @@ public class CourseworkServiceImpl implements CourseworkService {
         }
 
         List<Mark> marks = this.markService.getAllByCourseworkIds(ids);
+        Map<Long, List<Mark>> mappedMarks = marks
+                .parallelStream()
+                .collect(Collectors.groupingBy(m -> m.getCoursework().getId()));
 
         return courseworks
-                .stream()
+                .parallelStream()
                 .map(w -> {
-                    List<Mark> wMarks = marks
-                            .parallelStream()
-                            .filter(m -> m.getCoursework().getId().equals(w.getId()))
-                            .collect(Collectors.toCollection(
-                                    CopyOnWriteArrayList::new
-                            ));
-                    w.setMarks(wMarks);
+                    w.setMarks(mappedMarks.get(w.getId()));
                     return w;
                 })
                 .collect(Collectors.toCollection(

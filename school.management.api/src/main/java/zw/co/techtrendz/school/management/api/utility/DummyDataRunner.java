@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.enums.*;
 import zw.co.techtrendz.school.management.api.service.*;
+import zw.co.techtrendz.school.management.api.view.ExtraCurricularYearDto;
+import zw.co.techtrendz.school.management.api.view.StudentDto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,6 +37,8 @@ public class DummyDataRunner {
     private final TeacherService teacherService;
     private final UserService userService;
     private final CourseworkService courseworkService;
+    private final ActivityPointService activityPointService;
+    private final RatingService ratingService;
 
     public DummyDataRunner(
             ClassroomService classroomService,
@@ -50,7 +54,9 @@ public class DummyDataRunner {
             SubjectYearService subjectYearService,
             TeacherService teacherService,
             UserService userService,
-            CourseworkService courseworkService
+            CourseworkService courseworkService,
+            ActivityPointService activityPointService,
+            RatingService ratingService
     ) {
         this.classroomService = classroomService;
         this.classroomYearService = classroomYearService;
@@ -66,6 +72,8 @@ public class DummyDataRunner {
         this.teacherService = teacherService;
         this.userService = userService;
         this.courseworkService = courseworkService;
+        this.activityPointService = activityPointService;
+        this.ratingService = ratingService;
     }
 
     @Bean
@@ -92,6 +100,8 @@ public class DummyDataRunner {
         this.dummyExtraCurricular();
         this.dummyExtraCurricularYear();
         this.dummyCoursework();
+        this.dummyActivityPoint();
+        this.dummyRating();
     }
 
     private void dummyPersons() {
@@ -116,6 +126,7 @@ public class DummyDataRunner {
         p2.setFirstName("Leah");
         p2.setOtherNames("Ane");
         p2.setLastName("Kandemwa");
+        p2.setEmail("leah.a.kandemwa@mail.com");
         p2.setDateOfBirth(LocalDate.of(2010, 5, 15));
 
         Person p3 = new Person();
@@ -177,9 +188,9 @@ public class DummyDataRunner {
 
         for (int i = 0; i < 15; i++) {
             Person person = new Person();
-            person.setFirstName(firstNames[this.getRandomNumber(0, 70)]);
-            person.setLastName(lastNames[this.getRandomNumber(0, 30)]);
-            int otherNameLotto = this.getRandomNumber(0, 93);
+            person.setFirstName(firstNames[AppUtils.getRandom(0, 70)]);
+            person.setLastName(lastNames[AppUtils.getRandom(0, 30)]);
+            int otherNameLotto = AppUtils.getRandom(0, 93);
             person.setOtherNames(otherNameLotto < 70 ? firstNames[otherNameLotto] : "");
             person.setSalutation(random.nextBoolean() ? Salutation.MR : Salutation.MS);
             person.setDateOfBirth(LocalDate.of(1980 + random.nextInt(15), 1 + random.nextInt(12), 1 + random.nextInt(28)));
@@ -256,7 +267,7 @@ public class DummyDataRunner {
                 SubjectYear sy = new SubjectYear();
                 sy.setSubject(subject);
                 sy.setCalendarYear(year);
-                sy.setTeacher(teachers.get(this.getRandomNumber(0, teachers.size() - 1)));
+                sy.setTeacher(teachers.get(AppUtils.getRandom(0, teachers.size() - 1)));
                 if (subject.getCode().equals("BES101") && year == 2023) {
                     sy.setStatus(Status.DISABLED);
                 }
@@ -323,7 +334,7 @@ public class DummyDataRunner {
                 cy.setCalendarYear(year);
                 cy.setSubjects(
                         subjectYears
-                                .stream()
+                                .parallelStream()
                                 .filter(
                                         subjectYear ->
                                                 subjectYear
@@ -337,7 +348,7 @@ public class DummyDataRunner {
                                                 )
                                 )
                 );
-                cy.setHomeroomTeacher(teachers.get(this.getRandomNumber(0, teachers.size() - 1)));
+                cy.setHomeroomTeacher(teachers.get(AppUtils.getRandom(0, teachers.size() - 1)));
                 classroomYears.add(cy);
             }
         }
@@ -394,9 +405,9 @@ public class DummyDataRunner {
         int currentPersonId = 1;
 
         for (int i = 0; i < studentCount; i++) {
-            String firstName = firstNames[this.getRandomNumber(0, 90)];
-            String lastName = lastNames[this.getRandomNumber(0, 70)];
-            int otherNameLotto = this.getRandomNumber(0, 103);
+            String firstName = firstNames[AppUtils.getRandom(0, 90)];
+            String lastName = lastNames[AppUtils.getRandom(0, 70)];
+            int otherNameLotto = AppUtils.getRandom(0, 103);
             String otherName = otherNameLotto < 90 ? firstNames[otherNameLotto] : "";
 
             Person person = new Person();
@@ -454,7 +465,7 @@ public class DummyDataRunner {
                 u2
         );
         this.userService.saveAll(users);
-        users.stream().map(User::getId).forEach(this.userService::enableUser);
+        users.parallelStream().map(User::getId).forEach(this.userService::enableUser);
     }
 
     private void dummySchool() {
@@ -549,8 +560,8 @@ public class DummyDataRunner {
 
         for (ExtraCurricular extraCurricular : extraCurriculars) {
             for (int year = 2023; year <= 2025; year++) {
-                int numberOfTeachers = this.getRandomNumber(1, 5);
-                int numberOfStudents = this.getRandomNumber(5, 30);
+                int numberOfTeachers = AppUtils.getRandom(1, 5);
+                int numberOfStudents = AppUtils.getRandom(5, 30);
                 List<Teacher> teacherList = new ArrayList<>();
                 List<Student> studentList = new ArrayList<>();
                 for (int teacherCount = 0; teacherCount < numberOfTeachers; teacherCount++) {
@@ -582,5 +593,57 @@ public class DummyDataRunner {
         courseworks.add(new Coursework(null, "Quiz 1", CourseworkType.QUIZ, new SubjectYear(64), 100.0F, 50.0F));
 
         this.courseworkService.saveAll(courseworks);
+    }
+
+    private void dummyActivityPoint() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy activity points...");
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy activity point for extra curricular year 35...");
+
+        ExtraCurricularYearDto extraCurricularYearDto = this.extraCurricularYearService.getViewById(35L);
+        List<StudentDto> studentDtoList = extraCurricularYearDto.getStudents();
+        int studentsLength = studentDtoList.size();
+        int start = Math.min(studentsLength, 3);
+        int end = Math.max(studentsLength - 1, 0);
+        int randomCutoff = AppUtils.getRandom(start, end);
+        List<ActivityPoint> activityPoints = new ArrayList<>();
+        String remark = "Assessment of student's artistic performance";
+
+        studentDtoList
+                .subList(0, randomCutoff)
+                .parallelStream()
+                .forEach(student -> {
+                    activityPoints.add(
+                            new ActivityPoint(
+                                    null,
+                                    new ExtraCurricularYear(extraCurricularYearDto.getId()),
+                                    new Student(student.getId()),
+                                    remark,
+                                    null
+                            )
+                    );
+                });
+
+        this.activityPointService.saveAll(activityPoints);
+    }
+
+    private void dummyRating() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy ratings...");
+
+        List<ActivityPoint> activityPoints = this.activityPointService.getAll();
+        List<Rating> ratings = new ArrayList<>();
+
+        activityPoints
+                .parallelStream()
+                .forEach(ap -> {
+                    ratings.add(
+                            new Rating(
+                                    null,
+                                    ap,
+                                    AppUtils.getRandom(60F, 75F, 2)
+                            )
+                    );
+                });
+
+        this.ratingService.saveAll(ratings);
     }
 }

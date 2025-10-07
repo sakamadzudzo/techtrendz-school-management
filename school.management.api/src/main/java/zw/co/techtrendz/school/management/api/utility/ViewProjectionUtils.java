@@ -239,7 +239,8 @@ public class ViewProjectionUtils {
                 student.startYear,
                 student.endYear,
                 new NullExpression<>(Long.class),
-                new NullExpression<>(Long.class)
+                new NullExpression<>(Long.class),
+                new NullExpression<>(ActivityPoint.class)
         );
     }
 
@@ -268,7 +269,8 @@ public class ViewProjectionUtils {
                 student.startYear,
                 student.endYear,
                 new NullExpression<>(Long.class),
-                student.dorm.id
+                student.dorm.id,
+                new NullExpression<>(ActivityPoint.class)
         );
     }
 
@@ -298,7 +300,8 @@ public class ViewProjectionUtils {
                 student.startYear,
                 student.endYear,
                 extraCurricularYear.id,
-                new NullExpression<>(Long.class)
+                new NullExpression<>(Long.class),
+                new NullExpression<>(ActivityPoint.class)
         );
     }
 
@@ -357,7 +360,8 @@ public class ViewProjectionUtils {
                 student.startYear,
                 student.endYear,
                 new NullExpression<>(Long.class),
-                new NullExpression<>(Long.class)
+                new NullExpression<>(Long.class),
+                new NullExpression<>(ActivityPoint.class)
         );
     }
 
@@ -548,12 +552,28 @@ public class ViewProjectionUtils {
                         new NullExpression<>(Integer.class),
                         new NullExpression<>(Integer.class),
                         new NullExpression<>(ClassroomYear.class),
-                        new NullExpression<>(ExtraCurricularYear.class),
+                        new NullExpression<>(List.class),
                         new NullExpression<>(DormYear.class),
                         new NullExpression<>(School.class)
                 ),
-                activityPoint.passPercentage,
-                activityPoint.percentage
+                activityPoint.remarks,
+                new NullExpression<>(List.class)
+        );
+    }
+
+    public static ConstructorExpression<Rating> getRating() {
+        QRating rating = QRating.rating1;
+
+        return Projections.constructor(Rating.class,
+                rating.id,
+                Projections.constructor(ActivityPoint.class,
+                        rating.activityPoint.id,
+                        new NullExpression<>(ExtraCurricularYear.class),
+                        new NullExpression<>(Student.class),
+                        new NullExpression<>(String.class),
+                        new NullExpression<>(List.class)
+                ),
+                rating.rating
         );
     }
 }

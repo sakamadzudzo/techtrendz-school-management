@@ -33,7 +33,7 @@ public class ExtraCurricularServiceImpl implements ExtraCurricularService {
 
     @Override
     public List<ExtraCurricular> saveAll(List<ExtraCurricular> extraCurriculars) {
-        return extraCurriculars.stream().map(this::save).toList();
+        return extraCurriculars.parallelStream().map(this::save).toList();
     }
 
     @Override

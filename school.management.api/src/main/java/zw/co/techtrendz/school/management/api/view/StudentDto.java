@@ -3,12 +3,14 @@ package zw.co.techtrendz.school.management.api.view;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import zw.co.techtrendz.school.management.api.entity.ActivityPoint;
 import zw.co.techtrendz.school.management.api.enums.Salutation;
 import zw.co.techtrendz.school.management.api.enums.Status;
 import zw.co.techtrendz.school.management.api.utility.AppUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -58,6 +60,8 @@ public class StudentDto {
     private Long extraCurricularYearId;
 
     private Long dormId;
+
+    private ActivityPoint activityPoint;
 
     public String getFullname() {
         return AppUtils.getFullname(this.salutation, this.firstName, this.otherNames, this.lastName);

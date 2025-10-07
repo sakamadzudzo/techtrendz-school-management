@@ -175,7 +175,7 @@ public class TeacherQueryService {
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .fetch();
 
-        return results.stream()
+        return results.parallelStream()
                 .map(tuple -> {
                     String name = AppUtils.getFullname(tuple.get(teacher.person.salutation), tuple.get(teacher.person.firstName), tuple.get(teacher.person.otherNames), tuple.get(teacher.person.lastName));
                     YearDropdown dto = new YearDropdown();

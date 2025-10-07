@@ -24,6 +24,8 @@ import zw.co.techtrendz.school.management.api.utility.SpecificationUtils;
 import zw.co.techtrendz.school.management.api.view.UserDto;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -73,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> saveAll(List<User> users) {
-        return users.stream().map(this::save).toList();
+        return users.parallelStream().map(this::save).toList();
     }
 
     @Override
