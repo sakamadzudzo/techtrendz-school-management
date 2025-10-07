@@ -16,6 +16,7 @@ import MyTable, { Column } from "./MyTable";
 import React from "react";
 import { FloppyDiskIcon } from "@phosphor-icons/react";
 import useToastError from "@/hooks/toasts/ToastError";
+import { useSaveMarks } from "@/hooks/useMarks";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 
@@ -46,9 +47,9 @@ export const ViewMarks = ({
   decrementLoading,
   reloadTrigger,
 }: ViewMarksProps) => {
-  const [error, setError] = React.useState<string | null>(null);
-  const [statusCode, setStatusCode] = React.useState(0);
   const token = useSelector((state: RootState) => state.auth.token);
+  const { saveMarks } = useSaveMarks();
+
   const initialMark: Mark = {
     coursework: { id: courseworkId } as Coursework,
     student: {} as Student,
@@ -297,9 +298,6 @@ export const ViewMarks = ({
       useToastError({ error: "There are no changes to save" });
       return;
     }
-    setError(null);
-    setStatusCode(0);
-    incrementLoading();
 
     const changedIds: number[] = originalMarksTrack.map((item) =>
       Number(item.studentId)
@@ -308,32 +306,15 @@ export const ViewMarks = ({
       changedIds.includes(Number(item.student.id))
     );
 
-    try {
-      const res = await fetch("/api/mark?action=save-all-marks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(changes),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        const err = data.error || "Updating marks failed";
-        const code = res.status || 500;
-        setError(err);
-        setStatusCode(code);
-        useToastError({ error: err, statusCode: code });
-        return;
-      } else {
-        reloadTrigger();
-      }
-    } catch (err: any) {
-      setError(err.response.data.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-    } finally {
-      decrementLoading();
-    }
+    await saveMarks(
+      changes,
+      incrementLoading,
+      decrementLoading,
+      reloadTrigger, // onSuccess callback
+      (error, statusCode) => {
+        useToastError({ error, statusCode });
+      } // onError callback
+    );
   };
 
   return (
