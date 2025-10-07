@@ -169,3 +169,49 @@ export function useDormsList({
     mutate,
   };
 }
+
+export function useSaveDorm() {
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const saveDorm = async (
+    dormDto: any,
+    incrementLoading?: () => void,
+    decrementLoading?: () => void,
+    onSuccess?: () => void,
+    onError?: (error: string, statusCode: number) => void
+  ) => {
+    incrementLoading?.();
+
+    try {
+      const res = await fetch("/api/dorm?action=save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(dormDto),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const err = data.error || "Dorm creation failed";
+        const code = res.status || 500;
+        onError?.(err, code);
+        return { success: false, error: err, statusCode: code };
+      } else {
+        onSuccess?.();
+        return { success: true, data };
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "Network/Server error";
+      const statusCode = err.status || 500;
+      onError?.(errorMessage, statusCode);
+      return { success: false, error: errorMessage, statusCode };
+    } finally {
+      decrementLoading?.();
+    }
+  };
+
+  return { saveDorm };
+}

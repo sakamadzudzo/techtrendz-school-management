@@ -1,7 +1,7 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
 import useToastError from "@/hooks/toasts/ToastError";
-import { useSubjectById } from "@/hooks/useSubjects";
+import { useSubjectById, useSaveSubject } from "@/hooks/useSubjects";
 import { RootState } from "@/store/store";
 import { subjectTypes } from "@/utils/classes";
 import { Errors, Subject, SubjectType } from "@/utils/types";
@@ -37,6 +37,7 @@ export default function SubjectEdit({
   const token = useSelector((state: RootState) => state.auth.token);
   const router = useRouter();
   const { subject: oldSubject, isLoading, isError } = useSubjectById(id!);
+  const { saveSubject } = useSaveSubject();
 
   const editMsg: React.ReactNode = (
     <div className="w-full">
@@ -105,34 +106,26 @@ export default function SubjectEdit({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    incrementLoading();
+
     if (!validate()) {
-      decrementLoading();
       return;
     }
-    try {
-      const res = await fetch("/api/subject?action=save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(subject),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Saving subject failed");
-        setStatusCode(res.status || 500);
-        return;
-      } else if (data?.id) {
-        router.push(`/subject/one?id=${data?.id}`);
-      }
-    } catch (err: any) {
-      setError(err.response.data.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-    } finally {
-      decrementLoading();
-    }
+
+    await saveSubject(
+      subject,
+      incrementLoading,
+      decrementLoading,
+      () => {
+        if (subject?.id) {
+          router.push(`/subject/one?id=${subject.id}`);
+        }
+      }, // onSuccess callback with router.push
+      (error, statusCode) => {
+        setError(error);
+        setStatusCode(statusCode);
+        useToastError({ error, statusCode });
+      } // onError callback
+    );
   };
 
   return (

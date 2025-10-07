@@ -86,35 +86,6 @@ export function useRatingsByActivityId(activityId: string | undefined) {
   };
 }
 
-export function useSaveRating() {
-  const token = useSelector((state: RootState) => state.auth.token);
-
-  const saveRating = async (ratingDto: any) => {
-    if (!token) throw new Error("No authentication token");
-
-    const res = await fetch("/api/rating?action=save", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(ratingDto),
-    });
-
-    if (!res.ok) {
-      let backendError = "Rating creation failed";
-      try {
-        const errorBody = await res.json();
-        backendError = errorBody.message || errorBody.error || backendError;
-      } catch {}
-      throw new ApiError(backendError, res.status);
-    }
-
-    return res.json();
-  };
-
-  return { saveRating };
-}
 
 export function useSaveAllRatings() {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -144,4 +115,50 @@ export function useSaveAllRatings() {
   };
 
   return { saveAllRatings };
+}
+
+export function useSaveRating() {
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const saveRating = async (
+    ratingDto: any,
+    incrementLoading?: () => void,
+    decrementLoading?: () => void,
+    onSuccess?: () => void,
+    onError?: (error: string, statusCode: number) => void
+  ) => {
+    incrementLoading?.();
+
+    try {
+      const res = await fetch("/api/rating?action=save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(ratingDto),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const err = data.error || "Rating creation failed";
+        const code = res.status || 500;
+        onError?.(err, code);
+        return { success: false, error: err, statusCode: code };
+      } else {
+        onSuccess?.();
+        return { success: true, data };
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "Network/Server error";
+      const statusCode = err.status || 500;
+      onError?.(errorMessage, statusCode);
+      return { success: false, error: errorMessage, statusCode };
+    } finally {
+      decrementLoading?.();
+    }
+  };
+
+  return { saveRating };
 }

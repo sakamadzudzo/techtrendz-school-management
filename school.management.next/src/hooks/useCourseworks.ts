@@ -133,3 +133,95 @@ export function useCourseworksByTypeBySubject(
     mutate,
   };
 }
+
+export function useSaveCoursework() {
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const saveCoursework = async (
+    courseworkDto: any,
+    incrementLoading?: () => void,
+    decrementLoading?: () => void,
+    onSuccess?: () => void,
+    onError?: (error: string, statusCode: number) => void
+  ) => {
+    incrementLoading?.();
+
+    try {
+      const res = await fetch("/api/coursework?action=save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(courseworkDto),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const err = data.error || "Coursework creation failed";
+        const code = res.status || 500;
+        onError?.(err, code);
+        return { success: false, error: err, statusCode: code };
+      } else {
+        onSuccess?.();
+        return { success: true, data };
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "Network/Server error";
+      const statusCode = err.status || 500;
+      onError?.(errorMessage, statusCode);
+      return { success: false, error: errorMessage, statusCode };
+    } finally {
+      decrementLoading?.();
+    }
+  };
+
+  return { saveCoursework };
+}
+
+export function useSaveAllCourseworks() {
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const saveAllCourseworks = async (
+    courseworksDto: any[],
+    incrementLoading?: () => void,
+    decrementLoading?: () => void,
+    onSuccess?: () => void,
+    onError?: (error: string, statusCode: number) => void
+  ) => {
+    incrementLoading?.();
+
+    try {
+      const res = await fetch("/api/coursework?action=save-all", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(courseworksDto),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const err = data.error || "Bulk coursework creation failed";
+        const code = res.status || 500;
+        onError?.(err, code);
+        return { success: false, error: err, statusCode: code };
+      } else {
+        onSuccess?.();
+        return { success: true, data };
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "Network/Server error";
+      const statusCode = err.status || 500;
+      onError?.(errorMessage, statusCode);
+      return { success: false, error: errorMessage, statusCode };
+    } finally {
+      decrementLoading?.();
+    }
+  };
+
+  return { saveAllCourseworks };
+}

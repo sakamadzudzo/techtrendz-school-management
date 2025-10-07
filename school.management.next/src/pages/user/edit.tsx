@@ -1,6 +1,6 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
-import { useUserById } from "@/hooks/useUsers";
+import { useUserById, useSaveUser } from "@/hooks/useUsers";
 import { RootState } from "@/store/store";
 import { Errors, User } from "@/utils/types";
 import { Form, Button, Input, Select, SelectItem, Switch } from "@heroui/react";
@@ -31,6 +31,7 @@ export default function UserEdit({
   const token = useSelector((state: RootState) => state.auth.token);
   const router = useRouter();
   const { user: oldUser, isLoading, isError } = useUserById(id!);
+  const { saveUser } = useSaveUser();
   const [updatePassword, setUpdatePassword] = React.useState(false);
   const [updateUsername, setUpdateUsername] = React.useState(false);
   const [errors, setErrors] = React.useState<Errors<User, string>>(
@@ -147,45 +148,26 @@ export default function UserEdit({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    incrementLoading();
 
     if (!validate()) {
-      decrementLoading();
       return;
     }
 
-    try {
-      const res = await fetch("/api/user?action=save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(user),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        const err = data.error || "Sving teacher failed";
-        const code = res.status || 500;
-        setError(err);
-        setStatusCode(code);
-        useToastError({ error: err, statusCode: code });
-        return;
-      } else if (data?.id) {
-        router.push(`/user/one?id=${data?.id}`);
-      }
-    } catch (err: any) {
-      setError(err.response.data.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-      useToastError({
-        error: "Network/Server error",
-        statusCode: err.status || 500,
-      });
-    } finally {
-      decrementLoading();
-    }
+    await saveUser(
+      user,
+      incrementLoading,
+      decrementLoading,
+      () => {
+        if (user?.id) {
+          router.push(`/user/one?id=${user.id}`);
+        }
+      }, // onSuccess callback with router.push
+      (error, statusCode) => {
+        setError(error);
+        setStatusCode(statusCode);
+        useToastError({ error, statusCode });
+      } // onError callback
+    );
   };
 
   return (

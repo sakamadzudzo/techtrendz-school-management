@@ -168,3 +168,49 @@ export function useClassroomYearsDropdown() {
     mutate,
   };
 }
+
+export function useSaveClassroomYear() {
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const saveClassroomYear = async (
+    classroomYearDto: any,
+    incrementLoading?: () => void,
+    decrementLoading?: () => void,
+    onSuccess?: () => void,
+    onError?: (error: string, statusCode: number) => void
+  ) => {
+    incrementLoading?.();
+
+    try {
+      const res = await fetch("/api/classroom-year?action=save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(classroomYearDto),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const err = data.error || "Classroom year creation failed";
+        const code = res.status || 500;
+        onError?.(err, code);
+        return { success: false, error: err, statusCode: code };
+      } else {
+        onSuccess?.();
+        return { success: true, data };
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "Network/Server error";
+      const statusCode = err.status || 500;
+      onError?.(errorMessage, statusCode);
+      return { success: false, error: errorMessage, statusCode };
+    } finally {
+      decrementLoading?.();
+    }
+  };
+
+  return { saveClassroomYear };
+}

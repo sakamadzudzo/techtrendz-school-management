@@ -1,7 +1,7 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
 import useToastError from "@/hooks/toasts/ToastError";
-import { useSchoolById } from "@/hooks/useSchools";
+import { useSchoolById, useSaveSchool } from "@/hooks/useSchools";
 import { RootState } from "@/store/store";
 import { Errors, School } from "@/utils/types";
 import { Form, Button, Input, Textarea } from "@heroui/react";
@@ -37,6 +37,7 @@ export default function SchoolEdit({
   const token = useSelector((state: RootState) => state.auth.token);
   const router = useRouter();
   const { school: oldSchool, isLoading, isError } = useSchoolById(id!);
+  const { saveSchool } = useSaveSchool();
 
   useEffect(() => {
     isError &&
@@ -131,45 +132,26 @@ export default function SchoolEdit({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    incrementLoading();
 
     if (!validate()) {
-      decrementLoading();
       return;
     }
 
-    try {
-      const res = await fetch("/api/school?action=save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(school),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        const err: string = data.error || "Sving school failed";
-        const code: number = res.status || 500;
-        setError(err);
-        setStatusCode(code);
-        useToastError({ error: err, statusCode: code });
-        return;
-      } else if (data?.id) {
-        router.push(`/school/one?id=${data?.id}`);
-      }
-    } catch (err: any) {
-      setError(err.response.data.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-      useToastError({
-        error: "Network/Server error",
-        statusCode: err.status || 500,
-      });
-    } finally {
-      decrementLoading();
-    }
+    await saveSchool(
+      school,
+      incrementLoading,
+      decrementLoading,
+      () => {
+        if (school?.id) {
+          router.push(`/school/one?id=${school.id}`);
+        }
+      }, // onSuccess callback with router.push
+      (error, statusCode) => {
+        setError(error);
+        setStatusCode(statusCode);
+        useToastError({ error, statusCode });
+      } // onError callback
+    );
   };
 
   return (

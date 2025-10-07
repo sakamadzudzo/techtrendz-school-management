@@ -1,6 +1,6 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
-import { useTeacherById } from "@/hooks/useTeachers";
+import { useTeacherById, useSaveTeacher } from "@/hooks/useTeachers";
 import { RootState } from "@/store/store";
 import { Errors, Teacher } from "@/utils/types";
 import { Form, Button, Input, Select, SelectItem, Switch } from "@heroui/react";
@@ -36,6 +36,7 @@ export default function TeacherEdit({
   const token = useSelector((state: RootState) => state.auth.token);
   const router = useRouter();
   const { teacher: oldTeacher, isLoading, isError } = useTeacherById(id!);
+  const { saveTeacher } = useSaveTeacher();
 
   useEffect(() => {
     isError &&
@@ -143,45 +144,26 @@ export default function TeacherEdit({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    incrementLoading();
 
     if (!validate()) {
-      decrementLoading();
       return;
     }
 
-    try {
-      const res = await fetch("/api/teacher?action=save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(teacher),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        const err = data.error || "Sving teacher failed";
-        const code = res.status || 500;
-        setError(err);
-        setStatusCode(code);
-        useToastError({ error: err, statusCode: code });
-        return;
-      } else if (data?.id) {
-        router.push(`/teacher/one?id=${data?.id}`);
-      }
-    } catch (err: any) {
-      setError(err.response.data.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-      useToastError({
-        error: "Network/Server error",
-        statusCode: err.status || 500,
-      });
-    } finally {
-      decrementLoading();
-    }
+    await saveTeacher(
+      teacher,
+      incrementLoading,
+      decrementLoading,
+      () => {
+        if (teacher?.id) {
+          router.push(`/teacher/one?id=${teacher.id}`);
+        }
+      }, // onSuccess callback with router.push
+      (error, statusCode) => {
+        setError(error);
+        setStatusCode(statusCode);
+        useToastError({ error, statusCode });
+      } // onError callback
+    );
   };
 
   return (

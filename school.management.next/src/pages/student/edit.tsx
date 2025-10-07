@@ -1,6 +1,6 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
-import { useStudentById } from "@/hooks/useStudents";
+import { useStudentById, useSaveStudent } from "@/hooks/useStudents";
 import { RootState } from "@/store/store";
 import { Errors, Student } from "@/utils/types";
 import {
@@ -63,6 +63,7 @@ export default function StudentEdit({
     isLoading: schoolsLoading,
     isError: schoolsErorr,
   } = useSchoolsList({});
+  const { saveStudent } = useSaveStudent();
 
   useEffect(() => {
     isError &&
@@ -183,45 +184,26 @@ export default function StudentEdit({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    incrementLoading();
 
-    if (!validate) {
-      decrementLoading();
+    if (!validate()) {
       return;
     }
 
-    try {
-      const res = await fetch("/api/student?action=save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(student),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        const err = data.error || "Saving student failed";
-        const code = res.status || 500;
-        setError(err);
-        setStatusCode(code);
-        useToastError({ error: err, statusCode: code });
-        return;
-      } else if (data?.id) {
-        router.push(`/student/one?id=${data?.id}`);
-      }
-    } catch (err: any) {
-      setError(err.response.data.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-      useToastError({
-        error: "Network/Server error",
-        statusCode: err.status || 500,
-      });
-    } finally {
-      decrementLoading();
-    }
+    await saveStudent(
+      student,
+      incrementLoading,
+      decrementLoading,
+      () => {
+        if (student?.id) {
+          router.push(`/student/one?id=${student.id}`);
+        }
+      }, // onSuccess callback with router.push
+      (error, statusCode) => {
+        setError(error);
+        setStatusCode(statusCode);
+        useToastError({ error, statusCode });
+      } // onError callback
+    );
   };
 
   const changeStudyDuration = (field: string, value: SharedSelection) => {

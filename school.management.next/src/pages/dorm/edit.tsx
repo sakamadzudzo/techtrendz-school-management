@@ -1,7 +1,7 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
 import useToastError from "@/hooks/toasts/ToastError";
-import { useDormById } from "@/hooks/useDorms";
+import { useDormById, useSaveDorm } from "@/hooks/useDorms";
 import { useSchoolsList } from "@/hooks/useSchools";
 import { RootState } from "@/store/store";
 import { Errors, Dorm } from "@/utils/types";
@@ -44,6 +44,7 @@ export default function DormEdit({
     isLoading: schoolsLoading,
     isError: schoolsErorr,
   } = useSchoolsList({});
+  const { saveDorm } = useSaveDorm();
 
   const editMsg: React.ReactNode = (
     <div className="w-full">
@@ -129,41 +130,26 @@ export default function DormEdit({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    incrementLoading();
 
     if (!validate()) {
-      decrementLoading();
       return;
     }
 
-    try {
-      const res = await fetch("/api/dorm?action=save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(dorm),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        const err = data.error || "Saving dorm failed";
-        const code = res.status || 500;
-        setError(err);
-        setStatusCode(code);
-        useToastError({ error: err, statusCode: code });
-        return;
-      } else if (data?.id) {
-        router.push(`/dorm/one?id=${data?.id}`);
-      }
-    } catch (err: any) {
-      setError(err.response.data.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-    } finally {
-      decrementLoading();
-    }
+    await saveDorm(
+      dorm,
+      incrementLoading,
+      decrementLoading,
+      () => {
+        if (dorm?.id) {
+          router.push(`/dorm/one?id=${dorm.id}`);
+        }
+      }, // onSuccess callback with router.push
+      (error, statusCode) => {
+        setError(error);
+        setStatusCode(statusCode);
+        useToastError({ error, statusCode });
+      } // onError callback
+    );
   };
 
   return (

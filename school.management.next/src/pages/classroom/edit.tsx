@@ -1,7 +1,7 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
 import useToastError from "@/hooks/toasts/ToastError";
-import { useClassroomById } from "@/hooks/useClassrooms";
+import { useClassroomById, useSaveClassroom } from "@/hooks/useClassrooms";
 import { RootState } from "@/store/store";
 import { Errors, Classroom } from "@/utils/types";
 import { Form, Button, Input, Textarea } from "@heroui/react";
@@ -29,6 +29,7 @@ export default function ClassroomEdit({
   const token = useSelector((state: RootState) => state.auth.token);
   const router = useRouter();
   const { classroom: oldClassroom, isLoading, isError } = useClassroomById(id!);
+  const { saveClassroom } = useSaveClassroom();
 
   const editMsg: React.ReactNode = (
     <div className="w-full">
@@ -87,39 +88,26 @@ export default function ClassroomEdit({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    incrementLoading();
 
     if (!validate()) {
-      decrementLoading();
       return;
     }
 
-    try {
-      const res = await fetch("/api/classroom?action=save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(classroom),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        const err = data.error || "Saving classroom failed";
-        const code = res.status || 500;
-        setError(err);
-        setStatusCode(code);
-        useToastError({ error: err, statusCode: code });
-        return;
-      } else if (data?.id) {
-        router.push(`/classroom/one?id=${data?.id}`);
-      }
-    } catch (err: any) {
-      setError(err.response.data.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-    } finally {
-      decrementLoading();
-    }
+    await saveClassroom(
+      classroom,
+      incrementLoading,
+      decrementLoading,
+      () => {
+        if (classroom?.id) {
+          router.push(`/classroom/one?id=${classroom.id}`);
+        }
+      }, // onSuccess callback with router.push
+      (error, statusCode) => {
+        setError(error);
+        setStatusCode(statusCode);
+        useToastError({ error, statusCode });
+      } // onError callback
+    );
   };
 
   return (

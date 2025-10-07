@@ -126,3 +126,95 @@ export function useActivityPointByStudentIdByActivityId(
     mutate,
   };
 }
+
+export function useSaveActivityPoint() {
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const saveActivityPoint = async (
+    activityPointDto: any,
+    incrementLoading?: () => void,
+    decrementLoading?: () => void,
+    onSuccess?: () => void,
+    onError?: (error: string, statusCode: number) => void
+  ) => {
+    incrementLoading?.();
+
+    try {
+      const res = await fetch("/api/activity-point?action=save-activity-point", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(activityPointDto),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const err = data.error || "Activity point creation failed";
+        const code = res.status || 500;
+        onError?.(err, code);
+        return { success: false, error: err, statusCode: code };
+      } else {
+        onSuccess?.();
+        return { success: true, data };
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "Network/Server error";
+      const statusCode = err.status || 500;
+      onError?.(errorMessage, statusCode);
+      return { success: false, error: errorMessage, statusCode };
+    } finally {
+      decrementLoading?.();
+    }
+  };
+
+  return { saveActivityPoint };
+}
+
+export function useSaveAllActivityPoints() {
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const saveAllActivityPoints = async (
+    activityPointsDto: any[],
+    incrementLoading?: () => void,
+    decrementLoading?: () => void,
+    onSuccess?: () => void,
+    onError?: (error: string, statusCode: number) => void
+  ) => {
+    incrementLoading?.();
+
+    try {
+      const res = await fetch("/api/activity-point?action=save-all-activity-points", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(activityPointsDto),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const err = data.error || "Bulk activity point creation failed";
+        const code = res.status || 500;
+        onError?.(err, code);
+        return { success: false, error: err, statusCode: code };
+      } else {
+        onSuccess?.();
+        return { success: true, data };
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "Network/Server error";
+      const statusCode = err.status || 500;
+      onError?.(errorMessage, statusCode);
+      return { success: false, error: errorMessage, statusCode };
+    } finally {
+      decrementLoading?.();
+    }
+  };
+
+  return { saveAllActivityPoints };
+}

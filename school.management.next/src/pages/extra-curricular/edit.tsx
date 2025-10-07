@@ -1,7 +1,7 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import InlineError from "@/components/InlineError";
 import useToastError from "@/hooks/toasts/ToastError";
-import { useExtraCurricularById } from "@/hooks/useExtraCurriculars";
+import { useExtraCurricularById, useSaveExtraCurricular } from "@/hooks/useExtraCurriculars";
 import { RootState } from "@/store/store";
 import { Errors, ExtraCurricular } from "@/utils/types";
 import { Form, Button, Input, Textarea } from "@heroui/react";
@@ -35,6 +35,7 @@ export default function ExtraCurricularEdit({
     isLoading,
     isError,
   } = useExtraCurricularById(id!);
+  const { saveExtraCurricular } = useSaveExtraCurricular();
 
   const editMsg: React.ReactNode = (
     <div className="w-full">
@@ -100,41 +101,26 @@ export default function ExtraCurricularEdit({
     e.preventDefault();
     setError(null);
     setStatusCode(0);
-    incrementLoading();
 
     if (!validate()) {
-      decrementLoading();
       return;
     }
 
-    try {
-      const res = await fetch("/api/extra-curricular?action=save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(extraCurricular),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        const err = data.error || "Saving extra curricula failed";
-        const code = res.status || 500;
-        setError(err);
-        setStatusCode(code);
-        useToastError({ error: err, statusCode: code });
-        return;
-      } else if (data?.id) {
-        router.push(`/extra-curricular/one?id=${data?.id}`);
-      }
-    } catch (err: any) {
-      setError(err.response.data.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-    } finally {
-      decrementLoading();
-    }
+    await saveExtraCurricular(
+      extraCurricular,
+      incrementLoading,
+      decrementLoading,
+      () => {
+        if (extraCurricular?.id) {
+          router.push(`/extra-curricular/one?id=${extraCurricular.id}`);
+        }
+      }, // onSuccess callback with router.push
+      (error, statusCode) => {
+        setError(error);
+        setStatusCode(statusCode);
+        useToastError({ error, statusCode });
+      } // onError callback
+    );
   };
 
   return (
