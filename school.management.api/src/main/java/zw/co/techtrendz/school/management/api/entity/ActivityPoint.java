@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.entity;
 
+import com.querydsl.core.annotations.QueryInit;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -22,9 +23,11 @@ public class ActivityPoint extends Base {
     private Long id;
 
     @ManyToOne
+    @QueryInit("*.*")
     private ExtraCurricularYear extraCurricularYear;
 
     @ManyToOne
+    @QueryInit("*.*")
     private Student student;
 
     private String remarks;

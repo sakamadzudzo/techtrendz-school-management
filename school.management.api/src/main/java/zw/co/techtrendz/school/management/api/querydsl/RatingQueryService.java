@@ -93,7 +93,7 @@ public class RatingQueryService {
         return queryFactory
                 .select(ViewProjectionUtils.getRating())
                 .from(rating)
-                .where(rating.activityPoint.id.eq(activityId)
+                .where(rating.activityPoint.extraCurricularYear.extraCurricular.id.eq(activityId)
                         .and(rating.activityPoint.extraCurricularYear.calendarYear.eq(year)))
                 .fetch();
     }

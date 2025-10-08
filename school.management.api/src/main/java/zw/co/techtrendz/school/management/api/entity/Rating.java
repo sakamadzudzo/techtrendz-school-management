@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.entity;
 
+import com.querydsl.core.annotations.QueryInit;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -20,6 +21,7 @@ public class Rating extends Base {
     private Long id;
 
     @ManyToOne
+    @QueryInit("*.*")
     private ActivityPoint activityPoint;
 
     @NotNull(message = "Rating is mandatory")

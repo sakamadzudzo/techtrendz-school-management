@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.entity;
 
+import com.querydsl.core.annotations.QueryInit;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -22,12 +23,15 @@ public class ExtraCurricularYear extends Base{
     private Integer calendarYear;
 
     @ManyToOne
+    @QueryInit("*.*")
     private ExtraCurricular extraCurricular;
 
     @ManyToMany
+    @QueryInit("*.*")
     private List<Teacher> facilitators;
 
     @ManyToMany
+    @QueryInit("*.*")
     private List<Student> students;
 
     public ExtraCurricularYear(long id) {
