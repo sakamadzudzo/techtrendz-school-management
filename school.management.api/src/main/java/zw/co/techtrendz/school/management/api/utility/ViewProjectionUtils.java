@@ -584,4 +584,53 @@ public class ViewProjectionUtils {
                 rating.rating
         );
     }
+
+    public static ConstructorExpression<Rating> getRatingWithNestedFields() {
+        QRating rating = QRating.rating1;
+
+        return Projections.constructor(Rating.class,
+                rating.id,
+                Projections.constructor(ActivityPoint.class,
+                        rating.activityPoint.id,
+                        Projections.constructor(ExtraCurricularYear.class,
+                                rating.activityPoint.extraCurricularYear.id,
+                                rating.activityPoint.extraCurricularYear.calendarYear,
+                                Projections.constructor(ExtraCurricular.class,
+                                        rating.activityPoint.extraCurricularYear.extraCurricular.id,
+                                        rating.activityPoint.extraCurricularYear.extraCurricular.name,
+                                        rating.activityPoint.extraCurricularYear.extraCurricular.description
+                                ),
+                                new NullExpression<>(List.class),
+                                new NullExpression<>(List.class)
+                        ),
+                        Projections.constructor(Student.class,
+                                rating.activityPoint.student.id,
+                                Projections.constructor(Person.class,
+                                        rating.activityPoint.student.person.id,
+                                        rating.activityPoint.student.person.salutation,
+                                        rating.activityPoint.student.person.firstName,
+                                        rating.activityPoint.student.person.otherNames,
+                                        rating.activityPoint.student.person.lastName,
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(LocalDate.class)
+                                ),
+                                new NullExpression<>(Integer.class),
+                                new NullExpression<>(Integer.class),
+                                new NullExpression<>(ClassroomYear.class),
+                                new NullExpression<>(List.class),
+                                new NullExpression<>(DormYear.class),
+                                new NullExpression<>(School.class)
+                        ),
+                        new NullExpression<>(String.class),
+                        new NullExpression<>(List.class)
+                ),
+                rating.rating
+        );
+    }
 }

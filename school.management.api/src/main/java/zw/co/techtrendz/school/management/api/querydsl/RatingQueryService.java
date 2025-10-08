@@ -68,7 +68,7 @@ public class RatingQueryService {
         QRating rating = QRating.rating1;
 
         return queryFactory
-                .select(ViewProjectionUtils.getRating())
+                .select(ViewProjectionUtils.getRatingWithNestedFields())
                 .from(rating)
                 .where(rating.activityPoint.student.id.eq(studentId)
                         .and(rating.activityPoint.id.eq(activityId))
@@ -80,7 +80,7 @@ public class RatingQueryService {
         QRating rating = QRating.rating1;
 
         return queryFactory
-                .select(ViewProjectionUtils.getRating())
+                .select(ViewProjectionUtils.getRatingWithNestedFields())
                 .from(rating)
                 .where(rating.activityPoint.student.id.eq(studentId)
                         .and(rating.activityPoint.extraCurricularYear.calendarYear.eq(year)))
@@ -91,7 +91,7 @@ public class RatingQueryService {
         QRating rating = QRating.rating1;
 
         return queryFactory
-                .select(ViewProjectionUtils.getRating())
+                .select(ViewProjectionUtils.getRatingWithNestedFields())
                 .from(rating)
                 .where(rating.activityPoint.extraCurricularYear.extraCurricular.id.eq(activityId)
                         .and(rating.activityPoint.extraCurricularYear.calendarYear.eq(year)))
@@ -102,7 +102,7 @@ public class RatingQueryService {
         QRating rating = QRating.rating1;
 
         return queryFactory
-                .select(ViewProjectionUtils.getRating())
+                .select(ViewProjectionUtils.getRatingWithNestedFields())
                 .from(rating)
                 .where(rating.activityPoint.extraCurricularYear.facilitators.any().id.eq(teacherId)
                         .and(rating.activityPoint.extraCurricularYear.calendarYear.eq(year)))

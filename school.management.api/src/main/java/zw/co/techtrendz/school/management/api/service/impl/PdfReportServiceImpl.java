@@ -300,6 +300,7 @@ public class PdfReportServiceImpl implements PdfReportService {
 
             // Retrieve data from database
             List<Rating> ratings = ratingService.getAllByActivityIdByYear(activityId, year);
+            System.out.println(ratings);
             List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataByActivityYear(ratings, activityId, year);
 
             return generateReport("ratings_by_activity_year", parameters, data);

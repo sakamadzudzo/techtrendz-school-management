@@ -3,6 +3,8 @@ package zw.co.techtrendz.school.management.api.querydsl;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.Mark;
+import zw.co.techtrendz.school.management.api.entity.QClassroom;
+import zw.co.techtrendz.school.management.api.entity.QClassroomYear;
 import zw.co.techtrendz.school.management.api.entity.QMark;
 import zw.co.techtrendz.school.management.api.enums.CourseworkType;
 import zw.co.techtrendz.school.management.api.utility.ViewProjectionUtils;
@@ -179,12 +181,17 @@ public class MarkQueryService {
 
     public List<Mark> getAllByClassroomIdByYear(long classroomId, int year) {
         QMark mark = QMark.mark1;
+        QClassroomYear classroomYear = QClassroomYear.classroomYear;
+        QClassroom classroom = QClassroom.classroom;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
                 .from(mark)
-                .where(mark.student.classroom.isNotNull()
-                        .and(mark.student.classroom.classroom.id.eq(classroomId))
+                .leftJoin(classroomYear)
+                .on(mark.student.classroom.id.eq(classroomYear.id))
+                .leftJoin(classroom)
+                .on(classroomYear.classroom.id.eq(classroom.id))
+                .where(classroom.id.eq(classroomId)
                         .and(mark.coursework.subject.calendarYear.eq(year)))
                 .fetch();
     }
