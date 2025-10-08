@@ -63,4 +63,49 @@ public class RatingQueryService {
                 .where(rating.activityPoint.id.in(activityIds))
                 .fetch();
     }
+
+    public List<Rating> getAllByStudentIdByActivityIdByYear(long studentId, long activityId, int year) {
+        QRating rating = QRating.rating1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getRating())
+                .from(rating)
+                .where(rating.activityPoint.student.id.eq(studentId)
+                        .and(rating.activityPoint.id.eq(activityId))
+                        .and(rating.activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<Rating> getAllByStudentIdByYear(long studentId, int year) {
+        QRating rating = QRating.rating1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getRating())
+                .from(rating)
+                .where(rating.activityPoint.student.id.eq(studentId)
+                        .and(rating.activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<Rating> getAllByActivityIdByYear(long activityId, int year) {
+        QRating rating = QRating.rating1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getRating())
+                .from(rating)
+                .where(rating.activityPoint.id.eq(activityId)
+                        .and(rating.activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<Rating> getAllByTeacherIdByYear(long teacherId, int year) {
+        QRating rating = QRating.rating1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getRating())
+                .from(rating)
+                .where(rating.activityPoint.extraCurricularYear.facilitators.any().id.eq(teacherId)
+                        .and(rating.activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
 }

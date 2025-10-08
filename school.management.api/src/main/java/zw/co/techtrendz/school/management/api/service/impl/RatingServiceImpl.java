@@ -48,4 +48,24 @@ public class RatingServiceImpl implements RatingService {
     public List<Rating> getAllByActivityIds(List<Long> activityIds) {
         return this.ratingQueryService.getAllByActivityIds(activityIds);
     }
+
+    @Override
+    public List<Rating> getAllByStudentIdByActivityIdByYear(long studentId, long activityId, int year) {
+        return this.ratingQueryService.getAllByStudentIdByActivityIdByYear(studentId, activityId, year);
+    }
+
+    @Override
+    public List<Rating> getAllByStudentIdByYear(long studentId, int year) {
+        return this.ratingQueryService.getAllByStudentIdByYear(studentId, year);
+    }
+
+    @Override
+    public List<Rating> getAllByActivityIdByYear(long activityId, int year) {
+        return this.ratingQueryService.getAllByActivityIdByYear(activityId, year);
+    }
+
+    @Override
+    public List<Rating> getAllByTeacherIdByYear(long teacherId, int year) {
+        return this.ratingQueryService.getAllByTeacherIdByYear(teacherId, year);
+    }
 }

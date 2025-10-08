@@ -95,4 +95,39 @@ public class MarkServiceImpl implements MarkService {
     public List<Mark> getAllByCourseworkIds(List<Long> courseworkIds) {
         return this.markQueryService.getAllByCourseworkIds(courseworkIds);
     }
+
+    @Override
+    public List<Mark> getAllByStudentIdByClassroomIdByYear(long studentId, long classroomId, int year) {
+        return this.markQueryService.getAllByStudentIdByClassroomIdByYear(studentId, classroomId, year);
+    }
+
+    @Override
+    public List<Mark> getAllByStudentIdBySubjectIdByYear(long studentId, long subjectId, int year) {
+        return this.markQueryService.getAllByStudentIdBySubjectIdByYear(studentId, subjectId, year);
+    }
+
+    @Override
+    public List<Mark> getAllByStudentIdByYear(long studentId, int year) {
+        return this.markQueryService.getAllByStudentIdByYear(studentId, year);
+    }
+
+    @Override
+    public List<Mark> getAllByClassroomIdByYear(long classroomId, int year) {
+        return this.markQueryService.getAllByClassroomIdByYear(classroomId, year);
+    }
+
+    @Override
+    public List<Mark> getAllBySubjectIdByYear(long subjectId, int year) {
+        return this.markQueryService.getAllBySubjectIdByYear(subjectId, year);
+    }
+
+    @Override
+    public List<Mark> getAllByTeacherIdByYear(long teacherId, int year) {
+        return this.markQueryService.getAllByTeacherIdByYear(teacherId, year);
+    }
+
+    @Override
+    public List<Mark> getAllByYear(int year) {
+        return this.markQueryService.getAllByYear(year);
+    }
 }

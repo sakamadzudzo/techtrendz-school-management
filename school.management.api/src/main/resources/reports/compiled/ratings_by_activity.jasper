@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ratings_by_activity" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2e4f316e-3ac8-4f4a-887d-8ae6c48ad1db">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ratings_by_activity" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3ea17ee7-c4ee-43d6-99aa-3c6ebc668c8f">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -20,7 +20,7 @@
 		<groupHeader>
 			<band height="30">
 				<textField>
-					<reportElement x="0" y="5" width="555" height="20" uuid="835507cf-c042-4060-8f56-4835a252a545"/>
+					<reportElement x="0" y="5" width="555" height="20" uuid="31223748-3f7c-4a1a-b053-e68e4f1619e9"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="14" isBold="true"/>
 					</textElement>
@@ -31,7 +31,7 @@
 		<groupFooter>
 			<band height="20">
 				<line>
-					<reportElement x="0" y="0" width="555" height="1" uuid="a775a4e7-e9ee-44b2-a06d-5a290a5895c9"/>
+					<reportElement x="0" y="0" width="555" height="1" uuid="228435b0-d3b7-442a-a49c-2070ac356ad0"/>
 				</line>
 			</band>
 		</groupFooter>
@@ -39,94 +39,94 @@
 	<title>
 		<band height="50">
 			<line>
-				<reportElement x="0" y="0" width="555" height="1" uuid="57d654d7-0bf0-4492-a8b1-41bab9022b54"/>
+				<reportElement x="0" y="0" width="555" height="1" uuid="a610b3f1-485c-4af6-82ea-d53afaced99a"/>
 			</line>
 			<textField>
-				<reportElement x="0" y="10" width="555" height="30" uuid="698282cd-7262-4a25-a448-c8cedffaadf8"/>
+				<reportElement x="0" y="10" width="555" height="30" uuid="22a80d66-bf48-4f2f-9d86-040858e005cb"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Ratings Report by Extra Curricular Activity"]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="45" width="555" height="1" uuid="18a80e8e-d758-4c49-b643-c0cdfb55a57f"/>
+				<reportElement x="0" y="45" width="555" height="1" uuid="a4f33d3c-0be4-4882-9322-dcfa42b9282c"/>
 			</line>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="25">
 			<staticText>
-				<reportElement x="0" y="5" width="100" height="15" uuid="c14b17fa-fda2-4dc8-a9cd-9b8af46da462"/>
+				<reportElement x="0" y="5" width="100" height="15" uuid="ce078e62-d039-46b0-84cc-3739627afd1c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Student]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="5" width="80" height="15" uuid="c99a630f-de45-4b27-873e-3d8ba15b53aa"/>
+				<reportElement x="100" y="5" width="80" height="15" uuid="3a0c29f4-d4a3-42a4-a604-3b63f3f5f24a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Rating]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="180" y="5" width="100" height="15" uuid="d662efc8-5de5-4df6-8363-320f5a43cc4a"/>
+				<reportElement x="180" y="5" width="100" height="15" uuid="5c2180a1-2df4-49d1-acbb-c8130618261c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Percentage]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="280" y="5" width="100" height="15" uuid="9cb14c1c-c797-4978-839d-1b21f059e45b"/>
+				<reportElement x="280" y="5" width="100" height="15" uuid="e7429b84-150c-48dd-9a66-a8653975e4aa"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Pass %]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="380" y="5" width="175" height="15" uuid="664274ad-d4c7-49e3-b48c-d2af579c717d"/>
+				<reportElement x="380" y="5" width="175" height="15" uuid="58b41a3b-d72f-4349-9d56-4ba960c679b1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Facilitator]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="22" width="555" height="1" uuid="96590b75-6288-4593-a493-03d1cffc7da0"/>
+				<reportElement x="0" y="22" width="555" height="1" uuid="201a19b7-11bc-4fdd-97eb-a7d6b0f8c983"/>
 			</line>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="20">
 			<textField>
-				<reportElement x="0" y="2" width="100" height="15" uuid="88b0b6ef-ab78-43f5-8240-fe4208d3ca81"/>
+				<reportElement x="0" y="2" width="100" height="15" uuid="dd77a684-2e2d-45be-9840-65846165a6f7"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{studentName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="2" width="80" height="15" uuid="a39a9137-f794-4435-bfbc-6b0732d3a87d"/>
+				<reportElement x="100" y="2" width="80" height="15" uuid="e88a9d36-5d33-41b0-b5d9-c5bd5c3eecf5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{rating}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="180" y="2" width="100" height="15" uuid="3ba9202c-f389-4ae6-8be1-45906ea53ece"/>
+				<reportElement x="180" y="2" width="100" height="15" uuid="9551b5ec-c979-4f95-9824-2c9f4dbe4442"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{percentage}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="2" width="100" height="15" uuid="3ee56de2-36cd-49c9-b361-8400abad95b0"/>
+				<reportElement x="280" y="2" width="100" height="15" uuid="97db7ae4-dd3a-46c8-a81d-34dae2af3aab"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{passPercentage}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="380" y="2" width="175" height="15" uuid="e2edd33c-9fb0-4636-9f8f-ee5500069764"/>
+				<reportElement x="380" y="2" width="175" height="15" uuid="dbac7475-b274-4aea-8d23-df95345acbb1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
@@ -137,10 +137,10 @@
 	<summary>
 		<band height="30">
 			<line>
-				<reportElement x="0" y="0" width="555" height="1" uuid="b9dc968e-a3b0-476d-9467-492b619801f6"/>
+				<reportElement x="0" y="0" width="555" height="1" uuid="1facb181-ae5f-498c-bf74-65d55c42f53c"/>
 			</line>
 			<textField>
-				<reportElement x="0" y="5" width="555" height="20" uuid="8f8afd9a-fc49-4356-8df6-1a14143ccb44"/>
+				<reportElement x="0" y="5" width="555" height="20" uuid="07b59f95-1be0-4000-8af8-ec8eaaa12ffa"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>

@@ -32,7 +32,7 @@ public class ActivityPoint extends Base {
     @OneToMany
     private List<Rating> ratings;
 
-    private Float getOveralRating() {
+    public Float getOveralRating() {
         if (this.ratings != null && !this.ratings.isEmpty()) {
             Double overalRating = this.ratings
                     .parallelStream()

@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.entity;
 
+import com.querydsl.core.annotations.QueryInit;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -20,6 +21,7 @@ public class ClassroomYear extends Base {
     private Long id;
 
     @ManyToOne
+    @QueryInit("*.*")
     private Classroom classroom;
 
     private Integer calendarYear;
@@ -32,5 +34,10 @@ public class ClassroomYear extends Base {
 
     public ClassroomYear(long id) {
         this.id = id;
+    }
+
+    public ClassroomYear(long id, Classroom classroom) {
+        this.id = id;
+        this.classroom = classroom;
     }
 }

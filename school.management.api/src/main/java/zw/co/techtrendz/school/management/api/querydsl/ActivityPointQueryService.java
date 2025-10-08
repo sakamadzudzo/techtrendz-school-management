@@ -88,4 +88,34 @@ public class ActivityPointQueryService {
                         .and(activityPoint.extraCurricularYear.id.eq(activityId)))
                 .fetchOne();
     }
+
+    public List<ActivityPoint> getAllByTeacherId(long teacherId) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.facilitators.any().id.eq(teacherId))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByClassroomId(long classroomId) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.student.classroom.id.eq(classroomId))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByFacilitatorId(long facilitatorId) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.facilitators.any().id.eq(facilitatorId))
+                .fetch();
+    }
 }

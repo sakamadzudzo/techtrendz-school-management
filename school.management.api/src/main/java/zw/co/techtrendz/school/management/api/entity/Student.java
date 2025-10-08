@@ -49,4 +49,10 @@ public class Student extends Base {
         this.id = id;
         this.person = person;
     }
+
+    public Student(Long id, Person person, ClassroomYear classroom) {
+        this.id = id;
+        this.person = person;
+        this.classroom = classroom;
+    }
 }

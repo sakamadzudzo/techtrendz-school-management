@@ -23,4 +23,11 @@ public interface ActivityPointService {
     public List<ActivityPoint> getAllByStudentId(long studentId);
 
     public ActivityPoint getByStudentIdByActivityId(long studentId, long activityId);
+
+    // Report-specific data retrieval methods
+    public List<ActivityPoint> getAllByTeacherId(long teacherId);
+
+    public List<ActivityPoint> getAllByClassroomId(long classroomId);
+
+    public List<ActivityPoint> getAllByFacilitatorId(long facilitatorId);
 }

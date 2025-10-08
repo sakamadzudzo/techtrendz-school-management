@@ -512,7 +512,15 @@ public class ViewProjectionUtils {
                                 new NullExpression<>(String.class),
                                 new NullExpression<>(String.class),
                                 new NullExpression<>(LocalDate.class)
-                        )
+                        ),
+                        Projections.constructor(ClassroomYear.class,
+                                mark.student.classroom.id,
+                                mark.student.classroom.classroom != null ?
+                                    Projections.constructor(Classroom.class,
+                                        mark.student.classroom.classroom.id,
+                                        mark.student.classroom.classroom.name,
+                                        mark.student.classroom.classroom.description) :
+                                    new NullExpression<>(Classroom.class))
                 ),
                 mark.mark,
                 mark.status,

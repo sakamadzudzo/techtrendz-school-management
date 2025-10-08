@@ -4,6 +4,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.enums.*;
 import zw.co.techtrendz.school.management.api.service.*;
@@ -19,6 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 public class DummyDataRunner {
@@ -39,6 +41,7 @@ public class DummyDataRunner {
     private final CourseworkService courseworkService;
     private final ActivityPointService activityPointService;
     private final RatingService ratingService;
+    private final MarkService markService;
 
     public DummyDataRunner(
             ClassroomService classroomService,
@@ -56,7 +59,8 @@ public class DummyDataRunner {
             UserService userService,
             CourseworkService courseworkService,
             ActivityPointService activityPointService,
-            RatingService ratingService
+            RatingService ratingService,
+            MarkService markService
     ) {
         this.classroomService = classroomService;
         this.classroomYearService = classroomYearService;
@@ -74,6 +78,7 @@ public class DummyDataRunner {
         this.courseworkService = courseworkService;
         this.activityPointService = activityPointService;
         this.ratingService = ratingService;
+        this.markService = markService;
     }
 
     @Bean
@@ -439,11 +444,6 @@ public class DummyDataRunner {
         this.studentService.saveAll(students);
     }
 
-    private int getRandomNumber(int min, int max) {
-        Random random = new Random();
-        return random.nextInt(max - min) + min;
-    }
-
     private void dummyUser() {
         Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy users...");
         User u1 = new User();
@@ -592,7 +592,23 @@ public class DummyDataRunner {
         courseworks.add(new Coursework(null, "Assignment 2", CourseworkType.ASSIGNMENT, new SubjectYear(64), 100.0F, 70.0F));
         courseworks.add(new Coursework(null, "Quiz 1", CourseworkType.QUIZ, new SubjectYear(64), 100.0F, 50.0F));
 
-        this.courseworkService.saveAll(courseworks);
+        List<Coursework> savedCourseworks = this.courseworkService.saveAll(courseworks);
+
+        List<Mark> marks = new ArrayList<>();
+        List<YearDropdown> students = this.studentService.getAllStudentsForSubjectYear(64);
+        int studentsLength = students.size();
+        savedCourseworks
+                .parallelStream()
+                .forEach(coursework -> {
+                    int index1 = AppUtils.getRandom(0, studentsLength - 1);
+                    int index2 = AppUtils.getRandom(0, studentsLength - 1);
+                    int index3 = AppUtils.getRandom(0, studentsLength - 1);
+                    marks.add(new Mark(null, coursework, new Student(students.get(index1).getId()), AppUtils.getRandom(0F, 100F, 2)));
+                    marks.add(new Mark(null, coursework, new Student(students.get(index2).getId()), AppUtils.getRandom(0F, 100F, 2)));
+                    marks.add(new Mark(null, coursework, new Student(students.get(index3).getId()), AppUtils.getRandom(0F, 100F, 2)));
+                });
+
+        this.markService.saveAll(marks);
     }
 
     private void dummyActivityPoint() {

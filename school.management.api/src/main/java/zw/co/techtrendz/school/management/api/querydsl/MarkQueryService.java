@@ -140,4 +140,84 @@ public class MarkQueryService {
                 .where(mark.coursework.id.in(courseworkIds))
                 .fetch();
     }
+
+    public List<Mark> getAllByStudentIdByClassroomIdByYear(long studentId, long classroomId, int year) {
+        QMark mark = QMark.mark1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getMarkProjection())
+                .from(mark)
+                .where(mark.student.id.eq(studentId)
+                        .and(mark.student.classroom.isNotNull())
+                        .and(mark.student.classroom.classroom.id.eq(classroomId))
+                        .and(mark.coursework.subject.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<Mark> getAllByStudentIdBySubjectIdByYear(long studentId, long subjectId, int year) {
+        QMark mark = QMark.mark1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getMarkProjection())
+                .from(mark)
+                .where(mark.student.id.eq(studentId)
+                        .and(mark.coursework.subject.subject.id.eq(subjectId))
+                        .and(mark.coursework.subject.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<Mark> getAllByStudentIdByYear(long studentId, int year) {
+        QMark mark = QMark.mark1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getMarkProjection())
+                .from(mark)
+                .where(mark.student.id.eq(studentId)
+                        .and(mark.coursework.subject.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<Mark> getAllByClassroomIdByYear(long classroomId, int year) {
+        QMark mark = QMark.mark1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getMarkProjection())
+                .from(mark)
+                .where(mark.student.classroom.isNotNull()
+                        .and(mark.student.classroom.classroom.id.eq(classroomId))
+                        .and(mark.coursework.subject.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<Mark> getAllBySubjectIdByYear(long subjectId, int year) {
+        QMark mark = QMark.mark1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getMarkProjection())
+                .from(mark)
+                .where(mark.coursework.subject.subject.id.eq(subjectId)
+                        .and(mark.coursework.subject.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<Mark> getAllByTeacherIdByYear(long teacherId, int year) {
+        QMark mark = QMark.mark1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getMarkProjection())
+                .from(mark)
+                .where(mark.coursework.subject.teacher.id.eq(teacherId)
+                        .and(mark.coursework.subject.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<Mark> getAllByYear(int year) {
+        QMark mark = QMark.mark1;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getMarkProjection())
+                .from(mark)
+                .where(mark.coursework.subject.calendarYear.eq(year))
+                .fetch();
+    }
 }

@@ -36,4 +36,19 @@ public interface MarkService {
     public List<Mark> getAllByStudentIdBySubjectIdByCourseworkType(long studentId, long subjectId, CourseworkType type);
 
     public List<Mark> getAllByCourseworkIds(List<Long> courseworkIds);
+
+    // Report-specific data retrieval methods
+    public List<Mark> getAllByStudentIdByClassroomIdByYear(long studentId, long classroomId, int year);
+
+    public List<Mark> getAllByStudentIdBySubjectIdByYear(long studentId, long subjectId, int year);
+
+    public List<Mark> getAllByStudentIdByYear(long studentId, int year);
+
+    public List<Mark> getAllByClassroomIdByYear(long classroomId, int year);
+
+    public List<Mark> getAllBySubjectIdByYear(long subjectId, int year);
+
+    public List<Mark> getAllByTeacherIdByYear(long teacherId, int year);
+
+    public List<Mark> getAllByYear(int year);
 }
