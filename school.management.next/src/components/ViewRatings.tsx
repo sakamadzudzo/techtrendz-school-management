@@ -1,4 +1,3 @@
-import pages from "@/pages";
 import { ActivityPoint, Rating } from "@/utils/types";
 import {
   Modal,
@@ -8,13 +7,13 @@ import {
   SortDescriptor,
   Button,
   NumberInput,
-  ModalFooter,
 } from "@heroui/react";
 import MyTable, { Column } from "./MyTable";
 import React from "react";
 import useToastError from "@/hooks/toasts/ToastError";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import { useSaveAllRatings } from "@/hooks/useRatings";
 
 type ViewRatingsProps = {
   ratings?: Rating[];
@@ -58,8 +57,8 @@ export const ViewRatings = ({
 
   const [filterValue, setFilterValue] = React.useState<string>("");
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "name",
-    direction: "ascending",
+    column: "ratingString",
+    direction: "descending",
   });
   const initialRating: Rating = {
     activityPoint: { id: activityPointId } as ActivityPoint,
@@ -73,10 +72,20 @@ export const ViewRatings = ({
   const [inputValue, setInputValue] = React.useState<number | undefined>(
     undefined
   );
+  const [originalRatingsTrack, setOriginalRatingsTrack] = React.useState<
+    { ratingId: number; originalRating: number | undefined }[]
+  >([]);
+  const [tempIdCounter, setTempIdCounter] = React.useState<number>(0);
+  const { saveAllRatings } = useSaveAllRatings();
+
+  const hasChanges = React.useMemo(() => {
+    return originalRatingsTrack?.length !== 0;
+  }, [originalRatingsTrack]);
 
   React.useEffect(() => {
     if (isOpen) {
       setLocalRatings(ratings || []);
+      setOriginalRatingsTrack([]);
     }
   }, [isOpen, ratings]);
 
@@ -95,42 +104,38 @@ export const ViewRatings = ({
     ];
   }, []);
 
-  const addRating = async (activityId: number, rating: number) => {
-    setError(null);
-    setStatusCode(0);
-    incrementLoading();
-
-    const newRating: Rating = {
-      activityPoint: { id: activityId } as ActivityPoint,
-      rating: rating,
-    } as Rating;
-
-    try {
-      const res = await fetch("/api/rating?action=save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(newRating),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        const err = data.error || "Adding rating failed";
-        const code = res.status || 500;
-        setError(err);
-        setStatusCode(code);
-        useToastError({ error: err, statusCode: code });
-        return;
-      } else {
-        reloadTrigger();
-      }
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-    } finally {
-      decrementLoading();
+  const saveRatings = async () => {
+    if (!hasChanges) {
+      useToastError({ error: "There are no changes to save" });
+      return;
     }
+
+    const changedIds: number[] = originalRatingsTrack.map((item) =>
+      Number(item.ratingId)
+    );
+    const changes = localRatings.filter((item) =>
+      changedIds.includes(Number(item.id))
+    );
+
+    // Convert temporary IDs to proper format for saving
+    const ratingsToSave = changes.map((rating) => ({
+      id: rating.id > 0 ? rating.id : undefined, // Remove temp IDs
+      activityPoint: { id: activityPointId },
+      rating: rating.rating,
+    }));
+
+    await saveAllRatings(
+      ratingsToSave,
+      incrementLoading,
+      decrementLoading,
+      () => {
+        reloadTrigger();
+        onOpenChange(false);
+      },
+      (error, statusCode) => {
+        useToastError({ error, statusCode });
+      } // onError callback
+    );
   };
 
   const ratingInput = (
@@ -141,13 +146,36 @@ export const ViewRatings = ({
     const handleAccept = () => {
       const numValue: number = !value || isNaN(value) ? 0 : value;
       if (ratingId) {
+        const currentRating = localRatings?.find(
+          (r) => Number(r.id) === Number(ratingId)
+        );
+        const currentRatingValue = currentRating
+          ? currentRating.rating
+          : undefined;
+
+        // Track original rating if not already tracked
+        setOriginalRatingsTrack(
+          (
+            prev: { ratingId: number; originalRating: number | undefined }[]
+          ) => {
+            const existing = prev.find(
+              (p: { ratingId: number; originalRating: number | undefined }) =>
+                p.ratingId === ratingId
+            );
+            if (!existing) {
+              return [
+                ...prev,
+                { ratingId, originalRating: currentRatingValue },
+              ];
+            }
+            return prev;
+          }
+        );
+
         // Update existing rating
         setLocalRatings((prev) =>
           prev.map((r) => (r.id === ratingId ? { ...r, rating: numValue } : r))
         );
-      } else {
-        // Add new rating
-        addRating(activityPointId, numValue);
       }
       setEditingRatingId(null);
     };
@@ -237,6 +265,29 @@ export const ViewRatings = ({
     setEditingRatingId(ratingId);
   };
 
+  const addFunction = () => {
+    const tempId = -tempIdCounter - 1; // Use negative IDs for temporary entries
+    const newRating: Rating = {
+      id: tempId,
+      activityPoint: { id: activityPointId } as ActivityPoint,
+      rating: 0,
+    } as Rating;
+
+    setLocalRatings((prev) => [...prev, newRating]);
+    setTempIdCounter((prev) => prev + 1);
+    setEditingRatingId(tempId);
+    setInputValue(0);
+  };
+
+  const handleReset = () => {
+    // Reset to original ratings and clear tracking
+    setLocalRatings(ratings || []);
+    setOriginalRatingsTrack([]);
+    setEditingRatingId(null);
+    setInputValue(undefined);
+    setTempIdCounter(0);
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -252,8 +303,30 @@ export const ViewRatings = ({
       className="text-foreground"
     >
       <ModalContent className="h-full">
-        <ModalHeader className="text-xl font-bold">
+        <ModalHeader className="text-xl font-bold flex justify-between">
           {`View/Edit ratings for ${studentName} in ${activityName}`}
+          <div className="flex space-x-2 pr-8">
+            {hasChanges ? (
+              <>
+                <Button
+                  type="submit"
+                  color="primary"
+                  className="w-fit"
+                  onPress={saveRatings}
+                >
+                  Save Ratings
+                </Button>
+                <Button
+                  type="button"
+                  color="default"
+                  className="w-fit"
+                  onPress={handleReset}
+                >
+                  Reset
+                </Button>
+              </>
+            ) : null}
+          </div>
         </ModalHeader>
         <ModalBody className="grow mt-4 overflow-hidden">
           <MyTable
@@ -279,7 +352,7 @@ export const ViewRatings = ({
             last={last}
             nextPage={() => {}}
             prevPage={() => {}}
-            addFunction={() => {}}
+            addFunction={addFunction}
             onRowAction={(row) => {
               editRating(row);
             }}

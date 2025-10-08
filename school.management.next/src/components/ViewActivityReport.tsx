@@ -1,4 +1,5 @@
 import useToastError from "@/hooks/toasts/ToastError";
+import { useSaveActivityPoint } from "@/hooks/useActivityPoints";
 import { RootState } from "@/store/store";
 import {
   ActivityPoint,
@@ -72,12 +73,13 @@ export const ViewActivityReport = ({
     isLoading = false;
   const [filterValue, setFilterValue] = React.useState<string>("");
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "name",
+    column: "studentName",
     direction: "ascending",
   });
   const [remarks, setRemarks] = React.useState<string>("");
   const [editing, setEditing] = React.useState<boolean>(false);
   const [editingStudentId, setEditingStudentId] = React.useState<number>(0);
+  const { saveActivityPoint } = useSaveActivityPoint();
   const studentName = React.useMemo(() => {
     let student = students?.find(
       (s) => Number(s.id) === Number(editingStudentId)
@@ -123,14 +125,15 @@ export const ViewActivityReport = ({
           let total = 0;
           let count = 1;
           ratings?.forEach((rating: Rating, index) => {
-            total = +rating.rating;
+            total += rating.rating;
             count = index + 1;
           });
-          ratingStringValue = total / count;
+          ratingStringValue = (total / count).toFixed(2);
           hasRating = true;
         } else {
           ratingStringValue = "Unrated";
         }
+
         return {
           key: studentId,
           studentName: row.fullname,
@@ -140,16 +143,16 @@ export const ViewActivityReport = ({
           activityPointId: activityPointTemp?.id || 0,
           actions: [
             {
-              label: "Enter Mark",
+              label: `${hasRating ? "Enter Mark" : "Create Report"}`,
               function: () => {
                 if (hasRating) {
+                  setRatings(ratings);
+                  setStudentName(row.fullname);
+                  setActivityPointId(activityPointTemp?.id || 0);
+                  setViewRatingsOpen(true);
+                } else {
                   setEditingStudentId(studentId);
                   setEditing(true);
-                } else {
-                  setRatings(ratings);
-                  setStudentName(row.fullname),
-                    setActivityPointId(activityPointTemp?.id || 0),
-                    setViewRatingsOpen(true);
                 }
               },
             },
@@ -168,12 +171,12 @@ export const ViewActivityReport = ({
           return sortDescriptor.direction === "ascending" ? 1 : -1;
         return 0;
       });
-  }, [students, filterValue, sortDescriptor]);
+  }, [students, filterValue, sortDescriptor, activityPoints]);
 
-  const gradeStudent = async () => {
+  const gradeStudent = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setError(null);
     setStatusCode(0);
-    incrementLoading();
 
     const newActivityReport: ActivityPoint = {
       extraCurricularYear: { id: extraCurricularYearId } as ExtraCurricularYear,
@@ -181,35 +184,22 @@ export const ViewActivityReport = ({
       student: { id: editingStudentId } as Student,
     } as ActivityPoint;
 
-    try {
-      const res = await fetch(
-        "/api/activity-point?action=save-activity-point",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(newActivityReport),
-        }
-      );
-      const data = await res.json();
-      if (!res.ok) {
-        const err = data.error || "Creating activity report failed";
-        const code = res.status || 500;
-        setError(err);
-        setStatusCode(code);
-        useToastError({ error: err, statusCode: code });
-        return;
-      } else {
+    await saveActivityPoint(
+      newActivityReport,
+      incrementLoading,
+      decrementLoading,
+      () => {
         reloadTrigger();
+        setEditingStudentId(0);
+        setEditing(false);
+        setRemarks("");
+      },
+      (error: string, statusCode: number) => {
+        setError(error);
+        setStatusCode(statusCode);
+        useToastError({ error, statusCode });
       }
-    } catch (err: any) {
-      setError(err.response.data.message || "Network/Server error");
-      setStatusCode(err.status || 500);
-    } finally {
-      decrementLoading();
-    }
+    );
   };
 
   useEffect(() => {
@@ -243,8 +233,6 @@ export const ViewActivityReport = ({
               setPage={() => {}}
               page={page}
               pages={pages}
-              // statusOptions={courseworkTypes}
-              // statusCol="type"
               sortDescriptor={sortDescriptor}
               setSortDescriptor={setSortDescriptor}
               filterValue={filterValue}
@@ -284,8 +272,8 @@ export const ViewActivityReport = ({
                 className="h-full w-full md:w-1/2 pb-2 flex flex-col"
               >
                 {error && <InlineError statusCode={statusCode} title={error} />}
-                <div className="space-y-4 h-full w-full py-2 overflow-y-auto grow flex flex-col">
-                  <div className="w-full grow flex flex-col justify-end space-y-4">
+                <div className="space-y-4 h-full w-full py-2 overflow-y-auto grow flex flex-col justify-center">
+                  <div className="w-full flex flex-col justify-end space-y-4">
                     <Input
                       isRequired
                       label="Remarks"

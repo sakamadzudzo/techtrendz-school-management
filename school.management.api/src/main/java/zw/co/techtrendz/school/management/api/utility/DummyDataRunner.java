@@ -107,7 +107,6 @@ public class DummyDataRunner {
     private void dummyPersons() {
         Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy persons...");
         Person p1 = new Person();
-//        p1.setId(1L);
         p1.setSalutation(Salutation.MR);
         p1.setFirstName("Arlington");
         p1.setOtherNames("Chikozho");
@@ -146,13 +145,14 @@ public class DummyDataRunner {
                 p2,
                 p3
         );
-        this.personService.saveAll(persons);
+        this.personService.save(p1);
+        this.personService.save(p2);
+        this.personService.save(p3);
     }
 
     private void dummyTeachers() {
         Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy teachers...");
         Teacher t1 = new Teacher();
-//        t1.setId(1L);
         t1.setPerson(new Person(1L));
 
         List<Teacher> teachers1 = Arrays.asList(

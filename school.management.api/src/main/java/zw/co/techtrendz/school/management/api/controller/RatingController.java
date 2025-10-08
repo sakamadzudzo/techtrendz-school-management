@@ -19,13 +19,13 @@ public class RatingController {
     }
 
     @PostMapping("/save")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('TEACHER')")
     public Rating saveRating(@RequestBody @Valid Rating rating) {
         return this.ratingService.save(rating);
     }
 
     @PostMapping("/save/all")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('TEACHER')")
     public List<Rating> saveAllRatings(@RequestBody @Valid List<Rating> ratings) {
         return this.ratingService.saveAll(ratings);
     }
