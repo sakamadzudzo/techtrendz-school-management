@@ -37,6 +37,9 @@ public class ExtraCurricularYearDto {
 
     public TeacherDto getLeadFacilitator() {
         if (facilitators == null || facilitators.isEmpty() || this.leadFacilitatorId == null) {
+            if (this.leadFacilitator != null) {
+                return this.leadFacilitator;
+            }
             return null;
         }
 
