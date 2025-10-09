@@ -119,6 +119,46 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
                 .collect(Collectors.toList());
     }
 
+    // ActivityPoint-based ratings data aggregation methods (for enhanced reports)
+    @Override
+    public List<RatingsReportDto> aggregateRatingsDataFromActivityPoints(List<ActivityPoint> activityPoints) {
+        return activityPoints.stream()
+                .flatMap(activityPoint -> mapActivityPointToRatingsDto(activityPoint).stream())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByStudentActivityYear(List<ActivityPoint> activityPoints, Long studentId, Long activityId, Integer year) {
+        return activityPoints.stream()
+                .filter(point -> matchesStudentActivityYearFromActivityPoint(point, studentId, activityId, year))
+                .flatMap(activityPoint -> mapActivityPointToRatingsDto(activityPoint).stream())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByStudentYear(List<ActivityPoint> activityPoints, Long studentId, Integer year) {
+        return activityPoints.stream()
+                .filter(point -> matchesStudentYearFromActivityPoint(point, studentId, year))
+                .flatMap(activityPoint -> mapActivityPointToRatingsDto(activityPoint).stream())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByActivityYear(List<ActivityPoint> activityPoints, Long activityId, Integer year) {
+        return activityPoints.stream()
+                .filter(point -> matchesActivityYearFromActivityPoint(point, activityId, year))
+                .flatMap(activityPoint -> mapActivityPointToRatingsDto(activityPoint).stream())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByTeacherYear(List<ActivityPoint> activityPoints, Long teacherId, Integer year) {
+        return activityPoints.stream()
+                .filter(point -> matchesTeacherYearFromActivityPoint(point, teacherId, year))
+                .flatMap(activityPoint -> mapActivityPointToRatingsDto(activityPoint).stream())
+                .collect(Collectors.toList());
+    }
+
     // Progress data aggregation methods
     @Override
     public List<ProgressReportDto> aggregateProgressData(List<ActivityPoint> activityPoints) {
@@ -348,10 +388,79 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
 
     private boolean matchesFacilitator(ActivityPoint activityPoint, Long facilitatorId) {
         return activityPoint.getExtraCurricularYear() != null &&
-               activityPoint.getExtraCurricularYear().getFacilitators() != null &&
-               !activityPoint.getExtraCurricularYear().getFacilitators().isEmpty() &&
-               activityPoint.getExtraCurricularYear().getFacilitators().stream()
-                   .anyMatch(facilitator -> facilitator.getId().equals(facilitatorId));
+                activityPoint.getExtraCurricularYear().getFacilitators() != null &&
+                !activityPoint.getExtraCurricularYear().getFacilitators().isEmpty() &&
+                activityPoint.getExtraCurricularYear().getFacilitators().stream()
+                    .anyMatch(facilitator -> facilitator.getId().equals(facilitatorId));
+    }
+
+    // ActivityPoint-based filtering methods for ratings reports
+    private boolean matchesStudentActivityYearFromActivityPoint(ActivityPoint activityPoint, Long studentId, Long activityId, Integer year) {
+        return activityPoint.getStudent() != null && activityPoint.getStudent().getId().equals(studentId) &&
+                activityPoint.getExtraCurricularYear() != null && activityPoint.getExtraCurricularYear().getId().equals(activityId) &&
+                activityPoint.getExtraCurricularYear().getCalendarYear().equals(year);
+    }
+
+    private boolean matchesStudentYearFromActivityPoint(ActivityPoint activityPoint, Long studentId, Integer year) {
+        return activityPoint.getStudent() != null && activityPoint.getStudent().getId().equals(studentId) &&
+                activityPoint.getExtraCurricularYear() != null && activityPoint.getExtraCurricularYear().getCalendarYear().equals(year);
+    }
+
+    private boolean matchesActivityYearFromActivityPoint(ActivityPoint activityPoint, Long activityId, Integer year) {
+        return activityPoint.getExtraCurricularYear() != null && activityPoint.getExtraCurricularYear().getId().equals(activityId) &&
+                activityPoint.getExtraCurricularYear().getCalendarYear().equals(year);
+    }
+
+    private boolean matchesTeacherYearFromActivityPoint(ActivityPoint activityPoint, Long teacherId, Integer year) {
+        return activityPoint.getExtraCurricularYear() != null &&
+                activityPoint.getExtraCurricularYear().getFacilitators() != null &&
+                !activityPoint.getExtraCurricularYear().getFacilitators().isEmpty() &&
+                activityPoint.getExtraCurricularYear().getFacilitators().stream()
+                    .anyMatch(facilitator -> facilitator.getId().equals(teacherId)) &&
+                activityPoint.getExtraCurricularYear().getCalendarYear().equals(year);
+    }
+
+    // Helper method to map ActivityPoint to RatingsReportDto
+    private List<RatingsReportDto> mapActivityPointToRatingsDto(ActivityPoint activityPoint) {
+        if (activityPoint.getRatings() == null || activityPoint.getRatings().isEmpty()) {
+            // If no individual ratings, create a single DTO with overall rating
+            return List.of(new RatingsReportDto(
+                activityPoint.getStudent() != null ? activityPoint.getStudent().getPerson().getName() : "",
+                activityPoint.getStudent() != null ? activityPoint.getStudent().getId().toString() : "",
+                activityPoint.getExtraCurricularYear() != null &&
+                    activityPoint.getExtraCurricularYear().getExtraCurricular() != null ?
+                    activityPoint.getExtraCurricularYear().getExtraCurricular().getName() : "",
+                round2(BigDecimal.valueOf(activityPoint.getOveralRating())),
+                round2(BigDecimal.valueOf(activityPoint.getOveralRating())), // Percentage is same as rating
+                round2(BigDecimal.valueOf(50)), // Set pass percentage to 50 as default threshold
+                activityPoint.getExtraCurricularYear() != null &&
+                    activityPoint.getExtraCurricularYear().getFacilitators() != null &&
+                    !activityPoint.getExtraCurricularYear().getFacilitators().isEmpty() ?
+                    activityPoint.getExtraCurricularYear().getFacilitators().get(0).getPerson().getName() : "",
+                activityPoint.getExtraCurricularYear() != null ?
+                    activityPoint.getExtraCurricularYear().getCalendarYear() : null
+            ));
+        } else {
+            // If individual ratings exist, create DTOs for each rating
+            return activityPoint.getRatings().stream()
+                .map(rating -> new RatingsReportDto(
+                    activityPoint.getStudent() != null ? activityPoint.getStudent().getPerson().getName() : "",
+                    activityPoint.getStudent() != null ? activityPoint.getStudent().getId().toString() : "",
+                    activityPoint.getExtraCurricularYear() != null &&
+                        activityPoint.getExtraCurricularYear().getExtraCurricular() != null ?
+                        activityPoint.getExtraCurricularYear().getExtraCurricular().getName() : "",
+                    rating.getRating() != null ? round2(BigDecimal.valueOf(rating.getRating())) : BigDecimal.ZERO,
+                    rating.getRating() != null ? round2(BigDecimal.valueOf(rating.getRating())) : BigDecimal.ZERO, // Percentage is same as rating
+                    round2(BigDecimal.valueOf(50)), // Set pass percentage to 50 as default threshold
+                    activityPoint.getExtraCurricularYear() != null &&
+                        activityPoint.getExtraCurricularYear().getFacilitators() != null &&
+                        !activityPoint.getExtraCurricularYear().getFacilitators().isEmpty() ?
+                        activityPoint.getExtraCurricularYear().getFacilitators().get(0).getPerson().getName() : "",
+                    activityPoint.getExtraCurricularYear() != null ?
+                        activityPoint.getExtraCurricularYear().getCalendarYear() : null
+                ))
+                .collect(Collectors.toList());
+        }
     }
 
     // Rounds to 2 decimal places, HALF_UP policy

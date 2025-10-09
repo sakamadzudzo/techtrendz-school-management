@@ -30,4 +30,13 @@ public interface ActivityPointService {
     public List<ActivityPoint> getAllByClassroomId(long classroomId);
 
     public List<ActivityPoint> getAllByFacilitatorId(long facilitatorId);
+
+    // Year-based filtering methods for reports
+    public List<ActivityPoint> getAllByStudentIdByActivityIdByYear(long studentId, long activityId, Integer year);
+
+    public List<ActivityPoint> getAllByStudentIdByYear(long studentId, Integer year);
+
+    public List<ActivityPoint> getAllByActivityIdByYear(long activityId, Integer year);
+
+    public List<ActivityPoint> getAllByTeacherIdByYear(long teacherId, Integer year);
 }

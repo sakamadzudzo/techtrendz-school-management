@@ -40,6 +40,17 @@ public interface ReportDataAggregationService {
 
     List<RatingsReportDto> aggregateRatingsDataByTeacherYear(List<Rating> ratings, Long teacherId, Integer year);
 
+    // ActivityPoint-based ratings data aggregation methods (for enhanced reports)
+    List<RatingsReportDto> aggregateRatingsDataFromActivityPoints(List<ActivityPoint> activityPoints);
+
+    List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByStudentActivityYear(List<ActivityPoint> activityPoints, Long studentId, Long activityId, Integer year);
+
+    List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByStudentYear(List<ActivityPoint> activityPoints, Long studentId, Integer year);
+
+    List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByActivityYear(List<ActivityPoint> activityPoints, Long activityId, Integer year);
+
+    List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByTeacherYear(List<ActivityPoint> activityPoints, Long teacherId, Integer year);
+
     // Progress data aggregation methods
     List<ProgressReportDto> aggregateProgressData(List<ActivityPoint> activityPoints);
 

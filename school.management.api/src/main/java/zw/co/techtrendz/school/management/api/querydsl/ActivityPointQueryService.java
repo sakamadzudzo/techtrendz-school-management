@@ -119,4 +119,49 @@ public class ActivityPointQueryService {
                 .where(activityPoint.extraCurricularYear.facilitators.any().id.eq(facilitatorId))
                 .fetch();
     }
+
+    public List<ActivityPoint> getAllByStudentIdByActivityIdByYear(long studentId, long activityId, Integer year) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.student.id.eq(studentId)
+                        .and(activityPoint.extraCurricularYear.id.eq(activityId))
+                        .and(activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByStudentIdByYear(long studentId, Integer year) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.student.id.eq(studentId)
+                        .and(activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByActivityIdByYear(long activityId, Integer year) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.id.eq(activityId)
+                        .and(activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByTeacherIdByYear(long teacherId, Integer year) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.facilitators.any().id.eq(teacherId)
+                        .and(activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
 }

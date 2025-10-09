@@ -282,9 +282,9 @@ public class PdfReportServiceImpl implements PdfReportService {
             parameters.put("activityId", activityId);
             parameters.put("studentId", studentId);
 
-            // Retrieve data from database
-            List<Rating> ratings = ratingService.getAllByStudentIdByActivityIdByYear(studentId, activityId, year);
-            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataByStudentActivityYear(ratings, studentId, activityId, year);
+            // Retrieve data from database using ActivityPoint (enhanced with more info)
+            List<ActivityPoint> activityPoints = activityPointService.getAllByStudentIdByActivityIdByYear(studentId, activityId, year);
+            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPointsByStudentActivityYear(activityPoints, studentId, activityId, year);
 
             return generateReport("ratings_by_student_activity_year", parameters, data);
         } catch (Exception e) {
@@ -302,9 +302,9 @@ public class PdfReportServiceImpl implements PdfReportService {
             parameters.put("year", year);
             parameters.put("studentId", studentId);
 
-            // Retrieve data from database
-            List<Rating> ratings = ratingService.getAllByStudentIdByYear(studentId, year);
-            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataByStudentYear(ratings, studentId, year);
+            // Retrieve data from database using ActivityPoint (enhanced with more info)
+            List<ActivityPoint> activityPoints = activityPointService.getAllByStudentIdByYear(studentId, year);
+            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPointsByStudentYear(activityPoints, studentId, year);
 
             return generateReport("ratings_by_student_year", parameters, data);
         } catch (ResponseStatusException e) {
@@ -330,10 +330,9 @@ public class PdfReportServiceImpl implements PdfReportService {
             parameters.put("year", year);
             parameters.put("activityId", activityId);
 
-            // Retrieve data from database
-            List<Rating> ratings = ratingService.getAllByActivityIdByYear(activityId, year);
-            System.out.println(ratings);
-            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataByActivityYear(ratings, activityId, year);
+            // Retrieve data from database using ActivityPoint (enhanced with more info)
+            List<ActivityPoint> activityPoints = activityPointService.getAllByActivityIdByYear(activityId, year);
+            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPointsByActivityYear(activityPoints, activityId, year);
 
             return generateReport("ratings_by_activity_year", parameters, data);
         } catch (Exception e) {
@@ -349,9 +348,9 @@ public class PdfReportServiceImpl implements PdfReportService {
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("activityId", activityId);
 
-            // Retrieve data from database
-            List<Rating> ratings = ratingService.getAllByActivityId(activityId);
-            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsData(ratings);
+            // Retrieve data from database using ActivityPoint (enhanced with more info)
+            List<ActivityPoint> activityPoints = activityPointService.getAllByActivityId(activityId);
+            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPoints(activityPoints);
 
             return generateReport("ratings_by_activity", parameters, data);
         } catch (Exception e) {
@@ -368,9 +367,9 @@ public class PdfReportServiceImpl implements PdfReportService {
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("activityId", activityId);
 
-            // Retrieve data from database
-            List<Rating> ratings = ratingService.getAllByActivityId(activityId);
-            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsData(ratings);
+            // Retrieve data from database using ActivityPoint (enhanced with more info)
+            List<ActivityPoint> activityPoints = activityPointService.getAllByActivityId(activityId);
+            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPoints(activityPoints);
 
             // Check if data is large enough to warrant async processing
             if (data.size() > 30) {
@@ -415,9 +414,9 @@ public class PdfReportServiceImpl implements PdfReportService {
             parameters.put("year", year);
             parameters.put("teacherId", teacherId);
 
-            // Retrieve data from database
-            List<Rating> ratings = ratingService.getAllByTeacherIdByYear(teacherId, year);
-            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataByTeacherYear(ratings, teacherId, year);
+            // Retrieve data from database using ActivityPoint (enhanced with more info)
+            List<ActivityPoint> activityPoints = activityPointService.getAllByTeacherIdByYear(teacherId, year);
+            List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPointsByTeacherYear(activityPoints, teacherId, year);
 
             return generateReport("ratings_by_teacher_year", parameters, data);
         } catch (Exception e) {

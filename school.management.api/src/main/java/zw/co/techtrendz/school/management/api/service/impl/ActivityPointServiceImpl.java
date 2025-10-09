@@ -128,4 +128,28 @@ public class ActivityPointServiceImpl implements ActivityPointService {
         List<ActivityPoint> activityPoints = this.activityPointQueryService.getAllByFacilitatorId(facilitatorId);
         return this.getRatingsForActivityPoints(activityPoints);
     }
+
+    @Override
+    public List<ActivityPoint> getAllByStudentIdByActivityIdByYear(long studentId, long activityId, Integer year) {
+        List<ActivityPoint> activityPoints = this.activityPointQueryService.getAllByStudentIdByActivityIdByYear(studentId, activityId, year);
+        return this.getRatingsForActivityPoints(activityPoints);
+    }
+
+    @Override
+    public List<ActivityPoint> getAllByStudentIdByYear(long studentId, Integer year) {
+        List<ActivityPoint> activityPoints = this.activityPointQueryService.getAllByStudentIdByYear(studentId, year);
+        return this.getRatingsForActivityPoints(activityPoints);
+    }
+
+    @Override
+    public List<ActivityPoint> getAllByActivityIdByYear(long activityId, Integer year) {
+        List<ActivityPoint> activityPoints = this.activityPointQueryService.getAllByActivityIdByYear(activityId, year);
+        return this.getRatingsForActivityPoints(activityPoints);
+    }
+
+    @Override
+    public List<ActivityPoint> getAllByTeacherIdByYear(long teacherId, Integer year) {
+        List<ActivityPoint> activityPoints = this.activityPointQueryService.getAllByTeacherIdByYear(teacherId, year);
+        return this.getRatingsForActivityPoints(activityPoints);
+    }
 }
