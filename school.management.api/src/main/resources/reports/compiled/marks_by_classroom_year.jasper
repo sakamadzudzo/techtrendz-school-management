@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="marks_by_classroom_year" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="449a7670-35cc-42e8-9729-c2a74d1ffec9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="year" class="java.lang.Integer"/>
+	<parameter name="classroomId" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="studentName" class="java.lang.String"/>
+	<field name="studentId" class="java.lang.String"/>
+	<field name="classroomName" class="java.lang.String"/>
+	<field name="subjectName" class="java.lang.String"/>
+	<field name="courseworkTitle" class="java.lang.String"/>
+	<field name="mark" class="java.math.BigDecimal"/>
+	<field name="passMark" class="java.math.BigDecimal"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="grade" class="java.lang.String"/>
+	<field name="calendarYear" class="java.lang.Integer"/>
+	<field name="teacherName" class="java.lang.String"/>
+	<group name="classroom">
+		<groupExpression><![CDATA[$F{classroomName}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement x="0" y="5" width="555" height="20" uuid="7c2cb1a4-d543-4ecb-bcd1-88c3c410feb7"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Classroom: " + $F{classroomName} + " - Year: " + $P{year}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<line>
+					<reportElement x="0" y="0" width="555" height="1" uuid="497c4df0-f956-4015-a672-e1aaadf0a90b"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="50">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="f23fa361-da7d-4a33-8dba-e01855f75c9e"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="10" width="555" height="30" uuid="73182457-f20c-4149-9b69-4a8c777b82fd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Marks Report by Classroom - " + $P{year}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="45" width="555" height="1" uuid="864c403a-edab-4456-9d2b-a1fba8346882"/>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25">
+			<staticText>
+				<reportElement x="0" y="5" width="100" height="15" uuid="0f7d7bfa-443c-4804-aaa9-7c45fea3a845"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Student]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="5" width="80" height="15" uuid="2d488b62-5b8f-4287-9bd2-82966301e993"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Subject]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="5" width="100" height="15" uuid="db7c528e-9600-4403-b3c5-aa923179a111"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Coursework]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="5" width="60" height="15" uuid="296d24b9-8b89-4976-97be-fc095ab0b64d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mark]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="5" width="60" height="15" uuid="6ed1193e-033e-4a2c-b0e0-c4b5918d16de"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="5" width="60" height="15" uuid="4eb64246-64ed-4625-8550-63b5feabbc4b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="5" width="95" height="15" uuid="095863ac-5f29-4469-9311-8388ac7c0c3b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Teacher]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="22" width="555" height="1" uuid="d8bee9cd-3ea1-4b30-be1c-35b8eed2c99f"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement x="0" y="2" width="100" height="15" uuid="a5510d6d-ea5c-486e-8567-3c93dd758223"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{studentName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="2" width="80" height="15" uuid="314acc52-48e6-4321-932a-a493c498597c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{subjectName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="2" width="100" height="15" uuid="11c17e16-961f-403a-a79e-0a9494bc0925"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{courseworkTitle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="2" width="60" height="15" uuid="d52a5f9a-5303-4666-bf7c-18f225c4e829"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mark}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="2" width="60" height="15" uuid="77bc8024-ea8a-4ff4-b623-93902c47b585"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="2" width="60" height="15" uuid="f0894647-bc9e-4090-b096-2c6b6b1d8ab8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="2" width="95" height="15" uuid="5986d336-12a2-4816-9108-bec7dcc24de1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{teacherName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="30">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="03922a0a-8ee7-4910-939a-6c9fbb6dc34a"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="5" width="555" height="20" uuid="0c61d242-91cc-44ab-8ee7-6ccfd01a8c7f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Report generated on: " + new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

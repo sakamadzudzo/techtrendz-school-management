@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="progress_report_by_subject" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fef71118-b4f7-4481-afdc-afdbe845f9e7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="subjectId" class="java.lang.Long"/>
+	<parameter name="entityType" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="entityName" class="java.lang.String"/>
+	<field name="entityId" class="java.lang.String"/>
+	<field name="year" class="java.lang.Integer"/>
+	<field name="currentValue" class="java.math.BigDecimal"/>
+	<field name="previousValue" class="java.math.BigDecimal"/>
+	<field name="percentageChange" class="java.math.BigDecimal"/>
+	<field name="trend" class="java.lang.String"/>
+	<field name="yearlyData_year" class="java.lang.Integer"/>
+	<field name="yearlyData_value" class="java.math.BigDecimal"/>
+	<field name="yearlyData_label" class="java.lang.String"/>
+	<title>
+		<band height="80">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="cadb8073-9a14-41f5-9228-3712ad7c614b"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="10" width="555" height="30" uuid="ed9c1502-3db9-4fe2-b4b0-17d2da628a6f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Progress Report - " + $P{entityType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="40" width="555" height="20" uuid="7cb8e647-1bb9-46dc-b431-84a608e3a806"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Subject: " + $F{entityName} + " (ID: " + $F{entityId} + ")"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="70" width="555" height="1" uuid="150e9554-5d9a-4ae3-9257-d280b19bd20b"/>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="300">
+			<frame>
+				<reportElement x="0" y="0" width="555" height="60" uuid="8a04657a-5cd0-49b2-b18c-a2d012515c60"/>
+				<staticText>
+					<reportElement x="0" y="5" width="100" height="15" uuid="e7e57349-d196-4586-a564-c430b258a2da"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Current Year:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="100" y="5" width="50" height="15" uuid="a8be5f4d-07e5-4eaf-bc4e-1d2b780c4cee"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="20" width="100" height="15" uuid="a7982dcf-cddf-4ede-9412-69447345c7d4"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Current Value:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="100" y="20" width="100" height="15" uuid="c37f2719-284c-4878-a019-51641749d06e"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{currentValue}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="35" width="100" height="15" uuid="550a73d3-2852-431a-965b-bd6d0032091f"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Previous Value:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="100" y="35" width="100" height="15" uuid="64aa1b6b-530f-4e1c-a1f5-bc2a4910d005"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{previousValue}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="250" y="5" width="100" height="15" uuid="c17a265a-6416-43c3-8adc-89ff75939f8c"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Change %:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="350" y="5" width="80" height="15" uuid="b758f339-0d8c-4735-97dc-f62318951df1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{percentageChange} + "%"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="250" y="20" width="100" height="15" uuid="409e42aa-8c8d-4197-9540-cc4f677c0841"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Trend:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="350" y="20" width="80" height="15" uuid="c4cfc039-62e4-4f05-a8b4-c1a2e80f48eb"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{trend}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement x="0" y="70" width="555" height="230" uuid="f13512e3-5ba6-4445-ba61-739f11525177"/>
+				<staticText>
+					<reportElement x="0" y="5" width="555" height="20" uuid="b831f1a7-fa0c-4a9f-aada-58a14af38dec"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Year-on-Year Progress Chart]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="50" y="30" width="455" height="180" uuid="9e86e58d-ad5e-46be-a82c-4ec59e34dc1c"/>
+					<graphicElement>
+						<pen lineWidth="1.0"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="50" y="35" width="455" height="15" uuid="bbc1d559-61d2-410d-9dd9-c1a10b0e95c7"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Performance Trend]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="50" width="35" height="160" uuid="984002a0-a54e-4e07-86cd-917939dfdffe"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Value]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="50" y="215" width="455" height="15" uuid="70388604-c0d7-463b-ac3b-3b91693c945c"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Year]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="80" y="60" width="30" height="140" uuid="85a39b2a-82fc-41c6-b1c2-7af6d6e4e5b2"/>
+					<graphicElement>
+						<pen lineWidth="1.0"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="120" y="80" width="30" height="120" uuid="8e135113-1655-4072-9fe0-4ffe922d92a4"/>
+					<graphicElement>
+						<pen lineWidth="1.0"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="160" y="50" width="30" height="150" uuid="3f251538-84c0-42d3-a03a-a7857c5740a4"/>
+					<graphicElement>
+						<pen lineWidth="1.0"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="200" y="70" width="30" height="130" uuid="835642d1-6a00-4aca-8a2e-28092a31775d"/>
+					<graphicElement>
+						<pen lineWidth="1.0"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="240" y="40" width="30" height="160" uuid="a8995f76-8b33-4475-8d75-a4ace3210e49"/>
+					<graphicElement>
+						<pen lineWidth="1.0"/>
+					</graphicElement>
+				</rectangle>
+			</frame>
+		</band>
+	</detail>
+	<summary>
+		<band height="30">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="8a363ef0-2e47-4014-857a-c4c3ae963e73"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="5" width="555" height="20" uuid="b1e3c4ca-b776-4f3c-b851-1cba5ae3e265"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Progress Report generated on: " + new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
