@@ -37,7 +37,7 @@ public class JasperReportCompiler {
                 String filename = jrxmlResource.getFilename();
                 if (filename != null) {
                     String jasperFilename = filename.replace(".jrxml", ".jasper");
-                    compileReport(filename, jasperFilename);
+                    this.compileReport(filename, jasperFilename);
                 }
             }
         } catch (IOException e) {
