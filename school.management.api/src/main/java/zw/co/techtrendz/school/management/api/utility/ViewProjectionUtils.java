@@ -489,7 +489,24 @@ public class ViewProjectionUtils {
                                         subjectYear.subject.name
                                 ),
                                 mark.coursework.subject.calendarYear,
-                                new NullExpression<>(Teacher.class),
+                                Projections.constructor(Teacher.class,
+                                        subjectYear.teacher.id,
+                                        Projections.constructor(Person.class,
+                                                subjectYear.teacher.person.id,
+                                                subjectYear.teacher.person.salutation,
+                                                subjectYear.teacher.person.firstName,
+                                                subjectYear.teacher.person.otherNames,
+                                                subjectYear.teacher.person.lastName,
+                                                new NullExpression<>(String.class),
+                                                new NullExpression<>(String.class),
+                                                new NullExpression<>(String.class),
+                                                new NullExpression<>(String.class),
+                                                new NullExpression<>(String.class),
+                                                new NullExpression<>(String.class),
+                                                new NullExpression<>(String.class),
+                                                new NullExpression<>(LocalDate.class)
+                                        )
+                                        ),
                                 new NullExpression<>(List.class)
                         ),
                         mark.coursework.total,

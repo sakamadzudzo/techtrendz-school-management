@@ -8,6 +8,7 @@ import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.service.ReportDataAggregationService;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -185,43 +186,40 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     // Helper methods for entity to DTO mapping
     private MarksReportDto mapMarkToDto(Mark mark) {
         return new MarksReportDto(
-                mark.getStudent() != null ? mark.getStudent().getPerson().getFirstName() + " " + mark.getStudent().getPerson().getLastName() : "",
+                mark.getStudent() != null ? mark.getStudent().getPerson().getName(): "",
                 mark.getStudent() != null ? mark.getStudent().getId().toString() : "",
                 mark.getStudent() != null && mark.getStudent().getClassroom() != null ? mark.getStudent().getClassroom().getClassroom().getName() : "",
                 mark.getCoursework() != null && mark.getCoursework().getSubject() != null && mark.getCoursework().getSubject().getSubject() != null ?
                     mark.getCoursework().getSubject().getSubject().getName() : "",
                 mark.getCoursework() != null ? mark.getCoursework().getTitle() : "",
-                BigDecimal.valueOf(mark.getMark()),
-                mark.getCoursework() != null ? BigDecimal.valueOf(mark.getCoursework().getPassMark()) : BigDecimal.ZERO,
-                BigDecimal.valueOf(mark.getMark()),
+                round2(BigDecimal.valueOf(mark.getMark())),
+                mark.getCoursework() != null ? round2(BigDecimal.valueOf(mark.getCoursework().getPassMark())) : BigDecimal.ZERO,
+                round2(BigDecimal.valueOf(mark.getMark())),
                 calculateGrade(BigDecimal.valueOf(mark.getMark()), mark.getCoursework() != null ? BigDecimal.valueOf(mark.getCoursework().getPassMark()) : BigDecimal.ZERO),
                 mark.getCoursework() != null && mark.getCoursework().getSubject() != null ?
                     mark.getCoursework().getSubject().getCalendarYear() : null,
                 mark.getCoursework() != null && mark.getCoursework().getSubject() != null &&
                     mark.getCoursework().getSubject().getTeacher() != null ?
-                    mark.getCoursework().getSubject().getTeacher().getPerson().getFirstName() + " " +
-                    mark.getCoursework().getSubject().getTeacher().getPerson().getLastName() : ""
+                    mark.getCoursework().getSubject().getTeacher().getPerson().getName() : ""
         );
     }
 
     private RatingsReportDto mapRatingToDto(Rating rating) {
         return new RatingsReportDto(
                 rating.getActivityPoint() != null && rating.getActivityPoint().getStudent() != null ?
-                    rating.getActivityPoint().getStudent().getPerson().getFirstName() + " " +
-                    rating.getActivityPoint().getStudent().getPerson().getLastName() : "",
+                    rating.getActivityPoint().getStudent().getPerson().getName() : "",
                 rating.getActivityPoint() != null && rating.getActivityPoint().getStudent() != null ?
                     rating.getActivityPoint().getStudent().getId().toString() : "",
                 rating.getActivityPoint() != null && rating.getActivityPoint().getExtraCurricularYear() != null &&
                     rating.getActivityPoint().getExtraCurricularYear().getExtraCurricular() != null ?
                     rating.getActivityPoint().getExtraCurricularYear().getExtraCurricular().getName() : "",
-                rating.getRating() != null ? BigDecimal.valueOf(rating.getRating()) : BigDecimal.ZERO,
-                rating.getRating() != null ? BigDecimal.valueOf(rating.getRating()) : BigDecimal.ZERO, // Percentage is same as rating
-                BigDecimal.valueOf(50), // Set pass percentage to 50 as default threshold
+                rating.getRating() != null ? round2(BigDecimal.valueOf(rating.getRating())) : BigDecimal.ZERO,
+                rating.getRating() != null ? round2(BigDecimal.valueOf(rating.getRating())) : BigDecimal.ZERO, // Percentage is same as rating
+                round2(BigDecimal.valueOf(50)), // Set pass percentage to 50 as default threshold
                 rating.getActivityPoint() != null && rating.getActivityPoint().getExtraCurricularYear() != null &&
                     rating.getActivityPoint().getExtraCurricularYear().getFacilitators() != null &&
                     !rating.getActivityPoint().getExtraCurricularYear().getFacilitators().isEmpty() ?
-                    rating.getActivityPoint().getExtraCurricularYear().getFacilitators().get(0).getPerson().getFirstName() + " " +
-                    rating.getActivityPoint().getExtraCurricularYear().getFacilitators().get(0).getPerson().getLastName() : "",
+                    rating.getActivityPoint().getExtraCurricularYear().getFacilitators().get(0).getPerson().getName() : "",
                 rating.getActivityPoint() != null && rating.getActivityPoint().getExtraCurricularYear() != null ?
                     rating.getActivityPoint().getExtraCurricularYear().getCalendarYear() : null
         );
@@ -229,11 +227,10 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
 
     private ProgressReportDto mapActivityPointToDto(ActivityPoint activityPoint) {
         return new ProgressReportDto(
-                activityPoint.getStudent() != null ? activityPoint.getStudent().getPerson().getFirstName() + " " +
-                    activityPoint.getStudent().getPerson().getLastName() : "Unknown",
+                activityPoint.getStudent() != null ? activityPoint.getStudent().getPerson().getName() : "Unknown",
                 activityPoint.getStudent() != null ? activityPoint.getStudent().getId().toString() : "",
                 activityPoint.getExtraCurricularYear() != null ? activityPoint.getExtraCurricularYear().getCalendarYear() : null,
-                BigDecimal.valueOf(activityPoint.getOveralRating()),
+                round2(BigDecimal.valueOf(activityPoint.getOveralRating())),
                 BigDecimal.ZERO, // Previous value would need to be calculated based on historical data
                 BigDecimal.ZERO, // Percentage change would need to be calculated
                 "STABLE", // Trend would need to be calculated
@@ -357,6 +354,12 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
                    .anyMatch(facilitator -> facilitator.getId().equals(facilitatorId));
     }
 
+    // Rounds to 2 decimal places, HALF_UP policy
+    private BigDecimal round2(BigDecimal val) {
+        if (val == null) return null;
+        return val.setScale(2, RoundingMode.HALF_UP);
+    }
+
     private String calculateGrade(BigDecimal mark, BigDecimal passMark) {
         if (mark == null || passMark == null) return "N/A";
 
@@ -379,12 +382,11 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
 
     private ProgressReportDto mapMarkToProgressDto(Mark mark, String entityType) {
         return new ProgressReportDto(
-                mark.getStudent() != null ? mark.getStudent().getPerson().getFirstName() + " " +
-                    mark.getStudent().getPerson().getLastName() : "Unknown",
+                mark.getStudent() != null ? mark.getStudent().getPerson().getName() : "Unknown",
                 mark.getStudent() != null ? mark.getStudent().getId().toString() : "",
                 mark.getCoursework() != null && mark.getCoursework().getSubject() != null ?
                     mark.getCoursework().getSubject().getCalendarYear() : null,
-                BigDecimal.valueOf(mark.getMark()),
+                round2(BigDecimal.valueOf(mark.getMark())),
                 BigDecimal.ZERO, // Previous value would need to be calculated based on historical data
                 BigDecimal.ZERO, // Percentage change would need to be calculated
                 "STABLE", // Trend would need to be calculated

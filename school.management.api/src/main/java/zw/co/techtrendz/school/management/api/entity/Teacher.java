@@ -30,4 +30,9 @@ public class Teacher extends Base {
     public Teacher(long id) {
         this.id = id;
     }
+
+    public Teacher(Long id, Person person) {
+        this.id = id;
+        this.person = person;
+    }
 }
