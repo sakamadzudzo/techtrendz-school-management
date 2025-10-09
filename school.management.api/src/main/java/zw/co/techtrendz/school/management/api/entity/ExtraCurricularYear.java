@@ -23,15 +23,15 @@ public class ExtraCurricularYear extends Base{
     private Integer calendarYear;
 
     @ManyToOne
-    @QueryInit("*.*")
+    @QueryInit("*")
     private ExtraCurricular extraCurricular;
 
     @ManyToMany
-    @QueryInit("*.*")
+    @QueryInit("*")
     private List<Teacher> facilitators;
 
     @ManyToMany
-    @QueryInit("*.*")
+    @QueryInit("*")
     private List<Student> students;
 
     public ExtraCurricularYear(long id) {

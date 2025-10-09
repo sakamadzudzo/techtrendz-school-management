@@ -105,6 +105,7 @@ public class ActivityPointQueryService {
         return queryFactory
                 .select(ViewProjectionUtils.getActivityPoints())
                 .from(activityPoint)
+                .leftJoin(activityPoint.student.classroom)
                 .where(activityPoint.student.classroom.id.eq(classroomId))
                 .fetch();
     }

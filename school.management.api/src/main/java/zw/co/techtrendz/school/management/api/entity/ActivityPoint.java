@@ -23,16 +23,17 @@ public class ActivityPoint extends Base {
     private Long id;
 
     @ManyToOne
-    @QueryInit("*.*")
+    @QueryInit("*")
     private ExtraCurricularYear extraCurricularYear;
 
     @ManyToOne
-    @QueryInit("*.*")
+    @QueryInit("*")
     private Student student;
 
     private String remarks;
 
     @OneToMany
+    @QueryInit("*")
     private List<Rating> ratings;
 
     public Float getOveralRating() {

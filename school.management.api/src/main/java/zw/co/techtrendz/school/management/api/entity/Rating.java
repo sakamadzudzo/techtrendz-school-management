@@ -21,7 +21,7 @@ public class Rating extends Base {
     private Long id;
 
     @ManyToOne
-    @QueryInit("*.*")
+    @QueryInit("*")
     private ActivityPoint activityPoint;
 
     @NotNull(message = "Rating is mandatory")

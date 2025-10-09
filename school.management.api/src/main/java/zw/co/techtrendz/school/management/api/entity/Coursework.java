@@ -1,6 +1,5 @@
 package zw.co.techtrendz.school.management.api.entity;
 
-import com.querydsl.core.annotations.QueryInit;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -31,7 +30,6 @@ public class Coursework extends Base {
 
     @ManyToOne
     @NotNull(message = "Subject is required")
-    @QueryInit("*.*")
     private SubjectYear subject;
 
     @NotNull(message = "Coursework total is required")

@@ -27,24 +27,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class PdfReportServiceImpl implements PdfReportService {
 
-    @Autowired
-    private JasperReportCompiler jasperReportCompiler;
+    private final JasperReportCompiler jasperReportCompiler;
+    private final MarkService markService;
+    private final RatingService ratingService;
+    private final ActivityPointService activityPointService;
+    private final ReportDataAggregationService reportDataAggregationService;
 
-    @Autowired
-    private MarkService markService;
-
-    @Autowired
-    private RatingService ratingService;
-
-    @Autowired
-    private ActivityPointService activityPointService;
-
-    @Autowired
-    private ReportDataAggregationService reportDataAggregationService;
+    public PdfReportServiceImpl(JasperReportCompiler jasperReportCompiler,
+                               MarkService markService,
+                               RatingService ratingService,
+                               ActivityPointService activityPointService,
+                               ReportDataAggregationService reportDataAggregationService) {
+        this.jasperReportCompiler = jasperReportCompiler;
+        this.markService = markService;
+        this.ratingService = ratingService;
+        this.activityPointService = activityPointService;
+        this.reportDataAggregationService = reportDataAggregationService;
+    }
 
     // Marks Reports
     public byte[] generateMarksByStudentClassroomYearReport(Integer year, Long classroomId, Long studentId) {
@@ -64,8 +69,13 @@ public class PdfReportServiceImpl implements PdfReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksDataByStudentClassroomYear(marks, studentId, classroomId, year);
 
             return generateReport("marks_by_student_classroom_year", parameters, data);
+        } catch (ResponseStatusException e) {
+            // Re-throw validation exceptions as-is since they have meaningful messages
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to generate marks by student classroom year report", e);
+            throw new RuntimeException(String.format(
+                "Failed to generate marks report for student ID %s in classroom ID %s for year %d: %s",
+                studentId, classroomId, year, e.getMessage()), e);
         }
     }
 
@@ -86,8 +96,13 @@ public class PdfReportServiceImpl implements PdfReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksDataByStudentSubjectYear(marks, studentId, subjectId, year);
 
             return generateReport("marks_by_student_subject_year", parameters, data);
+        } catch (ResponseStatusException e) {
+            // Re-throw validation exceptions as-is since they have meaningful messages
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to generate marks by student subject year report", e);
+            throw new RuntimeException(String.format(
+                "Failed to generate marks report for student ID %s in subject ID %s for year %d: %s",
+                studentId, subjectId, year, e.getMessage()), e);
         }
     }
 
@@ -142,8 +157,12 @@ public class PdfReportServiceImpl implements PdfReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksDataByYear(marks, year);
 
             return generateReport("marks_by_year", parameters, data);
+        } catch (ResponseStatusException e) {
+            // Re-throw validation exceptions as-is since they have meaningful messages
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to generate marks by year report", e);
+            throw new RuntimeException(String.format(
+                "Failed to generate marks report for year %d: %s", year, e.getMessage()), e);
         }
     }
 
@@ -169,9 +188,14 @@ public class PdfReportServiceImpl implements PdfReportService {
                 byte[] report = generateReport("marks_by_year", parameters, data);
                 return CompletableFuture.completedFuture(report);
             }
+        } catch (ResponseStatusException e) {
+            CompletableFuture<byte[]> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
         } catch (Exception e) {
             CompletableFuture<byte[]> future = new CompletableFuture<>();
-            future.completeExceptionally(new RuntimeException("Failed to generate async marks by year report", e));
+            future.completeExceptionally(new RuntimeException(String.format(
+                "Failed to generate async marks report for year %d: %s", year, e.getMessage()), e));
             return future;
         }
     }
@@ -283,8 +307,16 @@ public class PdfReportServiceImpl implements PdfReportService {
             List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataByStudentYear(ratings, studentId, year);
 
             return generateReport("ratings_by_student_year", parameters, data);
+        } catch (ResponseStatusException e) {
+            // Re-throw validation exceptions as-is since they have meaningful messages
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to generate ratings by student year report", e);
+            Logger.getLogger(PdfReportServiceImpl.class.getName()).log(Level.WARNING,
+                String.format("Error generating ratings report for student ID %s, year %d: %s",
+                studentId, year, e.getMessage()), e);
+            throw new RuntimeException(String.format(
+                "Failed to generate ratings report for student ID %s for year %d: %s",
+                studentId, year, e.getMessage()), e);
         }
     }
 
@@ -348,9 +380,14 @@ public class PdfReportServiceImpl implements PdfReportService {
                 byte[] report = generateReport("ratings_by_activity", parameters, data);
                 return CompletableFuture.completedFuture(report);
             }
+        } catch (ResponseStatusException e) {
+            CompletableFuture<byte[]> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
         } catch (Exception e) {
             CompletableFuture<byte[]> future = new CompletableFuture<>();
-            future.completeExceptionally(new RuntimeException("Failed to generate async ratings by activity report", e));
+            future.completeExceptionally(new RuntimeException(String.format(
+                "Failed to generate async ratings report for activity ID %s: %s", activityId, e.getMessage()), e));
             return future;
         }
     }
@@ -404,8 +441,13 @@ public class PdfReportServiceImpl implements PdfReportService {
             List<ProgressReportDto> data = reportDataAggregationService.aggregateProgressDataByStudent(activityPoints, studentId, entityType);
 
             return generateReport("progress_report_by_student", parameters, data);
+        } catch (ResponseStatusException e) {
+            // Re-throw validation exceptions as-is since they have meaningful messages
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to generate progress report by student", e);
+            throw new RuntimeException(String.format(
+                "Failed to generate progress report for student ID %s with entity type '%s': %s",
+                studentId, entityType, e.getMessage()), e);
         }
     }
 
@@ -532,9 +574,15 @@ public class PdfReportServiceImpl implements PdfReportService {
                 byte[] report = generateReport("progress_report_by_classroom", parameters, data);
                 return CompletableFuture.completedFuture(report);
             }
+        } catch (ResponseStatusException e) {
+            CompletableFuture<byte[]> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
         } catch (Exception e) {
             CompletableFuture<byte[]> future = new CompletableFuture<>();
-            future.completeExceptionally(new RuntimeException("Failed to generate async progress report by classroom", e));
+            future.completeExceptionally(new RuntimeException(String.format(
+                "Failed to generate async progress report for classroom ID %s with entity type '%s': %s",
+                classroomId, entityType, e.getMessage()), e));
             return future;
         }
     }
@@ -546,7 +594,7 @@ public class PdfReportServiceImpl implements PdfReportService {
         validateReportData(reportName, data);
 
         // Compile report if needed
-        jasperReportCompiler.compileReport(reportName + ".jrxml", reportName + ".jasper");
+//        jasperReportCompiler.compileReport(reportName + ".jrxml", reportName + ".jasper");
 
         // Load compiled report
         InputStream reportStream = getClass().getClassLoader()
@@ -578,7 +626,10 @@ public class PdfReportServiceImpl implements PdfReportService {
             byte[] report = generateReport(reportName, parameters, data);
             return CompletableFuture.completedFuture(report);
         } catch (JRException e) {
-            throw new RuntimeException("Failed to generate async report: " + reportName, e);
+            CompletableFuture<byte[]> future = new CompletableFuture<>();
+            future.completeExceptionally(new RuntimeException(String.format(
+                "Failed to generate async report '%s': %s", reportName, e.getMessage()), e));
+            return future;
         }
     }
 

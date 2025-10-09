@@ -1,16 +1,13 @@
 package zw.co.techtrendz.school.management.api.utility;
 
-import co.elastic.clients.util.DateTime;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Projections;
 import zw.co.techtrendz.school.management.api.entity.*;
-import zw.co.techtrendz.school.management.api.enums.Status;
 import zw.co.techtrendz.school.management.api.enums.CourseworkType;
 import zw.co.techtrendz.school.management.api.view.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class ViewProjectionUtils {
@@ -172,7 +169,6 @@ public class ViewProjectionUtils {
 
     public static ConstructorExpression<SubjectYearDto> getSubjectYearWithTeacherNoClassroomProjection() {
         QSubjectYear subjectYear = QSubjectYear.subjectYear;
-        QClassroomYear classroomYear = QClassroomYear.classroomYear;
 
         return Projections.constructor(SubjectYearDto.class,
                 subjectYear.id,
@@ -477,6 +473,7 @@ public class ViewProjectionUtils {
 
     public static ConstructorExpression<Mark> getMarkProjection() {
         QMark mark = QMark.mark1;
+        QClassroom classroom = QClassroom.classroom;
 
         return Projections.constructor((Mark.class),
                 mark.id,
@@ -487,7 +484,7 @@ public class ViewProjectionUtils {
                         Projections.constructor(SubjectYear.class,
                                 mark.coursework.subject.id,
                                 new NullExpression<>(Subject.class),
-                                new NullExpression<>(Integer.class),
+                                mark.coursework.subject.calendarYear,
                                 new NullExpression<>(Teacher.class),
                                 new NullExpression<>(List.class)
                         ),
@@ -515,12 +512,11 @@ public class ViewProjectionUtils {
                         ),
                         Projections.constructor(ClassroomYear.class,
                                 mark.student.classroom.id,
-                                mark.student.classroom.classroom != null ?
-                                    Projections.constructor(Classroom.class,
-                                        mark.student.classroom.classroom.id,
-                                        mark.student.classroom.classroom.name,
-                                        mark.student.classroom.classroom.description) :
-                                    new NullExpression<>(Classroom.class))
+                                Projections.constructor(Classroom.class,
+                                        classroom.id,
+                                        classroom.name,
+                                        classroom.description)
+                        )
                 ),
                 mark.mark,
                 mark.status,
@@ -587,6 +583,8 @@ public class ViewProjectionUtils {
 
     public static ConstructorExpression<Rating> getRatingWithNestedFields() {
         QRating rating = QRating.rating1;
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+        QStudent student = QStudent.student;
 
         return Projections.constructor(Rating.class,
                 rating.id,
@@ -596,9 +594,9 @@ public class ViewProjectionUtils {
                                 rating.activityPoint.extraCurricularYear.id,
                                 rating.activityPoint.extraCurricularYear.calendarYear,
                                 Projections.constructor(ExtraCurricular.class,
-                                        rating.activityPoint.extraCurricularYear.extraCurricular.id,
-                                        rating.activityPoint.extraCurricularYear.extraCurricular.name,
-                                        rating.activityPoint.extraCurricularYear.extraCurricular.description
+                                        extraCurricularYear.extraCurricular.id,
+                                        extraCurricularYear.extraCurricular.name,
+                                        extraCurricularYear.extraCurricular.description
                                 ),
                                 new NullExpression<>(List.class),
                                 new NullExpression<>(List.class)
@@ -606,11 +604,11 @@ public class ViewProjectionUtils {
                         Projections.constructor(Student.class,
                                 rating.activityPoint.student.id,
                                 Projections.constructor(Person.class,
-                                        rating.activityPoint.student.person.id,
-                                        rating.activityPoint.student.person.salutation,
-                                        rating.activityPoint.student.person.firstName,
-                                        rating.activityPoint.student.person.otherNames,
-                                        rating.activityPoint.student.person.lastName,
+                                        student.person.id,
+                                        student.person.salutation,
+                                        student.person.firstName,
+                                        student.person.otherNames,
+                                        student.person.lastName,
                                         new NullExpression<>(String.class),
                                         new NullExpression<>(String.class),
                                         new NullExpression<>(String.class),

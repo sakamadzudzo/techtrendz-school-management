@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import zw.co.techtrendz.school.management.api.dto.MarksReportDto;
 import zw.co.techtrendz.school.management.api.dto.ProgressReportDto;
 import zw.co.techtrendz.school.management.api.dto.RatingsReportDto;
-import zw.co.techtrendz.school.management.api.service.impl.PdfReportServiceImpl;
+import zw.co.techtrendz.school.management.api.service.PdfReportService;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 public class PdfReportController {
 
     @Autowired
-    private PdfReportServiceImpl pdfReportService;
+    private PdfReportService pdfReportService;
 
     // Marks Reports Endpoints
     @PostMapping("/marks/student-classroom-year")
