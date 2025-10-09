@@ -143,7 +143,7 @@ export type ExtraCurricularYear = {
   facilitators: Teacher[];
   students: Student[];
   leadFacilitator: Teacher;
-  leadFacilitatorIndex: number;
+  leadFacilitatorId: number;
 };
 
 export type DormYear = {

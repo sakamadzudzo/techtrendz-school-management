@@ -350,6 +350,7 @@ public class PdfReportServiceImpl implements PdfReportService {
 
             // Retrieve data from database using ActivityPoint (enhanced with more info)
             List<ActivityPoint> activityPoints = activityPointService.getAllByActivityId(activityId);
+            Logger.getLogger(PdfReportServiceImpl.class.getName()).log(Level.INFO, activityPoints.get(0).toString());
             List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPoints(activityPoints);
 
             return generateReport("ratings_by_activity", parameters, data);

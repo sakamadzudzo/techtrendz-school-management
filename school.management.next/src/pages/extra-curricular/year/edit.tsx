@@ -286,10 +286,34 @@ export default function ExtraCurricularYearEdit({
                 facilitators: Array.from(keys).map((id) => {
                   return { id: id } as Teacher;
                 }),
+                leadFacilitatorId: 0
               })
             }
           >
             {facilitators?.map((t) => (
+              <SelectItem key={t.id}>{t.name}</SelectItem>
+            ))}
+          </Select>
+          <Select
+            label="Lead Facilitator"
+            selectedKeys={
+              [String(extraCurricularYear?.leadFacilitatorId)]
+            }
+            errorMessage={errors?.leadFacilitatorId}
+            isInvalid={!!errors?.leadFacilitatorId}
+            variant="underlined"
+            selectionMode="single"
+            isVirtualized={true}
+            onSelectionChange={(keys) =>
+              setExtraCurricularYear({
+                ...extraCurricularYear,
+                facilitators: Array.from(keys).map((id) => {
+                  return { id: id } as Teacher;
+                }),
+              })
+            }
+          >
+            {extraCurricularYear?.facilitators?.map((t) => (
               <SelectItem key={t.id}>{t.name}</SelectItem>
             ))}
           </Select>

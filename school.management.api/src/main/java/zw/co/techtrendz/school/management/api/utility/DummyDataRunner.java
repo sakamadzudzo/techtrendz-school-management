@@ -702,10 +702,11 @@ public class DummyDataRunner {
                 ecy.setFacilitators(teacherList);
                 ecy.setStudents(studentList);
 
-                // Set leadFacilitatorIndex to random value within bounds of facilitators list
+                // Set leadFacilitatorId to random teacher from facilitators list
                 if (!teacherList.isEmpty()) {
                     Random random = new Random();
-                    ecy.setLeadFacilitatorIndex(random.nextInt(teacherList.size()));
+                    Teacher randomTeacher = teacherList.get(random.nextInt(teacherList.size()));
+                    ecy.setLeadFacilitatorId(randomTeacher.getId());
                 }
 
                 extraCurricularYears.add(ecy);

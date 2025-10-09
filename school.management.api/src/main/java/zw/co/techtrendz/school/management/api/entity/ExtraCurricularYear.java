@@ -34,27 +34,26 @@ public class ExtraCurricularYear extends Base{
     @QueryInit("*")
     private List<Student> students;
 
-    private Integer leadFacilitatorIndex;
+    private Long leadFacilitatorId;
 
     public ExtraCurricularYear(long id) {
         this.id = id;
     }
 
     /**
-     * Returns the lead facilitator (Teacher) based on the leadFacilitatorIndex.
-     * Returns null if facilitators list is empty or leadFacilitatorIndex is null/invalid.
+     * Returns the lead facilitator (Teacher) based on the leadFacilitatorId.
+     * Returns null if facilitators list is empty or leadFacilitatorId is null/invalid.
      *
      * @return the lead facilitator Teacher object or null
      */
     public Teacher getLeadFacilitator() {
-        if (facilitators == null || facilitators.isEmpty() || this.leadFacilitatorIndex == null) {
+        if (facilitators == null || facilitators.isEmpty() || this.leadFacilitatorId == null) {
             return null;
         }
 
-        if (this.leadFacilitatorIndex >= 0 && leadFacilitatorIndex < facilitators.size()) {
-            return facilitators.get(this.leadFacilitatorIndex);
-        }
-
-        return null;
+        return facilitators.stream()
+            .filter(teacher -> teacher.getId().equals(this.leadFacilitatorId))
+            .findFirst()
+            .orElse(null);
     }
 }

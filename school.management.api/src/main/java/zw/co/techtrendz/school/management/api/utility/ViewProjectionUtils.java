@@ -374,7 +374,7 @@ public class ViewProjectionUtils {
                 new NullExpression<>(List.class),
                 new NullExpression<>(List.class),
                 extraCurricularYear.extraCurricular.id,
-                extraCurricularYear.leadFacilitatorIndex,
+                extraCurricularYear.leadFacilitatorId,
                 new NullExpression<>(TeacherDto.class)
         );
     }
@@ -558,7 +558,7 @@ public class ViewProjectionUtils {
                         new NullExpression<>(ExtraCurricular.class),
                         new NullExpression<>(List.class),
                         new NullExpression<>(List.class),
-                        new NullExpression<>(Integer.class)
+                        activityPoint.extraCurricularYear.leadFacilitatorId
                 ),
                 Projections.constructor(Student.class,
                         activityPoint.student.id,
@@ -603,7 +603,7 @@ public class ViewProjectionUtils {
                                 new NullExpression<>(ExtraCurricular.class),
                                 new NullExpression<>(List.class),
                                 new NullExpression<>(List.class),
-                                rating.activityPoint.extraCurricularYear.leadFacilitatorIndex
+                                rating.activityPoint.extraCurricularYear.leadFacilitatorId
                         ),
                         Projections.constructor(Student.class,
                                 rating.activityPoint.student.id,
@@ -655,7 +655,7 @@ public class ViewProjectionUtils {
                                 ),
                                 new NullExpression<>(List.class),
                                 new NullExpression<>(List.class),
-                                new NullExpression<>(Integer.class)
+                                rating.activityPoint.extraCurricularYear.leadFacilitatorId
                         ),
                         Projections.constructor(Student.class,
                                 rating.activityPoint.student.id,

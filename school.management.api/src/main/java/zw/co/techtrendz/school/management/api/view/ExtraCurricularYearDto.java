@@ -31,7 +31,7 @@ public class ExtraCurricularYearDto {
 
     private Long extraCurricularId;
 
-    private Integer leadFacilitatorIndex;
+    private Long leadFacilitatorId;
 
     private TeacherDto leadFacilitator;
 }
