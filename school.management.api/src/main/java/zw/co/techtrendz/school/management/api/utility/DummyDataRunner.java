@@ -701,6 +701,13 @@ public class DummyDataRunner {
                 ecy.setCalendarYear(year);
                 ecy.setFacilitators(teacherList);
                 ecy.setStudents(studentList);
+
+                // Set leadFacilitatorIndex to random value within bounds of facilitators list
+                if (!teacherList.isEmpty()) {
+                    Random random = new Random();
+                    ecy.setLeadFacilitatorIndex(random.nextInt(teacherList.size()));
+                }
+
                 extraCurricularYears.add(ecy);
             }
         }
@@ -831,13 +838,15 @@ public class DummyDataRunner {
         activityPoints
                 .parallelStream()
                 .forEach(ap -> {
-                    ratings.add(
-                            new Rating(
-                                    null,
-                                    ap,
-                                    AppUtils.getRandom(60F, 75F, 2)
-                            )
-                    );
+                    if (ap != null) {
+                        ratings.add(
+                                new Rating(
+                                        null,
+                                        ap,
+                                        AppUtils.getRandom(60F, 75F, 2)
+                                )
+                        );
+                    }
                 });
 
         this.ratingService.saveAll(ratings);

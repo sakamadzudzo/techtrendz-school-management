@@ -373,7 +373,9 @@ public class ViewProjectionUtils {
                 extraCurricularYear.status,
                 new NullExpression<>(List.class),
                 new NullExpression<>(List.class),
-                extraCurricularYear.extraCurricular.id
+                extraCurricularYear.extraCurricular.id,
+                extraCurricularYear.leadFacilitatorIndex,
+                new NullExpression<>(TeacherDto.class)
         );
     }
 
@@ -555,7 +557,8 @@ public class ViewProjectionUtils {
                         new NullExpression<>(Integer.class),
                         new NullExpression<>(ExtraCurricular.class),
                         new NullExpression<>(List.class),
-                        new NullExpression<>(List.class)
+                        new NullExpression<>(List.class),
+                        new NullExpression<>(Integer.class)
                 ),
                 Projections.constructor(Student.class,
                         activityPoint.student.id,
@@ -588,13 +591,44 @@ public class ViewProjectionUtils {
 
     public static ConstructorExpression<Rating> getRating() {
         QRating rating = QRating.rating1;
+        QStudent student = QStudent.student;
 
         return Projections.constructor(Rating.class,
                 rating.id,
                 Projections.constructor(ActivityPoint.class,
                         rating.activityPoint.id,
-                        new NullExpression<>(ExtraCurricularYear.class),
-                        new NullExpression<>(Student.class),
+                        Projections.constructor(ExtraCurricularYear.class,
+                                rating.activityPoint.extraCurricularYear.id,
+                                new NullExpression<>(Integer.class),
+                                new NullExpression<>(ExtraCurricular.class),
+                                new NullExpression<>(List.class),
+                                new NullExpression<>(List.class),
+                                rating.activityPoint.extraCurricularYear.leadFacilitatorIndex
+                        ),
+                        Projections.constructor(Student.class,
+                                rating.activityPoint.student.id,
+                                Projections.constructor(Person.class,
+                                        student.person.id,
+                                        student.person.salutation,
+                                        student.person.firstName,
+                                        student.person.otherNames,
+                                        student.person.lastName,
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(String.class),
+                                        new NullExpression<>(LocalDate.class)
+                                ),
+                                student.startYear,
+                                student.endYear,
+                                new NullExpression<>(ClassroomYear.class),
+                                new NullExpression<>(List.class),
+                                new NullExpression<>(DormYear.class),
+                                new NullExpression<>(School.class)
+                        ),
                         new NullExpression<>(String.class),
                         new NullExpression<>(List.class)
                 ),
@@ -620,7 +654,8 @@ public class ViewProjectionUtils {
                                         extraCurricularYear.extraCurricular.description
                                 ),
                                 new NullExpression<>(List.class),
-                                new NullExpression<>(List.class)
+                                new NullExpression<>(List.class),
+                                new NullExpression<>(Integer.class)
                         ),
                         Projections.constructor(Student.class,
                                 rating.activityPoint.student.id,

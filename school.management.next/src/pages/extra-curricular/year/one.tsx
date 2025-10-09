@@ -159,8 +159,19 @@ export default function OneExtraCurricularYearPage({
               </div>
             </div>
           </AccordionItem>
+          {extraCurricularYear?.leadFacilitator && (
+            <AccordionItem
+              key="2"
+              aria-label="Lead Facilitator"
+              title="Lead Facilitator"
+              subtitle="Teachers leading oversight of the extra curricular activity"
+              startContent={<ChalkboardTeacherIcon weight="thin" size={34} />}
+            >
+              <TeacherViewCard teacher={extraCurricularYear?.leadFacilitator} />
+            </AccordionItem>
+          )}
           <AccordionItem
-            key="2"
+            key={extraCurricularYear?.leadFacilitator ? "2.5" : "2"}
             aria-label="Facilitators"
             title="Facilitators"
             subtitle="Teachers overseeing the extra curricular activity"

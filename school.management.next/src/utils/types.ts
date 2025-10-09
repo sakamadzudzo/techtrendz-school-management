@@ -142,6 +142,8 @@ export type ExtraCurricularYear = {
   extraCurricular: ExtraCurricular;
   facilitators: Teacher[];
   students: Student[];
+  leadFacilitator: Teacher;
+  leadFacilitatorIndex: number;
 };
 
 export type DormYear = {
@@ -272,6 +274,7 @@ export type ExtraCurricularYearView = {
   facilitators: TeacherView[];
   students: StudentView[];
   extraCurricularId: number;
+  leadFacilitator: TeacherView;
 };
 
 export type UserView = {

@@ -256,10 +256,9 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
                 rating.getRating() != null ? round2(BigDecimal.valueOf(rating.getRating())) : BigDecimal.ZERO,
                 rating.getRating() != null ? round2(BigDecimal.valueOf(rating.getRating())) : BigDecimal.ZERO, // Percentage is same as rating
                 round2(BigDecimal.valueOf(50)), // Set pass percentage to 50 as default threshold
-                rating.getActivityPoint() != null && rating.getActivityPoint().getExtraCurricularYear() != null &&
-                    rating.getActivityPoint().getExtraCurricularYear().getFacilitators() != null &&
-                    !rating.getActivityPoint().getExtraCurricularYear().getFacilitators().isEmpty() ?
-                    rating.getActivityPoint().getExtraCurricularYear().getFacilitators().get(0).getPerson().getName() : "",
+                rating.getActivityPoint() != null && rating.getActivityPoint().getExtraCurricularYear() != null ?
+                    rating.getActivityPoint().getExtraCurricularYear().getLeadFacilitator() != null ?
+                        rating.getActivityPoint().getExtraCurricularYear().getLeadFacilitator().getPerson().getName() : "" : "",
                 rating.getActivityPoint() != null && rating.getActivityPoint().getExtraCurricularYear() != null ?
                     rating.getActivityPoint().getExtraCurricularYear().getCalendarYear() : null
         );
@@ -433,10 +432,9 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
                 round2(BigDecimal.valueOf(activityPoint.getOveralRating())),
                 round2(BigDecimal.valueOf(activityPoint.getOveralRating())), // Percentage is same as rating
                 round2(BigDecimal.valueOf(50)), // Set pass percentage to 50 as default threshold
-                activityPoint.getExtraCurricularYear() != null &&
-                    activityPoint.getExtraCurricularYear().getFacilitators() != null &&
-                    !activityPoint.getExtraCurricularYear().getFacilitators().isEmpty() ?
-                    activityPoint.getExtraCurricularYear().getFacilitators().get(0).getPerson().getName() : "",
+                activityPoint.getExtraCurricularYear() != null ?
+                    activityPoint.getExtraCurricularYear().getLeadFacilitator() != null ?
+                        activityPoint.getExtraCurricularYear().getLeadFacilitator().getPerson().getName() : "" : "",
                 activityPoint.getExtraCurricularYear() != null ?
                     activityPoint.getExtraCurricularYear().getCalendarYear() : null
             ));
@@ -452,10 +450,9 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
                     rating.getRating() != null ? round2(BigDecimal.valueOf(rating.getRating())) : BigDecimal.ZERO,
                     rating.getRating() != null ? round2(BigDecimal.valueOf(rating.getRating())) : BigDecimal.ZERO, // Percentage is same as rating
                     round2(BigDecimal.valueOf(50)), // Set pass percentage to 50 as default threshold
-                    activityPoint.getExtraCurricularYear() != null &&
-                        activityPoint.getExtraCurricularYear().getFacilitators() != null &&
-                        !activityPoint.getExtraCurricularYear().getFacilitators().isEmpty() ?
-                        activityPoint.getExtraCurricularYear().getFacilitators().get(0).getPerson().getName() : "",
+                    activityPoint.getExtraCurricularYear() != null ?
+                        activityPoint.getExtraCurricularYear().getLeadFacilitator() != null ?
+                            activityPoint.getExtraCurricularYear().getLeadFacilitator().getPerson().getName() : "" : "",
                     activityPoint.getExtraCurricularYear() != null ?
                         activityPoint.getExtraCurricularYear().getCalendarYear() : null
                 ))

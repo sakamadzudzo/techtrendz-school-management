@@ -30,4 +30,8 @@ public class ExtraCurricularYearDto {
     private List<StudentDto> students;
 
     private Long extraCurricularId;
+
+    private Integer leadFacilitatorIndex;
+
+    private TeacherDto leadFacilitator;
 }

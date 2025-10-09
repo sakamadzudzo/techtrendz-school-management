@@ -26,7 +26,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public List<Rating> saveAll(List<Rating> ratings) {
-        return this.ratingRepository.saveAll((ratings));
+        return this.ratingRepository.saveAll(ratings);
     }
 
     @Override

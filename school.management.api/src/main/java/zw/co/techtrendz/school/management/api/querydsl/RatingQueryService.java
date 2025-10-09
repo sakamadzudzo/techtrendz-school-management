@@ -18,39 +18,75 @@ public class RatingQueryService {
 
     public Rating getById(long id) {
         QRating rating = QRating.rating1;
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+        QExtraCurricular extraCurricular = QExtraCurricular.extraCurricular;
+        QStudent student = QStudent.student;
 
         return queryFactory
-                .select(ViewProjectionUtils.getRating())
+                .select(ViewProjectionUtils.getRatingWithNestedFields())
                 .from(rating)
+                .leftJoin(extraCurricularYear)
+                .on(rating.activityPoint.extraCurricularYear.id.eq(extraCurricularYear.id))
+                .leftJoin(extraCurricular)
+                .on(extraCurricularYear.extraCurricular.id.eq(extraCurricular.id))
+                .leftJoin(student)
+                .on(rating.activityPoint.student.id.eq(student.id))
                 .where(rating.id.eq(id))
                 .fetchOne();
     }
 
     public List<Rating> getAll() {
         QRating rating = QRating.rating1;
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+        QExtraCurricular extraCurricular = QExtraCurricular.extraCurricular;
+        QStudent student = QStudent.student;
 
         return queryFactory
-                .select(ViewProjectionUtils.getRating())
+                .select(ViewProjectionUtils.getRatingWithNestedFields())
                 .from(rating)
+                .leftJoin(extraCurricularYear)
+                .on(rating.activityPoint.extraCurricularYear.id.eq(extraCurricularYear.id))
+                .leftJoin(extraCurricular)
+                .on(extraCurricularYear.extraCurricular.id.eq(extraCurricular.id))
+                .leftJoin(student)
+                .on(rating.activityPoint.student.id.eq(student.id))
                 .fetch();
     }
 
     public List<Rating> getAllByActivityId(long activityId) {
         QRating rating = QRating.rating1;
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+        QExtraCurricular extraCurricular = QExtraCurricular.extraCurricular;
+        QStudent student = QStudent.student;
 
         return queryFactory
-                .select(ViewProjectionUtils.getRating())
+                .select(ViewProjectionUtils.getRatingWithNestedFields())
                 .from(rating)
+                .leftJoin(extraCurricularYear)
+                .on(rating.activityPoint.extraCurricularYear.id.eq(extraCurricularYear.id))
+                .leftJoin(extraCurricular)
+                .on(extraCurricularYear.extraCurricular.id.eq(extraCurricular.id))
+                .leftJoin(student)
+                .on(rating.activityPoint.student.id.eq(student.id))
                 .where(rating.activityPoint.id.eq(activityId))
                 .fetch();
     }
 
     public List<Rating> getAllByActivityIds(List<Long> activityIds) {
         QRating rating = QRating.rating1;
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+        QExtraCurricular extraCurricular = QExtraCurricular.extraCurricular;
+        QStudent student = QStudent.student;
 
         return queryFactory
-                .select(ViewProjectionUtils.getRating())
+                .select(ViewProjectionUtils.getRatingWithNestedFields())
                 .from(rating)
+                .leftJoin(extraCurricularYear)
+                .on(rating.activityPoint.extraCurricularYear.id.eq(extraCurricularYear.id))
+                .leftJoin(extraCurricular)
+                .on(extraCurricularYear.extraCurricular.id.eq(extraCurricular.id))
+                .leftJoin(student)
+                .on(rating.activityPoint.student.id.eq(student.id))
                 .where(rating.activityPoint.id.in(activityIds))
                 .fetch();
     }
