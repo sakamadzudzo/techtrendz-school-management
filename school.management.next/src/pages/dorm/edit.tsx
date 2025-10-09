@@ -170,7 +170,7 @@ export default function DormEdit({
             isInvalid={!!errors?.name}
             onValueChange={(e) => setDorm({ ...dorm, name: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             autoFocus={true}
           />
           <Textarea
@@ -184,7 +184,7 @@ export default function DormEdit({
             isInvalid={!!errors?.description}
             onValueChange={(e) => setDorm({ ...dorm, description: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             className="placeholder:text-ellipsis"
           />
           <Textarea
@@ -198,7 +198,7 @@ export default function DormEdit({
             isInvalid={!!errors?.address}
             onValueChange={(e) => setDorm({ ...dorm, address: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             className="placeholder:text-ellipsis"
           />
           <Select
@@ -206,7 +206,7 @@ export default function DormEdit({
             selectedKeys={dorm?.school?.id ? [String(dorm.school.id)] : []}
             errorMessage={errors?.school?.general}
             isInvalid={!!errors?.school?.general}
-            variant="underlined"
+            variant="bordered"
             onSelectionChange={(keys) =>
               setDorm({
                 ...dorm,

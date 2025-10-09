@@ -147,7 +147,7 @@ export default function SubjectEdit({
             isInvalid={!!errors?.name}
             onValueChange={(e) => setSubject({ ...subject, name: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             autoFocus={true}
           />
           <Textarea
@@ -160,7 +160,7 @@ export default function SubjectEdit({
             isInvalid={!!errors?.description}
             onValueChange={(e) => setSubject({ ...subject, description: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             className="placeholder:text-ellipsis"
           />
           <Input
@@ -174,7 +174,7 @@ export default function SubjectEdit({
             isInvalid={!!errors?.code}
             onValueChange={(e) => setSubject({ ...subject, code: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             isRequired
@@ -186,7 +186,7 @@ export default function SubjectEdit({
             isInvalid={!!errors?.syllabus}
             onValueChange={(e) => setSubject({ ...subject, syllabus: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             className="placeholder:text-ellipsis"
           />
           <Input
@@ -199,7 +199,7 @@ export default function SubjectEdit({
             isInvalid={!!errors?.curriculum}
             onValueChange={(e) => setSubject({ ...subject, curriculum: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             className="placeholder:text-ellipsis"
           />
           <Input
@@ -213,14 +213,14 @@ export default function SubjectEdit({
             isInvalid={!!errors?.level}
             onValueChange={(e) => setSubject({ ...subject, level: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Select
             isRequired
             label="Type"
             name="type"
             selectedKeys={[subject?.type?.valueOf()]}
-            variant="underlined"
+            variant="bordered"
             selectionMode="single"
             errorMessage={errors?.type}
             isInvalid={!!errors?.type}
@@ -248,7 +248,7 @@ export default function SubjectEdit({
             isInvalid={!!errors?.category}
             onValueChange={(e) => setSubject({ ...subject, category: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
         </div>
         <Button

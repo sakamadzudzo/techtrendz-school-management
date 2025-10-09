@@ -283,7 +283,7 @@ export const ViewActivityReport = ({
                       value={remarks || ""}
                       onValueChange={(e) => setRemarks(e)}
                       size="sm"
-                      variant="underlined"
+                      variant="bordered"
                       autoFocus={true}
                     />
                   </div>

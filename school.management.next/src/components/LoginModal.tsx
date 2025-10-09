@@ -111,7 +111,7 @@ export default function LoginModal({
               value={username}
               onValueChange={setUsername}
               size="sm"
-              variant="underlined"
+              variant="bordered"
               autoFocus={true}
             />
             <Input
@@ -123,7 +123,7 @@ export default function LoginModal({
               value={password}
               onValueChange={setPassword}
               size="sm"
-              variant="underlined"
+              variant="bordered"
             />
             <Button
               type="submit"

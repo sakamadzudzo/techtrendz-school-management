@@ -1,5 +1,5 @@
 import { useExtraCurricularYearById } from "@/hooks/useExtraCurricularYears";
-import { Accordion, AccordionItem, Button, Spacer } from "@heroui/react";
+import { Accordion, AccordionItem, Button, Link, Spacer } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import {
   StudentIcon,
@@ -102,6 +102,7 @@ export default function OneExtraCurricularYearPage({
           </Button>
           <Button
             color="primary"
+            as={Link}
             endContent={<PencilSimpleLineIcon weight="thin" size={34} />}
             href={`/extra-curricular/year/edit?id=${extraCurricularYear?.id}`}
           >

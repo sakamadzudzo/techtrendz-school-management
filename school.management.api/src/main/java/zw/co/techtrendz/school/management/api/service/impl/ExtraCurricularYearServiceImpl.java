@@ -170,7 +170,7 @@ public class ExtraCurricularYearServiceImpl implements ExtraCurricularYearServic
         Map<Long, ActivityPoint> mappedActivityPointList = activityPointList
                 .parallelStream()
                 .collect(Collectors.toMap(
-                        a -> a.getStudent().getId(), Function.identity()
+                        a -> a.getStudent().getId(), Function.identity(), (oldValue, newValue) -> oldValue
                 ));
         List<StudentDto> studentDtoList = this.studentQueryService.getStudentsByExtraCurricular(extraCurricularYearIds);
         List<StudentDto> newStudentDtoList = studentDtoList

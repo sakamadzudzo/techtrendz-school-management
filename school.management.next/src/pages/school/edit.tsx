@@ -173,7 +173,7 @@ export default function SchoolEdit({
             isInvalid={!!errors?.name}
             onValueChange={(e) => setSchool({ ...school, name: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             autoFocus={true}
           />
           <Input
@@ -187,7 +187,7 @@ export default function SchoolEdit({
             isInvalid={!!errors?.email}
             onValueChange={(e) => setSchool({ ...school, email: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             className="placeholder:text-ellipsis"
           />
           <Input
@@ -201,7 +201,7 @@ export default function SchoolEdit({
             isInvalid={!!errors?.telNumber}
             onValueChange={(e) => changeNumbers("telNumber", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             isRequired
@@ -214,7 +214,7 @@ export default function SchoolEdit({
             isInvalid={!!errors?.mobileNumber}
             onValueChange={(e) => changeNumbers("mobileNumber", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             isRequired
@@ -227,7 +227,7 @@ export default function SchoolEdit({
             isInvalid={!!errors?.mobileNumber2}
             onValueChange={(e) => changeNumbers("mobileNumber2", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Textarea
             isRequired
@@ -240,7 +240,7 @@ export default function SchoolEdit({
             isInvalid={!!errors?.address}
             onValueChange={(e) => setSchool({ ...school, address: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             isRequired
@@ -251,7 +251,7 @@ export default function SchoolEdit({
             value={school.website || ""}
             onValueChange={(e) => setSchool({ ...school, website: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
         </div>
         <Button

@@ -157,7 +157,7 @@ export default function DormYearEdit({
             selectedKeys={dormYear?.dorm?.id ? [String(dormYear.dorm.id)] : []}
             errorMessage={errors?.dorm?.general}
             isInvalid={!!errors?.dorm?.general}
-            variant="underlined"
+            variant="bordered"
             onSelectionChange={(keys) =>
               setDormYear({
                 ...dormYear,
@@ -171,7 +171,7 @@ export default function DormYearEdit({
           </Select>
           <Select
             label="Calendar Year"
-            variant="underlined"
+            variant="bordered"
             selectedKeys={
               dormYear?.calendarYear ? [String(dormYear.calendarYear)] : []
             }

@@ -202,7 +202,7 @@ export default function UserEdit({
                   value={user.username || ""}
                   onValueChange={(e) => setUser({ ...user, username: e })}
                   size="sm"
-                  variant="underlined"
+                  variant="bordered"
                   autoFocus={true}
                 />
               )}
@@ -231,7 +231,7 @@ export default function UserEdit({
                   value={user.password || ""}
                   onValueChange={(e) => setUser({ ...user, password: e })}
                   size="sm"
-                  variant="underlined"
+                  variant="bordered"
                 />
               )}
             </>
@@ -248,7 +248,7 @@ export default function UserEdit({
               setUser({ ...user, person: { ...user.person, salutation: e } })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="First Name"
@@ -262,7 +262,7 @@ export default function UserEdit({
               setUser({ ...user, person: { ...user.person, firstName: e } })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Other Names"
@@ -276,7 +276,7 @@ export default function UserEdit({
               setUser({ ...user, person: { ...user.person, otherNames: e } })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Last Name"
@@ -290,7 +290,7 @@ export default function UserEdit({
               setUser({ ...user, person: { ...user.person, lastName: e } })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Email"
@@ -304,7 +304,7 @@ export default function UserEdit({
               setUser({ ...user, person: { ...user.person, email: e } })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Mobile Number"
@@ -316,7 +316,7 @@ export default function UserEdit({
             isInvalid={!!errors?.person?.mobileNumber}
             onValueChange={(e) => changeNumbers("mobileNumber", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Mobile Number 2"
@@ -328,7 +328,7 @@ export default function UserEdit({
             isInvalid={!!errors?.person?.mobileNumber2}
             onValueChange={(e) => changeNumbers("mobileNumber2", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Tel Number"
@@ -340,7 +340,7 @@ export default function UserEdit({
             isInvalid={!!errors?.person?.telNumber}
             onValueChange={(e) => changeNumbers("telNumber", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="WhatsApp"
@@ -352,7 +352,7 @@ export default function UserEdit({
             isInvalid={!!errors?.person?.whatsapp}
             onValueChange={(e) => changeNumbers("whatsapp", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Facebook"
@@ -366,7 +366,7 @@ export default function UserEdit({
               setUser({ ...user, person: { ...user.person, facebook: e } })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="LinkedIn"
@@ -380,7 +380,7 @@ export default function UserEdit({
               setUser({ ...user, person: { ...user.person, linkedin: e } })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Date of Birth"
@@ -402,12 +402,12 @@ export default function UserEdit({
               setUser({ ...user, person: { ...user.person, dateOfBirth: e } })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Select
             label="Roles"
             selectedKeys={user.roles || []}
-            variant="underlined"
+            variant="bordered"
             selectionMode="multiple"
             errorMessage={errors?.roles}
             isInvalid={!!errors?.roles}

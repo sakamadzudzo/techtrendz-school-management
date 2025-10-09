@@ -174,13 +174,13 @@ export const AddCoursework = ({
               isInvalid={!!errors?.title}
               onValueChange={(e) => setCoursework({ ...coursework, title: e })}
               size="sm"
-              variant="underlined"
+              variant="bordered"
               autoFocus={true}
             />
             <Select
               label="Type"
               selectedKeys={[coursework.type]}
-              variant="underlined"
+              variant="bordered"
               selectionMode="single"
               errorMessage={errors?.type}
               isInvalid={!!errors?.type}
@@ -208,7 +208,7 @@ export const AddCoursework = ({
                 setCoursework({ ...coursework, total: Number(e) })
               }
               size="sm"
-              variant="underlined"
+              variant="bordered"
               type="number"
             />
             <Input
@@ -223,7 +223,7 @@ export const AddCoursework = ({
                 setCoursework({ ...coursework, passMark: Number(e) })
               }
               size="sm"
-              variant="underlined"
+              variant="bordered"
               type="number"
             />
             <Button

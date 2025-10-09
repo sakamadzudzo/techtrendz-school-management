@@ -13,6 +13,7 @@ import {
   ExtraCurricular,
   Teacher,
   Student,
+  YearDropdown,
 } from "@/utils/types";
 import { Form, Button, Input, Select, SelectItem } from "@heroui/react";
 import { FloppyDiskIcon, PaletteIcon } from "@phosphor-icons/react";
@@ -130,6 +131,17 @@ export default function ExtraCurricularYearEdit({
       });
   }, [extraCurricularsError]);
 
+  const selectedFacilitators = React.useMemo(() => {
+    return (
+      facilitators?.filter((facilitator) => {
+        return extraCurricularYear?.facilitators?.some(
+          (innerFacilitator) =>
+            Number(innerFacilitator.id) === Number(facilitator.id)
+        );
+      }) || ([] as YearDropdown[])
+    );
+  }, [extraCurricularYear.facilitators, facilitators]);
+
   const validate = () => {
     setErrors({} as Errors<ExtraCurricularYear, string>);
     let tempErrors: Errors<ExtraCurricularYear, string> = {} as Errors<
@@ -231,7 +243,7 @@ export default function ExtraCurricularYearEdit({
           <Select
             label="Calendar Year"
             name="calendarYear"
-            variant="underlined"
+            variant="bordered"
             selectedKeys={[String(extraCurricularYear.calendarYear)]}
             errorMessage={errors?.calendarYear}
             isInvalid={!!errors?.calendarYear}
@@ -256,7 +268,7 @@ export default function ExtraCurricularYearEdit({
             }
             errorMessage={errors?.extraCurricular?.general}
             isInvalid={!!errors?.extraCurricular?.general}
-            variant="underlined"
+            variant="bordered"
             onSelectionChange={(keys) =>
               setExtraCurricularYear({
                 ...extraCurricularYear,
@@ -277,7 +289,7 @@ export default function ExtraCurricularYearEdit({
             }
             errorMessage={errors?.facilitators?.general}
             isInvalid={!!errors?.facilitators?.general}
-            variant="underlined"
+            variant="bordered"
             selectionMode="multiple"
             isVirtualized={true}
             onSelectionChange={(keys) =>
@@ -286,7 +298,7 @@ export default function ExtraCurricularYearEdit({
                 facilitators: Array.from(keys).map((id) => {
                   return { id: id } as Teacher;
                 }),
-                leadFacilitatorId: 0
+                leadFacilitatorId: 0,
               })
             }
           >
@@ -296,24 +308,21 @@ export default function ExtraCurricularYearEdit({
           </Select>
           <Select
             label="Lead Facilitator"
-            selectedKeys={
-              [String(extraCurricularYear?.leadFacilitatorId)]
-            }
+            selectedKeys={[String(extraCurricularYear?.leadFacilitatorId)]}
             errorMessage={errors?.leadFacilitatorId}
             isInvalid={!!errors?.leadFacilitatorId}
-            variant="underlined"
+            variant="bordered"
             selectionMode="single"
             isVirtualized={true}
-            onSelectionChange={(keys) =>
+            isDisabled={!extraCurricularYear.facilitators.length}
+            onSelectionChange={(key) =>
               setExtraCurricularYear({
                 ...extraCurricularYear,
-                facilitators: Array.from(keys).map((id) => {
-                  return { id: id } as Teacher;
-                }),
+                leadFacilitatorId: Number(key.currentKey!),
               })
             }
           >
-            {extraCurricularYear?.facilitators?.map((t) => (
+            {selectedFacilitators?.map((t) => (
               <SelectItem key={t.id}>{t.name}</SelectItem>
             ))}
           </Select>
@@ -324,7 +333,7 @@ export default function ExtraCurricularYearEdit({
             }
             errorMessage={errors?.students?.general}
             isInvalid={!!errors?.students?.general}
-            variant="underlined"
+            variant="bordered"
             selectionMode="multiple"
             isVirtualized={true}
             onSelectionChange={(keys) =>

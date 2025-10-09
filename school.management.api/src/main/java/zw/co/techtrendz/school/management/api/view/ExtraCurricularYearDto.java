@@ -34,4 +34,15 @@ public class ExtraCurricularYearDto {
     private Long leadFacilitatorId;
 
     private TeacherDto leadFacilitator;
+
+    public TeacherDto getLeadFacilitator() {
+        if (facilitators == null || facilitators.isEmpty() || this.leadFacilitatorId == null) {
+            return null;
+        }
+
+        return facilitators.stream()
+                .filter(teacher -> teacher.getId().equals(this.leadFacilitatorId))
+                .findFirst()
+                .orElse(null);
+    }
 }

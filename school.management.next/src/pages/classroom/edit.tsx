@@ -129,7 +129,7 @@ export default function ClassroomEdit({
             isInvalid={!!errors?.name}
             onValueChange={(e) => setClassroom({ ...classroom, name: e })}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             autoFocus={true}
           />
           <Textarea
@@ -145,7 +145,7 @@ export default function ClassroomEdit({
               setClassroom({ ...classroom, description: e })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
             className="placeholder:text-ellipsis"
           />
         </div>

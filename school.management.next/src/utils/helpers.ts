@@ -238,6 +238,10 @@ export const extraCurricularYearViewToExtraCurricularYear = (
     status: dto.status,
     datestamp: dto.datestamp,
     calendarYear: dto.calendarYear,
+    leadFacilitatorId: dto.leadFacilitator.id,
+    leadFacilitator: dto.leadFacilitator
+      ? teacherViewToTeacher(dto.leadFacilitator)
+      : ({} as Teacher),
     extraCurricular: { id: dto.extraCurricularId } as ExtraCurricular,
     facilitators: (Array.isArray(dto.facilitators)
       ? dto.facilitators.map(teacherViewToTeacher)

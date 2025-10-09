@@ -159,7 +159,7 @@ export default function SubjectYearEdit({
             }
             errorMessage={errors?.subject?.general}
             isInvalid={!!errors?.subject?.general}
-            variant="underlined"
+            variant="bordered"
             onSelectionChange={(keys) =>
               setSubjectYear({
                 ...subjectYear,
@@ -180,7 +180,7 @@ export default function SubjectYearEdit({
             }
             errorMessage={errors?.teacher?.general}
             isInvalid={!!errors?.teacher?.general}
-            variant="underlined"
+            variant="bordered"
             onSelectionChange={(key) =>
               setSubjectYear({
                 ...subjectYear,
@@ -194,7 +194,7 @@ export default function SubjectYearEdit({
           </Select>
           <Select
             label="Calendar Year"
-            variant="underlined"
+            variant="bordered"
             selectedKeys={
               subjectYear?.calendarYear
                 ? [String(subjectYear.calendarYear)]

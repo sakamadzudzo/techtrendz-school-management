@@ -191,7 +191,7 @@ export default function ClassroomYearEdit({
             }
             errorMessage={errors?.classroom?.general}
             isInvalid={!!errors?.classroom?.general}
-            variant="underlined"
+            variant="bordered"
             onSelectionChange={(keys) =>
               setClassroomYear({
                 ...classroomYear,
@@ -207,7 +207,7 @@ export default function ClassroomYearEdit({
           </Select>
           <Select
             label="Calendar Year"
-            variant="underlined"
+            variant="bordered"
             selectedKeys={
               classroomYear?.calendarYear
                 ? [String(classroomYear.calendarYear)]
@@ -236,7 +236,7 @@ export default function ClassroomYearEdit({
             }
             errorMessage={errors?.homeroomTeacher?.general}
             isInvalid={!!errors?.homeroomTeacher?.general}
-            variant="underlined"
+            variant="bordered"
             onSelectionChange={(key) =>
               setClassroomYear({
                 ...classroomYear,
@@ -258,7 +258,7 @@ export default function ClassroomYearEdit({
             }
             errorMessage={errors?.subjects?.general}
             isInvalid={!!errors?.subjects?.general}
-            variant="underlined"
+            variant="bordered"
             selectionMode="multiple"
             isVirtualized={true}
             onSelectionChange={(keys) =>

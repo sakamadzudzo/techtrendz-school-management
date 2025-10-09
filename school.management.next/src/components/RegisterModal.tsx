@@ -186,7 +186,7 @@ export default function RegisterModal({
               isInvalid={!!errors?.username}
               onValueChange={(v) => handleChange("username", v)}
               size="sm"
-              variant="underlined"
+              variant="bordered"
             />
             <Input
               isRequired
@@ -199,7 +199,7 @@ export default function RegisterModal({
               isInvalid={!!errors?.password}
               onValueChange={(v) => handleChange("password", v)}
               size="sm"
-              variant="underlined"
+              variant="bordered"
             />
             <Select
               className="text-foreground"
@@ -207,7 +207,7 @@ export default function RegisterModal({
               selectedKeys={[form.salutation]}
               errorMessage={errors?.person?.salutation}
               isInvalid={!!errors?.person?.salutation}
-              variant="underlined"
+              variant="bordered"
               onSelectionChange={(keys) =>
                 handleChange("salutation", Array.from(keys)[0] as string)
               }
@@ -226,7 +226,7 @@ export default function RegisterModal({
               isInvalid={!!errors?.person?.firstName}
               onValueChange={(v) => handleChange("firstName", v)}
               size="sm"
-              variant="underlined"
+              variant="bordered"
             />
             <Input
               label="Other Names"
@@ -237,7 +237,7 @@ export default function RegisterModal({
               isInvalid={!!errors?.person?.otherNames}
               onValueChange={(v) => handleChange("otherNames", v)}
               size="sm"
-              variant="underlined"
+              variant="bordered"
             />
             <Input
               isRequired
@@ -249,7 +249,7 @@ export default function RegisterModal({
               isInvalid={!!errors?.person?.lastName}
               onValueChange={(v) => handleChange("lastName", v)}
               size="sm"
-              variant="underlined"
+              variant="bordered"
             />
             <Input
               isRequired
@@ -262,7 +262,7 @@ export default function RegisterModal({
               isInvalid={!!errors?.person?.email}
               onValueChange={(v) => handleChange("email", v)}
               size="sm"
-              variant="underlined"
+              variant="bordered"
             />
             <Input
               label="Mobile Number"
@@ -273,7 +273,7 @@ export default function RegisterModal({
               isInvalid={!!errors?.person?.mobileNumber}
               onValueChange={(v) => handleChange("mobileNumber", v)}
               size="sm"
-              variant="underlined"
+              variant="bordered"
             />
             <Input
               label="Date of Birth"
@@ -284,14 +284,14 @@ export default function RegisterModal({
               isInvalid={!!errors?.person?.dateOfBirth}
               onValueChange={(v) => handleChange("dateOfBirth", v)}
               size="sm"
-              variant="underlined"
+              variant="bordered"
             />
             <Select
               label="Role"
               selectedKeys={[form.role]}
               errorMessage={errors?.role}
               isInvalid={!!errors?.role}
-              variant="underlined"
+              variant="bordered"
               onSelectionChange={(keys) =>
                 handleChange("role", Array.from(keys)[0] as string)
               }

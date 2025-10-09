@@ -144,7 +144,7 @@ export default function ExtraCurricularEdit({
               setExtraCurricular({ ...extraCurricular, name: e })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
             autoFocus={true}
           />
           <Textarea
@@ -160,7 +160,7 @@ export default function ExtraCurricularEdit({
               setExtraCurricular({ ...extraCurricular, description: e })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
             className="placeholder:text-ellipsis"
           />
         </div>

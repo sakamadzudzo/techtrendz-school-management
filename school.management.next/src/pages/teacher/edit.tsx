@@ -189,7 +189,7 @@ export default function TeacherEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="First Name"
@@ -206,7 +206,7 @@ export default function TeacherEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Other Names"
@@ -223,7 +223,7 @@ export default function TeacherEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Last Name"
@@ -240,7 +240,7 @@ export default function TeacherEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Email"
@@ -257,7 +257,7 @@ export default function TeacherEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Mobile Number"
@@ -269,7 +269,7 @@ export default function TeacherEdit({
             isInvalid={!!errors?.person?.mobileNumber}
             onValueChange={(e) => changeNumbers("mobileNumber", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Mobile Number 2"
@@ -281,7 +281,7 @@ export default function TeacherEdit({
             isInvalid={!!errors?.person?.mobileNumber2}
             onValueChange={(e) => changeNumbers("mobileNumber2", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Tel Number"
@@ -293,7 +293,7 @@ export default function TeacherEdit({
             isInvalid={!!errors?.person?.telNumber}
             onValueChange={(e) => changeNumbers("telNumber", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="WhatsApp"
@@ -305,7 +305,7 @@ export default function TeacherEdit({
             isInvalid={!!errors?.person?.whatsapp}
             onValueChange={(e) => changeNumbers("whatsapp", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Facebook"
@@ -322,7 +322,7 @@ export default function TeacherEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="LinkedIn"
@@ -339,7 +339,7 @@ export default function TeacherEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Date of Birth"
@@ -364,7 +364,7 @@ export default function TeacherEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
         </div>
         <Button

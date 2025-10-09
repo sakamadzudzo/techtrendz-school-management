@@ -265,7 +265,7 @@ export default function StudentEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="First Name"
@@ -282,7 +282,7 @@ export default function StudentEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Other Names"
@@ -299,7 +299,7 @@ export default function StudentEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Last Name"
@@ -316,7 +316,7 @@ export default function StudentEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Email"
@@ -333,7 +333,7 @@ export default function StudentEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Mobile Number"
@@ -345,7 +345,7 @@ export default function StudentEdit({
             isInvalid={!!errors?.person?.mobileNumber}
             onValueChange={(e) => changeNumbers("mobileNumber", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Mobile Number 2"
@@ -357,7 +357,7 @@ export default function StudentEdit({
             isInvalid={!!errors?.person?.mobileNumber2}
             onValueChange={(e) => changeNumbers("mobileNumber2", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Tel Number"
@@ -369,7 +369,7 @@ export default function StudentEdit({
             isInvalid={!!errors?.person?.telNumber}
             onValueChange={(e) => changeNumbers("telNumber", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="WhatsApp"
@@ -381,7 +381,7 @@ export default function StudentEdit({
             isInvalid={!!errors?.person?.whatsapp}
             onValueChange={(e) => changeNumbers("whatsapp", e)}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Facebook"
@@ -398,7 +398,7 @@ export default function StudentEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="LinkedIn"
@@ -415,7 +415,7 @@ export default function StudentEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             label="Date of Birth"
@@ -440,12 +440,12 @@ export default function StudentEdit({
               })
             }
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <div className="w-full flex gap-5">
             <Select
               label="Start Year"
-              variant="underlined"
+              variant="bordered"
               selectedKeys={[String(student.startYear)]}
               errorMessage={errors.startYear}
               isInvalid={!!errors.startYear}
@@ -458,7 +458,7 @@ export default function StudentEdit({
             </Select>
             <Select
               label="End Year"
-              variant="underlined"
+              variant="bordered"
               selectedKeys={[String(student.endYear)]}
               errorMessage={errors.endYear}
               isInvalid={!!errors.endYear}
@@ -476,7 +476,7 @@ export default function StudentEdit({
             placeholder="Select classroom"
             errorMessage={errors?.classroom?.general}
             isInvalid={!!errors?.classroom?.general}
-            variant="underlined"
+            variant="bordered"
             isVirtualized={true}
             onSelectionChange={(key) =>
               setStudent({
@@ -502,7 +502,7 @@ export default function StudentEdit({
             placeholder="Select dorm"
             errorMessage={errors?.dorm?.general}
             isInvalid={!!errors?.dorm?.general}
-            variant="underlined"
+            variant="bordered"
             isVirtualized={true}
             onSelectionChange={(key) =>
               setStudent({
@@ -529,7 +529,7 @@ export default function StudentEdit({
             }
             errorMessage={errors?.school?.general}
             isInvalid={!!errors?.school?.general}
-            variant="underlined"
+            variant="bordered"
             onSelectionChange={(keys) =>
               setStudent({
                 ...student,

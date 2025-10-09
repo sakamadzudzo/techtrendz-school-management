@@ -109,7 +109,7 @@ export const ChangePassword = () => {
             value={currentPassword}
             onValueChange={setCurrentPassword}
             size="sm"
-            variant="underlined"
+            variant="bordered"
             autoFocus={true}
           />
           <Input
@@ -121,7 +121,7 @@ export const ChangePassword = () => {
             value={newPassword}
             onValueChange={setNewPassword}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
           <Input
             isRequired
@@ -132,7 +132,7 @@ export const ChangePassword = () => {
             value={confirmPassword}
             onValueChange={setConfirmPassword}
             size="sm"
-            variant="underlined"
+            variant="bordered"
           />
         </div>
         <Button type="submit" color="primary" className="w-full px-5 py-4">

@@ -274,7 +274,7 @@ export default function MyTable(props: MyTableProps) {
                 value={filterValue}
                 onClear={() => onClear()}
                 onValueChange={onSearchChange}
-                variant="underlined"
+                variant="bordered"
               />
               {fetchButton && (
                 <Button onPress={search}>{fetchButtonLabel}</Button>

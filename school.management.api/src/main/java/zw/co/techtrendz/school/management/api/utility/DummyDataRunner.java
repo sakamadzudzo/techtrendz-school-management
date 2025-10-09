@@ -837,19 +837,28 @@ public class DummyDataRunner {
         List<Rating> ratings = new ArrayList<>();
 
         activityPoints
-                .parallelStream()
+                .stream()  // Changed from parallelStream() to stream() to avoid race conditions
+                .filter(ap -> ap != null && ap.getId() != null)  // More robust null check
                 .forEach(ap -> {
-                    if (ap != null) {
-                        ratings.add(
-                                new Rating(
-                                        null,
-                                        ap,
-                                        AppUtils.getRandom(60F, 75F, 2)
-                                )
+                    try {
+                        Rating rating = new Rating(
+                                null,
+                                ap,
+                                AppUtils.getRandom(60F, 75F, 2)
                         );
+                        ratings.add(rating);
+                    } catch (Exception e) {
+                        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.WARNING,
+                            "Failed to create rating for activity point ID: " +
+                            (ap != null ? ap.getId() : "null"), e);
                     }
                 });
 
-        this.ratingService.saveAll(ratings);
+        if (!ratings.isEmpty()) {
+            this.ratingService.saveAll(ratings);
+        } else {
+            Logger.getLogger(DummyDataRunner.class.getName()).log(Level.WARNING,
+                "No valid ratings to save - activity points may be missing or invalid");
+        }
     }
 }
