@@ -4,10 +4,14 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.token.Sha512DigestUtils;
 import zw.co.techtrendz.school.management.api.entity.Person;
+import zw.co.techtrendz.school.management.api.entity.Student;
+import zw.co.techtrendz.school.management.api.entity.Teacher;
 import zw.co.techtrendz.school.management.api.entity.User;
 import zw.co.techtrendz.school.management.api.enums.Salutation;
 import zw.co.techtrendz.school.management.api.exception.UserCreationException;
 import zw.co.techtrendz.school.management.api.service.UserService;
+import zw.co.techtrendz.school.management.api.view.StudentDto;
+import zw.co.techtrendz.school.management.api.view.TeacherDto;
 import zw.co.techtrendz.school.management.api.view.UserDto;
 
 import java.math.BigDecimal;
@@ -153,6 +157,26 @@ public class AppUtils {
         }
 
         return userDto;
+    }
+
+    public static Teacher dtoToTeacher(TeacherDto dto) {
+        Person person = new Person();
+        person.setSalutation(dto.getSalutation());
+        person.setFirstName(dto.getFirstName());
+        person.setOtherNames(dto.getOtherNames());
+        person.setLastName(dto.getLastName());
+
+        return new Teacher(dto.getId(), person);
+    }
+
+    public static Student dtoToStudent(StudentDto dto) {
+        Person person = new Person();
+        person.setSalutation(dto.getSalutation());
+        person.setFirstName(dto.getFirstName());
+        person.setOtherNames(dto.getOtherNames());
+        person.setLastName(dto.getLastName());
+
+        return new Student(dto.getId(), person);
     }
 
     public static <T> BooleanExpression getBooleanExpression(String filter, BooleanExpression predicate, Class<T> entityClass, String alias, List<String> skipFields) {

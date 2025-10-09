@@ -589,6 +589,53 @@ public class ViewProjectionUtils {
         );
     }
 
+    public static ConstructorExpression<ActivityPoint> getActivityPointsWithFullECA() {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+
+        return Projections.constructor(ActivityPoint.class,
+                activityPoint.id,
+                Projections.constructor(ExtraCurricularYear.class,
+                        activityPoint.extraCurricularYear.id,
+                        activityPoint.extraCurricularYear.calendarYear,
+                        Projections.constructor(ExtraCurricular.class,
+                                extraCurricularYear.extraCurricular.id,
+                                extraCurricularYear.extraCurricular.name,
+                                extraCurricularYear.extraCurricular.description
+                        ),
+                        new NullExpression<>(List.class), // facilitators - will be populated later
+                        new NullExpression<>(List.class), // students - will be populated later
+                        activityPoint.extraCurricularYear.leadFacilitatorId
+                ),
+                Projections.constructor(Student.class,
+                        activityPoint.student.id,
+                        Projections.constructor(Person.class,
+                                activityPoint.student.person.id,
+                                activityPoint.student.person.salutation,
+                                activityPoint.student.person.firstName,
+                                activityPoint.student.person.otherNames,
+                                activityPoint.student.person.lastName,
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(LocalDate.class)
+                        ),
+                        new NullExpression<>(Integer.class),
+                        new NullExpression<>(Integer.class),
+                        new NullExpression<>(ClassroomYear.class),
+                        new NullExpression<>(List.class),
+                        new NullExpression<>(DormYear.class),
+                        new NullExpression<>(School.class)
+                ),
+                activityPoint.remarks,
+                new NullExpression<>(List.class)
+        );
+    }
+
     public static ConstructorExpression<Rating> getRating() {
         QRating rating = QRating.rating1;
         QStudent student = QStudent.student;

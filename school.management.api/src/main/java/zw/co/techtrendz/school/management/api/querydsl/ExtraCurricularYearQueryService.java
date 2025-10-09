@@ -35,6 +35,14 @@ public class ExtraCurricularYearQueryService {
                 .fetchOne();
     }
 
+    public List<ExtraCurricularYear> getExtraCurricularYearsByIds(List<Long> extraCurricularYearIds) {
+        QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
+
+        return queryFactory.selectFrom(extraCurricularYear)
+                .where(extraCurricularYear.id.in(extraCurricularYearIds))
+                .fetch();
+    }
+
     public Page<ExtraCurricularYearDto> getAllExtraCurricularYearDetails(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         QExtraCurricularYear extraCurricularYear = QExtraCurricularYear.extraCurricularYear;
 
