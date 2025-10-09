@@ -589,7 +589,7 @@ public class PdfReportServiceImpl implements PdfReportService {
 
     // Generic report generation method with validation and caching
     @Cacheable(value = "reportCache", key = "#reportName + '_' + #parameters.hashCode() + '_' + (#data != null ? #data.size() : 0)")
-    private byte[] generateReport(String reportName, Map<String, Object> parameters, List<?> data) throws JRException {
+    public byte[] generateReport(String reportName, Map<String, Object> parameters, List<?> data) throws JRException {
         // Validate data is not empty
         validateReportData(reportName, data);
 

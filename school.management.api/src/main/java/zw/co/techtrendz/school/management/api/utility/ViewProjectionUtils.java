@@ -474,16 +474,20 @@ public class ViewProjectionUtils {
     public static ConstructorExpression<Mark> getMarkProjection() {
         QMark mark = QMark.mark1;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return Projections.constructor((Mark.class),
                 mark.id,
                 Projections.constructor(Coursework.class,
                         mark.coursework.id,
-                        new NullExpression<>(String.class),
-                        new NullExpression<>(CourseworkType.class),
+                        mark.coursework.title,
+                        mark.coursework.type,
                         Projections.constructor(SubjectYear.class,
                                 mark.coursework.subject.id,
-                                new NullExpression<>(Subject.class),
+                                Projections.constructor(Subject.class,
+                                        subjectYear.subject.id,
+                                        subjectYear.subject.name
+                                ),
                                 mark.coursework.subject.calendarYear,
                                 new NullExpression<>(Teacher.class),
                                 new NullExpression<>(List.class)

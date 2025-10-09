@@ -104,6 +104,19 @@ public class DummyDataRunner {
     }
 
     private void dummyDataInsertion() {
+        // Fast devtools restarts: if data already seeded, skip reseeding on restart
+        try {
+            boolean hasUsers = !this.userService.getAll(0, 1, Arrays.asList("id"), Sort.Direction.ASC).getContent().isEmpty();
+            boolean hasSchools = !this.schoolService.getAll(0, 1, Arrays.asList("id"), Sort.Direction.ASC).getContent().isEmpty();
+            boolean hasSubjects = !this.subjectService.getAll(0, 1, Arrays.asList("id"), Sort.Direction.ASC).getContent().isEmpty();
+            if (hasUsers || hasSchools || hasSubjects) {
+                Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Dummy data detected; skipping reseed for devtools restart.");
+                return;
+            }
+        } catch (Exception e) {
+            Logger.getLogger(DummyDataRunner.class.getName()).log(Level.WARNING, "Seed pre-check failed; proceeding with seeding.", e);
+        }
+
         this.dummyPersons();
         this.dummyTeachers();
         this.dummySubject();

@@ -21,6 +21,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -29,6 +30,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.id.eq(id))
                 .fetchOne();
     }
@@ -37,6 +40,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -45,6 +49,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .fetch();
     }
 
@@ -52,6 +58,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -60,6 +67,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.coursework.id.eq(courseworkId))
                 .fetch();
     }
@@ -68,6 +77,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -76,6 +86,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.student.id.eq(studentId))
                 .fetch();
     }
@@ -84,6 +96,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -92,6 +105,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.coursework.subject.id.eq(subjectId))
                 .fetch();
     }
@@ -100,6 +115,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -108,6 +124,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.coursework.subject.id.eq(subjectId).and(mark.coursework.id.eq(courseworkId)))
                 .fetch();
     }
@@ -116,6 +134,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -124,6 +143,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.student.id.eq(studentId).and(mark.coursework.subject.id.eq(subjectId)))
                 .fetch();
     }
@@ -132,6 +153,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -140,6 +162,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.student.id.eq(studentId).and(mark.coursework.id.eq(courseworkId)))
                 .fetchOne();
     }
@@ -148,6 +172,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -156,6 +181,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.coursework.subject.id.eq(subjectId).and(mark.coursework.type.eq(type)))
                 .fetch();
     }
@@ -164,6 +191,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -172,6 +200,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.student.id.eq(studentId).and(mark.coursework.type.eq(type)))
                 .fetch();
     }
@@ -180,6 +210,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -188,6 +219,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.student.id.eq(studentId)
                         .and(mark.coursework.subject.id.eq(subjectId))
                         .and(mark.coursework.type.eq(type)))
@@ -198,6 +231,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -206,6 +240,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.coursework.id.in(courseworkIds))
                 .fetch();
     }
@@ -214,6 +250,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -222,6 +259,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.student.id.eq(studentId)
                         .and(mark.student.classroom.isNotNull())
                         .and(classroom.id.eq(classroomId))
@@ -254,6 +293,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -262,6 +302,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.student.id.eq(studentId)
                         .and(mark.coursework.subject.calendarYear.eq(year)))
                 .fetch();
@@ -271,6 +313,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -279,6 +322,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(classroom.id.eq(classroomId)
                         .and(mark.coursework.subject.calendarYear.eq(year)))
                 .fetch();
@@ -288,6 +333,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -296,7 +342,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
-                .leftJoin(mark.coursework.subject.subject)
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.coursework.subject.subject.id.eq(subjectId)
                         .and(mark.coursework.subject.calendarYear.eq(year)))
                 .fetch();
@@ -326,6 +373,7 @@ public class MarkQueryService {
         QMark mark = QMark.mark1;
         QClassroomYear classroomYear = QClassroomYear.classroomYear;
         QClassroom classroom = QClassroom.classroom;
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
 
         return queryFactory
                 .select(ViewProjectionUtils.getMarkProjection())
@@ -334,6 +382,8 @@ public class MarkQueryService {
                 .on(mark.student.classroom.id.eq(classroomYear.id))
                 .leftJoin(classroom)
                 .on(classroomYear.classroom.id.eq(classroom.id))
+                .leftJoin(subjectYear)
+                .on(mark.coursework.subject.id.eq(subjectYear.id))
                 .where(mark.coursework.subject.calendarYear.eq(year))
                 .fetch();
     }
