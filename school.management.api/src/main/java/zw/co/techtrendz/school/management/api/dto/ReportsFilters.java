@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.stream.IntStream;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "DTO for data to use in reports filtering dropdowns")
 public class ReportsFilters {
 
     private List<YearDropdown> students;
@@ -29,6 +31,7 @@ public class ReportsFilters {
 
     private List<YearDropdown> extraCurriculars;
 
+    @Schema(description = "Calendar years derived from all years used in subject years, or from current going back 10 years")
     private List<Integer> calendarYears;
 
     public List<Integer> getCalendarYears() {
