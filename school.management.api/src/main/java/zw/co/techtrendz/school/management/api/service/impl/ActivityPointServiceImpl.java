@@ -77,6 +77,13 @@ public class ActivityPointServiceImpl implements ActivityPointService {
         return this.getRatingsForActivityPoints(activityPoints);
     }
 
+    // Report-focused variant: preserves old behaviour while exposing enriched data for reports
+    @Override
+    public List<ActivityPoint> getAllByActivityIdForReports(long activityId) {
+        List<ActivityPoint> activityPoints = this.activityPointQueryService.getAllByActivityId(activityId);
+        return this.getRatingsForReports(activityPoints);
+    }
+
     @Override
     public List<ActivityPoint> getAllByActivityIds(List<Long> activityIds) {
         List<ActivityPoint> activityPoints = this.activityPointQueryService.getAllByActivityIds(activityIds);
@@ -87,6 +94,13 @@ public class ActivityPointServiceImpl implements ActivityPointService {
     public List<ActivityPoint> getAllByStudentId(long studentId) {
         List<ActivityPoint> activityPoints = this.activityPointQueryService.getAllByStudentId(studentId);
         return this.getRatingsForActivityPoints(activityPoints);
+    }
+
+    // Report-focused variant: preserves old behaviour while exposing enriched data for reports
+    @Override
+    public List<ActivityPoint> getAllByStudentIdForReports(long studentId) {
+        List<ActivityPoint> activityPoints = this.activityPointQueryService.getAllByStudentId(studentId);
+        return this.getRatingsForReports(activityPoints);
     }
 
     @Override
@@ -152,8 +166,8 @@ public class ActivityPointServiceImpl implements ActivityPointService {
                 .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
 
         // Group facilitators and students by ECA ID
-        Map<Long, List<Teacher>> mappedFacilitators = null;
-        Map<Long, List<Student>> mappedStudents = null;
+        Map<Long, List<Teacher>> mappedFacilitators = new HashMap<>();
+        Map<Long, List<Student>> mappedStudents = new HashMap<>();
 
         if (!ecaIds.isEmpty()) {
             // Fetch facilitators and students for these ECA IDs
@@ -165,15 +179,7 @@ public class ActivityPointServiceImpl implements ActivityPointService {
                     .forEach(facilitator -> {
                         Long ecaId = facilitator.getExtraCurricularYearId();
                         Teacher teacher = AppUtils.dtoToTeacher(facilitator);
-                        if (!mappedFacilitators.get(ecaId).isEmpty()) {
-                            List<Teacher> temp = mappedFacilitators.get(ecaId);
-                            temp.add(teacher);
-                            mappedFacilitators.put(ecaId, temp);
-                        } else {
-                            List<Teacher> temp = new ArrayList<>();
-                            temp.add(teacher);
-                            mappedFacilitators.put(ecaId, temp);
-                        }
+                        mappedFacilitators.computeIfAbsent(ecaId, k -> new ArrayList<>()).add(teacher);
                     });
 
             students
@@ -181,15 +187,7 @@ public class ActivityPointServiceImpl implements ActivityPointService {
                     .forEach(studentDto -> {
                         Long ecaId = studentDto.getExtraCurricularYearId();
                         Student student = AppUtils.dtoToStudent(studentDto);
-                        if (!mappedStudents.get(ecaId).isEmpty()) {
-                            List<Student> temp = mappedStudents.get(ecaId);
-                            temp.add(student);
-                            mappedStudents.put(ecaId, temp);
-                        } else {
-                            List<Student> temp = new ArrayList<>();
-                            temp.add(student);
-                            mappedStudents.put(ecaId, temp);
-                        }
+                        mappedStudents.computeIfAbsent(ecaId, k -> new ArrayList<>()).add(student);
                     });
         }
 
@@ -203,10 +201,10 @@ public class ActivityPointServiceImpl implements ActivityPointService {
                     if (activityPoint.getExtraCurricularYear() != null && !ecaIds.isEmpty()) {
                         Long ecaId = activityPoint.getExtraCurricularYear().getId();
                         ExtraCurricularYear extraCurricularYear = activityPoint.getExtraCurricularYear();
-                        if (mappedFacilitators != null && !mappedFacilitators.isEmpty()) {
+                        if (!mappedFacilitators.isEmpty()) {
                             extraCurricularYear.setFacilitators(mappedFacilitators.get(ecaId));
                         }
-                        if (mappedStudents != null && !mappedStudents.isEmpty()) {
+                        if (!mappedStudents.isEmpty()) {
                             extraCurricularYear.setStudents(mappedStudents.get(ecaId));
                         }
                     }

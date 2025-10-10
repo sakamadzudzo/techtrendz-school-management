@@ -349,7 +349,7 @@ public class PdfReportServiceImpl implements PdfReportService {
             parameters.put("activityId", activityId);
 
             // Retrieve data from database using ActivityPoint (enhanced with more info)
-            List<ActivityPoint> activityPoints = activityPointService.getAllByActivityId(activityId);
+            List<ActivityPoint> activityPoints = activityPointService.getAllByActivityIdForReports(activityId);
             Logger.getLogger(PdfReportServiceImpl.class.getName()).log(Level.INFO, activityPoints.get(0).toString());
             List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPoints(activityPoints);
 
@@ -369,7 +369,7 @@ public class PdfReportServiceImpl implements PdfReportService {
             parameters.put("activityId", activityId);
 
             // Retrieve data from database using ActivityPoint (enhanced with more info)
-            List<ActivityPoint> activityPoints = activityPointService.getAllByActivityId(activityId);
+            List<ActivityPoint> activityPoints = activityPointService.getAllByActivityIdForReports(activityId);
             List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPoints(activityPoints);
 
             // Check if data is large enough to warrant async processing
@@ -437,7 +437,7 @@ public class PdfReportServiceImpl implements PdfReportService {
             parameters.put("entityType", entityType);
 
             // Retrieve data from database
-            List<ActivityPoint> activityPoints = activityPointService.getAllByStudentId(studentId);
+            List<ActivityPoint> activityPoints = activityPointService.getAllByStudentIdForReports(studentId);
             List<ProgressReportDto> data = reportDataAggregationService.aggregateProgressDataByStudent(activityPoints, studentId, entityType);
 
             return generateReport("progress_report_by_student", parameters, data);
@@ -522,7 +522,7 @@ public class PdfReportServiceImpl implements PdfReportService {
             parameters.put("entityType", entityType);
 
             // Retrieve data from database
-            List<ActivityPoint> activityPoints = activityPointService.getAllByActivityId(activityId);
+            List<ActivityPoint> activityPoints = activityPointService.getAllByActivityIdForReports(activityId);
             List<ProgressReportDto> data = reportDataAggregationService.aggregateProgressDataByActivity(activityPoints, activityId, entityType);
 
             return generateReport("progress_report_by_activity", parameters, data);
