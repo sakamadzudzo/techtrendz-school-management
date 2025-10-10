@@ -60,17 +60,14 @@ public class ReportsDropdownsController {
 
     // Marks Reports - need year, classroom, student, subject, teacher
     @GetMapping("/marks")
-    public ResponseEntity<Map<String, List<?>>> getMarksReportDropdowns() {
-        Map<String, List<?>> dropdowns = Map.of(
-                "students", this.reportsDropdownsService.getAllStudentsForDropdown(),
-                "teachers", this.reportsDropdownsService.getAllTeachersForDropdown(),
-                "classrooms", this.reportsDropdownsService.getAllClassroomsForDropdown(),
-                "subjects", this.reportsDropdownsService.getAllSubjectsForDropdown(),
-                "calendarYears", this.reportsDropdownsService.getAllCalendarYearsForDropdown()
-        );
+    public ResponseEntity<ReportsFilters> getMarksReportDropdowns() {
         ReportsFilters reportsFilters = new ReportsFilters();
         reportsFilters.setStudents(this.reportsDropdownsService.getAllStudentsForDropdown());
-        return ResponseEntity.ok(dropdowns);
+        reportsFilters.setTeachers(this.reportsDropdownsService.getAllTeachersForDropdown());
+        reportsFilters.setClassrooms(this.reportsDropdownsService.getAllClassroomsForDropdown());
+        reportsFilters.setSubjects(this.reportsDropdownsService.getAllSubjectsForDropdown());
+        reportsFilters.setCalendarYears(this.reportsDropdownsService.getAllCalendarYearsForDropdown());
+        return ResponseEntity.ok(reportsFilters);
     }
 
     // Marks by Student Classroom Year - need year, classroom, student

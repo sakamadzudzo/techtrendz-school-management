@@ -1,6 +1,7 @@
 package zw.co.techtrendz.school.management.api.entity;
 
 import com.querydsl.core.annotations.QueryInit;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -16,24 +17,30 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Audited
+@Schema(description = "Entity representing student activity points and performance")
 public class ActivityPoint extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier for the activity point", example = "1")
     private Long id;
 
     @ManyToOne
     @QueryInit("*")
+    @Schema(description = "Extra-curricular activity year this point belongs to")
     private ExtraCurricularYear extraCurricularYear;
 
     @ManyToOne
     @QueryInit("*")
+    @Schema(description = "Student this activity point belongs to")
     private Student student;
 
+    @Schema(description = "Additional remarks or comments", example = "Excellent performance")
     private String remarks;
 
     @OneToMany
     @QueryInit("*")
+    @Schema(description = "List of ratings that contribute to this activity point")
     private List<Rating> ratings;
 
     public Float getOveralRating() {

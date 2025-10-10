@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,28 +18,36 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Audited
+@Schema(description = "Entity representing academic coursework and assessments")
 public class Coursework extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier for the coursework", example = "1")
     private Long id;
 
+    @Schema(description = "Title of the coursework", example = "Mid-term Mathematics Exam")
     private String title;
 
     @NotNull(message = "Coursework type is required")
+    @Schema(description = "Type of coursework", example = "EXAM", required = true)
     private CourseworkType type;
 
     @ManyToOne
     @NotNull(message = "Subject is required")
+    @Schema(description = "Subject-year this coursework belongs to", required = true)
     private SubjectYear subject;
 
     @NotNull(message = "Coursework total is required")
+    @Schema(description = "Total marks for the coursework", example = "100.0", required = true)
     private Float total;
 
     @NotNull(message = "Coursework pass mark is required")
+    @Schema(description = "Minimum pass mark for the coursework", example = "50.0", required = true)
     private Float passMark;
 
     @Transient
+    @Schema(description = "List of marks associated with this coursework")
     private List<Mark> marks;
 
     {

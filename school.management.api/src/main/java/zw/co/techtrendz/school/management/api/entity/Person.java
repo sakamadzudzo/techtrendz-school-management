@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,34 +18,48 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Data
 @Audited
+@Schema(description = "Entity representing personal information for individuals")
 public class Person extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier for the person", example = "1")
     private Long id;
 
+    @Schema(description = "Salutation for the person", example = "MR")
     private Salutation salutation;
 
+    @Schema(description = "First name", example = "John")
     private String firstName;
 
+    @Schema(description = "Middle or other names", example = "William")
     private String otherNames;
 
+    @Schema(description = "Last name or surname", example = "Doe")
     private String lastName;
 
+    @Schema(description = "Email address", example = "john.doe@example.com")
     private String email;
 
+    @Schema(description = "Primary mobile number", example = "+1234567890")
     private String mobileNumber;
 
+    @Schema(description = "Secondary mobile number", example = "+0987654321")
     private String mobileNumber2;
 
+    @Schema(description = "Telephone number", example = "+1234567890")
     private String telNumber;
 
+    @Schema(description = "WhatsApp contact", example = "+1234567890")
     private String whatsapp;
 
+    @Schema(description = "Facebook profile URL", example = "https://facebook.com/john.doe")
     private String facebook;
 
+    @Schema(description = "LinkedIn profile URL", example = "https://linkedin.com/in/john-doe")
     private String linkedin;
 
+    @Schema(description = "Date of birth", example = "1990-05-15")
     private LocalDate dateOfBirth;
 
     public Person(long id) {

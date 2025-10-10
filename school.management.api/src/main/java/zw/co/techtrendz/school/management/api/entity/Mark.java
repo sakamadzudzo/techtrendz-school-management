@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -15,18 +16,23 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @Audited
+@Schema(description = "Entity representing student marks for coursework")
 public class Mark extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier for the mark", example = "1")
     private Long id;
 
     @ManyToOne
+    @Schema(description = "Coursework this mark belongs to")
     private Coursework coursework;
 
     @ManyToOne
+    @Schema(description = "Student this mark belongs to")
     private Student student;
 
+    @Schema(description = "Numerical mark obtained", example = "85.5")
     private Float mark;
 
     public Mark(Long id, Coursework coursework, Student student, Float mark, Status status, LocalDateTime datestamp) {
