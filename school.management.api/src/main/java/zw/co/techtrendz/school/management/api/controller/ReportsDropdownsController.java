@@ -71,6 +71,10 @@ public class ReportsDropdownsController {
     }
 
     // Marks by Student Classroom Year - need year, classroom, student
+    @Operation(
+            summary = "Get marks dropdown data by student, classroom and year",
+            description = "Retrieves dropdown data for marks reports filtered by student, classroom and year"
+    )
     @GetMapping("/marks/student-classroom-year")
     public ResponseEntity<Map<String, List<?>>> getMarksByStudentClassroomYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -82,6 +86,10 @@ public class ReportsDropdownsController {
     }
 
     // Marks by Student Subject Year - need year, subject, student
+    @Operation(
+            summary = "Get marks dropdown data by student, subject and year",
+            description = "Retrieves dropdown data for marks reports filtered by student, subject and year"
+    )
     @GetMapping("/marks/student-subject-year")
     public ResponseEntity<Map<String, List<?>>> getMarksByStudentSubjectYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -93,6 +101,10 @@ public class ReportsDropdownsController {
     }
 
     // Marks by Student Year - need year, student
+    @Operation(
+            summary = "Get marks dropdown data by student and year",
+            description = "Retrieves dropdown data for marks reports filtered by student and year"
+    )
     @GetMapping("/marks/student-year")
     public ResponseEntity<Map<String, List<?>>> getMarksByStudentYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -103,6 +115,10 @@ public class ReportsDropdownsController {
     }
 
     // Marks by Student - need student only
+    @Operation(
+            summary = "Get marks dropdown data by student",
+            description = "Retrieves dropdown data for marks reports filtered by student only"
+    )
     @GetMapping("/marks/student")
     public ResponseEntity<Map<String, List<?>>> getMarksByStudentDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -112,6 +128,10 @@ public class ReportsDropdownsController {
     }
 
     // Marks by Year - need year only
+    @Operation(
+            summary = "Get marks dropdown data by year",
+            description = "Retrieves dropdown data for marks reports filtered by year only"
+    )
     @GetMapping("/marks/year")
     public ResponseEntity<Map<String, List<?>>> getMarksByYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -121,6 +141,10 @@ public class ReportsDropdownsController {
     }
 
     // Marks by Classroom Year - need year, classroom
+    @Operation(
+            summary = "Get marks dropdown data by classroom and year",
+            description = "Retrieves dropdown data for marks reports filtered by classroom and year"
+    )
     @GetMapping("/marks/classroom-year")
     public ResponseEntity<Map<String, List<?>>> getMarksByClassroomYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -131,6 +155,10 @@ public class ReportsDropdownsController {
     }
 
     // Marks by Subject Year - need year, subject
+    @Operation(
+            summary = "Get marks dropdown data by subject and year",
+            description = "Retrieves dropdown data for marks reports filtered by subject and year"
+    )
     @GetMapping("/marks/subject-year")
     public ResponseEntity<Map<String, List<?>>> getMarksBySubjectYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -141,6 +169,10 @@ public class ReportsDropdownsController {
     }
 
     // Marks by Teacher Year - need year, teacher
+    @Operation(
+            summary = "Get marks dropdown data by teacher and year",
+            description = "Retrieves dropdown data for marks reports filtered by teacher and year"
+    )
     @GetMapping("/marks/teacher-year")
     public ResponseEntity<Map<String, List<?>>> getMarksByTeacherYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -151,6 +183,10 @@ public class ReportsDropdownsController {
     }
 
     // Ratings Reports - need year, activity, student, teacher
+    @Operation(
+            summary = "Get ratings dropdown data",
+            description = "Retrieves dropdown data for ratings reports requiring year, activity, student, and teacher filters"
+    )
     @GetMapping("/ratings")
     public ResponseEntity<Map<String, List<?>>> getRatingsReportDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -163,6 +199,10 @@ public class ReportsDropdownsController {
     }
 
     // Ratings by Student Activity Year - need year, activity, student
+    @Operation(
+            summary = "Get ratings dropdown data by student, activity and year",
+            description = "Retrieves dropdown data for ratings reports filtered by student, activity and year"
+    )
     @GetMapping("/ratings/student-activity-year")
     public ResponseEntity<Map<String, List<?>>> getRatingsByStudentActivityYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -174,6 +214,10 @@ public class ReportsDropdownsController {
     }
 
     // Ratings by Student Year - need year, student
+    @Operation(
+            summary = "Get ratings dropdown data by student and year",
+            description = "Retrieves dropdown data for ratings reports filtered by student and year"
+    )
     @GetMapping("/ratings/student-year")
     public ResponseEntity<Map<String, List<?>>> getRatingsByStudentYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -184,6 +228,10 @@ public class ReportsDropdownsController {
     }
 
     // Ratings by Activity Year - need year, activity
+    @Operation(
+            summary = "Get ratings dropdown data by activity and year",
+            description = "Retrieves dropdown data for ratings reports filtered by activity and year"
+    )
     @GetMapping("/ratings/activity-year")
     public ResponseEntity<Map<String, List<?>>> getRatingsByActivityYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -194,6 +242,10 @@ public class ReportsDropdownsController {
     }
 
     // Ratings by Activity - need activity only
+    @Operation(
+            summary = "Get ratings dropdown data by activity",
+            description = "Retrieves dropdown data for ratings reports filtered by activity only"
+    )
     @GetMapping("/ratings/activity")
     public ResponseEntity<Map<String, List<?>>> getRatingsByActivityDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -203,6 +255,10 @@ public class ReportsDropdownsController {
     }
 
     // Ratings by Teacher Year - need year, teacher
+    @Operation(
+            summary = "Get ratings dropdown data by teacher and year",
+            description = "Retrieves dropdown data for ratings reports filtered by teacher and year"
+    )
     @GetMapping("/ratings/teacher-year")
     public ResponseEntity<Map<String, List<?>>> getRatingsByTeacherYearDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -213,6 +269,10 @@ public class ReportsDropdownsController {
     }
 
     // Progress Reports - need student, teacher, subject, classroom, activity, facilitator, entityType
+    @Operation(
+            summary = "Get progress report dropdown data",
+            description = "Retrieves dropdown data for progress reports requiring student, teacher, subject, classroom, activity, and facilitator filters"
+    )
     @GetMapping("/progress")
     public ResponseEntity<Map<String, List<?>>> getProgressReportDropdowns() {
         Map<String, List<?>> dropdowns = Map.of(
@@ -226,36 +286,64 @@ public class ReportsDropdownsController {
     }
 
     // Individual dropdown endpoints for flexibility
+    @Operation(
+            summary = "Get students dropdown",
+            description = "Retrieves all students formatted for dropdown selections"
+    )
     @GetMapping("/students")
     public ResponseEntity<List<YearDropdown>> getStudentsDropdown() {
         return ResponseEntity.ok(this.reportsDropdownsService.getAllStudentsForDropdown());
     }
 
+    @Operation(
+            summary = "Get teachers dropdown",
+            description = "Retrieves all teachers formatted for dropdown selections"
+    )
     @GetMapping("/teachers")
     public ResponseEntity<List<YearDropdown>> getTeachersDropdown() {
         return ResponseEntity.ok(this.reportsDropdownsService.getAllTeachersForDropdown());
     }
 
+    @Operation(
+            summary = "Get courseworks dropdown",
+            description = "Retrieves all courseworks formatted for dropdown selections"
+    )
     @GetMapping("/courseworks")
     public ResponseEntity<List<CourseworkDropdown>> getCourseworksDropdown() {
         return ResponseEntity.ok(this.reportsDropdownsService.getAllCourseworksForDropdown());
     }
 
+    @Operation(
+            summary = "Get classrooms dropdown",
+            description = "Retrieves all classrooms formatted for dropdown selections"
+    )
     @GetMapping("/classrooms")
     public ResponseEntity<List<YearDropdown>> getClassroomsDropdown() {
         return ResponseEntity.ok(this.reportsDropdownsService.getAllClassroomsForDropdown());
     }
 
+    @Operation(
+            summary = "Get subjects dropdown",
+            description = "Retrieves all subjects formatted for dropdown selections"
+    )
     @GetMapping("/subjects")
     public ResponseEntity<List<YearDropdown>> getSubjectsDropdown() {
         return ResponseEntity.ok(this.reportsDropdownsService.getAllSubjectsForDropdown());
     }
 
+    @Operation(
+            summary = "Get extra-curriculars dropdown",
+            description = "Retrieves all extra-curricular activities formatted for dropdown selections"
+    )
     @GetMapping("/extra-curriculars")
     public ResponseEntity<List<YearDropdown>> getExtraCurricularsDropdown() {
         return ResponseEntity.ok(this.reportsDropdownsService.getAllExtraCurricularsForDropdown());
     }
 
+    @Operation(
+            summary = "Get calendar years dropdown",
+            description = "Retrieves all calendar years formatted for dropdown selections"
+    )
     @GetMapping("/calendar-years")
     public ResponseEntity<List<Integer>> getCalendarYearsDropdown() {
         return ResponseEntity.ok(this.reportsDropdownsService.getAllCalendarYearsForDropdown());
