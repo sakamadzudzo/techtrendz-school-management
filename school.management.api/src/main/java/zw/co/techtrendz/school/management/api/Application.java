@@ -19,13 +19,34 @@ package zw.co.techtrendz.school.management.api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.License;
 
+@OpenAPIDefinition(
+        info = @Info(
+                title = "TechTrendz School Management API",
+                version = "1.0.0",
+                description = "API for the Student Progress and Reporting System",
+                contact = @Contact(
+                        name = "Saka Shingirai Madzudzo",
+                        email = "sakamadzudzo@gmail.com",
+                        url = "https://saka-madzudzo-portfolio.vercel.app/"
+                ),
+                license = @License(
+                        name = "Apache 2.0",
+                        url = "http://www.apache.org/licenses/LICENSE-2.0"
+                )
+        )
+)
 @SpringBootApplication
 @EnableAsync
 public class Application {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
 }
