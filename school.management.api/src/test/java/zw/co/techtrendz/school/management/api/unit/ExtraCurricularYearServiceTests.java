@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import zw.co.techtrendz.school.management.api.entity.ExtraCurricularYear;
 import zw.co.techtrendz.school.management.api.repository.ExtraCurricularYearRepository;
 import zw.co.techtrendz.school.management.api.service.impl.ExtraCurricularYearServiceImpl;
@@ -112,13 +109,13 @@ class ExtraCurricularYearServiceTests {
         List<ExtraCurricularYear> years = List.of(year);
         Page<ExtraCurricularYear> page = new PageImpl<>(years);
 
-        when(extraCurricularYearRepository.findAll(any(), eq(PageRequest.of(0, 10, Sort.by("year").ascending())))).thenReturn(page);
+        when(extraCurricularYearRepository.findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("year").ascending())))).thenReturn(page);
 
         List<ExtraCurricularYear> foundYears = extraCurricularYearService.getAllByExample(example, 0, 10, List.of("year"), Sort.Direction.ASC).getContent();
 
         assertNotNull(foundYears);
         assertEquals(1, foundYears.size());
         assertEquals(2023, foundYears.get(0).getCalendarYear());
-        verify(extraCurricularYearRepository, times(1)).findAll(any(), eq(PageRequest.of(0, 10, Sort.by("year").ascending())));
+        verify(extraCurricularYearRepository, times(1)).findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("year").ascending())));
     }
 }

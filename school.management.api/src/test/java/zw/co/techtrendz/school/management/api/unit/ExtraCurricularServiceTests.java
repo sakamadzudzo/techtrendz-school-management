@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import zw.co.techtrendz.school.management.api.entity.ExtraCurricular;
 import zw.co.techtrendz.school.management.api.repository.ExtraCurricularRepository;
 import zw.co.techtrendz.school.management.api.service.impl.ExtraCurricularServiceImpl;
@@ -112,13 +109,13 @@ class ExtraCurricularServiceTests {
         List<ExtraCurricular> extraCurriculars = List.of(extraCurricular);
         Page<ExtraCurricular> page = new PageImpl<>(extraCurriculars);
 
-        when(extraCurricularRepository.findAll(any(), eq(PageRequest.of(0, 10, Sort.by("name").ascending())))).thenReturn(page);
+        when(extraCurricularRepository.findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("name").ascending())))).thenReturn(page);
 
         List<ExtraCurricular> foundExtraCurriculars = extraCurricularService.getAllByExample(example, 0, 10, List.of("name"), Sort.Direction.ASC).getContent();
 
         assertNotNull(foundExtraCurriculars);
         assertEquals(1, foundExtraCurriculars.size());
         assertEquals("Basketball", foundExtraCurriculars.get(0).getName());
-        verify(extraCurricularRepository, times(1)).findAll(any(), eq(PageRequest.of(0, 10, Sort.by("name").ascending())));
+        verify(extraCurricularRepository, times(1)).findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("name").ascending())));
     }
 }

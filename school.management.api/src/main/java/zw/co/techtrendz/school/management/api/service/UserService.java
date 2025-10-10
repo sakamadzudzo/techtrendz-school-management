@@ -1,9 +1,11 @@
 package zw.co.techtrendz.school.management.api.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.entity.User;
+import zw.co.techtrendz.school.management.api.view.UserDto;
 
 import java.util.List;
 
@@ -20,6 +22,16 @@ public interface UserService {
 
     public Page<User> getAllByExample(User user, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
+    public Page<User> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
+
+    public UserDto getViewById(Long id);
+
+    public Page<UserDto> getViewAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<UserDto> getViewAllByExample(User user, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<UserDto> getViewAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
+
     public User getByUsername(String username);
 
     public User getByEmail(String email);
@@ -32,9 +44,17 @@ public interface UserService {
 
     public boolean existsByPhoneNumber(String phoneNumber);
 
+    public boolean existsByUsername(String username, Long id);
+
+    public boolean existsByEmail(String email, Long id);
+
+    public boolean existsByPhoneNumber(String phoneNumber, Long id);
+
     public void enableUser(Long id);
 
     public void disableUser(Long id);
 
     public void verifyUser(Long id);
+
+    public void changePassword(String currentPassword, String newPassword, HttpServletRequest request);
 }

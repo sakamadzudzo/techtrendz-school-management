@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.dto.AuthDto;
 import zw.co.techtrendz.school.management.api.entity.User;
 
+import java.util.Map;
+
 @Service
 public interface AuthService {
 
-    public ResponseEntity<String> login(AuthDto authDto, HttpServletRequest request);
+    public ResponseEntity<Map<String, Object>> login(AuthDto authDto, HttpServletRequest request);
 
     public ResponseEntity<String> logout(HttpServletRequest request);
 

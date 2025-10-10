@@ -1,5 +1,6 @@
 package zw.co.techtrendz.school.management.api.config.envers;
 
+import com.querydsl.core.annotations.QueryExclude;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import org.hibernate.envers.RevisionEntity;
 @Table(name = "revinfo")
 @Getter
 @Setter
+@QueryExclude
 public class AuditEntity extends DefaultRevisionEntity {
 
     private Long userId;

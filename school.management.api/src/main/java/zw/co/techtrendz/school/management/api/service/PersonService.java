@@ -19,4 +19,6 @@ public interface PersonService {
     public Page<Person> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<Person> getAllByExample(Person person, int page, int size, List<String> sortBy, Sort.Direction sortDir);
+
+    public Page<Person> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);
 }

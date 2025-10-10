@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.dto.AuthDto;
+import zw.co.techtrendz.school.management.api.dto.UserViewDto;
 import zw.co.techtrendz.school.management.api.entity.User;
-import zw.co.techtrendz.school.management.api.security.JwtAuthenticationFilter;
 import zw.co.techtrendz.school.management.api.security.JwtUtil;
 import zw.co.techtrendz.school.management.api.service.AuthService;
 import zw.co.techtrendz.school.management.api.service.JwtBlacklistService;
@@ -16,46 +16,58 @@ import zw.co.techtrendz.school.management.api.service.PersonService;
 import zw.co.techtrendz.school.management.api.service.UserService;
 import zw.co.techtrendz.school.management.api.utility.AppUtils;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private JwtBlacklistService jwtBlacklistService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PersonService personService;
+    private final JwtUtil jwtUtil;
+    private final JwtBlacklistService jwtBlacklistService;
+    private final UserService userService;
+    private final PersonService personService;
+
+    public AuthServiceImpl(JwtUtil jwtUtil, JwtBlacklistService jwtBlacklistService, UserService userService, PersonService personService) {
+        this.jwtUtil = jwtUtil;
+        this.jwtBlacklistService = jwtBlacklistService;
+        this.userService = userService;
+        this.personService = personService;
+    }
 
 
     @Override
-    public ResponseEntity<String> login(AuthDto authDto, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> login(AuthDto authDto, HttpServletRequest request) {
         String fingerprint = AppUtils.getClientFingerprint(request);
         User user = this.userService.getByUsername(authDto.getUsername());
 
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not found");
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", "User not found");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         } else if (!user.getEnabled()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is locked");
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", "User is locked");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         } else {
             if (!new BCryptPasswordEncoder().matches(authDto.getPassword(), user.getPassword())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid password");
+                Map<String, Object> response = new HashMap<>();
+                response.put("error", "Invalid password");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
             }
         }
 
         String token = this.jwtUtil.generateToken(authDto.getUsername(), fingerprint, authDto.isRememberMe(), user.getRoles());
-        return ResponseEntity.ok(token);
+        Map<String, Object> principal = new HashMap<>();
+        principal.put("token", token);
+        principal.put("user", AppUtils.userToDto(user));
+        return ResponseEntity.ok(principal);
     }
 
     @Override
     public ResponseEntity<String> logout(HttpServletRequest request) {
-        if(request.getHeader("Authorization") == null || request.getHeader("Authorization").isEmpty()) {
+        if (request.getHeader("Authorization") == null || request.getHeader("Authorization").isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authorization token is missing");
-        } else if(!request.getHeader("Authorization").startsWith("Bearer ")) {
+        } else if (!request.getHeader("Authorization").startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid token format");
         } else {
             String token = request.getHeader("Authorization").substring(7);
@@ -70,9 +82,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<String> refresh(HttpServletRequest request) {
-        if(request.getHeader("Authorization") == null || request.getHeader("Authorization").isEmpty()) {
+        if (request.getHeader("Authorization") == null || request.getHeader("Authorization").isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authorization token is missing");
-        } else if(!request.getHeader("Authorization").startsWith("Bearer ")) {
+        } else if (!request.getHeader("Authorization").startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid token format");
         } else {
             String token = request.getHeader("Authorization").substring(7);
@@ -90,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<String> register(User user, HttpServletRequest request) {
-        if(user.getPerson() != null && user.getPerson().getId() != null && !user.getPerson().getId().equals(0L)) {
+        if (user.getPerson() != null && user.getPerson().getId() != null && !user.getPerson().getId().equals(0L)) {
             user.setPerson(this.personService.getById(user.getPerson().getId()));
         }
         AppUtils.validateUser(user, this.userService);

@@ -1,7 +1,6 @@
 package zw.co.techtrendz.school.management.api.config.envers;
 
 import org.hibernate.envers.RevisionListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,12 +11,9 @@ import zw.co.techtrendz.school.management.api.service.UserService;
 @Component
 public class AuditUserListener implements RevisionListener {
 
-    //    @Autowired
-//    private UserService userService;
-    private static ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
-    @Autowired
-    public void setApplicationContext(ApplicationContext applicationContext) {
+    public AuditUserListener(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 

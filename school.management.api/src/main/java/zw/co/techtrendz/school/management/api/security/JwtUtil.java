@@ -1,11 +1,15 @@
 package zw.co.techtrendz.school.management.api.security;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import zw.co.techtrendz.school.management.api.enums.Role;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,11 +20,15 @@ import java.util.logging.Logger;
 @Component
 public class JwtUtil {
 
-    private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final long expiration = 1000 * 60 * 60; // 1 hour
+    @Value("${jwt.secret}")
+    private String secret;
+    @Value("${jwt.expiration}")
+    private long expiration;
 
     public String generateToken(String username, String fingerprint, boolean rememberMe, List<Role> roles) {
-        long tokenExpiration = rememberMe ? expiration * 24 * 7 : expiration; // 7 days for "remember me"
+        final SecretKey secretKey = new SecretKeySpec(this.secret.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
+        final long expirationMs = this.expiration * 60 * 1000;
+        long tokenExpiration = rememberMe ? expirationMs * 24 * 7 : expirationMs; // 7 days for "remember me"
         Map<String, Object> claims = new HashMap<>();
         claims.put("fingerprint", fingerprint);
         claims.put("roles", roles);
@@ -50,6 +58,7 @@ public class JwtUtil {
     }
 
     public Claims extractAllClaims(String token) {
+        final SecretKey secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()

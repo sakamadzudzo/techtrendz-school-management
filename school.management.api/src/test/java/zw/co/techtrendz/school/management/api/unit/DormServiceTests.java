@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import zw.co.techtrendz.school.management.api.entity.Dorm;
 import zw.co.techtrendz.school.management.api.repository.DormRepository;
 import zw.co.techtrendz.school.management.api.service.impl.DormServiceImpl;
@@ -112,13 +109,13 @@ class DormServiceTests {
         List<Dorm> dorms = List.of(dorm);
         Page<Dorm> page = new PageImpl<>(dorms);
 
-        when(dormRepository.findAll(any(), eq(PageRequest.of(0, 10, Sort.by("name").ascending())))).thenReturn(page);
+        when(dormRepository.findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("name").ascending())))).thenReturn(page);
 
         List<Dorm> foundDorms = dormService.getAllByExample(example, 0, 10, List.of("name"), Sort.Direction.ASC).getContent();
 
         assertNotNull(foundDorms);
         assertEquals(1, foundDorms.size());
         assertEquals("Dorm A", foundDorms.get(0).getName());
-        verify(dormRepository, times(1)).findAll(any(), eq(PageRequest.of(0, 10, Sort.by("name").ascending())));
+        verify(dormRepository, times(1)).findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("name").ascending())));
     }
 }

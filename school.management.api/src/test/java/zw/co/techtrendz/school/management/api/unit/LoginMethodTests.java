@@ -13,12 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import zw.co.techtrendz.school.management.api.dto.AuthDto;
+import zw.co.techtrendz.school.management.api.dto.UserViewDto;
 import zw.co.techtrendz.school.management.api.entity.User;
 import zw.co.techtrendz.school.management.api.security.JwtUtil;
 import zw.co.techtrendz.school.management.api.service.JwtBlacklistService;
 import zw.co.techtrendz.school.management.api.service.UserService;
 import zw.co.techtrendz.school.management.api.service.impl.AuthServiceImpl;
 
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,10 +51,10 @@ class LoginMethodTests {
 
         when(userService.getByUsername("nonexistent")).thenReturn(null);
 
-        ResponseEntity<String> response = authService.login(authDto, mock(HttpServletRequest.class));
+        ResponseEntity<Map<String, Object>> response = authService.login(authDto, mock(HttpServletRequest.class));
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals("User not found", response.getBody());
+        assertEquals("User not found", response.getBody().get("error"));
     }
 
     @Test
@@ -66,10 +68,10 @@ class LoginMethodTests {
 
         when(userService.getByUsername("lockedUser")).thenReturn(user);
 
-        ResponseEntity<String> response = authService.login(authDto, mock(HttpServletRequest.class));
+        ResponseEntity<Map<String, Object>> response = authService.login(authDto, mock(HttpServletRequest.class));
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals("User is locked", response.getBody());
+        assertEquals("User is locked", response.getBody().get("error"));
     }
 
     @Test
@@ -84,10 +86,10 @@ class LoginMethodTests {
 
         when(userService.getByUsername("validUser")).thenReturn(user);
 
-        ResponseEntity<String> response = authService.login(authDto, mock(HttpServletRequest.class));
+        ResponseEntity<Map<String, Object>> response = authService.login(authDto, mock(HttpServletRequest.class));
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals("Invalid password", response.getBody());
+        assertEquals("Invalid password", response.getBody().get("error"));
     }
 
     @Test
@@ -109,10 +111,10 @@ class LoginMethodTests {
         when(request.getHeader("User-Agent")).thenReturn("mockUserAgent");
         when(request.getHeader("Accept-Language")).thenReturn("mockLanguage");
 
-        ResponseEntity<String> response = authService.login(authDto, request);
+        ResponseEntity<Map<String, Object>> response = authService.login(authDto, request);
         Logger.getLogger(LoginMethodTests.class.getName()).log(Level.INFO, "Login response: {0}", response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("mockToken", response.getBody());
+        assertEquals("mockToken", response.getBody().get("token"));
     }
 }

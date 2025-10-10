@@ -1,0 +1,302 @@
+import {
+  Classroom,
+  ClassroomView,
+  ClassroomYear,
+  Dorm,
+  DormYear,
+  DormYearView,
+  ExtraCurricular,
+  ExtraCurricularYear,
+  ExtraCurricularYearView,
+  Person,
+  Student,
+  StudentView,
+  Subject,
+  SubjectYear,
+  Teacher,
+  TeacherView,
+  User,
+  UserView,
+} from "./types";
+
+export function capitalize(s: string) {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
+}
+
+export const numformat = (num: number) => {
+  let result = "";
+  if (num) {
+    result = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  return result;
+};
+
+export const formatDate = (date: Date | string, withTime: boolean = true) => {
+  if (!date) return "";
+  const d = typeof date === "string" ? new Date(date) : date;
+  if (isNaN(d.getTime())) return "";
+
+  const dayOfWeek = d.toLocaleDateString(undefined, { weekday: "long" });
+  const day = d.getDate();
+  const month = d.toLocaleDateString(undefined, { month: "long" });
+  const year = d.getFullYear();
+
+  // Get ordinal suffix
+  const getOrdinal = (n: number) => {
+    if (n > 3 && n < 21) return "th";
+    switch (n % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  const dayWithOrdinal = `${day}${getOrdinal(day)}`;
+
+  // Check if time is not midnight (00:00:00)
+  const hasTime =
+    d.getHours() !== 0 || d.getMinutes() !== 0 || d.getSeconds() !== 0;
+
+  const dateStr = `${dayOfWeek}, ${dayWithOrdinal} of ${month}, ${year}`;
+  if (hasTime && withTime) {
+    const timeStr = d.toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return `${dateStr} at ${timeStr}`;
+  }
+  return dateStr;
+};
+
+export const getInitials = (name: string) => {
+  if (!name) return "U";
+  if (name.split(". ").length > 1) {
+    const subname: string[] = name.split(". ");
+    return subname[1]
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 5);
+  }
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 5);
+};
+
+export const sanitizeForWhatsapp = (phone: string) => {
+  if (!phone) {
+    return "";
+  }
+  if (phone.startsWith("0")) {
+    // return "https://api.whatsapp.com/send?phone=" + phone.substring(1);
+    return "https://api.whatsapp.com/send?phone=772397475";
+  }
+};
+
+export const API_URL = "http://localhost:4002";
+
+export const passwordRegex =
+  // eslint-disable-next-line no-useless-escape
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+
+export const passwordError =
+  "Password must be at least 8 characters, with uppercase, lowercase, number, and symbol.";
+
+export const usernameRegex = /^(?!\s*$)[-_a-zA-Z0-9 ]*$/;
+
+export const usernameError =
+  "Username should only contain letters, digits, dash, or underscore";
+
+export const emailRegex =
+  /^[\w.!#$%&'*+/=?^`{|}~-]+@[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?(?:\.[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?)+$/i;
+
+export const emailError =
+  "Please enter a valid email address (e.g. name@example.com)";
+
+export const phoneNumberRegex =
+  /^\+?[0-9]{1,4}?[-.\s]?\(?[0-9]{1,3}?\)?[-.\s]?[0-9]{3,4}[-.\s]?[0-9]{3,4}$/;
+
+export const phoneNumberError =
+  "Phone number must contain digits, and may include +, spaces, or dashes";
+
+export const userViewToUser = (dto: UserView): User => {
+  const user: User = {} as User;
+  const person: Person = {} as Person;
+
+  person.id = dto.personId;
+  person.salutation = dto.salutation;
+  person.firstName = dto.firstName;
+  person.otherNames = dto.otherNames;
+  person.lastName = dto.lastName;
+  person.email = dto.email;
+  person.mobileNumber = dto.mobileNumber;
+  person.mobileNumber2 = dto.mobileNumber2;
+  person.telNumber = dto.telNumber;
+  person.whatsapp = dto.whatsapp;
+  person.facebook = dto.facebook;
+  person.linkedin = dto.linkedin;
+  person.dateOfBirth = dto.dateOfBirth;
+  user.person = person;
+
+  user.id = dto.id;
+  user.username = dto.username;
+  user.password = dto.password;
+  user.verified = dto.verified;
+  user.enabled = dto.enabled;
+  user.changePassword = dto.changePassword;
+  user.roles = dto.roles;
+  user.status = dto.status;
+  user.datestamp = dto.datestamp;
+
+  return user;
+};
+
+export const teacherViewToTeacher = (dto: TeacherView): Teacher => {
+  const teacher: Teacher = {} as Teacher;
+  const person: Person = {} as Person;
+
+  person.id = dto.id;
+  person.salutation = dto.salutation;
+  person.firstName = dto.firstName;
+  person.otherNames = dto.otherNames;
+  person.lastName = dto.lastName;
+  person.email = dto.email;
+  person.mobileNumber = dto.mobileNumber;
+  person.mobileNumber2 = dto.mobileNumber2;
+  person.telNumber = dto.telNumber;
+  person.whatsapp = dto.whatsapp;
+  person.facebook = dto.facebook;
+  person.linkedin = dto.linkedin;
+  person.dateOfBirth = dto.dateOfBirth;
+  person.status = dto.status;
+  person.datestamp = dto.datestamp;
+  person.name = dto.name;
+  person.fullname = dto.fullname;
+  person.avatarUrl = dto.avatarUrl;
+  person.imagesUrls = dto.imagesUrls;
+
+  teacher.id = dto.id;
+  teacher.person = person;
+  teacher.datestamp = dto.datestamp;
+  teacher.status = dto.status;
+
+  return teacher;
+};
+
+export const studentViewToStudent = (dto: StudentView): Student => {
+  const student = {} as Student;
+  const person = {} as Person;
+
+  person.id = dto.id;
+  person.salutation = dto.salutation;
+  person.firstName = dto.firstName;
+  person.otherNames = dto.otherNames;
+  person.lastName = dto.lastName;
+  person.email = dto.email;
+  person.mobileNumber = dto.mobileNumber;
+  person.mobileNumber2 = dto.mobileNumber2;
+  person.telNumber = dto.telNumber;
+  person.whatsapp = dto.whatsapp;
+  person.facebook = dto.facebook;
+  person.linkedin = dto.linkedin;
+  person.dateOfBirth = dto.dateOfBirth;
+  person.status = dto.status;
+  person.datestamp = dto.datestamp;
+  person.name = dto.name;
+  person.fullname = dto.fullname;
+  person.avatarUrl = dto.avatarUrl;
+  person.imagesUrls = dto.imagesUrls;
+
+  student.id = dto.id;
+  student.person = person;
+  student.datestamp = dto.datestamp;
+  student.status = dto.status;
+  student.startYear = dto.startYear;
+  student.endYear = dto.endYear;
+  student.classroom = dto.classroom as any;
+  student.dorm = dto.dorm as any;
+  student.school = dto.school as any;
+
+  return student;
+};
+
+export const extraCurricularYearViewToExtraCurricularYear = (
+  dto: ExtraCurricularYearView
+): ExtraCurricularYear => {
+  return {
+    id: dto.id,
+    status: dto.status,
+    datestamp: dto.datestamp,
+    calendarYear: dto.calendarYear,
+    leadFacilitatorId: dto.leadFacilitator.id,
+    leadFacilitator: dto.leadFacilitator
+      ? teacherViewToTeacher(dto.leadFacilitator)
+      : ({} as Teacher),
+    extraCurricular: { id: dto.extraCurricularId } as ExtraCurricular,
+    facilitators: (Array.isArray(dto.facilitators)
+      ? dto.facilitators.map(teacherViewToTeacher)
+      : []) as Teacher[],
+    students: (Array.isArray(dto.students)
+      ? dto.students.map(studentViewToStudent)
+      : []) as Student[],
+  };
+};
+
+export const dormYearViewToDormYear = (dto: DormYearView): DormYear => {
+  return {
+    id: dto.id,
+    calendarYear: dto.calendarYear,
+    dorm: { id: dto.dormId } as Dorm,
+    status: dto.status,
+    datestamp: dto.datestamp,
+  };
+};
+
+export const classroomViewToClassroomYear = (
+  dto: ClassroomView
+): ClassroomYear => {
+  return {
+    id: dto.id,
+    status: dto.status,
+    datestamp: dto.datestamp,
+    classroom: { id: dto.classroomId } as Classroom,
+    calendarYear: dto.calendarYear,
+    homeroomTeacher: teacherViewToTeacher(dto.teacher),
+    subjects: (Array.isArray(dto.subjects)
+      ? dto.subjects.map(subjectViewToSubjectYear)
+      : []) as SubjectYear[],
+  };
+};
+
+export const subjectViewToSubjectYear = (dto: any): SubjectYear => {
+  return {
+    id: dto.id,
+    status: dto.status,
+    datestamp: dto.datestamp,
+    calendarYear: dto.calendarYear,
+    subject: {
+      id: dto.subjectId,
+      status: dto.status,
+      datestamp: dto.datestamp,
+      name: dto.name,
+      description: dto.description,
+      code: dto.code,
+      syllabus: dto.syllabus,
+      curriculum: dto.curriculum,
+      level: dto.level,
+      type: dto.type,
+      category: dto.category,
+    },
+    teacher: teacherViewToTeacher(dto.teacher),
+  };
+};

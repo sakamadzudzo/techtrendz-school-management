@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import zw.co.techtrendz.school.management.api.entity.ClassroomYear;
 import zw.co.techtrendz.school.management.api.repository.ClassroomYearRepository;
 import zw.co.techtrendz.school.management.api.service.impl.ClassroomYearServiceImpl;
@@ -112,13 +109,13 @@ class ClassroomYearServiceTests {
         List<ClassroomYear> classroomYears = List.of(classroomYear);
         Page<ClassroomYear> page = new PageImpl<>(classroomYears);
 
-        when(classroomYearRepository.findAll(any(), eq(PageRequest.of(0, 10, Sort.by("year").ascending())))).thenReturn(page);
+        when(classroomYearRepository.findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("year").ascending())))).thenReturn(page);
 
         List<ClassroomYear> foundClassroomYears = classroomYearService.getAllByExample(example, 0, 10, List.of("year"), Sort.Direction.ASC).getContent();
 
         assertNotNull(foundClassroomYears);
         assertEquals(1, foundClassroomYears.size());
         assertEquals(2023, foundClassroomYears.get(0).getCalendarYear());
-        verify(classroomYearRepository, times(1)).findAll(any(), eq(PageRequest.of(0, 10, Sort.by("year").ascending())));
+        verify(classroomYearRepository, times(1)).findAll(any(Example.class), eq(PageRequest.of(0, 10, Sort.by("year").ascending())));
     }
 }
