@@ -25,4 +25,6 @@ public interface ReportsDropdownsService {
     public List<YearDropdown> getAllExtraCurricularsForDropdown();
 
     public List<Integer> getAllCalendarYearsForDropdown();
+
+    public ReportsFilters getSelectiveDropdowns(Boolean students, Boolean teachers, Boolean courseworks, Boolean classrooms, Boolean subjects, Boolean extraCurriculars, Boolean calendarYears);
 }

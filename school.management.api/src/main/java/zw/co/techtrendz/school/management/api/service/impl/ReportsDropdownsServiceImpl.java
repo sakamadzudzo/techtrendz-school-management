@@ -98,4 +98,41 @@ public class ReportsDropdownsServiceImpl implements ReportsDropdownsService {
     public List<Integer> getAllCalendarYearsForDropdown() {
         return this.subjectYearQueryService.getCalendarYears();
     }
+
+    @Override
+    public ReportsFilters getSelectiveDropdowns(
+            Boolean students,
+            Boolean teachers,
+            Boolean courseworks,
+            Boolean classrooms,
+            Boolean subjects,
+            Boolean extraCurriculars,
+            Boolean calendarYears
+    ) {
+        ReportsFilters reportsFilters = new ReportsFilters();
+
+        if (students != null && students) {
+            reportsFilters.setStudents(this.getAllStudentsForDropdown());
+        }
+        if (teachers != null && teachers) {
+            reportsFilters.setTeachers(this.getAllTeachersForDropdown());
+        }
+        if (courseworks != null && courseworks) {
+            reportsFilters.setCourseworks(this.getAllCourseworksForDropdown());
+        }
+        if (classrooms != null && classrooms) {
+            reportsFilters.setClassrooms(this.getAllClassroomsForDropdown());
+        }
+        if (subjects != null && subjects) {
+            reportsFilters.setStudents(this.getAllSubjectsForDropdown());
+        }
+        if (extraCurriculars != null && extraCurriculars) {
+            reportsFilters.setExtraCurriculars(this.getAllExtraCurricularsForDropdown());
+        }
+        if (calendarYears != null && calendarYears) {
+            reportsFilters.setCalendarYears(this.getAllCalendarYearsForDropdown());
+        }
+
+        return reportsFilters;
+    }
 }
