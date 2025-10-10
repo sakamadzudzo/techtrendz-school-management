@@ -409,6 +409,33 @@ export type CourseworkDropdown = {
   subject: Subject;
 };
 
+export type ReportFilter = {
+  students: YearDropdown[];
+  teachers: YearDropdown[];
+  courseworks: CourseworkDropdown[];
+  classrooms: YearDropdown[];
+  subjects: YearDropdown[];
+  extraCurriculars: YearDropdown[];
+  calendarYears: number[];
+}
+
+export type AvailableFilters = {
+  students: boolean;
+  teachers: boolean;
+  courseworks: boolean;
+  classrooms: boolean;
+  subjects: boolean;
+  extraCurriculars: boolean;
+  calendarYears: boolean;
+}
+
+export type ReportType = {
+  title: string;
+  endpoint: string;
+  availableFilters: AvailableFilters;
+  index: number;
+}
+
 export type Errors<T, V> = {
   [K in keyof T]: T[K] extends object ? Errors<T[K], V> : V;
 } & {
