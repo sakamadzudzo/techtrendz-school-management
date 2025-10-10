@@ -132,6 +132,15 @@ public class ClassroomYearQueryService {
                 ));
     }
 
+    public List<Integer> getCalendarYears() {
+        QClassroomYear classroomYear = QClassroomYear.classroomYear;
+
+        return this.queryFactory
+                .select(ViewProjectionUtils.getCalendarYears())
+                .from(classroomYear)
+                .distinct()
+                .fetch();
+    }
 
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {
         // Build sorting order

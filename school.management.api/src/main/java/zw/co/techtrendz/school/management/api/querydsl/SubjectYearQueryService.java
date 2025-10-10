@@ -146,6 +146,16 @@ public class SubjectYearQueryService {
                 ));
     }
 
+    public List<Integer> getCalendarYears() {
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
+
+        return this.queryFactory
+                .select(ViewProjectionUtils.getCalendarYears2())
+                .from(subjectYear)
+                .distinct()
+                .fetch();
+    }
+
     private List<OrderSpecifier<?>> getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {
         // Build sorting order
         Order order = sortDir == Sort.Direction.ASC ? Order.ASC : Order.DESC;

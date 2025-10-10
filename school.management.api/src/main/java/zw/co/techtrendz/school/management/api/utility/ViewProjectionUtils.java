@@ -3,6 +3,7 @@ package zw.co.techtrendz.school.management.api.utility;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Projections;
+import zw.co.techtrendz.school.management.api.dto.CourseworkDropdown;
 import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.enums.CourseworkType;
 import zw.co.techtrendz.school.management.api.view.*;
@@ -462,7 +463,7 @@ public class ViewProjectionUtils {
                         Projections.constructor(Subject.class,
                                 coursework.subject.subject.id,
                                 coursework.subject.subject.name),
-                        new NullExpression<>(Integer.class),
+                        coursework.subject.calendarYear,
                         new NullExpression<>(Teacher.class),
                         new NullExpression<>(List.class)
                 ),
@@ -508,7 +509,7 @@ public class ViewProjectionUtils {
                                                 new NullExpression<>(String.class),
                                                 new NullExpression<>(LocalDate.class)
                                         )
-                                        ),
+                                ),
                                 new NullExpression<>(List.class)
                         ),
                         mark.coursework.total,
@@ -732,6 +733,36 @@ public class ViewProjectionUtils {
                         new NullExpression<>(List.class)
                 ),
                 rating.rating
+        );
+    }
+
+    public static ConstructorExpression<Integer> getCalendarYears() {
+        QClassroomYear classroomYear = QClassroomYear.classroomYear;
+
+        return Projections.constructor(Integer.class,
+                classroomYear.calendarYear
+        );
+    }
+
+    public static ConstructorExpression<Integer> getCalendarYears2() {
+        QSubjectYear subjectYear = QSubjectYear.subjectYear;
+
+        return Projections.constructor(Integer.class,
+                subjectYear.calendarYear
+        );
+    }
+
+    public static ConstructorExpression<CourseworkDropdown> getCourseworkDropdown() {
+        QCoursework coursework = QCoursework.coursework;
+
+        return Projections.constructor(CourseworkDropdown.class,
+                coursework.id,
+                coursework.type,
+                coursework.subject.calendarYear,
+                Projections.constructor(Subject.class,
+                        coursework.subject.subject.id,
+                        coursework.subject.subject.name
+                )
         );
     }
 }

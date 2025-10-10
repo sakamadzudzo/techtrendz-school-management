@@ -18,6 +18,8 @@ public interface ClassroomService {
 
     public Page<Classroom> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
+    public List<Classroom> getAllList(List<String> sortBy, Sort.Direction sortDir);
+
     public Page<Classroom> getAllByExample(Classroom classroom, int page, int size, List<String> sortBy, Sort.Direction sortDir);
 
     public Page<Classroom> getAllByFilter(int page, int size, List<String> sortBy, Sort.Direction sortDir, String filter);

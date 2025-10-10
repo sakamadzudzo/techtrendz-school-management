@@ -4,20 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import zw.co.techtrendz.school.management.api.dto.MarksReportDto;
-import zw.co.techtrendz.school.management.api.dto.ProgressReportDto;
-import zw.co.techtrendz.school.management.api.dto.RatingsReportDto;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import zw.co.techtrendz.school.management.api.service.PdfReportService;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/pdf-reports")
+@RequestMapping("/reports")
 public class PdfReportController {
 
-    @Autowired
-    private PdfReportService pdfReportService;
+    private final PdfReportService pdfReportService;
+
+    public PdfReportController(PdfReportService pdfReportService) {
+        this.pdfReportService = pdfReportService;
+    }
 
     // Marks Reports Endpoints
     @PostMapping("/marks/student-classroom-year")

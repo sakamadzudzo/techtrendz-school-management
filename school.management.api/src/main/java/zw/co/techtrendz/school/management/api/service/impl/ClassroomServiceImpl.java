@@ -55,6 +55,15 @@ public class ClassroomServiceImpl implements ClassroomService {
     }
 
     @Override
+    public List<Classroom> getAllList(List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy.isEmpty()) {
+            sortBy.add("name");
+        }
+        String[] sortFields = sortBy.toArray(new String[sortBy.size()]);
+        return this.classroomRepository.findAll(Sort.by(sortDir, sortFields));
+    }
+
+    @Override
     public Page<Classroom> getAllByExample(Classroom classroom, int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (classroom == null) {
             return this.getAll(page, size, sortBy, sortDir);

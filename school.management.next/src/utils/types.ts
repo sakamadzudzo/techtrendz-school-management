@@ -402,6 +402,13 @@ export type YearDropdown = {
   calendarYear?: number;
 };
 
+export type CourseworkDropdown = {
+  id: number;
+  type: string;
+  calendarYear: number;
+  subject: Subject;
+};
+
 export type Errors<T, V> = {
   [K in keyof T]: T[K] extends object ? Errors<T[K], V> : V;
 } & {

@@ -2,6 +2,7 @@ package zw.co.techtrendz.school.management.api.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
+import zw.co.techtrendz.school.management.api.dto.CourseworkDropdown;
 import zw.co.techtrendz.school.management.api.entity.Coursework;
 import zw.co.techtrendz.school.management.api.entity.QCoursework;
 import zw.co.techtrendz.school.management.api.enums.CourseworkType;
@@ -86,6 +87,15 @@ public class CourseworkQueryService {
                 )
                 .from(coursework)
                 .where(coursework.subject.id.in(ids))
+                .fetch();
+    }
+
+    public List<CourseworkDropdown> getAllCourseworkForDropdown() {
+        QCoursework coursework = QCoursework.coursework;
+
+        return this.queryFactory
+                .select(ViewProjectionUtils.getCourseworkDropdown())
+                .from(coursework)
                 .fetch();
     }
 }
