@@ -120,8 +120,8 @@ export default function Reports({
       title: "Marks By Classroom Year",
       endpoint: "marks_by_classroom_year",
       index: 1,
-      function: () =>
-        generateMarksByClassroomYearReport(
+      function: () => {
+        return generateMarksByClassroomYearReport(
           reportFilter,
           incrementLoading,
           decrementLoading,
@@ -130,7 +130,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -145,8 +146,8 @@ export default function Reports({
       title: "Marks By Student",
       endpoint: "marks_by_student",
       index: 2,
-      function: () =>
-        generateMarksByStudentReport(
+      function: () => {
+        return generateMarksByStudentReport(
           reportFilter,
           incrementLoading,
           decrementLoading,
@@ -155,7 +156,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: true,
         teachers: false,
@@ -170,8 +172,8 @@ export default function Reports({
       title: "Marks By Student Classroom Year",
       endpoint: "marks_student_classroom_year",
       index: 3,
-      function: () =>
-        generateMarksByStudentClassroomYearReport(
+      function: () => {
+        return generateMarksByStudentClassroomYearReport(
           reportFilter.year!,
           reportFilter.classroomId,
           reportFilter.studentId,
@@ -182,7 +184,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -197,8 +200,8 @@ export default function Reports({
       title: "Marks By Student Subject Year",
       endpoint: "marks_student_subject_year",
       index: 4,
-      function: () =>
-        generateMarksByStudentSubjectYearReport(
+      function: () => {
+        return generateMarksByStudentSubjectYearReport(
           reportFilter.year!,
           reportFilter.subjectId!,
           reportFilter.studentId,
@@ -209,7 +212,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -224,8 +228,8 @@ export default function Reports({
       title: "Marks By Student Year",
       endpoint: "marks_student_year",
       index: 5,
-      function: () =>
-        generateMarksByStudentYearReport(
+      function: () => {
+        return generateMarksByStudentYearReport(
           reportFilter.year!,
           reportFilter.studentId!,
           incrementLoading,
@@ -235,7 +239,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: true,
         teachers: false,
@@ -250,8 +255,8 @@ export default function Reports({
       title: "Marks By Year",
       endpoint: "marks_year",
       index: 6,
-      function: () =>
-        generateMarksByYearReport(
+      function: () => {
+        return generateMarksByYearReport(
           reportFilter.year!,
           incrementLoading,
           decrementLoading,
@@ -260,7 +265,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -275,8 +281,8 @@ export default function Reports({
       title: "Marks By Subject Year",
       endpoint: "marks_subject_year",
       index: 7,
-      function: () =>
-        generateMarksBySubjectYearReport(
+      function: () => {
+        return generateMarksBySubjectYearReport(
           reportFilter.year!,
           reportFilter.subjectId!,
           incrementLoading,
@@ -286,7 +292,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -301,8 +308,8 @@ export default function Reports({
       title: "Ratings By Student Activity Year",
       endpoint: "ratings_student_activity_year",
       index: 8,
-      function: () =>
-        generateRatingsByStudentActivityYearReport(
+      function: () => {
+        return generateRatingsByStudentActivityYearReport(
           reportFilter.year!,
           reportFilter.extraCurricularId!,
           reportFilter.studentId,
@@ -313,7 +320,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -328,8 +336,8 @@ export default function Reports({
       title: "Ratings By Student Year",
       endpoint: "ratings_student_year",
       index: 9,
-      function: () =>
-        generateRatingsByStudentYearReport(
+      function: () => {
+        return generateRatingsByStudentYearReport(
           reportFilter.year!,
           reportFilter.studentId!,
           incrementLoading,
@@ -339,7 +347,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: true,
         teachers: false,
@@ -354,8 +363,8 @@ export default function Reports({
       title: "Ratings By Activity Year",
       endpoint: "ratings_activity_year",
       index: 10,
-      function: () =>
-        generateRatingsByActivityYearReport(
+      function: () => {
+        return generateRatingsByActivityYearReport(
           reportFilter.year!,
           reportFilter.extraCurricularId!,
           incrementLoading,
@@ -365,7 +374,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -380,8 +390,8 @@ export default function Reports({
       title: "Ratings By Activity",
       endpoint: "ratings_activity",
       index: 11,
-      function: () =>
-        generateRatingsByActivityReport(
+      function: () => {
+        return generateRatingsByActivityReport(
           reportFilter.extraCurricularId!,
           incrementLoading,
           decrementLoading,
@@ -390,7 +400,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -405,8 +416,8 @@ export default function Reports({
       title: "Marks By Teacher Year",
       endpoint: "marks_teacher_year",
       index: 12,
-      function: () =>
-        generateMarksByTeacherYearReport(
+      function: () => {
+        return generateMarksByTeacherYearReport(
           reportFilter.year!,
           reportFilter.teacherId!,
           incrementLoading,
@@ -416,7 +427,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: true,
@@ -431,8 +443,8 @@ export default function Reports({
       title: "Ratings By Teacher Year",
       endpoint: "ratings_teacher_year",
       index: 13,
-      function: () =>
-        generateRatingsByTeacherYearReport(
+      function: () => {
+        return generateRatingsByTeacherYearReport(
           reportFilter.year!,
           reportFilter.teacherId!,
           incrementLoading,
@@ -442,7 +454,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: true,
@@ -457,8 +470,8 @@ export default function Reports({
       title: "Progress By Student",
       endpoint: "progress_student",
       index: 14,
-      function: () =>
-        generateProgressReportByStudent(
+      function: () => {
+        return generateProgressReportByStudent(
           reportFilter.studentId!,
           "student",
           incrementLoading,
@@ -468,7 +481,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: true,
         teachers: false,
@@ -483,8 +497,8 @@ export default function Reports({
       title: "Progress By Teacher",
       endpoint: "progress_teacher",
       index: 15,
-      function: () =>
-        generateProgressReportByTeacher(
+      function: () => {
+        return generateProgressReportByTeacher(
           reportFilter.teacherId!,
           "teacher",
           incrementLoading,
@@ -494,7 +508,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: true,
@@ -509,8 +524,8 @@ export default function Reports({
       title: "Progress By Subject",
       endpoint: "progress_subject",
       index: 16,
-      function: () =>
-        generateProgressReportBySubject(
+      function: () => {
+        return generateProgressReportBySubject(
           reportFilter.subjectId!,
           "subject",
           incrementLoading,
@@ -520,7 +535,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -535,8 +551,8 @@ export default function Reports({
       title: "Progress By Classroom",
       endpoint: "progress_classroom",
       index: 17,
-      function: () =>
-        generateProgressReportByClassroom(
+      function: () => {
+        return generateProgressReportByClassroom(
           reportFilter.classroomId!,
           "classroom",
           incrementLoading,
@@ -546,7 +562,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -561,8 +578,8 @@ export default function Reports({
       title: "Progress By Activity",
       endpoint: "progress_activity",
       index: 18,
-      function: () =>
-        generateProgressReportByActivity(
+      function: () => {
+        return generateProgressReportByActivity(
           reportFilter.extraCurricularId!,
           "activity",
           incrementLoading,
@@ -572,7 +589,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: false,
@@ -587,8 +605,8 @@ export default function Reports({
       title: "Progress By Facilitator",
       endpoint: "progress_facilitator",
       index: 19,
-      function: () =>
-        generateProgressReportByFacilitator(
+      function: () => {
+        return generateProgressReportByFacilitator(
           reportFilter.teacherId!,
           "facilitator",
           incrementLoading,
@@ -598,7 +616,8 @@ export default function Reports({
             setErrorMessage(error);
             setStatusCode(statusCode);
           }
-        ),
+        );
+      },
       availableFilters: {
         students: false,
         teachers: true,
@@ -790,13 +809,12 @@ export default function Reports({
             selectionMode="single"
             placeholder="Select report..."
             className="w-96"
-            onSelectionChange={(key) =>
-              setReportType(
-                reportTypes?.find(
-                  (type) => Number(type.index) === Number(key.currentKey)
-                ) || ({} as ReportType)
-              )
-            }
+            onSelectionChange={(key) => {
+              const selectedReportType = reportTypes?.find(
+                (type) => Number(type.index) === Number(key.currentKey)
+              ) || ({} as ReportType);
+              setReportType(selectedReportType);
+            }}
           >
             {reportTypes?.map((type) => (
               <SelectItem key={type.index}>{type.title}</SelectItem>
@@ -826,12 +844,12 @@ export default function Reports({
                         isRequired
                         isVirtualized={true}
                         onSelectionChange={(key) => {
-                          setReportFiler({
-                            ...reportFilter,
-                            studentId: Number(key),
-                          });
-                          console.log(Number(key));
-                          validate();
+                          const studentId = Number(key);
+                          setReportFiler(prev => ({
+                            ...prev,
+                            studentId,
+                          }));
+                          console.log(studentId);
                         }}
                         listboxProps={{
                           emptyContent: "No data available.",
@@ -861,10 +879,11 @@ export default function Reports({
                         isRequired
                         isVirtualized={true}
                         onSelectionChange={(key) => {
-                          setReportFiler({
-                            ...reportFilter,
-                            teacherId: Number(key),
-                          });
+                          const teacherId = Number(key);
+                          setReportFiler(prev => ({
+                            ...prev,
+                            teacherId,
+                          }));
                           validate();
                         }}
                         listboxProps={{
@@ -893,10 +912,11 @@ export default function Reports({
                         isRequired
                         isVirtualized={true}
                         onSelectionChange={(key) => {
-                          setReportFiler({
-                            ...reportFilter,
-                            courseworkId: Number(key),
-                          });
+                          const courseworkId = Number(key);
+                          setReportFiler(prev => ({
+                            ...prev,
+                            courseworkId,
+                          }));
                           validate();
                         }}
                         listboxProps={{
@@ -930,10 +950,11 @@ export default function Reports({
                         isRequired
                         isVirtualized={true}
                         onSelectionChange={(key) => {
-                          setReportFiler({
-                            ...reportFilter,
-                            classroomId: Number(key),
-                          });
+                          const classroomId = Number(key);
+                          setReportFiler(prev => ({
+                            ...prev,
+                            classroomId,
+                          }));
                           validate();
                         }}
                         listboxProps={{
@@ -962,10 +983,11 @@ export default function Reports({
                         isRequired
                         isVirtualized={true}
                         onSelectionChange={(key) => {
-                          setReportFiler({
-                            ...reportFilter,
-                            subjectId: Number(key),
-                          });
+                          const subjectId = Number(key);
+                          setReportFiler(prev => ({
+                            ...prev,
+                            subjectId,
+                          }));
                           validate();
                         }}
                         listboxProps={{
@@ -994,10 +1016,11 @@ export default function Reports({
                         isRequired
                         isVirtualized={true}
                         onSelectionChange={(key) => {
-                          setReportFiler({
-                            ...reportFilter,
-                            extraCurricularId: Number(key),
-                          });
+                          const extraCurricularId = Number(key);
+                          setReportFiler(prev => ({
+                            ...prev,
+                            extraCurricularId,
+                          }));
                           validate();
                         }}
                         listboxProps={{
@@ -1026,10 +1049,11 @@ export default function Reports({
                         isRequired
                         isVirtualized={true}
                         onSelectionChange={(key) => {
-                          setReportFiler({
-                            ...reportFilter,
-                            year: Number(key),
-                          });
+                          const year = Number(key);
+                          setReportFiler(prev => ({
+                            ...prev,
+                            year,
+                          }));
                           validate();
                         }}
                         listboxProps={{
