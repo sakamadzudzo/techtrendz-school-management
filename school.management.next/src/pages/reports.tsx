@@ -65,6 +65,7 @@ export default function Reports({
     errors,
     reportTypes,
     hasEnoughFilters,
+    isValid,
     resetStates,
     validate,
     handleReportTypeChange,
@@ -208,7 +209,7 @@ export default function Reports({
                       : "Fetch Filter Data"}
                   </Button>
                 </Tooltip>
-                {hasEnoughFilters && validate() && (
+                {hasEnoughFilters && isValid && (
                   <Tooltip>
                     <Button
                       color="primary"

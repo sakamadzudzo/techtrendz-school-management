@@ -93,7 +93,6 @@ export const useReportsState = (
       generateProgressReportByClassroom,
       generateProgressReportByActivity,
       generateProgressReportByFacilitator,
-      reportFilter,
       incrementLoading,
       decrementLoading,
     ]
@@ -108,53 +107,40 @@ export const useReportsState = (
     setErrors({} as Errors<ReportFilter, string>);
   }, []);
 
-  const validate = useCallback(() => {
-    setErrors({} as Errors<ReportFilter, string>);
-    let tempErrors: Errors<ReportFilter, string> = {} as Errors<ReportFilter, string>;
+  const isValid = useMemo(() => {
+    if (!reportType) return false;
+
+    const tempErrors: Errors<ReportFilter, string> = {} as Errors<ReportFilter, string>;
 
     if (reportType?.availableFilters?.students && !reportFilter?.studentId) {
-      tempErrors = {
-        ...tempErrors,
-        studentId: "Student is required for this report",
-      };
+      tempErrors.studentId = "Student is required for this report";
     }
     if (reportType?.availableFilters?.teachers && !reportFilter?.teacherId) {
-      tempErrors = {
-        ...tempErrors,
-        teacherId: "Teacher is required for this report",
-      };
+      tempErrors.teacherId = "Teacher is required for this report";
     }
     if (reportType?.availableFilters?.courseworks && !reportFilter?.courseworkId) {
-      tempErrors = {
-        ...tempErrors,
-        courseworkId: "Coursework is required for this report",
-      };
+      tempErrors.courseworkId = "Coursework is required for this report";
     }
     if (reportType?.availableFilters?.classrooms && !reportFilter?.classroomId) {
-      tempErrors = {
-        ...tempErrors,
-        classroomId: "Classroom is required for this report",
-      };
+      tempErrors.classroomId = "Classroom is required for this report";
     }
     if (reportType?.availableFilters?.subjects && !reportFilter?.subjectId) {
-      tempErrors = {
-        ...tempErrors,
-        subjectId: "Subject is required for this report",
-      };
+      tempErrors.subjectId = "Subject is required for this report";
     }
     if (reportType?.availableFilters?.extraCurriculars && !reportFilter?.extraCurricularId) {
-      tempErrors = {
-        ...tempErrors,
-        extraCurricularId: "Extra curricular activity is required for this report",
-      };
+      tempErrors.extraCurricularId = "Extra curricular activity is required for this report";
     }
     if (reportType?.availableFilters?.calendarYears && !reportFilter?.year) {
-      tempErrors = { ...tempErrors, year: "Year is required for this report" };
+      tempErrors.year = "Year is required for this report";
     }
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   }, [reportType, reportFilter]);
+
+  const validate = useCallback(() => {
+    return isValid;
+  }, [isValid]);
 
   const hasEnoughFilters = useMemo(() => {
     if (!reportType) {
@@ -201,6 +187,7 @@ export const useReportsState = (
 
     // Computed values
     hasEnoughFilters,
+    isValid,
 
     // Actions
     resetStates,
