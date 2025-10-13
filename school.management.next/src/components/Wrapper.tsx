@@ -12,8 +12,8 @@ export const Wrapper = ({
   error?: string;
   statusCode?: number;
 }) => {
-  if (hasData) {
-    return <div className="grow overflow-auto">{children}</div>;
+  if (hasData && !error) {
+    return <>{children}</>;
   } else {
     return (
       <div className="grow overflow-auto">

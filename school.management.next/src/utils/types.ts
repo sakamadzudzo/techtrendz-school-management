@@ -409,15 +409,15 @@ export type CourseworkDropdown = {
   subject: Subject;
 };
 
-export type ReportFilter = {
-  students: YearDropdown[];
-  teachers: YearDropdown[];
-  courseworks: CourseworkDropdown[];
-  classrooms: YearDropdown[];
-  subjects: YearDropdown[];
-  extraCurriculars: YearDropdown[];
-  calendarYears: number[];
-}
+export type ReportsFilters = {
+  students?: YearDropdown[];
+  teachers?: YearDropdown[];
+  courseworks?: CourseworkDropdown[];
+  classrooms?: YearDropdown[];
+  subjects?: YearDropdown[];
+  extraCurriculars?: YearDropdown[];
+  calendarYears?: number[];
+};
 
 export type AvailableFilters = {
   students: boolean;
@@ -427,14 +427,32 @@ export type AvailableFilters = {
   subjects: boolean;
   extraCurriculars: boolean;
   calendarYears: boolean;
-}
+};
 
 export type ReportType = {
   title: string;
   endpoint: string;
+  function?: () => Promise<ReportResult>;
   availableFilters: AvailableFilters;
   index: number;
-}
+};
+
+export type ReportFilter = {
+  studentId: number | undefined;
+  teacherId: number | undefined;
+  courseworkId: number | undefined;
+  classroomId: number | undefined;
+  subjectId: number | undefined;
+  extraCurricularId: number | undefined;
+  year: number | undefined;
+};
+
+export type ReportResult = {
+  success: boolean;
+  data?: ArrayBuffer;
+  error?: string;
+  statusCode?: number;
+};
 
 export type Errors<T, V> = {
   [K in keyof T]: T[K] extends object ? Errors<T[K], V> : V;

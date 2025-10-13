@@ -71,22 +71,8 @@ export default function Navbar_Staff() {
     const reportItems: MyDropdown[] = [
       {
         label: "Reports",
-        dropdown: [
-          {
-            label: "By Classroom Year",
-            href: "/reports/classroom-year",
-            className: "",
-          },
-          { label: "By Subject", href: "/reports/subject", className: "" },
-          {
-            label: "By Extra Curricular",
-            href: "/reports/extra-curricular",
-            className: "",
-          },
-          { label: "By Year", href: "/reports/year", className: "" },
-          { label: "By Teacher", href: "/reports/teacher", className: "" },
-          { label: "By Student", href: "/reports/student", className: "" },
-        ],
+        href: "/reports",
+        className: "",
       },
     ];
 
