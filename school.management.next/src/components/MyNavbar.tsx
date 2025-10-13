@@ -14,6 +14,7 @@ import {
   NavbarMenuToggle,
 } from "@heroui/react";
 import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 import { Logo } from "./Logo";
 import AvatarDropdown from "./AvatarDropdown";
 
@@ -44,6 +45,7 @@ type MyNavbarProps = {
 export default function MyNavbar({ menuItems, hasAvatar }: MyNavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [openDropdown, setOpenDropdown] = React.useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!isMenuOpen) {
@@ -89,7 +91,7 @@ export default function MyNavbar({ menuItems, hasAvatar }: MyNavbarProps) {
 
       {/* Desktop Menu */}
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        {renderDesktopMenu(menuItems, 1)}
+        {renderDesktopMenu(menuItems, router.asPath, 1)}
       </NavbarContent>
       {hasAvatar && (
         <NavbarContent className="hidden sm:flex" justify="end">
@@ -112,12 +114,32 @@ export default function MyNavbar({ menuItems, hasAvatar }: MyNavbarProps) {
   );
 }
 
-function renderDesktopMenu(items: MyDropdown[], depth = 0) {
+function hrefMatches(href: string | undefined, path: string): boolean {
+  if (!href) return false;
+  const clean = (p: string) => p.split("?")[0].replace(/\/+$/, "");
+  try {
+    const hrefPath = clean(href);
+    const cur = clean(path);
+    return cur === hrefPath || cur.startsWith(hrefPath + "/");
+  } catch {
+    return path === href;
+  }
+}
+
+function isItemActive(item: MyDropdown, currentPath: string): boolean {
+  if (item.href && hrefMatches(item.href, currentPath)) return true;
+  if (item.dropdown && item.dropdown.length > 0) {
+    return item.dropdown.some((child) => isItemActive(child, currentPath));
+  }
+  return false;
+}
+
+function renderDesktopMenu(items: MyDropdown[], currentPath: string, depth = 0) {
   return items.map((item) =>
     item.dropdown ? (
       <Dropdown key={item.label} className={``}>
         <DropdownTrigger>
-          <NavbarItem className={`cursor-pointer pl-${depth * 1}`}>
+          <NavbarItem className={`cursor-pointer pl-${depth * 1}`} isActive={isItemActive(item, currentPath)}>
             {item.label}
           </NavbarItem>
         </DropdownTrigger>
@@ -138,7 +160,7 @@ function renderDesktopMenu(items: MyDropdown[], depth = 0) {
       <NavbarItem
         key={item.label}
         className={item.className}
-        isActive={item.isActive || false}
+        isActive={item.isActive || isItemActive(item, currentPath)}
       >
         <Button
           as={Link}
@@ -156,7 +178,7 @@ function renderDesktopMenu(items: MyDropdown[], depth = 0) {
         as={Link}
         href={item.href}
         className={item.className}
-        isActive={item.isActive || false}
+        isActive={item.isActive || isItemActive(item, currentPath)}
       >
         {item.label}
       </NavbarItem>
