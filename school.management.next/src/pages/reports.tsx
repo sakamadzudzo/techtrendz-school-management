@@ -1,6 +1,11 @@
 import EditFormWrapper from "@/components/EditFormWrapper";
 import { Wrapper } from "@/components/Wrapper";
-import { useGenerateMarksReport } from "@/hooks/useReports";
+import {
+  useGenerateMarksReport,
+  useGenerateRatingsReport,
+  useGenerateTeacherReport,
+  useGenerateProgressReport,
+} from "@/hooks/useReports";
 import { useReportsDropdownsSelective } from "@/hooks/useReportsDropdowns";
 import {
   AvailableFilters,
@@ -71,8 +76,36 @@ export default function Reports({
       decrementLoading
     );
 
-  const { generateMarksByClassroomYearReport, generateMarksByStudentReport } =
-    useGenerateMarksReport();
+  const {
+    generateMarksByStudentClassroomYearReport,
+    generateMarksByStudentSubjectYearReport,
+    generateMarksByStudentYearReport,
+    generateMarksByStudentReport,
+    generateMarksByYearReport,
+    generateMarksByClassroomYearReport,
+    generateMarksBySubjectYearReport,
+  } = useGenerateMarksReport();
+
+  const {
+    generateRatingsByStudentActivityYearReport,
+    generateRatingsByStudentYearReport,
+    generateRatingsByActivityYearReport,
+    generateRatingsByActivityReport,
+  } = useGenerateRatingsReport();
+
+  const {
+    generateMarksByTeacherYearReport,
+    generateRatingsByTeacherYearReport,
+  } = useGenerateTeacherReport();
+
+  const {
+    generateProgressReportByStudent,
+    generateProgressReportByTeacher,
+    generateProgressReportBySubject,
+    generateProgressReportByClassroom,
+    generateProgressReportByActivity,
+    generateProgressReportByFacilitator,
+  } = useGenerateProgressReport();
 
   const resetStates = () => {
     setReportData(null);
@@ -126,6 +159,449 @@ export default function Reports({
       availableFilters: {
         students: true,
         teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: false,
+      },
+    },
+    {
+      title: "Marks By Student Classroom Year",
+      endpoint: "marks_student_classroom_year",
+      index: 3,
+      function: () =>
+        generateMarksByStudentClassroomYearReport(
+          reportFilter.year!,
+          reportFilter.classroomId,
+          reportFilter.studentId,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: true,
+      },
+    },
+    {
+      title: "Marks By Student Subject Year",
+      endpoint: "marks_student_subject_year",
+      index: 4,
+      function: () =>
+        generateMarksByStudentSubjectYearReport(
+          reportFilter.year!,
+          reportFilter.subjectId!,
+          reportFilter.studentId,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: true,
+        extraCurriculars: false,
+        calendarYears: true,
+      },
+    },
+    {
+      title: "Marks By Student Year",
+      endpoint: "marks_student_year",
+      index: 5,
+      function: () =>
+        generateMarksByStudentYearReport(
+          reportFilter.year!,
+          reportFilter.studentId!,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: true,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: true,
+      },
+    },
+    {
+      title: "Marks By Year",
+      endpoint: "marks_year",
+      index: 6,
+      function: () =>
+        generateMarksByYearReport(
+          reportFilter.year!,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: true,
+      },
+    },
+    {
+      title: "Marks By Subject Year",
+      endpoint: "marks_subject_year",
+      index: 7,
+      function: () =>
+        generateMarksBySubjectYearReport(
+          reportFilter.year!,
+          reportFilter.subjectId!,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: true,
+        extraCurriculars: false,
+        calendarYears: true,
+      },
+    },
+    {
+      title: "Ratings By Student Activity Year",
+      endpoint: "ratings_student_activity_year",
+      index: 8,
+      function: () =>
+        generateRatingsByStudentActivityYearReport(
+          reportFilter.year!,
+          reportFilter.extraCurricularId!,
+          reportFilter.studentId,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: true,
+        calendarYears: true,
+      },
+    },
+    {
+      title: "Ratings By Student Year",
+      endpoint: "ratings_student_year",
+      index: 9,
+      function: () =>
+        generateRatingsByStudentYearReport(
+          reportFilter.year!,
+          reportFilter.studentId!,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: true,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: true,
+      },
+    },
+    {
+      title: "Ratings By Activity Year",
+      endpoint: "ratings_activity_year",
+      index: 10,
+      function: () =>
+        generateRatingsByActivityYearReport(
+          reportFilter.year!,
+          reportFilter.extraCurricularId!,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: true,
+        calendarYears: true,
+      },
+    },
+    {
+      title: "Ratings By Activity",
+      endpoint: "ratings_activity",
+      index: 11,
+      function: () =>
+        generateRatingsByActivityReport(
+          reportFilter.extraCurricularId!,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: true,
+        calendarYears: false,
+      },
+    },
+    {
+      title: "Marks By Teacher Year",
+      endpoint: "marks_teacher_year",
+      index: 12,
+      function: () =>
+        generateMarksByTeacherYearReport(
+          reportFilter.year!,
+          reportFilter.teacherId!,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: true,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: true,
+      },
+    },
+    {
+      title: "Ratings By Teacher Year",
+      endpoint: "ratings_teacher_year",
+      index: 13,
+      function: () =>
+        generateRatingsByTeacherYearReport(
+          reportFilter.year!,
+          reportFilter.teacherId!,
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: true,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: true,
+      },
+    },
+    {
+      title: "Progress By Student",
+      endpoint: "progress_student",
+      index: 14,
+      function: () =>
+        generateProgressReportByStudent(
+          reportFilter.studentId!,
+          "student",
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: true,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: false,
+      },
+    },
+    {
+      title: "Progress By Teacher",
+      endpoint: "progress_teacher",
+      index: 15,
+      function: () =>
+        generateProgressReportByTeacher(
+          reportFilter.teacherId!,
+          "teacher",
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: true,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: false,
+      },
+    },
+    {
+      title: "Progress By Subject",
+      endpoint: "progress_subject",
+      index: 16,
+      function: () =>
+        generateProgressReportBySubject(
+          reportFilter.subjectId!,
+          "subject",
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: true,
+        extraCurriculars: false,
+        calendarYears: false,
+      },
+    },
+    {
+      title: "Progress By Classroom",
+      endpoint: "progress_classroom",
+      index: 17,
+      function: () =>
+        generateProgressReportByClassroom(
+          reportFilter.classroomId!,
+          "classroom",
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: true,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: false,
+      },
+    },
+    {
+      title: "Progress By Activity",
+      endpoint: "progress_activity",
+      index: 18,
+      function: () =>
+        generateProgressReportByActivity(
+          reportFilter.extraCurricularId!,
+          "activity",
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: true,
+        calendarYears: false,
+      },
+    },
+    {
+      title: "Progress By Facilitator",
+      endpoint: "progress_facilitator",
+      index: 19,
+      function: () =>
+        generateProgressReportByFacilitator(
+          reportFilter.teacherId!,
+          "facilitator",
+          incrementLoading,
+          decrementLoading,
+          setReportData,
+          (error, statusCode) => {
+            setErrorMessage(error);
+            setStatusCode(statusCode);
+          }
+        ),
+      availableFilters: {
+        students: false,
+        teachers: true,
         courseworks: false,
         classrooms: false,
         subjects: false,
@@ -294,7 +770,7 @@ export default function Reports({
       return false;
     }
     return true;
-  }, [reportFilter]);
+  }, [dropdowns]);
 
   return (
     <Wrapper hasData={true} error={errorMessage} statusCode={statusCode}>
@@ -345,7 +821,7 @@ export default function Reports({
                         startContent={<StudentIcon weight="thin" size={18} />}
                         isInvalid={!!errors.studentId}
                         errorMessage={errors.studentId}
-                        selectedKey={reportFilter.studentId}
+                        selectedKey={String(reportFilter.studentId)}
                         defaultItems={dropdowns?.students || []}
                         isRequired
                         isVirtualized={true}
@@ -354,6 +830,7 @@ export default function Reports({
                             ...reportFilter,
                             studentId: Number(key),
                           });
+                          console.log(Number(key));
                           validate();
                         }}
                         listboxProps={{
@@ -572,6 +1049,11 @@ export default function Reports({
                 ) : (
                   <div className="flex justify-center items-center">
                     Please fetch fitler data
+                  </div>
+                )}
+                {!reportType?.index && (
+                  <div className="flex justify-center items-center">
+                    Please first select report type above...
                   </div>
                 )}
               </CardBody>
