@@ -1,5 +1,10 @@
+import React, { useCallback, useState } from "react";
+import { Form, Card, CardFooter, Button, Tooltip, Divider } from "@heroui/react";
+import { ArrowClockwiseIcon, ClipboardIcon } from "@phosphor-icons/react";
 import EditFormWrapper from "@/components/EditFormWrapper";
 import { Wrapper } from "@/components/Wrapper";
+import { ReportSelector } from "@/components/ReportSelector";
+import { ReportFilters } from "@/components/ReportFilters";
 import {
   useGenerateMarksReport,
   useGenerateRatingsReport,
@@ -7,38 +12,7 @@ import {
   useGenerateProgressReport,
 } from "@/hooks/useReports";
 import { useReportsDropdownsSelective } from "@/hooks/useReportsDropdowns";
-import {
-  AvailableFilters,
-  Errors,
-  ReportFilter,
-  ReportType,
-} from "@/utils/types";
-import {
-  Select,
-  SelectItem,
-  Form,
-  Card,
-  CardHeader,
-  CardFooter,
-  Button,
-  CardBody,
-  Tooltip,
-  Divider,
-  Autocomplete,
-  AutocompleteItem,
-} from "@heroui/react";
-import {
-  ArrowClockwiseIcon,
-  CalendarIcon,
-  ChalkboardIcon,
-  ChalkboardTeacherIcon,
-  ClipboardIcon,
-  ScrollIcon,
-  StrategyIcon,
-  StudentIcon,
-  SubtitlesIcon,
-} from "@phosphor-icons/react";
-import React from "react";
+import { useReportsState } from "@/hooks/useReportsState";
 
 export default function Reports({
   incrementLoading,
@@ -47,35 +21,7 @@ export default function Reports({
   incrementLoading: () => void;
   decrementLoading: () => void;
 }) {
-  const availableFilters: AvailableFilters = {
-    students: false,
-    teachers: false,
-    courseworks: false,
-    classrooms: false,
-    subjects: false,
-    extraCurriculars: false,
-    calendarYears: false,
-  };
-  const [reportData, setReportData] = React.useState<ArrayBuffer | null>(null);
-  const [errorMessage, setErrorMessage] = React.useState<string>("");
-  const [statusCode, setStatusCode] = React.useState<number | undefined>();
-  const [reportType, setReportType] = React.useState<ReportType>({
-    availableFilters,
-  } as ReportType);
-  const [reportFilter, setReportFiler] = React.useState<ReportFilter>(
-    {} as ReportFilter
-  );
-  const [errors, setErrors] = React.useState<Errors<ReportFilter, string>>(
-    {} as Errors<ReportFilter, string>
-  );
-
-  const { dropdowns, isError, isLoading, mutate } =
-    useReportsDropdownsSelective(
-      reportType.availableFilters,
-      incrementLoading,
-      decrementLoading
-    );
-
+  // Get all the report generation functions
   const {
     generateMarksByStudentClassroomYearReport,
     generateMarksByStudentSubjectYearReport,
@@ -107,674 +53,102 @@ export default function Reports({
     generateProgressReportByFacilitator,
   } = useGenerateProgressReport();
 
-  const resetStates = () => {
-    setReportData(null);
-    setErrorMessage("");
-    setStatusCode(undefined);
-    setReportType({ availableFilters } as ReportType);
-    setReportFiler({} as ReportFilter);
-  };
+  // State setters for the custom hook
+  const [reportData, setReportData] = useState<ArrayBuffer | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [statusCode, setStatusCode] = useState<number | undefined>();
 
-  const reportTypes: ReportType[] = [
-    {
-      title: "Marks By Classroom Year",
-      endpoint: "marks_by_classroom_year",
-      index: 1,
-      function: () => {
-        return generateMarksByClassroomYearReport(
-          reportFilter,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: true,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Marks By Student",
-      endpoint: "marks_by_student",
-      index: 2,
-      function: () => {
-        return generateMarksByStudentReport(
-          reportFilter,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: true,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: false,
-      },
-    },
-    {
-      title: "Marks By Student Classroom Year",
-      endpoint: "marks_student_classroom_year",
-      index: 3,
-      function: () => {
-        return generateMarksByStudentClassroomYearReport(
-          reportFilter.year!,
-          reportFilter.classroomId,
-          reportFilter.studentId,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Marks By Student Subject Year",
-      endpoint: "marks_student_subject_year",
-      index: 4,
-      function: () => {
-        return generateMarksByStudentSubjectYearReport(
-          reportFilter.year!,
-          reportFilter.subjectId!,
-          reportFilter.studentId,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: true,
-        extraCurriculars: false,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Marks By Student Year",
-      endpoint: "marks_student_year",
-      index: 5,
-      function: () => {
-        return generateMarksByStudentYearReport(
-          reportFilter.year!,
-          reportFilter.studentId!,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: true,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Marks By Year",
-      endpoint: "marks_year",
-      index: 6,
-      function: () => {
-        return generateMarksByYearReport(
-          reportFilter.year!,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Marks By Subject Year",
-      endpoint: "marks_subject_year",
-      index: 7,
-      function: () => {
-        return generateMarksBySubjectYearReport(
-          reportFilter.year!,
-          reportFilter.subjectId!,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: true,
-        extraCurriculars: false,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Ratings By Student Activity Year",
-      endpoint: "ratings_student_activity_year",
-      index: 8,
-      function: () => {
-        return generateRatingsByStudentActivityYearReport(
-          reportFilter.year!,
-          reportFilter.extraCurricularId!,
-          reportFilter.studentId,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: true,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Ratings By Student Year",
-      endpoint: "ratings_student_year",
-      index: 9,
-      function: () => {
-        return generateRatingsByStudentYearReport(
-          reportFilter.year!,
-          reportFilter.studentId!,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: true,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Ratings By Activity Year",
-      endpoint: "ratings_activity_year",
-      index: 10,
-      function: () => {
-        return generateRatingsByActivityYearReport(
-          reportFilter.year!,
-          reportFilter.extraCurricularId!,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: true,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Ratings By Activity",
-      endpoint: "ratings_activity",
-      index: 11,
-      function: () => {
-        return generateRatingsByActivityReport(
-          reportFilter.extraCurricularId!,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: true,
-        calendarYears: false,
-      },
-    },
-    {
-      title: "Marks By Teacher Year",
-      endpoint: "marks_teacher_year",
-      index: 12,
-      function: () => {
-        return generateMarksByTeacherYearReport(
-          reportFilter.year!,
-          reportFilter.teacherId!,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: true,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Ratings By Teacher Year",
-      endpoint: "ratings_teacher_year",
-      index: 13,
-      function: () => {
-        return generateRatingsByTeacherYearReport(
-          reportFilter.year!,
-          reportFilter.teacherId!,
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: true,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: true,
-      },
-    },
-    {
-      title: "Progress By Student",
-      endpoint: "progress_student",
-      index: 14,
-      function: () => {
-        return generateProgressReportByStudent(
-          reportFilter.studentId!,
-          "student",
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: true,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: false,
-      },
-    },
-    {
-      title: "Progress By Teacher",
-      endpoint: "progress_teacher",
-      index: 15,
-      function: () => {
-        return generateProgressReportByTeacher(
-          reportFilter.teacherId!,
-          "teacher",
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: true,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: false,
-      },
-    },
-    {
-      title: "Progress By Subject",
-      endpoint: "progress_subject",
-      index: 16,
-      function: () => {
-        return generateProgressReportBySubject(
-          reportFilter.subjectId!,
-          "subject",
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: true,
-        extraCurriculars: false,
-        calendarYears: false,
-      },
-    },
-    {
-      title: "Progress By Classroom",
-      endpoint: "progress_classroom",
-      index: 17,
-      function: () => {
-        return generateProgressReportByClassroom(
-          reportFilter.classroomId!,
-          "classroom",
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: true,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: false,
-      },
-    },
-    {
-      title: "Progress By Activity",
-      endpoint: "progress_activity",
-      index: 18,
-      function: () => {
-        return generateProgressReportByActivity(
-          reportFilter.extraCurricularId!,
-          "activity",
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: false,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: true,
-        calendarYears: false,
-      },
-    },
-    {
-      title: "Progress By Facilitator",
-      endpoint: "progress_facilitator",
-      index: 19,
-      function: () => {
-        return generateProgressReportByFacilitator(
-          reportFilter.teacherId!,
-          "facilitator",
-          incrementLoading,
-          decrementLoading,
-          setReportData,
-          (error, statusCode) => {
-            setErrorMessage(error);
-            setStatusCode(statusCode);
-          }
-        );
-      },
-      availableFilters: {
-        students: false,
-        teachers: true,
-        courseworks: false,
-        classrooms: false,
-        subjects: false,
-        extraCurriculars: false,
-        calendarYears: false,
-      },
-    },
-  ];
+  // Use the custom hook for state management
+  const {
+    reportType,
+    reportFilter,
+    errors,
+    reportTypes,
+    hasEnoughFilters,
+    resetStates,
+    validate,
+    handleReportTypeChange,
+    handleFilterChange,
+  } = useReportsState(
+    generateMarksByClassroomYearReport,
+    generateMarksByStudentReport,
+    generateMarksByStudentClassroomYearReport,
+    generateMarksByStudentSubjectYearReport,
+    generateMarksByStudentYearReport,
+    generateMarksByYearReport,
+    generateMarksBySubjectYearReport,
+    generateRatingsByStudentActivityYearReport,
+    generateRatingsByStudentYearReport,
+    generateRatingsByActivityYearReport,
+    generateRatingsByActivityReport,
+    generateMarksByTeacherYearReport,
+    generateRatingsByTeacherYearReport,
+    generateProgressReportByStudent,
+    generateProgressReportByTeacher,
+    generateProgressReportBySubject,
+    generateProgressReportByClassroom,
+    generateProgressReportByActivity,
+    generateProgressReportByFacilitator,
+    incrementLoading,
+    decrementLoading,
+    setReportData,
+    setErrorMessage,
+    setStatusCode
+  );
 
-  const validate = () => {
-    setErrors({} as Errors<ReportFilter, string>);
-    let tempErrors: Errors<ReportFilter, string> = {} as Errors<
-      ReportFilter,
-      string
-    >;
+  // Get dropdown data
+  const { dropdowns, isError, isLoading, mutate } =
+    useReportsDropdownsSelective(
+      reportType?.availableFilters || {
+        students: false,
+        teachers: false,
+        courseworks: false,
+        classrooms: false,
+        subjects: false,
+        extraCurriculars: false,
+        calendarYears: false,
+      },
+      incrementLoading,
+      decrementLoading
+    );
 
-    if (reportType?.availableFilters?.students && !reportFilter?.studentId) {
-      tempErrors = {
-        ...tempErrors,
-        studentId: "Student is required for this report",
-      };
+  const fetchDropdowns = useCallback(async () => {
+    try {
+      mutate();
+      if (isError) {
+        setErrorMessage(isError.error);
+        setStatusCode(isError.statusCode);
+      }
+    } catch (error) {
+      setErrorMessage("Failed to fetch dropdown data");
+      setStatusCode(500);
     }
-    if (reportType?.availableFilters?.teachers && !reportFilter?.teacherId) {
-      tempErrors = {
-        ...tempErrors,
-        teacherId: "Teacher is required for this report",
-      };
-    }
-    if (
-      reportType?.availableFilters?.courseworks &&
-      !reportFilter?.courseworkId
-    ) {
-      tempErrors = {
-        ...tempErrors,
-        courseworkId: "Coursework is required for this report",
-      };
-    }
-    if (
-      reportType?.availableFilters?.classrooms &&
-      !reportFilter?.classroomId
-    ) {
-      tempErrors = {
-        ...tempErrors,
-        classroomId: "Classroom is required for this report",
-      };
-    }
-    if (reportType?.availableFilters?.subjects && !reportFilter?.subjectId) {
-      tempErrors = {
-        ...tempErrors,
-        subjectId: "Subject is required for this report",
-      };
-    }
-    if (
-      reportType?.availableFilters?.extraCurriculars &&
-      !reportFilter?.extraCurricularId
-    ) {
-      tempErrors = {
-        ...tempErrors,
-        extraCurricularId:
-          "Extra curricular activity is required for this report",
-      };
-    }
-    if (reportType?.availableFilters?.calendarYears && !reportFilter?.year) {
-      tempErrors = { ...tempErrors, year: "Year is required for this report" };
-    }
+  }, [mutate, isError, setErrorMessage, setStatusCode]);
 
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
-  };
-
-  const fetchDropdowns = async () => {
-    mutate();
-    if (isError) {
-      setErrorMessage(isError.error);
-      setStatusCode(isError.statusCode);
-    }
-  };
-
-  const fetchReport = async () => {
+  const fetchReport = useCallback(async () => {
     if (!validate()) {
       return;
     }
 
-    let reportResult;
-
-    // switch (reportType.index) {
-    //   case 1:
-    //     reportResult = await generateMarksByClassroomYearReport(
-    //       reportFilter,
-    //       incrementLoading,
-    //       decrementLoading,
-    //       setReportData,
-    //       (error, statusCode) => {
-    //         setErrorMessage(error);
-    //         setStatusCode(statusCode);
-    //       }
-    //     );
-    //     break;
-    //   case 2:
-    //     reportResult = await generateMarksByStudentReport(
-    //       reportFilter,
-    //       incrementLoading,
-    //       decrementLoading,
-    //       setReportData,
-    //       (error, statusCode) => {
-    //         setErrorMessage(error);
-    //         setStatusCode(statusCode);
-    //       }
-    //     );
-    //     break;
-    //   default:
-    //     const res = await fetch(reportType.endpoint);
-    //     const data = await res.arrayBuffer();
-    //     setReportData(data);
-    //     return;
-    // }
-    if (reportType.function) {
-      reportResult = await reportType.function();
-      if (reportResult?.data) {
-        setReportData(reportResult.data);
+    try {
+      if (reportType?.function) {
+        const reportResult = await reportType.function();
+        if (reportResult?.data) {
+          setReportData(reportResult.data);
+        }
+      } else {
+        const res = await fetch(reportType?.endpoint || '');
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const data = await res.arrayBuffer();
+        setReportData(data);
       }
-    } else {
-      const res = await fetch(reportType.endpoint);
-      const data = await res.arrayBuffer();
-      setReportData(data);
+    } catch (error) {
+      setErrorMessage("Failed to fetch report data");
+      setStatusCode(500);
     }
-  };
-
-  const hasEnoughFilters = React.useMemo(() => {
-    if (
-      JSON.stringify(reportFilter) === JSON.stringify({}) ||
-      JSON.stringify(reportType) === JSON.stringify({})
-    ) {
-      return false;
-    }
-
-    const { availableFilters } = reportType;
-
-    // Define filter requirements
-    const requirements = [
-      { needs: availableFilters.students, has: !!reportFilter.studentId },
-      { needs: availableFilters.teachers, has: !!reportFilter.teacherId },
-      { needs: availableFilters.courseworks, has: !!reportFilter.courseworkId },
-      { needs: availableFilters.classrooms, has: !!reportFilter.classroomId },
-      { needs: availableFilters.subjects, has: !!reportFilter.subjectId },
-      {
-        needs: availableFilters.extraCurriculars,
-        has: !!reportFilter.extraCurricularId,
-      },
-      { needs: availableFilters.calendarYears, has: !!reportFilter.year },
-    ];
-
-    return requirements.every(({ needs, has }) => !needs || has);
-  }, [reportFilter, reportType]);
+  }, [validate, reportType, setReportData, setErrorMessage, setStatusCode]);
 
   const hasFilterData = React.useMemo(() => {
     if (
@@ -802,286 +176,23 @@ export default function Reports({
           onSubmit={(e) => e.preventDefault}
           className="h-full w-full md:w-1/2 pb-2 flex flex-col overflow-auto"
         >
-          <Select
-            label="Report"
-            selectedKeys={[String(reportType?.index || "")]}
-            variant="bordered"
-            selectionMode="single"
-            placeholder="Select report..."
-            className="w-96"
-            onSelectionChange={(key) => {
-              const selectedReportType = reportTypes?.find(
-                (type) => Number(type.index) === Number(key.currentKey)
-              ) || ({} as ReportType);
-              setReportType(selectedReportType);
-            }}
-          >
-            {reportTypes?.map((type) => (
-              <SelectItem key={type.index}>{type.title}</SelectItem>
-            ))}
-          </Select>
+          <ReportSelector
+            reportTypes={reportTypes}
+            selectedReportType={reportType}
+            onReportTypeChange={handleReportTypeChange}
+          />
+
           {reportType && (
             <Card className="w-full">
-              <CardHeader>Enter your filter data</CardHeader>
-              <Divider />
-              <CardBody
-                aria-label="Report dropdown filters"
-                className="space-y-2"
-              >
-                {dropdowns ? (
-                  <>
-                    {reportType?.availableFilters?.students && (
-                      <Autocomplete
-                        key="student-dropdown"
-                        variant="bordered"
-                        label="Student"
-                        placeholder="Select student..."
-                        startContent={<StudentIcon weight="thin" size={18} />}
-                        isInvalid={!!errors.studentId}
-                        errorMessage={errors.studentId}
-                        selectedKey={String(reportFilter.studentId)}
-                        defaultItems={dropdowns?.students || []}
-                        isRequired
-                        isVirtualized={true}
-                        onSelectionChange={(key) => {
-                          const studentId = Number(key);
-                          setReportFiler(prev => ({
-                            ...prev,
-                            studentId,
-                          }));
-                          console.log(studentId);
-                        }}
-                        listboxProps={{
-                          emptyContent: "No data available.",
-                        }}
-                      >
-                        {(student) => (
-                          <AutocompleteItem key={student.id}>
-                            {student.name}
-                          </AutocompleteItem>
-                        )}
-                      </Autocomplete>
-                    )}
+              <ReportFilters
+                reportType={reportType}
+                reportFilter={reportFilter}
+                errors={errors}
+                dropdowns={dropdowns}
+                onFilterChange={handleFilterChange}
+                onValidate={validate}
+              />
 
-                    {reportType?.availableFilters?.teachers && (
-                      <Autocomplete
-                        key="teacher-dropdown"
-                        variant="bordered"
-                        label="Teacher"
-                        placeholder="Select teacher..."
-                        startContent={
-                          <ChalkboardTeacherIcon weight="thin" size={18} />
-                        }
-                        isInvalid={!!errors.teacherId}
-                        errorMessage={errors.teacherId}
-                        selectedKey={reportFilter.teacherId}
-                        defaultItems={dropdowns?.teachers || []}
-                        isRequired
-                        isVirtualized={true}
-                        onSelectionChange={(key) => {
-                          const teacherId = Number(key);
-                          setReportFiler(prev => ({
-                            ...prev,
-                            teacherId,
-                          }));
-                          validate();
-                        }}
-                        listboxProps={{
-                          emptyContent: "No data available.",
-                        }}
-                      >
-                        {(teacher) => (
-                          <AutocompleteItem key={teacher.id}>
-                            {teacher.name}
-                          </AutocompleteItem>
-                        )}
-                      </Autocomplete>
-                    )}
-
-                    {reportType?.availableFilters?.courseworks && (
-                      <Autocomplete
-                        key="coursework-dropdown"
-                        variant="bordered"
-                        label="Coursework"
-                        placeholder="Select coursework..."
-                        startContent={<ScrollIcon weight="thin" size={18} />}
-                        isInvalid={!!errors.courseworkId}
-                        errorMessage={errors.courseworkId}
-                        selectedKey={reportFilter.courseworkId}
-                        defaultItems={dropdowns?.courseworks || []}
-                        isRequired
-                        isVirtualized={true}
-                        onSelectionChange={(key) => {
-                          const courseworkId = Number(key);
-                          setReportFiler(prev => ({
-                            ...prev,
-                            courseworkId,
-                          }));
-                          validate();
-                        }}
-                        listboxProps={{
-                          emptyContent: "No data available.",
-                        }}
-                      >
-                        {(coursework) => (
-                          <AutocompleteItem
-                            key={coursework.id}
-                            description={coursework.subject.name}
-                          >
-                            {coursework.type}
-                          </AutocompleteItem>
-                        )}
-                      </Autocomplete>
-                    )}
-
-                    {reportType?.availableFilters?.classrooms && (
-                      <Autocomplete
-                        key="classroom-dropdown"
-                        variant="bordered"
-                        label="Classroom"
-                        placeholder="Select classroom..."
-                        startContent={
-                          <ChalkboardIcon weight="thin" size={18} />
-                        }
-                        isInvalid={!!errors.classroomId}
-                        errorMessage={errors.classroomId}
-                        selectedKey={reportFilter.classroomId}
-                        defaultItems={dropdowns?.classrooms || []}
-                        isRequired
-                        isVirtualized={true}
-                        onSelectionChange={(key) => {
-                          const classroomId = Number(key);
-                          setReportFiler(prev => ({
-                            ...prev,
-                            classroomId,
-                          }));
-                          validate();
-                        }}
-                        listboxProps={{
-                          emptyContent: "No data available.",
-                        }}
-                      >
-                        {(classroom) => (
-                          <AutocompleteItem key={classroom.id}>
-                            {classroom.name}
-                          </AutocompleteItem>
-                        )}
-                      </Autocomplete>
-                    )}
-
-                    {reportType?.availableFilters?.subjects && (
-                      <Autocomplete
-                        key="subject-dropdown"
-                        variant="bordered"
-                        label="Subject"
-                        placeholder="Select subject..."
-                        startContent={<SubtitlesIcon weight="thin" size={18} />}
-                        isInvalid={!!errors.subjectId}
-                        errorMessage={errors.subjectId}
-                        selectedKey={reportFilter.subjectId}
-                        defaultItems={dropdowns?.subjects || []}
-                        isRequired
-                        isVirtualized={true}
-                        onSelectionChange={(key) => {
-                          const subjectId = Number(key);
-                          setReportFiler(prev => ({
-                            ...prev,
-                            subjectId,
-                          }));
-                          validate();
-                        }}
-                        listboxProps={{
-                          emptyContent: "No data available.",
-                        }}
-                      >
-                        {(subject) => (
-                          <AutocompleteItem key={subject.id}>
-                            {subject.name}
-                          </AutocompleteItem>
-                        )}
-                      </Autocomplete>
-                    )}
-
-                    {reportType?.availableFilters?.extraCurriculars && (
-                      <Autocomplete
-                        key="extra-curricular-dropdown"
-                        variant="bordered"
-                        label="Extra Curricular"
-                        placeholder="Select extra curricular..."
-                        startContent={<StrategyIcon weight="thin" size={18} />}
-                        isInvalid={!!errors.extraCurricularId}
-                        errorMessage={errors.extraCurricularId}
-                        selectedKey={reportFilter.extraCurricularId}
-                        defaultItems={dropdowns?.extraCurriculars || []}
-                        isRequired
-                        isVirtualized={true}
-                        onSelectionChange={(key) => {
-                          const extraCurricularId = Number(key);
-                          setReportFiler(prev => ({
-                            ...prev,
-                            extraCurricularId,
-                          }));
-                          validate();
-                        }}
-                        listboxProps={{
-                          emptyContent: "No data available.",
-                        }}
-                      >
-                        {(activity) => (
-                          <AutocompleteItem key={activity.id}>
-                            {activity.name}
-                          </AutocompleteItem>
-                        )}
-                      </Autocomplete>
-                    )}
-
-                    {reportType?.availableFilters?.calendarYears && (
-                      <Autocomplete
-                        key="year-dropdown"
-                        variant="bordered"
-                        label="Year"
-                        placeholder="Select year..."
-                        startContent={<CalendarIcon weight="thin" size={18} />}
-                        isInvalid={!!errors.year}
-                        errorMessage={errors.year}
-                        selectedKey={reportFilter.year}
-                        // defaultItems={dropdowns?.calendarYears || []}
-                        isRequired
-                        isVirtualized={true}
-                        onSelectionChange={(key) => {
-                          const year = Number(key);
-                          setReportFiler(prev => ({
-                            ...prev,
-                            year,
-                          }));
-                          validate();
-                        }}
-                        listboxProps={{
-                          emptyContent: "No data available.",
-                        }}
-                      >
-                        {(dropdowns?.calendarYears || ([] as number[])).map(
-                          (year) => (
-                            <AutocompleteItem key={year}>
-                              {year}
-                            </AutocompleteItem>
-                          )
-                        )}
-                      </Autocomplete>
-                    )}
-                  </>
-                ) : (
-                  <div className="flex justify-center items-center">
-                    Please fetch fitler data
-                  </div>
-                )}
-                {!reportType?.index && (
-                  <div className="flex justify-center items-center">
-                    Please first select report type above...
-                  </div>
-                )}
-              </CardBody>
-              <Divider />
               <CardFooter className="flex gap-2 justify-end">
                 <Tooltip>
                   <Button
