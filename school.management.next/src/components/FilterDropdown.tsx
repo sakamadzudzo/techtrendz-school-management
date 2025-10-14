@@ -1,5 +1,10 @@
 import React from "react";
-import { Autocomplete, AutocompleteItem } from "@heroui/react";
+import {
+  Autocomplete,
+  AutocompleteItem,
+  Select,
+  SelectItem,
+} from "@heroui/react";
 import {
   StudentIcon,
   ChalkboardTeacherIcon,
@@ -63,11 +68,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
 
   const renderOption = (option: any) => {
     if (typeof option === "number") {
-      return (
-        <AutocompleteItem key={option}>
-          {option}
-        </AutocompleteItem>
-      );
+      return <AutocompleteItem key={String(option)}>{option}</AutocompleteItem>;
     }
 
     const { id, name, subject, type: optionType } = option;
@@ -80,12 +81,35 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
       );
     }
 
-    return (
-      <AutocompleteItem key={id}>
-        {name}
-      </AutocompleteItem>
-    );
+    return <AutocompleteItem key={id}>{name}</AutocompleteItem>;
   };
+
+  if (type === "year") {
+    return (
+      <Select
+        key={`${type}-dropdown`}
+        variant="bordered"
+        label={label}
+        placeholder={placeholder}
+        startContent={iconMap[type]}
+        selectedKeys={value ? [String(value)] : []}
+        errorMessage={error}
+        isInvalid={!!error}
+        isRequired={isRequired}
+        isVirtualized={isVirtualized}
+        listboxProps={{
+          emptyContent: "No data available.",
+        }}
+        onSelectionChange={(key) =>
+          handleSelectionChange(key.currentKey || null)
+        }
+      >
+        {options.map((year) => {
+          return <SelectItem key={String(year)}>{String(year)}</SelectItem>;
+        })}
+      </Select>
+    );
+  }
 
   return (
     <Autocomplete
