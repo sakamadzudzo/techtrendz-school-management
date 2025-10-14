@@ -249,6 +249,7 @@ export type DormYearView = {
   dormId: number;
   status: string;
   datestamp: Date | string;
+  schoolId: number;
 };
 
 export type SchoolView = {
@@ -432,7 +433,7 @@ export type AvailableFilters = {
 export type ReportType = {
   title: string;
   endpoint: string;
-  function?: () => Promise<ReportResult>;
+  function?: (reportFilter: ReportFilter) => Promise<ReportResult>;
   availableFilters: AvailableFilters;
   index: number;
 };

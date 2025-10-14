@@ -66,7 +66,6 @@ export const useReportsState = (
       generateProgressReportByClassroom,
       generateProgressReportByActivity,
       generateProgressReportByFacilitator,
-      reportFilter,
       incrementLoading,
       decrementLoading,
       setReportDataState,

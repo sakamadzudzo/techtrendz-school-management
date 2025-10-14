@@ -54,9 +54,9 @@ export default function OneDormYearPage({
         <div className="info-row">
           <div className="info-row-title">Dorm:</div>
           <div className="info-row-content flex-col">
-            {dormYear?.dorm?.name}
+            {dormYear?.name}
             <div className="font-extralight italic text-sm -mt-1">
-              {dormYear?.dorm?.description}
+              {dormYear?.description}
             </div>
           </div>
         </div>
@@ -68,17 +68,17 @@ export default function OneDormYearPage({
         <Spacer x={4} y={4} />
         <div className="info-row">
           <div className="info-row-title">Dorm Address:</div>
-          <div className="info-row-content">{dormYear?.dorm?.address}</div>
+          <div className="info-row-content">{dormYear?.address}</div>
         </div>
         <Spacer x={4} y={4} />
         <div className="info-row">
           <div className="info-row-title">Linked School:</div>
           <div className="info-row-content">
             <Link
-              href={`/school/one?id=${dormYear?.dorm?.school?.id}`}
+              href={`/school/one?id=${dormYear?.schoolId}`}
               isExternal
             >
-              {dormYear?.dorm?.school?.name}
+              {dormYear?.linkedSchool}
             </Link>
           </div>
         </div>

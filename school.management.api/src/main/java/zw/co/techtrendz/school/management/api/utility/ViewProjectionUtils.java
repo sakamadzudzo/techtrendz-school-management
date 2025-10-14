@@ -393,7 +393,8 @@ public class ViewProjectionUtils {
                 new NullExpression<>(List.class),
                 dormYear.dorm.id,
                 dormYear.dorm.status,
-                dormYear.dorm.datestamp
+                dormYear.dorm.datestamp,
+                dormYear.dorm.school.id
         );
     }
 

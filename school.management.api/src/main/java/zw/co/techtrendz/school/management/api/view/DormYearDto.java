@@ -32,4 +32,28 @@ public class DormYearDto {
     private Status status;
 
     private LocalDateTime datestamp;
+
+    private Long schoolId;
+
+    public DormYearDto(Long id,
+                       String name,
+                       String description,
+                       String address,
+                       Integer calendarYear,
+                       String linkedSchool,
+                       List<StudentDto> students,
+                       Long dormId,
+                       Status status,
+                       LocalDateTime datestamp) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.address = address;
+        this.calendarYear = calendarYear;
+        this.linkedSchool = linkedSchool;
+        this.students = students;
+        this.dormId = dormId;
+        this.status = status;
+        this.datestamp = datestamp;
+    }
 }

@@ -28,7 +28,6 @@ export const createReportTypes = (
   generateProgressReportByClassroom: any,
   generateProgressReportByActivity: any,
   generateProgressReportByFacilitator: any,
-  reportFilter: any,
   incrementLoading: () => void,
   decrementLoading: () => void,
   setReportData: (data: ArrayBuffer | null) => void,
@@ -40,7 +39,7 @@ export const createReportTypes = (
       title: "Marks By Classroom Year",
       endpoint: "marks_by_classroom_year",
       index: 1,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateMarksByClassroomYearReport(
           reportFilter,
           incrementLoading,
@@ -66,7 +65,7 @@ export const createReportTypes = (
       title: "Marks By Student",
       endpoint: "marks_by_student",
       index: 2,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateMarksByStudentReport(
           reportFilter,
           incrementLoading,
@@ -92,7 +91,7 @@ export const createReportTypes = (
       title: "Marks By Student Classroom Year",
       endpoint: "marks_student_classroom_year",
       index: 3,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateMarksByStudentClassroomYearReport(
           reportFilter.year!,
           reportFilter.classroomId,
@@ -120,7 +119,7 @@ export const createReportTypes = (
       title: "Marks By Student Subject Year",
       endpoint: "marks_student_subject_year",
       index: 4,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateMarksByStudentSubjectYearReport(
           reportFilter.year!,
           reportFilter.subjectId!,
@@ -148,7 +147,7 @@ export const createReportTypes = (
       title: "Marks By Student Year",
       endpoint: "marks_student_year",
       index: 5,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateMarksByStudentYearReport(
           reportFilter.year!,
           reportFilter.studentId!,
@@ -175,7 +174,7 @@ export const createReportTypes = (
       title: "Marks By Year",
       endpoint: "marks_year",
       index: 6,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateMarksByYearReport(
           reportFilter.year!,
           incrementLoading,
@@ -201,7 +200,7 @@ export const createReportTypes = (
       title: "Marks By Subject Year",
       endpoint: "marks_subject_year",
       index: 7,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateMarksBySubjectYearReport(
           reportFilter.year!,
           reportFilter.subjectId!,
@@ -228,7 +227,7 @@ export const createReportTypes = (
       title: "Ratings By Student Activity Year",
       endpoint: "ratings_student_activity_year",
       index: 8,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateRatingsByStudentActivityYearReport(
           reportFilter.year!,
           reportFilter.extraCurricularId!,
@@ -256,7 +255,7 @@ export const createReportTypes = (
       title: "Ratings By Student Year",
       endpoint: "ratings_student_year",
       index: 9,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateRatingsByStudentYearReport(
           reportFilter.year!,
           reportFilter.studentId!,
@@ -283,7 +282,7 @@ export const createReportTypes = (
       title: "Ratings By Activity Year",
       endpoint: "ratings_activity_year",
       index: 10,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateRatingsByActivityYearReport(
           reportFilter.year!,
           reportFilter.extraCurricularId!,
@@ -310,7 +309,7 @@ export const createReportTypes = (
       title: "Ratings By Activity",
       endpoint: "ratings_activity",
       index: 11,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateRatingsByActivityReport(
           reportFilter.extraCurricularId!,
           incrementLoading,
@@ -336,7 +335,7 @@ export const createReportTypes = (
       title: "Marks By Teacher Year",
       endpoint: "marks_teacher_year",
       index: 12,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateMarksByTeacherYearReport(
           reportFilter.year!,
           reportFilter.teacherId!,
@@ -363,7 +362,7 @@ export const createReportTypes = (
       title: "Ratings By Teacher Year",
       endpoint: "ratings_teacher_year",
       index: 13,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateRatingsByTeacherYearReport(
           reportFilter.year!,
           reportFilter.teacherId!,
@@ -390,7 +389,7 @@ export const createReportTypes = (
       title: "Progress By Student",
       endpoint: "progress_student",
       index: 14,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateProgressReportByStudent(
           reportFilter.studentId!,
           "student",
@@ -417,7 +416,7 @@ export const createReportTypes = (
       title: "Progress By Teacher",
       endpoint: "progress_teacher",
       index: 15,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateProgressReportByTeacher(
           reportFilter.teacherId!,
           "teacher",
@@ -444,7 +443,7 @@ export const createReportTypes = (
       title: "Progress By Subject",
       endpoint: "progress_subject",
       index: 16,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateProgressReportBySubject(
           reportFilter.subjectId!,
           "subject",
@@ -471,7 +470,7 @@ export const createReportTypes = (
       title: "Progress By Classroom",
       endpoint: "progress_classroom",
       index: 17,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateProgressReportByClassroom(
           reportFilter.classroomId!,
           "classroom",
@@ -498,7 +497,7 @@ export const createReportTypes = (
       title: "Progress By Activity",
       endpoint: "progress_activity",
       index: 18,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateProgressReportByActivity(
           reportFilter.extraCurricularId!,
           "activity",
@@ -525,7 +524,7 @@ export const createReportTypes = (
       title: "Progress By Facilitator",
       endpoint: "progress_facilitator",
       index: 19,
-      function: () => {
+      function: (reportFilter: any) => {
         return generateProgressReportByFacilitator(
           reportFilter.teacherId!,
           "facilitator",

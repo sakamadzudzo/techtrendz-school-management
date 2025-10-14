@@ -133,7 +133,7 @@ export default function Reports({
 
     try {
       if (reportType?.function) {
-        const reportResult = await reportType.function();
+        const reportResult = await reportType.function(reportFilter);
         if (reportResult?.data) {
           setReportData(reportResult.data);
         }
@@ -149,7 +149,7 @@ export default function Reports({
       setErrorMessage("Failed to fetch report data");
       setStatusCode(500);
     }
-  }, [validate, reportType, setReportData, setErrorMessage, setStatusCode]);
+  }, [validate, reportType, reportFilter, setReportData, setErrorMessage, setStatusCode]);
 
   const hasFilterData = React.useMemo(() => {
     if (

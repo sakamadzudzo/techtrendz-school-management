@@ -20,7 +20,9 @@ export default function ParentLanding() {
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-8">
       <header className="text-center space-y-2">
-        <h1 className="text-3xl font-bold">Stay Connected to Your Child’s Learning Journey</h1>
+        <h1 className="text-3xl font-bold">
+          Stay Connected to Your Child’s Learning Journey
+        </h1>
       </header>
 
       {/* Dashboard Snapshot */}
@@ -28,7 +30,12 @@ export default function ParentLanding() {
         {dashboardCards.map((card) => (
           <Card key={card.label} className="flex flex-col items-center py-6">
             <div className="text-lg font-semibold mb-4">{card.label}</div>
-            <Button as={Link} color="primary" href={card.action.href} variant="flat">
+            <Button
+              as={Link}
+              color="primary"
+              href={card.action.href}
+              variant="flat"
+            >
               {card.action.label}
             </Button>
           </Card>
@@ -37,7 +44,9 @@ export default function ParentLanding() {
 
       {/* Insights */}
       <section className="bg-gray-50 rounded-lg p-6 text-center space-y-2">
-        <div className="font-medium">Track progress by subject, class, or activity</div>
+        <div className="font-medium">
+          Track progress by subject, class, or activity
+        </div>
         <Button as={Link} color="secondary" href="#" variant="ghost">
           View Progress Reports
         </Button>
@@ -60,10 +69,10 @@ export default function ParentLanding() {
       <section className="bg-gray-100 rounded-lg p-6 text-center space-y-2">
         <div>Have questions about your child’s progress?</div>
         <div className="space-x-4">
-          <Link href="#" color="secondary" underline>
+          <Link href="#" color="secondary" underline="hover">
             Contact Teacher
           </Link>
-          <Link href="#" color="secondary" underline>
+          <Link href="#" color="secondary" underline="hover">
             Help & Support
           </Link>
         </div>

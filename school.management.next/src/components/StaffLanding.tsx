@@ -58,10 +58,10 @@ export default function StaffLanding() {
       <section className="bg-gray-100 rounded-lg p-6 text-center space-y-2">
         <div>Engage with parents and colleagues for better outcomes.</div>
         <div className="space-x-4">
-          <Link href="#" color="secondary" underline>
+          <Link href="#" color="secondary" underline="hover">
             Send Updates to Parents
           </Link>
-          <Link href="#" color="secondary" underline>
+          <Link href="#" color="secondary" underline="hover">
             Team Collaboration
           </Link>
         </div>
