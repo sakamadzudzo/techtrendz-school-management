@@ -126,14 +126,14 @@ export default function Reports({
     }
   }, [mutate, isError, setErrorMessage, setStatusCode]);
 
-  const fetchReport = useCallback(async () => {
+  const fetchReport = useCallback(async (type: "pdf" | "excel") => {
     if (!validate()) {
       return;
     }
 
     try {
       if (reportType?.function) {
-        const reportResult = await reportType.function(reportFilter);
+        const reportResult = await reportType.function({ ...reportFilter, type });
         if (reportResult?.data) {
           setReportData(reportResult.data);
         }
@@ -210,16 +210,28 @@ export default function Reports({
                   </Button>
                 </Tooltip>
                 {hasEnoughFilters && isValid && (
-                  <Tooltip>
-                    <Button
-                      color="primary"
-                      className="button !w-fit"
-                      startContent={<ClipboardIcon weight="thin" size={25} />}
-                      onPress={fetchReport}
-                    >
-                      Fetch Report
-                    </Button>
-                  </Tooltip>
+                  <>
+                    <Tooltip>
+                      <Button
+                        color="primary"
+                        className="button !w-fit"
+                        startContent={<ClipboardIcon weight="thin" size={25} />}
+                        onPress={() => fetchReport("pdf")}
+                      >
+                        Fetch PDF
+                      </Button>
+                    </Tooltip>
+                    <Tooltip>
+                      <Button
+                        color="primary"
+                        className="button !w-fit"
+                        startContent={<ClipboardIcon weight="thin" size={25} />}
+                        onPress={() => fetchReport("excel")}
+                      >
+                        Fetch Excel
+                      </Button>
+                    </Tooltip>
+                  </>
                 )}
               </CardFooter>
             </Card>

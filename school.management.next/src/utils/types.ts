@@ -446,6 +446,7 @@ export type ReportFilter = {
   subjectId: number | undefined;
   extraCurricularId: number | undefined;
   year: number | undefined;
+  type: "pdf" | "excel";
 };
 
 export type ReportResult = {

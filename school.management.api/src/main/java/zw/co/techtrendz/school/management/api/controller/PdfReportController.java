@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import zw.co.techtrendz.school.management.api.service.PdfReportService;
 
 @RestController
-@RequestMapping("/reports")
+@RequestMapping("/reports/pdf")
 @Tag(name = "PDF Reports", description = "Generation of PDF reports for various school data")
 public class PdfReportController {
 

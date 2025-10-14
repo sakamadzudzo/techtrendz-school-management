@@ -44,6 +44,7 @@ const iconMap = {
   subjectId: <SubtitlesIcon weight="thin" size={18} />,
   extraCurricularId: <StrategyIcon weight="thin" size={18} />,
   year: <CalendarIcon weight="thin" size={18} />,
+  type: <ScrollIcon weight="thin" size={18} />,
 };
 
 export const FilterDropdown: React.FC<FilterDropdownProps> = ({

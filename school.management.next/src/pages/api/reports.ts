@@ -15,14 +15,15 @@ async function generateMarksByStudentClassroomYearReport(
   authHeader: any,
   year: number,
   classroomId?: number,
-  studentId?: number
+  studentId?: number,
+  type?: string
 ) {
   const params = new URLSearchParams({ year: String(year) });
   if (classroomId) params.append("classroomId", String(classroomId));
   if (studentId) params.append("studentId", String(studentId));
 
   const res = await fetch(
-    `${API_BASE}/marks/student-classroom-year?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/marks/student-classroom-year?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -44,7 +45,8 @@ async function generateMarksByStudentSubjectYearReport(
   authHeader: any,
   year: number,
   subjectId: number,
-  studentId?: number
+  studentId?: number,
+  type?: string
 ) {
   const params = new URLSearchParams({
     year: String(year),
@@ -53,7 +55,7 @@ async function generateMarksByStudentSubjectYearReport(
   if (studentId) params.append("studentId", String(studentId));
 
   const res = await fetch(
-    `${API_BASE}/marks/student-subject-year?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/marks/student-subject-year?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -73,7 +75,8 @@ async function generateMarksByStudentSubjectYearReport(
 async function generateMarksByStudentYearReport(
   year: number,
   studentId: number,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     year: String(year),
@@ -81,7 +84,7 @@ async function generateMarksByStudentYearReport(
   });
 
   const res = await fetch(
-    `${API_BASE}/marks/student-year?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/marks/student-year?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -100,11 +103,12 @@ async function generateMarksByStudentYearReport(
 
 async function generateMarksByStudentReport(
   studentId: number,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({ studentId: String(studentId) });
 
-  const res = await fetch(`${API_BASE}/marks/student?${params.toString()}`, {
+  const res = await fetch(`${API_BASE}/${type || 'pdf'}/marks/student?${params.toString()}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
@@ -119,10 +123,10 @@ async function generateMarksByStudentReport(
   return res.arrayBuffer();
 }
 
-async function generateMarksByYearReport(year: number, authHeader: any) {
+async function generateMarksByYearReport(year: number, authHeader: any, type?: string) {
   const params = new URLSearchParams({ year: String(year) });
 
-  const res = await fetch(`${API_BASE}/marks/year?${params.toString()}`, {
+  const res = await fetch(`${API_BASE}/${type || 'pdf'}/marks/year?${params.toString()}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
@@ -140,7 +144,8 @@ async function generateMarksByYearReport(year: number, authHeader: any) {
 async function generateMarksByClassroomYearReport(
   year: number,
   classroomId: number,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     year: String(year),
@@ -148,7 +153,7 @@ async function generateMarksByClassroomYearReport(
   });
 
   const res = await fetch(
-    `${API_BASE}/marks/classroom-year?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/marks/classroom-year?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -168,7 +173,8 @@ async function generateMarksByClassroomYearReport(
 async function generateMarksBySubjectYearReport(
   year: number,
   subjectId: number,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     year: String(year),
@@ -176,7 +182,7 @@ async function generateMarksBySubjectYearReport(
   });
 
   const res = await fetch(
-    `${API_BASE}/marks/subject-year?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/marks/subject-year?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -198,7 +204,8 @@ async function generateRatingsByStudentActivityYearReport(
   year: number,
   activityId: number,
   authHeader: any,
-  studentId?: number
+  studentId?: number,
+  type?: string
 ) {
   const params = new URLSearchParams({
     year: String(year),
@@ -207,7 +214,7 @@ async function generateRatingsByStudentActivityYearReport(
   if (studentId) params.append("studentId", String(studentId));
 
   const res = await fetch(
-    `${API_BASE}/ratings/student-activity-year?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/ratings/student-activity-year?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -228,7 +235,8 @@ async function generateRatingsByStudentActivityYearReport(
 async function generateRatingsByStudentYearReport(
   year: number,
   studentId: number,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     year: String(year),
@@ -236,7 +244,7 @@ async function generateRatingsByStudentYearReport(
   });
 
   const res = await fetch(
-    `${API_BASE}/ratings/student-year?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/ratings/student-year?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -256,7 +264,8 @@ async function generateRatingsByStudentYearReport(
 async function generateRatingsByActivityYearReport(
   year: number,
   activityId: number,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     year: String(year),
@@ -264,7 +273,7 @@ async function generateRatingsByActivityYearReport(
   });
 
   const res = await fetch(
-    `${API_BASE}/ratings/activity-year?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/ratings/activity-year?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -283,11 +292,12 @@ async function generateRatingsByActivityYearReport(
 
 async function generateRatingsByActivityReport(
   activityId: number,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({ activityId: String(activityId) });
 
-  const res = await fetch(`${API_BASE}/ratings/activity?${params.toString()}`, {
+  const res = await fetch(`${API_BASE}/${type || 'pdf'}/ratings/activity?${params.toString()}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
@@ -306,7 +316,8 @@ async function generateRatingsByActivityReport(
 async function generateMarksByTeacherYearReport(
   year: number,
   teacherId: number,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     year: String(year),
@@ -314,7 +325,7 @@ async function generateMarksByTeacherYearReport(
   });
 
   const res = await fetch(
-    `${API_BASE}/marks/teacher-year?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/marks/teacher-year?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -334,7 +345,8 @@ async function generateMarksByTeacherYearReport(
 async function generateRatingsByTeacherYearReport(
   year: number,
   teacherId: number,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     year: String(year),
@@ -342,7 +354,7 @@ async function generateRatingsByTeacherYearReport(
   });
 
   const res = await fetch(
-    `${API_BASE}/ratings/teacher-year?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/ratings/teacher-year?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -363,14 +375,15 @@ async function generateRatingsByTeacherYearReport(
 async function generateProgressReportByStudent(
   studentId: number,
   entityType: string,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     studentId: String(studentId),
     entityType,
   });
 
-  const res = await fetch(`${API_BASE}/progress/student?${params.toString()}`, {
+  const res = await fetch(`${API_BASE}/${type || 'pdf'}/progress/student?${params.toString()}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
@@ -388,14 +401,15 @@ async function generateProgressReportByStudent(
 async function generateProgressReportByTeacher(
   teacherId: number,
   entityType: string,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     teacherId: String(teacherId),
     entityType,
   });
 
-  const res = await fetch(`${API_BASE}/progress/teacher?${params.toString()}`, {
+  const res = await fetch(`${API_BASE}/${type || 'pdf'}/progress/teacher?${params.toString()}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
@@ -413,14 +427,15 @@ async function generateProgressReportByTeacher(
 async function generateProgressReportBySubject(
   subjectId: number,
   entityType: string,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     subjectId: String(subjectId),
     entityType,
   });
 
-  const res = await fetch(`${API_BASE}/progress/subject?${params.toString()}`, {
+  const res = await fetch(`${API_BASE}/${type || 'pdf'}/progress/subject?${params.toString()}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
@@ -438,7 +453,8 @@ async function generateProgressReportBySubject(
 async function generateProgressReportByClassroom(
   classroomId: number,
   entityType: string,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     classroomId: String(classroomId),
@@ -446,7 +462,7 @@ async function generateProgressReportByClassroom(
   });
 
   const res = await fetch(
-    `${API_BASE}/progress/classroom?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/progress/classroom?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -466,7 +482,8 @@ async function generateProgressReportByClassroom(
 async function generateProgressReportByActivity(
   activityId: number,
   entityType: string,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     activityId: String(activityId),
@@ -474,7 +491,7 @@ async function generateProgressReportByActivity(
   });
 
   const res = await fetch(
-    `${API_BASE}/progress/activity?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/progress/activity?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -494,7 +511,8 @@ async function generateProgressReportByActivity(
 async function generateProgressReportByFacilitator(
   facilitatorId: number,
   entityType: string,
-  authHeader: any
+  authHeader: any,
+  type?: string
 ) {
   const params = new URLSearchParams({
     facilitatorId: String(facilitatorId),
@@ -502,7 +520,7 @@ async function generateProgressReportByFacilitator(
   });
 
   const res = await fetch(
-    `${API_BASE}/progress/facilitator?${params.toString()}`,
+    `${API_BASE}/${type || 'pdf'}/progress/facilitator?${params.toString()}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeader },
@@ -537,6 +555,7 @@ export default async function handler(
         teacherId,
         facilitatorId,
         entityType,
+        type,
       } = req.query;
 
       // Marks Reports
@@ -545,14 +564,15 @@ export default async function handler(
           authHeader,
           Number(year),
           classroomId ? Number(classroomId) : undefined,
-          studentId ? Number(studentId) : undefined
+          studentId ? Number(studentId) : undefined,
+          String(type || 'pdf')
         );
         return res
           .status(200)
-          .setHeader("Content-Type", "application/pdf")
+          .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            "attachment; filename=marks_by_student_classroom_year.pdf"
+            `attachment; filename=marks_by_student_classroom_year.${type === "excel" ? "xlsx" : "pdf"}`
           )
           .send(Buffer.from(reportData));
       }

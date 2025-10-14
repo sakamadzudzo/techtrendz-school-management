@@ -14,7 +14,10 @@ export function useGenerateMarksReport() {
   ) => {
     incrementLoading && incrementLoading();
     try {
-      const params = new URLSearchParams({ year: String(reportFilter.year!) });
+      const params = new URLSearchParams({
+        year: String(reportFilter.year!),
+        type: reportFilter.type
+      });
       if (reportFilter.classroomId) params.append("classroomId", String(reportFilter.classroomId));
       if (reportFilter.studentId) params.append("studentId", String(reportFilter.studentId));
 
@@ -63,6 +66,7 @@ export function useGenerateMarksReport() {
       const params = new URLSearchParams({
         year: String(reportFilter.year!),
         subjectId: String(reportFilter.subjectId!),
+        type: reportFilter.type,
       });
       if (reportFilter.studentId) params.append("studentId", String(reportFilter.studentId));
 
@@ -111,6 +115,7 @@ export function useGenerateMarksReport() {
       const params = new URLSearchParams({
         year: String(reportFilter.year!),
         studentId: String(reportFilter.studentId!),
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -157,6 +162,7 @@ export function useGenerateMarksReport() {
     try {
       const params = new URLSearchParams({
         studentId: String(reportFiler.studentId),
+        type: reportFiler.type,
       });
 
       const res = await fetch(
@@ -201,7 +207,10 @@ export function useGenerateMarksReport() {
   ) => {
     incrementLoading && incrementLoading();
     try {
-      const params = new URLSearchParams({ year: String(reportFilter.year!) });
+      const params = new URLSearchParams({
+        year: String(reportFilter.year!),
+        type: reportFilter.type
+      });
 
       const res = await fetch(
         `/api/reports?action=marks-year&${params.toString()}`,
@@ -248,6 +257,7 @@ export function useGenerateMarksReport() {
       const params = new URLSearchParams({
         year: String(reportFiler.year),
         classroomId: String(reportFiler.classroomId),
+        type: reportFiler.type,
       });
 
       const res = await fetch(
@@ -295,6 +305,7 @@ export function useGenerateMarksReport() {
       const params = new URLSearchParams({
         year: String(reportFilter.year!),
         subjectId: String(reportFilter.subjectId!),
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -356,6 +367,7 @@ export function useGenerateRatingsReport() {
       const params = new URLSearchParams({
         year: String(reportFilter.year!),
         activityId: String(reportFilter.extraCurricularId!),
+        type: reportFilter.type,
       });
       if (reportFilter.studentId) params.append("studentId", String(reportFilter.studentId));
 
@@ -404,6 +416,7 @@ export function useGenerateRatingsReport() {
       const params = new URLSearchParams({
         year: String(reportFilter.year!),
         studentId: String(reportFilter.studentId!),
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -451,6 +464,7 @@ export function useGenerateRatingsReport() {
       const params = new URLSearchParams({
         year: String(reportFilter.year!),
         activityId: String(reportFilter.extraCurricularId!),
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -495,7 +509,10 @@ export function useGenerateRatingsReport() {
   ) => {
     incrementLoading && incrementLoading();
     try {
-      const params = new URLSearchParams({ activityId: String(reportFilter.extraCurricularId!) });
+      const params = new URLSearchParams({
+        activityId: String(reportFilter.extraCurricularId!),
+        type: reportFilter.type
+      });
 
       const res = await fetch(
         `/api/reports?action=ratings-activity&${params.toString()}`,
@@ -553,6 +570,7 @@ export function useGenerateTeacherReport() {
       const params = new URLSearchParams({
         year: String(reportFilter.year!),
         teacherId: String(reportFilter.teacherId!),
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -601,6 +619,7 @@ export function useGenerateTeacherReport() {
       const params = new URLSearchParams({
         year: String(reportFilter.year!),
         teacherId: String(reportFilter.teacherId!),
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -658,6 +677,7 @@ export function useGenerateProgressReport() {
       const params = new URLSearchParams({
         studentId: String(reportFilter.studentId!),
         entityType: "student",
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -705,6 +725,7 @@ export function useGenerateProgressReport() {
       const params = new URLSearchParams({
         teacherId: String(reportFilter.teacherId!),
         entityType: "teacher",
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -752,6 +773,7 @@ export function useGenerateProgressReport() {
       const params = new URLSearchParams({
         subjectId: String(reportFilter.subjectId!),
         entityType: "subject",
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -799,6 +821,7 @@ export function useGenerateProgressReport() {
       const params = new URLSearchParams({
         classroomId: String(reportFilter.classroomId!),
         entityType: "classroom",
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -846,6 +869,7 @@ export function useGenerateProgressReport() {
       const params = new URLSearchParams({
         activityId: String(reportFilter.extraCurricularId!),
         entityType: "activity",
+        type: reportFilter.type,
       });
 
       const res = await fetch(
@@ -893,6 +917,7 @@ export function useGenerateProgressReport() {
       const params = new URLSearchParams({
         facilitatorId: String(reportFilter.teacherId!),
         entityType: "facilitator",
+        type: reportFilter.type,
       });
 
       const res = await fetch(
