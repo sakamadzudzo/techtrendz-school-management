@@ -132,10 +132,11 @@ export default function Reports({
     }
 
     try {
+      let reportResult;
       if (reportType?.function) {
         let tempFilter = reportFilter;
         tempFilter.type = type;
-        const reportResult = await reportType.function(tempFilter);
+        reportResult = await reportType.function(tempFilter);
         if (reportResult?.data) {
           setReportData(reportResult.data);
         }
@@ -146,6 +147,22 @@ export default function Reports({
         }
         const data = await res.arrayBuffer();
         setReportData(data);
+        reportResult = { data };
+      }
+
+      // Handle Excel file download
+      if (type === "excel" && reportResult?.data) {
+        const blob = new Blob([reportResult.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${reportType?.title} - ${Date.now()}.xlsx`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       }
     } catch (error) {
       setErrorMessage("Failed to fetch report data");
