@@ -557,7 +557,11 @@ public class ViewProjectionUtils {
                 Projections.constructor(ExtraCurricularYear.class,
                         activityPoint.extraCurricularYear.id,
                         new NullExpression<>(Integer.class),
-                        new NullExpression<>(ExtraCurricular.class),
+                        Projections.constructor(ExtraCurricular.class,
+                                activityPoint.extraCurricularYear.extraCurricular.id,
+                                activityPoint.extraCurricularYear.extraCurricular.name,
+                                activityPoint.extraCurricularYear.extraCurricular.description
+                        ),
                         new NullExpression<>(List.class),
                         new NullExpression<>(List.class),
                         activityPoint.extraCurricularYear.leadFacilitatorId

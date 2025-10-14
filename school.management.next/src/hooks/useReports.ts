@@ -6,9 +6,7 @@ export function useGenerateMarksReport() {
   const token = useSelector((state: RootState) => state.auth.token);
 
   const generateMarksByStudentClassroomYearReport = async (
-    year: number,
-    classroomId?: number,
-    studentId?: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -16,9 +14,9 @@ export function useGenerateMarksReport() {
   ) => {
     incrementLoading && incrementLoading();
     try {
-      const params = new URLSearchParams({ year: String(year) });
-      if (classroomId) params.append("classroomId", String(classroomId));
-      if (studentId) params.append("studentId", String(studentId));
+      const params = new URLSearchParams({ year: String(reportFilter.year!) });
+      if (reportFilter.classroomId) params.append("classroomId", String(reportFilter.classroomId));
+      if (reportFilter.studentId) params.append("studentId", String(reportFilter.studentId));
 
       const res = await fetch(
         `/api/reports?action=marks-student-classroom-year&${params.toString()}`,
@@ -54,9 +52,7 @@ export function useGenerateMarksReport() {
   };
 
   const generateMarksByStudentSubjectYearReport = async (
-    year: number,
-    subjectId: number,
-    studentId?: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -65,10 +61,10 @@ export function useGenerateMarksReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        year: String(year),
-        subjectId: String(subjectId),
+        year: String(reportFilter.year!),
+        subjectId: String(reportFilter.subjectId!),
       });
-      if (studentId) params.append("studentId", String(studentId));
+      if (reportFilter.studentId) params.append("studentId", String(reportFilter.studentId));
 
       const res = await fetch(
         `/api/reports?action=marks-student-subject-year&${params.toString()}`,
@@ -104,8 +100,7 @@ export function useGenerateMarksReport() {
   };
 
   const generateMarksByStudentYearReport = async (
-    year: number,
-    studentId: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -114,8 +109,8 @@ export function useGenerateMarksReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        year: String(year),
-        studentId: String(studentId),
+        year: String(reportFilter.year!),
+        studentId: String(reportFilter.studentId!),
       });
 
       const res = await fetch(
@@ -198,7 +193,7 @@ export function useGenerateMarksReport() {
   };
 
   const generateMarksByYearReport = async (
-    year: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -206,7 +201,7 @@ export function useGenerateMarksReport() {
   ) => {
     incrementLoading && incrementLoading();
     try {
-      const params = new URLSearchParams({ year: String(year) });
+      const params = new URLSearchParams({ year: String(reportFilter.year!) });
 
       const res = await fetch(
         `/api/reports?action=marks-year&${params.toString()}`,
@@ -289,8 +284,7 @@ export function useGenerateMarksReport() {
   };
 
   const generateMarksBySubjectYearReport = async (
-    year: number,
-    subjectId: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -299,8 +293,8 @@ export function useGenerateMarksReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        year: String(year),
-        subjectId: String(subjectId),
+        year: String(reportFilter.year!),
+        subjectId: String(reportFilter.subjectId!),
       });
 
       const res = await fetch(
@@ -351,9 +345,7 @@ export function useGenerateRatingsReport() {
   const token = useSelector((state: RootState) => state.auth.token);
 
   const generateRatingsByStudentActivityYearReport = async (
-    year: number,
-    activityId: number,
-    studentId?: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -362,10 +354,10 @@ export function useGenerateRatingsReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        year: String(year),
-        activityId: String(activityId),
+        year: String(reportFilter.year!),
+        activityId: String(reportFilter.extraCurricularId!),
       });
-      if (studentId) params.append("studentId", String(studentId));
+      if (reportFilter.studentId) params.append("studentId", String(reportFilter.studentId));
 
       const res = await fetch(
         `/api/reports?action=ratings-student-activity-year&${params.toString()}`,
@@ -401,8 +393,7 @@ export function useGenerateRatingsReport() {
   };
 
   const generateRatingsByStudentYearReport = async (
-    year: number,
-    studentId: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -411,8 +402,8 @@ export function useGenerateRatingsReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        year: String(year),
-        studentId: String(studentId),
+        year: String(reportFilter.year!),
+        studentId: String(reportFilter.studentId!),
       });
 
       const res = await fetch(
@@ -449,8 +440,7 @@ export function useGenerateRatingsReport() {
   };
 
   const generateRatingsByActivityYearReport = async (
-    year: number,
-    activityId: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -459,8 +449,8 @@ export function useGenerateRatingsReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        year: String(year),
-        activityId: String(activityId),
+        year: String(reportFilter.year!),
+        activityId: String(reportFilter.extraCurricularId!),
       });
 
       const res = await fetch(
@@ -497,7 +487,7 @@ export function useGenerateRatingsReport() {
   };
 
   const generateRatingsByActivityReport = async (
-    activityId: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -505,7 +495,7 @@ export function useGenerateRatingsReport() {
   ) => {
     incrementLoading && incrementLoading();
     try {
-      const params = new URLSearchParams({ activityId: String(activityId) });
+      const params = new URLSearchParams({ activityId: String(reportFilter.extraCurricularId!) });
 
       const res = await fetch(
         `/api/reports?action=ratings-activity&${params.toString()}`,
@@ -552,8 +542,7 @@ export function useGenerateTeacherReport() {
   const token = useSelector((state: RootState) => state.auth.token);
 
   const generateMarksByTeacherYearReport = async (
-    year: number,
-    teacherId: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -562,8 +551,8 @@ export function useGenerateTeacherReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        year: String(year),
-        teacherId: String(teacherId),
+        year: String(reportFilter.year!),
+        teacherId: String(reportFilter.teacherId!),
       });
 
       const res = await fetch(
@@ -601,8 +590,7 @@ export function useGenerateTeacherReport() {
   };
 
   const generateRatingsByTeacherYearReport = async (
-    year: number,
-    teacherId: number,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -611,8 +599,8 @@ export function useGenerateTeacherReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        year: String(year),
-        teacherId: String(teacherId),
+        year: String(reportFilter.year!),
+        teacherId: String(reportFilter.teacherId!),
       });
 
       const res = await fetch(
@@ -659,8 +647,7 @@ export function useGenerateProgressReport() {
   const token = useSelector((state: RootState) => state.auth.token);
 
   const generateProgressReportByStudent = async (
-    studentId: number,
-    entityType: string,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -669,8 +656,8 @@ export function useGenerateProgressReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        studentId: String(studentId),
-        entityType,
+        studentId: String(reportFilter.studentId!),
+        entityType: "student",
       });
 
       const res = await fetch(
@@ -707,8 +694,7 @@ export function useGenerateProgressReport() {
   };
 
   const generateProgressReportByTeacher = async (
-    teacherId: number,
-    entityType: string,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -717,8 +703,8 @@ export function useGenerateProgressReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        teacherId: String(teacherId),
-        entityType,
+        teacherId: String(reportFilter.teacherId!),
+        entityType: "teacher",
       });
 
       const res = await fetch(
@@ -755,8 +741,7 @@ export function useGenerateProgressReport() {
   };
 
   const generateProgressReportBySubject = async (
-    subjectId: number,
-    entityType: string,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -765,8 +750,8 @@ export function useGenerateProgressReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        subjectId: String(subjectId),
-        entityType,
+        subjectId: String(reportFilter.subjectId!),
+        entityType: "subject",
       });
 
       const res = await fetch(
@@ -803,8 +788,7 @@ export function useGenerateProgressReport() {
   };
 
   const generateProgressReportByClassroom = async (
-    classroomId: number,
-    entityType: string,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -813,8 +797,8 @@ export function useGenerateProgressReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        classroomId: String(classroomId),
-        entityType,
+        classroomId: String(reportFilter.classroomId!),
+        entityType: "classroom",
       });
 
       const res = await fetch(
@@ -851,8 +835,7 @@ export function useGenerateProgressReport() {
   };
 
   const generateProgressReportByActivity = async (
-    activityId: number,
-    entityType: string,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -861,8 +844,8 @@ export function useGenerateProgressReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        activityId: String(activityId),
-        entityType,
+        activityId: String(reportFilter.extraCurricularId!),
+        entityType: "activity",
       });
 
       const res = await fetch(
@@ -899,8 +882,7 @@ export function useGenerateProgressReport() {
   };
 
   const generateProgressReportByFacilitator = async (
-    facilitatorId: number,
-    entityType: string,
+    reportFilter: ReportFilter,
     incrementLoading?: () => void,
     decrementLoading?: () => void,
     onSuccess?: (data: ArrayBuffer) => void,
@@ -909,8 +891,8 @@ export function useGenerateProgressReport() {
     incrementLoading && incrementLoading();
     try {
       const params = new URLSearchParams({
-        facilitatorId: String(facilitatorId),
-        entityType,
+        facilitatorId: String(reportFilter.teacherId!),
+        entityType: "facilitator",
       });
 
       const res = await fetch(

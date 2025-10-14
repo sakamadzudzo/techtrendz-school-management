@@ -93,9 +93,7 @@ export const createReportTypes = (
       index: 3,
       function: (reportFilter: any) => {
         return generateMarksByStudentClassroomYearReport(
-          reportFilter.year!,
-          reportFilter.classroomId,
-          reportFilter.studentId,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -121,9 +119,7 @@ export const createReportTypes = (
       index: 4,
       function: (reportFilter: any) => {
         return generateMarksByStudentSubjectYearReport(
-          reportFilter.year!,
-          reportFilter.subjectId!,
-          reportFilter.studentId,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -149,8 +145,7 @@ export const createReportTypes = (
       index: 5,
       function: (reportFilter: any) => {
         return generateMarksByStudentYearReport(
-          reportFilter.year!,
-          reportFilter.studentId!,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -176,7 +171,7 @@ export const createReportTypes = (
       index: 6,
       function: (reportFilter: any) => {
         return generateMarksByYearReport(
-          reportFilter.year!,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -202,8 +197,7 @@ export const createReportTypes = (
       index: 7,
       function: (reportFilter: any) => {
         return generateMarksBySubjectYearReport(
-          reportFilter.year!,
-          reportFilter.subjectId!,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -229,9 +223,7 @@ export const createReportTypes = (
       index: 8,
       function: (reportFilter: any) => {
         return generateRatingsByStudentActivityYearReport(
-          reportFilter.year!,
-          reportFilter.extraCurricularId!,
-          reportFilter.studentId,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -257,8 +249,7 @@ export const createReportTypes = (
       index: 9,
       function: (reportFilter: any) => {
         return generateRatingsByStudentYearReport(
-          reportFilter.year!,
-          reportFilter.studentId!,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -284,8 +275,7 @@ export const createReportTypes = (
       index: 10,
       function: (reportFilter: any) => {
         return generateRatingsByActivityYearReport(
-          reportFilter.year!,
-          reportFilter.extraCurricularId!,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -311,7 +301,7 @@ export const createReportTypes = (
       index: 11,
       function: (reportFilter: any) => {
         return generateRatingsByActivityReport(
-          reportFilter.extraCurricularId!,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -337,8 +327,7 @@ export const createReportTypes = (
       index: 12,
       function: (reportFilter: any) => {
         return generateMarksByTeacherYearReport(
-          reportFilter.year!,
-          reportFilter.teacherId!,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -364,8 +353,7 @@ export const createReportTypes = (
       index: 13,
       function: (reportFilter: any) => {
         return generateRatingsByTeacherYearReport(
-          reportFilter.year!,
-          reportFilter.teacherId!,
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -391,8 +379,7 @@ export const createReportTypes = (
       index: 14,
       function: (reportFilter: any) => {
         return generateProgressReportByStudent(
-          reportFilter.studentId!,
-          "student",
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -418,8 +405,7 @@ export const createReportTypes = (
       index: 15,
       function: (reportFilter: any) => {
         return generateProgressReportByTeacher(
-          reportFilter.teacherId!,
-          "teacher",
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -445,8 +431,7 @@ export const createReportTypes = (
       index: 16,
       function: (reportFilter: any) => {
         return generateProgressReportBySubject(
-          reportFilter.subjectId!,
-          "subject",
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -472,8 +457,7 @@ export const createReportTypes = (
       index: 17,
       function: (reportFilter: any) => {
         return generateProgressReportByClassroom(
-          reportFilter.classroomId!,
-          "classroom",
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -499,8 +483,7 @@ export const createReportTypes = (
       index: 18,
       function: (reportFilter: any) => {
         return generateProgressReportByActivity(
-          reportFilter.extraCurricularId!,
-          "activity",
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,
@@ -526,8 +509,7 @@ export const createReportTypes = (
       index: 19,
       function: (reportFilter: any) => {
         return generateProgressReportByFacilitator(
-          reportFilter.teacherId!,
-          "facilitator",
+          reportFilter,
           incrementLoading,
           decrementLoading,
           setReportData,

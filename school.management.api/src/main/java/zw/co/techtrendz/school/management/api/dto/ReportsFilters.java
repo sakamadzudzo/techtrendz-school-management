@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Year;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -32,7 +30,7 @@ public class ReportsFilters {
     private List<YearDropdown> extraCurriculars;
 
     @Schema(description = "Calendar years derived from all years used in subject years, or from current going back 10 years")
-    private List<Integer> calendarYears;
+    private List<Integer> calendarYears = new ArrayList<>();
 
     public List<Integer> getCalendarYears() {
         if (this.calendarYears != null && !this.calendarYears.isEmpty()) {
@@ -43,6 +41,7 @@ public class ReportsFilters {
         if (this.students != null && !this.students.isEmpty()) {
             Set<Integer> temp = this.students
                     .parallelStream()
+                    .filter(item -> item.getCalendarYear() != null)
                     .mapToInt(YearDropdown::getCalendarYear)
                     .boxed()
                     .collect(Collectors.toCollection(
@@ -54,6 +53,7 @@ public class ReportsFilters {
         if (this.teachers != null && !this.teachers.isEmpty()) {
             Set<Integer> temp = this.teachers
                     .parallelStream()
+                    .filter(item -> item.getCalendarYear() != null)
                     .mapToInt(YearDropdown::getCalendarYear)
                     .boxed()
                     .collect(Collectors.toCollection(
@@ -65,6 +65,7 @@ public class ReportsFilters {
         if (this.courseworks != null && !this.courseworks.isEmpty()) {
             Set<Integer> temp = this.courseworks
                     .parallelStream()
+                    .filter(item -> item.getCalendarYear() != null)
                     .mapToInt(CourseworkDropdown::getCalendarYear)
                     .boxed()
                     .collect(Collectors.toCollection(
@@ -76,6 +77,7 @@ public class ReportsFilters {
         if (this.classrooms != null && !this.classrooms.isEmpty()) {
             Set<Integer> temp = this.classrooms
                     .parallelStream()
+                    .filter(item -> item.getCalendarYear() != null)
                     .mapToInt(YearDropdown::getCalendarYear)
                     .boxed()
                     .collect(Collectors.toCollection(
@@ -87,6 +89,7 @@ public class ReportsFilters {
         if (this.subjects != null && !this.subjects.isEmpty()) {
             Set<Integer> temp = this.subjects
                     .parallelStream()
+                    .filter(item -> item.getCalendarYear() != null)
                     .mapToInt(YearDropdown::getCalendarYear)
                     .boxed()
                     .collect(Collectors.toCollection(
@@ -98,6 +101,7 @@ public class ReportsFilters {
         if (this.extraCurriculars != null && !this.extraCurriculars.isEmpty()) {
             Set<Integer> temp = this.extraCurriculars
                     .parallelStream()
+                    .filter(item -> item.getCalendarYear() != null)
                     .mapToInt(YearDropdown::getCalendarYear)
                     .boxed()
                     .collect(Collectors.toCollection(
@@ -117,8 +121,8 @@ public class ReportsFilters {
             calendarYears.addAll(temp);
         }
 
-        return calendarYears
-                .stream()
-                .toList();
+        this.calendarYears = new ArrayList<>(calendarYears);
+        Collections.sort(this.calendarYears);
+        return this.calendarYears;
     }
 }
