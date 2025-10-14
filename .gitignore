@@ -2,3 +2,4 @@ school.management.api/schoolmanage.mv.db
 school.management.api/schoolmanage.trace.db
 school.management.api/src/main/resources/reports/compiled/
 school.management.api/logs/
+school.management.api/report_parameter_examples.json

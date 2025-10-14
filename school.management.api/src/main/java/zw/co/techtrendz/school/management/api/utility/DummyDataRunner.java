@@ -21,6 +21,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Component
 public class DummyDataRunner {
@@ -133,6 +138,9 @@ public class DummyDataRunner {
         this.dummyCoursework();
         this.dummyActivityPoint();
         this.dummyRating();
+
+        // Generate example parameter data for all PDF reports
+        this.generateReportParameterExamples();
     }
 
     private void dummyPersons() {
@@ -859,6 +867,234 @@ public class DummyDataRunner {
         } else {
             Logger.getLogger(DummyDataRunner.class.getName()).log(Level.WARNING,
                 "No valid ratings to save - activity points may be missing or invalid");
+        }
+    }
+
+    private void generateReportParameterExamples() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Generating example parameter data for PDF reports...");
+
+        try {
+            // Fetch actual entities from database for realistic examples
+            List<Classroom> classrooms = this.classroomService.getAll(0, 10, Arrays.asList("name"), Sort.Direction.ASC).getContent();
+            List<Subject> subjects = this.subjectService.getAll(0, 10, Arrays.asList("name"), Sort.Direction.ASC).getContent();
+            List<Student> students = this.studentService.getAll(0, 10, Arrays.asList("person.lastName"), Sort.Direction.ASC).getContent();
+            List<Teacher> teachers = this.teacherService.getAll(0, 10, Arrays.asList("person.lastName"), Sort.Direction.ASC).getContent();
+            List<ExtraCurricular> activities = this.extraCurricularService.getAll(0, 10, Arrays.asList("name"), Sort.Direction.ASC).getContent();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectNode rootNode = objectMapper.createObjectNode();
+
+            // Marks Reports
+            ObjectNode marksReports = objectMapper.createObjectNode();
+
+            if (!classrooms.isEmpty() && !students.isEmpty()) {
+                Classroom firstClassroom = classrooms.get(0);
+                Student firstStudent = students.get(0);
+
+                ObjectNode studentClassroomYearParams = objectMapper.createObjectNode();
+                studentClassroomYearParams.put("year", 2024);
+                studentClassroomYearParams.put("classroomId", firstClassroom.getId());
+                studentClassroomYearParams.put("classroomName", firstClassroom.getName());
+                studentClassroomYearParams.put("studentId", firstStudent.getId());
+                studentClassroomYearParams.put("studentName", firstStudent.getPerson().getFirstName() + " " + firstStudent.getPerson().getLastName());
+                marksReports.set("marks_by_student_classroom_year", studentClassroomYearParams);
+            }
+
+            if (!subjects.isEmpty() && !students.isEmpty()) {
+                Subject firstSubject = subjects.get(0);
+                Student firstStudent = students.get(0);
+
+                ObjectNode studentSubjectYearParams = objectMapper.createObjectNode();
+                studentSubjectYearParams.put("year", 2024);
+                studentSubjectYearParams.put("subjectId", firstSubject.getId());
+                studentSubjectYearParams.put("subjectName", firstSubject.getName());
+                studentSubjectYearParams.put("studentId", firstStudent.getId());
+                studentSubjectYearParams.put("studentName", firstStudent.getPerson().getFirstName() + " " + firstStudent.getPerson().getLastName());
+                marksReports.set("marks_by_student_subject_year", studentSubjectYearParams);
+            }
+
+            if (!students.isEmpty()) {
+                Student firstStudent = students.get(0);
+
+                ObjectNode studentYearParams = objectMapper.createObjectNode();
+                studentYearParams.put("year", 2024);
+                studentYearParams.put("studentId", firstStudent.getId());
+                studentYearParams.put("studentName", firstStudent.getPerson().getFirstName() + " " + firstStudent.getPerson().getLastName());
+                marksReports.set("marks_by_student_year", studentYearParams);
+
+                ObjectNode studentParams = objectMapper.createObjectNode();
+                studentParams.put("studentId", firstStudent.getId());
+                studentParams.put("studentName", firstStudent.getPerson().getFirstName() + " " + firstStudent.getPerson().getLastName());
+                marksReports.set("marks_by_student", studentParams);
+            }
+
+            ObjectNode yearParams = objectMapper.createObjectNode();
+            yearParams.put("year", 2024);
+            marksReports.set("marks_by_year", yearParams);
+
+            if (!classrooms.isEmpty()) {
+                Classroom firstClassroom = classrooms.get(0);
+
+                ObjectNode classroomYearParams = objectMapper.createObjectNode();
+                classroomYearParams.put("year", 2024);
+                classroomYearParams.put("classroomId", firstClassroom.getId());
+                classroomYearParams.put("classroomName", firstClassroom.getName());
+                marksReports.set("marks_by_classroom_year", classroomYearParams);
+            }
+
+            if (!subjects.isEmpty()) {
+                Subject firstSubject = subjects.get(0);
+
+                ObjectNode subjectYearParams = objectMapper.createObjectNode();
+                subjectYearParams.put("year", 2024);
+                subjectYearParams.put("subjectId", firstSubject.getId());
+                subjectYearParams.put("subjectName", firstSubject.getName());
+                marksReports.set("marks_by_subject_year", subjectYearParams);
+            }
+
+            rootNode.set("marks_reports", marksReports);
+
+            // Ratings Reports
+            ObjectNode ratingsReports = objectMapper.createObjectNode();
+
+            if (!activities.isEmpty() && !students.isEmpty()) {
+                ExtraCurricular firstActivity = activities.get(0);
+                Student firstStudent = students.get(0);
+
+                ObjectNode studentActivityYearParams = objectMapper.createObjectNode();
+                studentActivityYearParams.put("year", 2024);
+                studentActivityYearParams.put("activityId", firstActivity.getId());
+                studentActivityYearParams.put("activityName", firstActivity.getName());
+                studentActivityYearParams.put("studentId", firstStudent.getId());
+                studentActivityYearParams.put("studentName", firstStudent.getPerson().getFirstName() + " " + firstStudent.getPerson().getLastName());
+                ratingsReports.set("ratings_by_student_activity_year", studentActivityYearParams);
+            }
+
+            if (!students.isEmpty()) {
+                Student firstStudent = students.get(0);
+
+                ObjectNode ratingsStudentYearParams = objectMapper.createObjectNode();
+                ratingsStudentYearParams.put("year", 2024);
+                ratingsStudentYearParams.put("studentId", firstStudent.getId());
+                ratingsStudentYearParams.put("studentName", firstStudent.getPerson().getFirstName() + " " + firstStudent.getPerson().getLastName());
+                ratingsReports.set("ratings_by_student_year", ratingsStudentYearParams);
+            }
+
+            if (!activities.isEmpty()) {
+                ExtraCurricular firstActivity = activities.get(0);
+
+                ObjectNode activityYearParams = objectMapper.createObjectNode();
+                activityYearParams.put("year", 2024);
+                activityYearParams.put("activityId", firstActivity.getId());
+                activityYearParams.put("activityName", firstActivity.getName());
+                ratingsReports.set("ratings_by_activity_year", activityYearParams);
+
+                ObjectNode activityParams = objectMapper.createObjectNode();
+                activityParams.put("activityId", firstActivity.getId());
+                activityParams.put("activityName", firstActivity.getName());
+                ratingsReports.set("ratings_by_activity", activityParams);
+            }
+
+            rootNode.set("ratings_reports", ratingsReports);
+
+            // Teacher Reports
+            ObjectNode teacherReports = objectMapper.createObjectNode();
+
+            if (!teachers.isEmpty()) {
+                Teacher firstTeacher = teachers.get(0);
+
+                ObjectNode teacherMarksYearParams = objectMapper.createObjectNode();
+                teacherMarksYearParams.put("year", 2024);
+                teacherMarksYearParams.put("teacherId", firstTeacher.getId());
+                teacherMarksYearParams.put("teacherName", firstTeacher.getPerson().getFirstName() + " " + firstTeacher.getPerson().getLastName());
+                teacherReports.set("marks_by_teacher_year", teacherMarksYearParams);
+
+                ObjectNode teacherRatingsYearParams = objectMapper.createObjectNode();
+                teacherRatingsYearParams.put("year", 2024);
+                teacherRatingsYearParams.put("teacherId", firstTeacher.getId());
+                teacherRatingsYearParams.put("teacherName", firstTeacher.getPerson().getFirstName() + " " + firstTeacher.getPerson().getLastName());
+                teacherReports.set("ratings_by_teacher_year", teacherRatingsYearParams);
+            }
+
+            rootNode.set("teacher_reports", teacherReports);
+
+            // Progress Reports
+            ObjectNode progressReports = objectMapper.createObjectNode();
+
+            if (!students.isEmpty()) {
+                Student firstStudent = students.get(0);
+
+                ObjectNode studentProgressParams = objectMapper.createObjectNode();
+                studentProgressParams.put("studentId", firstStudent.getId());
+                studentProgressParams.put("studentName", firstStudent.getPerson().getFirstName() + " " + firstStudent.getPerson().getLastName());
+                studentProgressParams.put("entityType", "comprehensive");
+                progressReports.set("progress_by_student", studentProgressParams);
+            }
+
+            if (!teachers.isEmpty()) {
+                Teacher firstTeacher = teachers.get(0);
+
+                ObjectNode teacherProgressParams = objectMapper.createObjectNode();
+                teacherProgressParams.put("teacherId", firstTeacher.getId());
+                teacherProgressParams.put("teacherName", firstTeacher.getPerson().getFirstName() + " " + firstTeacher.getPerson().getLastName());
+                teacherProgressParams.put("entityType", "academic");
+                progressReports.set("progress_by_teacher", teacherProgressParams);
+            }
+
+            if (!subjects.isEmpty()) {
+                Subject firstSubject = subjects.get(0);
+
+                ObjectNode subjectProgressParams = objectMapper.createObjectNode();
+                subjectProgressParams.put("subjectId", firstSubject.getId());
+                subjectProgressParams.put("subjectName", firstSubject.getName());
+                subjectProgressParams.put("entityType", "detailed");
+                progressReports.set("progress_by_subject", subjectProgressParams);
+            }
+
+            if (!classrooms.isEmpty()) {
+                Classroom firstClassroom = classrooms.get(0);
+
+                ObjectNode classroomProgressParams = objectMapper.createObjectNode();
+                classroomProgressParams.put("classroomId", firstClassroom.getId());
+                classroomProgressParams.put("classroomName", firstClassroom.getName());
+                classroomProgressParams.put("entityType", "summary");
+                progressReports.set("progress_by_classroom", classroomProgressParams);
+            }
+
+            if (!activities.isEmpty()) {
+                ExtraCurricular firstActivity = activities.get(0);
+
+                ObjectNode activityProgressParams = objectMapper.createObjectNode();
+                activityProgressParams.put("activityId", firstActivity.getId());
+                activityProgressParams.put("activityName", firstActivity.getName());
+                activityProgressParams.put("entityType", "comprehensive");
+                progressReports.set("progress_by_activity", activityProgressParams);
+            }
+
+            if (!teachers.isEmpty()) {
+                Teacher firstTeacher = teachers.get(0);
+
+                ObjectNode facilitatorProgressParams = objectMapper.createObjectNode();
+                facilitatorProgressParams.put("facilitatorId", firstTeacher.getId());
+                facilitatorProgressParams.put("facilitatorName", firstTeacher.getPerson().getFirstName() + " " + firstTeacher.getPerson().getLastName());
+                facilitatorProgressParams.put("entityType", "detailed");
+                progressReports.set("progress_by_facilitator", facilitatorProgressParams);
+            }
+
+            rootNode.set("progress_reports", progressReports);
+
+            // Write to file
+            String filePath = "report_parameter_examples.json";
+            try (FileWriter fileWriter = new FileWriter(filePath)) {
+                fileWriter.write(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode));
+            }
+
+            Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO,
+                "Report parameter examples saved to: " + filePath);
+
+        } catch (IOException e) {
+            Logger.getLogger(DummyDataRunner.class.getName()).log(Level.SEVERE,
+                "Failed to generate report parameter examples", e);
         }
     }
 }

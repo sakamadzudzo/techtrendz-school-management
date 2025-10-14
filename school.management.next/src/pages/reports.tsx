@@ -1,5 +1,12 @@
 import React, { useCallback, useState } from "react";
-import { Form, Card, CardFooter, Button, Tooltip, Divider } from "@heroui/react";
+import {
+  Form,
+  Card,
+  CardFooter,
+  Button,
+  Tooltip,
+  Divider,
+} from "@heroui/react";
 import { ArrowClockwiseIcon, ClipboardIcon } from "@phosphor-icons/react";
 import EditFormWrapper from "@/components/EditFormWrapper";
 import { Wrapper } from "@/components/Wrapper";
@@ -126,49 +133,61 @@ export default function Reports({
     }
   }, [mutate, isError, setErrorMessage, setStatusCode]);
 
-  const fetchReport = useCallback(async (type: "pdf" | "excel") => {
-    if (!validate()) {
-      return;
-    }
-
-    try {
-      let reportResult;
-      if (reportType?.function) {
-        let tempFilter = reportFilter;
-        tempFilter.type = type;
-        reportResult = await reportType.function(tempFilter);
-        if (reportResult?.data) {
-          setReportData(reportResult.data);
-        }
-      } else {
-        const res = await fetch(reportType?.endpoint || '');
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const data = await res.arrayBuffer();
-        setReportData(data);
-        reportResult = { data };
+  const fetchReport = useCallback(
+    async (type: "pdf" | "excel") => {
+      if (!validate()) {
+        return;
       }
 
-      // Handle Excel file download
-      if (type === "excel" && reportResult?.data) {
-        const blob = new Blob([reportResult.data], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${reportType?.title} - ${Date.now()}.xlsx`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+      try {
+        let reportResult;
+        if (reportType?.function) {
+          let tempFilter = reportFilter;
+          tempFilter.type = type;
+          reportResult = await reportType.function(tempFilter);
+          if (reportResult?.data) {
+            setReportData(reportResult.data);
+          }
+        } else {
+          const res = await fetch(reportType?.endpoint || "");
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          const data = await res.arrayBuffer();
+          setReportData(data);
+          reportResult = { data };
+        }
+
+        // Handle Excel file download
+        if (type === "excel" && reportResult?.data) {
+          const blob = new Blob([reportResult.data], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+          const date = new Date();
+          const dateString = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `${reportType?.title} - ${dateString}.xlsx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }
+      } catch (error) {
+        setErrorMessage("Failed to fetch report data");
+        setStatusCode(500);
       }
-    } catch (error) {
-      setErrorMessage("Failed to fetch report data");
-      setStatusCode(500);
-    }
-  }, [validate, reportType, reportFilter, setReportData, setErrorMessage, setStatusCode]);
+    },
+    [
+      validate,
+      reportType,
+      reportFilter,
+      setReportData,
+      setErrorMessage,
+      setStatusCode,
+    ]
+  );
 
   const hasFilterData = React.useMemo(() => {
     if (
