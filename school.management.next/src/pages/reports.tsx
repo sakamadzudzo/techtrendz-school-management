@@ -133,7 +133,9 @@ export default function Reports({
 
     try {
       if (reportType?.function) {
-        const reportResult = await reportType.function({ ...reportFilter, type });
+        let tempFilter = reportFilter;
+        tempFilter.type = type;
+        const reportResult = await reportType.function(tempFilter);
         if (reportResult?.data) {
           setReportData(reportResult.data);
         }
