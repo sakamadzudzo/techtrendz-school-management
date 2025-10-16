@@ -8,6 +8,8 @@ import {
   ExtraCurricular,
   ExtraCurricularYear,
   ExtraCurricularYearView,
+  Parent,
+  ParentView,
   Person,
   Student,
   StudentView,
@@ -299,4 +301,37 @@ export const subjectViewToSubjectYear = (dto: any): SubjectYear => {
     },
     teacher: teacherViewToTeacher(dto.teacher),
   };
+};
+
+export const parentViewToParent = (dto: ParentView): Parent => {
+  const parent = {} as Parent;
+  const person = {} as Person;
+
+  person.id = dto.id;
+  person.salutation = dto.salutation;
+  person.firstName = dto.firstName;
+  person.otherNames = dto.otherNames;
+  person.lastName = dto.lastName;
+  person.email = dto.email;
+  person.mobileNumber = dto.mobileNumber;
+  person.mobileNumber2 = dto.mobileNumber2;
+  person.telNumber = dto.telNumber;
+  person.whatsapp = dto.whatsapp;
+  person.facebook = dto.facebook;
+  person.linkedin = dto.linkedin;
+  person.dateOfBirth = dto.dateOfBirth;
+  person.status = dto.status;
+  person.datestamp = dto.datestamp;
+  person.name = dto.name;
+  person.fullname = dto.fullname;
+  person.avatarUrl = dto.avatarUrl;
+  person.imagesUrls = dto.imagesUrls;
+
+  parent.id = dto.id;
+  parent.person = person;
+  parent.datestamp = dto.datestamp;
+  parent.status = dto.status;
+  parent.students = dto.students?.map(studentViewToStudent) || [];
+
+  return parent;
 };

@@ -31,16 +31,19 @@ public class StudentQueryService {
 
     public StudentDto getStudentDetails(Long studentId) {
         QStudent student = QStudent.student;
+        QDorm dorm = QDorm.dorm;
 
         return queryFactory.select(
                         ViewProjectionUtils.getStudentWithClassroomProjection()
                 ).from(student)
+                .leftJoin(student.dorm.dorm, dorm)
                 .where(student.id.eq(studentId))
                 .fetchOne();
     }
 
     public Page<StudentDto> getAllStudentDetails(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         QStudent student = QStudent.student;
+        QDorm dorm = QDorm.dorm;
 
         List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
 
@@ -50,6 +53,7 @@ public class StudentQueryService {
                         ViewProjectionUtils.getStudentWithClassroomProjection()
                 )
                 .from(student)
+                .leftJoin(student.dorm.dorm, dorm)
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -62,6 +66,7 @@ public class StudentQueryService {
 
     public Page<StudentDto> getAllStudentDetailsByPredicate(int page, int size, List<String> sortBy, Sort.Direction sortDir, BooleanExpression predicate) {
         QStudent student = QStudent.student;
+        QDorm dorm = QDorm.dorm;
 
         List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
 
@@ -70,6 +75,7 @@ public class StudentQueryService {
         List<StudentDto> studentDtoList = queryFactory.select(
                         ViewProjectionUtils.getStudentWithClassroomProjection()
                 ).from(student)
+                .leftJoin(student.dorm.dorm, dorm)
                 .where(predicate)
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .offset(pageable.getOffset())
@@ -83,6 +89,7 @@ public class StudentQueryService {
 
     public Page<StudentDto> getAllStudentDetailsByExample(int page, int size, List<String> sortBy, Sort.Direction sortDir, Example<Student> example) {
         QStudent student = QStudent.student;
+        QDorm dorm = QDorm.dorm;
 
         List<OrderSpecifier<?>> orderSpecifiers = this.getOrderSpecifiers(sortBy, sortDir);
 
@@ -91,6 +98,7 @@ public class StudentQueryService {
         List<StudentDto> studentDtoList = queryFactory.select(
                         ViewProjectionUtils.getStudentWithClassroomProjection()
                 ).from(student)
+                .leftJoin(student.dorm.dorm, dorm)
                 .where(QuerydslUtils.toPredicate(example, Student.class, "student"))
                 .orderBy(orderSpecifiers.toArray(new com.querydsl.core.types.OrderSpecifier[0]))
                 .offset(pageable.getOffset())

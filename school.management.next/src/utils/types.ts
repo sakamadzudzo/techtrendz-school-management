@@ -126,6 +126,14 @@ export type Student = {
   school: School;
 };
 
+export type Parent = {
+  datestamp: Date | string;
+  status: string;
+  id: number;
+  person: Person;
+  students: Student[];
+};
+
 export type ExtraCurricular = {
   datestamp: Date | string;
   status: string;
@@ -232,6 +240,29 @@ export type StudentView = {
   school: SchoolView;
   startYear: string;
   endYear: string;
+  name: string;
+  fullname: string;
+  avatarUrl: string;
+  imagesUrls: string[];
+};
+
+export type ParentView = {
+  id: number;
+  salutation: string;
+  firstName: string;
+  otherNames: string;
+  lastName: string;
+  dateOfBirth: string;
+  email: string;
+  mobileNumber: string;
+  mobileNumber2: string;
+  telNumber: string;
+  whatsapp: string;
+  facebook: string;
+  linkedin: string;
+  status: string;
+  datestamp: Date | string;
+  students: StudentView[];
   name: string;
   fullname: string;
   avatarUrl: string;

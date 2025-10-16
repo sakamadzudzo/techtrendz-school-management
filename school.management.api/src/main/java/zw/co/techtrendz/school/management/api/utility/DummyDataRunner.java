@@ -47,6 +47,7 @@ public class DummyDataRunner {
     private final ActivityPointService activityPointService;
     private final RatingService ratingService;
     private final MarkService markService;
+    private final ParentService parentService;
 
     // Simulation range: 5 years
     private final List<Integer> CALENDAR_YEARS = IntStream.rangeClosed(2021, 2025).boxed().collect(Collectors.toList());
@@ -78,7 +79,8 @@ public class DummyDataRunner {
             CourseworkService courseworkService,
             ActivityPointService activityPointService,
             RatingService ratingService,
-            MarkService markService
+            MarkService markService,
+            ParentService parentService
     ) {
         this.classroomService = classroomService;
         this.classroomYearService = classroomYearService;
@@ -97,6 +99,7 @@ public class DummyDataRunner {
         this.activityPointService = activityPointService;
         this.ratingService = ratingService;
         this.markService = markService;
+        this.parentService = parentService;
     }
 
     @Bean
@@ -133,6 +136,7 @@ public class DummyDataRunner {
         this.dummyDorm();
         this.dummyDormYear();
         this.dummyStudent();
+        this.dummyParent();
         this.dummyExtraCurricular();
         this.dummyExtraCurricularYear();
         this.dummyCoursework();
@@ -529,6 +533,81 @@ public class DummyDataRunner {
         }
 
         this.studentService.saveAll(students);
+    }
+
+    private void dummyParent() {
+        Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy parents...");
+        
+        List<Student> allStudents = this.studentService.getAll(0, 1000, Arrays.asList("person.lastName"), Sort.Direction.ASC).getContent();
+        if (allStudents.isEmpty()) return;
+        
+        List<Parent> parents = new ArrayList<>();
+        Random random = new Random();
+        
+        // Create 50 parents
+        for (int i = 0; i < 50; i++) {
+            Person person = new Person();
+            person.setSalutation(random.nextBoolean() ? Salutation.MR : Salutation.MS);
+            person.setFirstName(getRandomParentFirstName(random));
+            person.setOtherNames(random.nextBoolean() ? getRandomParentFirstName(random) : "");
+            person.setLastName(getRandomParentLastName(random));
+            person.setEmail(person.getFirstName().toLowerCase() + "." + person.getLastName().toLowerCase() + "@parentmail.co.zw");
+            person.setMobileNumber("07" + (70000000 + random.nextInt(9999999)));
+            person.setDateOfBirth(LocalDate.of(1970 + random.nextInt(25), 1 + random.nextInt(12), 1 + random.nextInt(28)));
+            person.setWhatsapp(person.getMobileNumber());
+            
+            Parent parent = new Parent();
+            parent.setPerson(person);
+            
+            // Assign 1-5 students to each parent
+            int studentCount = 1 + random.nextInt(5);
+            List<Student> parentStudents = new ArrayList<>();
+            for (int j = 0; j < studentCount; j++) {
+                Student student = allStudents.get(random.nextInt(allStudents.size()));
+                if (!parentStudents.contains(student)) {
+                    parentStudents.add(student);
+                }
+            }
+            parent.setStudents(parentStudents);
+            parents.add(parent);
+        }
+        
+        // Ensure some students have two parents
+        for (int i = 0; i < 20; i++) {
+            Student student = allStudents.get(random.nextInt(allStudents.size()));
+            Parent parent1 = parents.get(random.nextInt(parents.size()));
+            Parent parent2 = parents.get(random.nextInt(parents.size()));
+            
+            if (!parent1.equals(parent2)) {
+                if (!parent1.getStudents().contains(student)) {
+                    parent1.getStudents().add(student);
+                }
+                if (!parent2.getStudents().contains(student)) {
+                    parent2.getStudents().add(student);
+                }
+            }
+        }
+        
+        this.parentService.saveAll(parents);
+    }
+    
+    private String getRandomParentFirstName(Random random) {
+        String[] names = {
+            "Tendai", "Chipo", "Farai", "Rudo", "Tinashe", "Vimbai", "Kudzai", "Nyasha",
+            "Tafadzwa", "Rumbidzai", "Munyaradzi", "Fadzai", "Takudzwa", "Chenai",
+            "Thandeka", "Bongani", "Lindiwe", "Sipho", "Nomsa", "Themba", "Zanele",
+            "Michael", "Sarah", "David", "Grace", "Peter", "Mary", "John", "Elizabeth"
+        };
+        return names[random.nextInt(names.length)];
+    }
+    
+    private String getRandomParentLastName(Random random) {
+        String[] names = {
+            "Moyo", "Ncube", "Dube", "Sibanda", "Mpofu", "Nyoni", "Banda", "Chigumba",
+            "Mutasa", "Chirwa", "Makoni", "Zhou", "Mtetwa", "Marufu", "Hove",
+            "Smith", "Brown", "Johnson", "Williams", "Jones", "Davis", "Miller"
+        };
+        return names[random.nextInt(names.length)];
     }
 
     private void dummyUser() {

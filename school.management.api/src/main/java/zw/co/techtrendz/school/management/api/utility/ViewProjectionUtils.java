@@ -304,6 +304,7 @@ public class ViewProjectionUtils {
 
     public static ConstructorExpression<StudentDto> getStudentWithClassroomProjection() {
         QStudent student = QStudent.student;
+        QDorm dorm = QDorm.dorm;
 
         return Projections.constructor(StudentDto.class,
                 student.id,
@@ -336,7 +337,7 @@ public class ViewProjectionUtils {
                         student.dorm.dorm.description,
                         student.dorm.dorm.address,
                         student.dorm.calendarYear,
-                        student.dorm.dorm.school.name,
+                        dorm.school.name,
                         new NullExpression<>(List.class),
                         student.dorm.id,
                         student.dorm.status,
