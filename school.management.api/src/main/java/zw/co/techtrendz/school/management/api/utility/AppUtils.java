@@ -57,7 +57,7 @@ public class AppUtils {
             throw new UserCreationException("Email already in use: " + user.getPerson().getEmail());
         }
         if (userService.existsByUsername(user.getUsername(), user.getId())) {
-            throw new UserCreationException("Username already in use");
+            throw new UserCreationException("Username already in use: " + user.getUsername());
         }
     }
 
