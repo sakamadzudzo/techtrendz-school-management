@@ -54,7 +54,7 @@ public class AppUtils {
             throw new UserCreationException("Email cannot be null or empty");
         }
         if (userService.existsByEmail(user.getPerson().getEmail(), user.getId())) {
-            throw new UserCreationException("Email already in use");
+            throw new UserCreationException("Email already in use: " + user.getPerson().getEmail());
         }
         if (userService.existsByUsername(user.getUsername(), user.getId())) {
             throw new UserCreationException("Username already in use");

@@ -259,7 +259,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByEmail(String email, Long id) {
         if (id == null || id.equals(0L)) {
-            return this.existsByEmail(email);
+            BooleanExpression predicate = QuerydslUtils.exactMatch(User.class, "person.email", email, "user");
+            UserDto userDto = this.userQueryService.getUserDetails(predicate);
+            return userDto != null;
         }
         BooleanExpression predicate = QuerydslUtils.exactMatch(User.class, "person.email", email, "user");
         predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.exactMatch(User.class, "id", id, "user").not(), true);
