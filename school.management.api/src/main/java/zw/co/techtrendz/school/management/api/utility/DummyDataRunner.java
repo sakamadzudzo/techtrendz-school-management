@@ -1,5 +1,8 @@
 package zw.co.techtrendz.school.management.api.utility;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Sort;
@@ -7,25 +10,21 @@ import org.springframework.stereotype.Component;
 import zw.co.techtrendz.school.management.api.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.entity.*;
 import zw.co.techtrendz.school.management.api.enums.*;
+import zw.co.techtrendz.school.management.api.querydsl.ActivityPointQueryService;
+import zw.co.techtrendz.school.management.api.querydsl.MarkQueryService;
 import zw.co.techtrendz.school.management.api.service.*;
 import zw.co.techtrendz.school.management.api.view.ExtraCurricularYearDto;
 import zw.co.techtrendz.school.management.api.view.StudentDto;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Component
 public class DummyDataRunner {
@@ -48,6 +47,9 @@ public class DummyDataRunner {
     private final RatingService ratingService;
     private final MarkService markService;
     private final ParentService parentService;
+    private final MarkQueryService markQueryService;
+    private final ActivityPointQueryService activityPointQueryService;
+    private final JPAQueryFactory queryFactory;
 
     // Simulation range: 5 years
     private final List<Integer> CALENDAR_YEARS = IntStream.rangeClosed(2021, 2025).boxed().collect(Collectors.toList());
@@ -61,6 +63,8 @@ public class DummyDataRunner {
     // Saved school and dorms (to avoid hardcoded IDs)
     private School savedSchool;
     private final List<Dorm> savedDorms = new ArrayList<>();
+    private final Map<String, Boolean> usedEmails = new HashMap<>();
+    private final Map<String, Boolean> usedUsernames = new HashMap<>();
 
     public DummyDataRunner(
             ClassroomService classroomService,
@@ -80,7 +84,10 @@ public class DummyDataRunner {
             ActivityPointService activityPointService,
             RatingService ratingService,
             MarkService markService,
-            ParentService parentService
+            ParentService parentService,
+            MarkQueryService markQueryService,
+            ActivityPointQueryService activityPointQueryService,
+            JPAQueryFactory queryFactory
     ) {
         this.classroomService = classroomService;
         this.classroomYearService = classroomYearService;
@@ -100,6 +107,9 @@ public class DummyDataRunner {
         this.ratingService = ratingService;
         this.markService = markService;
         this.parentService = parentService;
+        this.markQueryService = markQueryService;
+        this.activityPointQueryService = activityPointQueryService;
+        this.queryFactory = queryFactory;
     }
 
     @Bean
@@ -537,13 +547,13 @@ public class DummyDataRunner {
 
     private void dummyParent() {
         Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "Inserting dummy parents...");
-        
+
         List<Student> allStudents = this.studentService.getAll(0, 1000, Arrays.asList("person.lastName"), Sort.Direction.ASC).getContent();
         if (allStudents.isEmpty()) return;
-        
+
         List<Parent> parents = new ArrayList<>();
         Random random = new Random();
-        
+
         // Create 50 parents
         for (int i = 0; i < 50; i++) {
             Person person = new Person();
@@ -551,14 +561,23 @@ public class DummyDataRunner {
             person.setFirstName(getRandomParentFirstName(random));
             person.setOtherNames(random.nextBoolean() ? getRandomParentFirstName(random) : "");
             person.setLastName(getRandomParentLastName(random));
-            person.setEmail(person.getFirstName().toLowerCase() + "." + person.getLastName().toLowerCase() + "@parentmail.co.zw");
+            String email = person.getFirstName().toLowerCase() + "." + person.getLastName().toLowerCase();
+            while (this.userService.existsByEmail(email + "@parentmail.co.zw", null)) {
+                email += "1";
+            }
+            while (this.usedEmails.get(email + "@parentmail.co.zw") != null) {
+                email += "1";
+            }
+            this.usedEmails.put(email + "@parentmail.co.zw", true);
+//            Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO, "\n\n\n" + email + "@parentmail.co.zw" + "\n\n\n");
+            person.setEmail(email + "@parentmail.co.zw");
             person.setMobileNumber("07" + (70000000 + random.nextInt(9999999)));
             person.setDateOfBirth(LocalDate.of(1970 + random.nextInt(25), 1 + random.nextInt(12), 1 + random.nextInt(28)));
             person.setWhatsapp(person.getMobileNumber());
-            
+
             Parent parent = new Parent();
             parent.setPerson(person);
-            
+
             // Assign 1-5 students to each parent
             int studentCount = 1 + random.nextInt(5);
             List<Student> parentStudents = new ArrayList<>();
@@ -571,13 +590,13 @@ public class DummyDataRunner {
             parent.setStudents(parentStudents);
             parents.add(parent);
         }
-        
+
         // Ensure some students have two parents
         for (int i = 0; i < 20; i++) {
             Student student = allStudents.get(random.nextInt(allStudents.size()));
             Parent parent1 = parents.get(random.nextInt(parents.size()));
             Parent parent2 = parents.get(random.nextInt(parents.size()));
-            
+
             if (!parent1.equals(parent2)) {
                 if (!parent1.getStudents().contains(student)) {
                     parent1.getStudents().add(student);
@@ -587,25 +606,48 @@ public class DummyDataRunner {
                 }
             }
         }
-        
-        this.parentService.saveAll(parents);
+
+        List<Parent> savedParents = this.parentService.saveAll(parents);
+
+        // Create user accounts for each parent
+        List<User> parentUsers = new ArrayList<>();
+        for (Parent parent : savedParents) {
+            User user = new User();
+            String username = parent.getPerson().getFirstName().toLowerCase() + parent.getPerson().getLastName().toLowerCase();
+            while (this.userService.existsByUsername(username, null)) {
+                username += "1";
+            }
+            while (this.usedUsernames.get(username) != null) {
+                username += "1";
+            }
+            this.usedUsernames.put(username, true);
+            user.setUsername(username);
+            user.setPassword("password");
+            user.setPerson(parent.getPerson());
+            user.setRoles(Arrays.asList(Role.PARENT));
+            user.setEnabled(true);
+            parentUsers.add(user);
+        }
+
+        this.userService.saveAll(parentUsers);
+        parentUsers.parallelStream().map(User::getId).forEach(this.userService::enableUser);
     }
-    
+
     private String getRandomParentFirstName(Random random) {
         String[] names = {
-            "Tendai", "Chipo", "Farai", "Rudo", "Tinashe", "Vimbai", "Kudzai", "Nyasha",
-            "Tafadzwa", "Rumbidzai", "Munyaradzi", "Fadzai", "Takudzwa", "Chenai",
-            "Thandeka", "Bongani", "Lindiwe", "Sipho", "Nomsa", "Themba", "Zanele",
-            "Michael", "Sarah", "David", "Grace", "Peter", "Mary", "John", "Elizabeth"
+                "Tendai", "Chipo", "Farai", "Rudo", "Tinashe", "Vimbai", "Kudzai", "Nyasha",
+                "Tafadzwa", "Rumbidzai", "Munyaradzi", "Fadzai", "Takudzwa", "Chenai",
+                "Thandeka", "Bongani", "Lindiwe", "Sipho", "Nomsa", "Themba", "Zanele",
+                "Michael", "Sarah", "David", "Grace", "Peter", "Mary", "John", "Elizabeth"
         };
         return names[random.nextInt(names.length)];
     }
-    
+
     private String getRandomParentLastName(Random random) {
         String[] names = {
-            "Moyo", "Ncube", "Dube", "Sibanda", "Mpofu", "Nyoni", "Banda", "Chigumba",
-            "Mutasa", "Chirwa", "Makoni", "Zhou", "Mtetwa", "Marufu", "Hove",
-            "Smith", "Brown", "Johnson", "Williams", "Jones", "Davis", "Miller"
+                "Moyo", "Ncube", "Dube", "Sibanda", "Mpofu", "Nyoni", "Banda", "Chigumba",
+                "Mutasa", "Chirwa", "Makoni", "Zhou", "Mtetwa", "Marufu", "Hove",
+                "Smith", "Brown", "Johnson", "Williams", "Jones", "Davis", "Miller"
         };
         return names[random.nextInt(names.length)];
     }
@@ -936,8 +978,8 @@ public class DummyDataRunner {
                         ratings.add(rating);
                     } catch (Exception e) {
                         Logger.getLogger(DummyDataRunner.class.getName()).log(Level.WARNING,
-                            "Failed to create rating for activity point ID: " +
-                            (ap != null ? ap.getId() : "null"), e);
+                                "Failed to create rating for activity point ID: " +
+                                        (ap != null ? ap.getId() : "null"), e);
                     }
                 });
 
@@ -945,7 +987,7 @@ public class DummyDataRunner {
             this.ratingService.saveAll(ratings);
         } else {
             Logger.getLogger(DummyDataRunner.class.getName()).log(Level.WARNING,
-                "No valid ratings to save - activity points may be missing or invalid");
+                    "No valid ratings to save - activity points may be missing or invalid");
         }
     }
 
@@ -1162,6 +1204,20 @@ public class DummyDataRunner {
 
             rootNode.set("progress_reports", progressReports);
 
+            // Get all users for login credentials
+            List<User> allUsers = this.userService.getAll(0, 1000, Arrays.asList("username"), Sort.Direction.ASC).getContent();
+
+            // Add login credentials
+            ObjectNode loginsNode = objectMapper.createObjectNode();
+            for (User user : allUsers) {
+                ObjectNode userNode = objectMapper.createObjectNode();
+                userNode.put("username", user.getUsername());
+                userNode.put("password", "password");
+                userNode.put("roles", String.join(",", user.getRoles().stream().map(Enum::name).toArray(String[]::new)));
+                loginsNode.set(user.getUsername(), userNode);
+            }
+            rootNode.set("logins", loginsNode);
+
             // Write to file
             String filePath = "report_parameter_examples.json";
             try (FileWriter fileWriter = new FileWriter(filePath)) {
@@ -1169,11 +1225,11 @@ public class DummyDataRunner {
             }
 
             Logger.getLogger(DummyDataRunner.class.getName()).log(Level.INFO,
-                "Report parameter examples saved to: " + filePath);
+                    "Report parameter examples saved to: " + filePath);
 
         } catch (IOException e) {
             Logger.getLogger(DummyDataRunner.class.getName()).log(Level.SEVERE,
-                "Failed to generate report parameter examples", e);
+                    "Failed to generate report parameter examples", e);
         }
     }
 }
