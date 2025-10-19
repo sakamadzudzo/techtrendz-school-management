@@ -26,7 +26,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<MarksReportDto> aggregateMarksDataByStudentClassroomYear(List<Mark> marks, Long studentId, Long classroomId, Integer year) {
         return marks.stream()
-                .filter(mark -> matchesStudentClassroomYear(mark, studentId, classroomId, year))
+//                .filter(mark -> matchesStudentClassroomYear(mark, studentId, classroomId, year))
                 .map(this::mapMarkToDto)
                 .collect(Collectors.toList());
     }
@@ -34,7 +34,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<MarksReportDto> aggregateMarksDataByStudentSubjectYear(List<Mark> marks, Long studentId, Long subjectId, Integer year) {
         return marks.stream()
-                .filter(mark -> matchesStudentSubjectYear(mark, studentId, subjectId, year))
+//                .filter(mark -> matchesStudentSubjectYear(mark, studentId, subjectId, year))
                 .map(this::mapMarkToDto)
                 .collect(Collectors.toList());
     }
@@ -42,7 +42,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<MarksReportDto> aggregateMarksDataByStudentYear(List<Mark> marks, Long studentId, Integer year) {
         return marks.stream()
-                .filter(mark -> matchesStudentYear(mark, studentId, year))
+//                .filter(mark -> matchesStudentYear(mark, studentId, year))
                 .map(this::mapMarkToDto)
                 .collect(Collectors.toList());
     }
@@ -50,7 +50,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<MarksReportDto> aggregateMarksDataByClassroomYear(List<Mark> marks, Long classroomId, Integer year) {
         return marks.stream()
-                .filter(mark -> matchesClassroomYear(mark, classroomId, year))
+//                .filter(mark -> matchesClassroomYear(mark, classroomId, year))
                 .map(this::mapMarkToDto)
                 .collect(Collectors.toList());
     }
@@ -58,7 +58,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<MarksReportDto> aggregateMarksDataBySubjectYear(List<Mark> marks, Long subjectId, Integer year) {
         return marks.stream()
-                .filter(mark -> matchesSubjectYear(mark, subjectId, year))
+//                .filter(mark -> matchesSubjectYear(mark, subjectId, year))
                 .map(this::mapMarkToDto)
                 .collect(Collectors.toList());
     }
@@ -66,7 +66,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<MarksReportDto> aggregateMarksDataByTeacherYear(List<Mark> marks, Long teacherId, Integer year) {
         return marks.stream()
-                .filter(mark -> matchesTeacherYear(mark, teacherId, year))
+//                .filter(mark -> matchesTeacherYear(mark, teacherId, year))
                 .map(this::mapMarkToDto)
                 .collect(Collectors.toList());
     }
@@ -74,7 +74,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<MarksReportDto> aggregateMarksDataByYear(List<Mark> marks, Integer year) {
         return marks.stream()
-                .filter(mark -> matchesYear(mark, year))
+//                .filter(mark -> matchesYear(mark, year))
                 .map(this::mapMarkToDto)
                 .collect(Collectors.toList());
     }
@@ -90,7 +90,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<RatingsReportDto> aggregateRatingsDataByStudentActivityYear(List<Rating> ratings, Long studentId, Long activityId, Integer year) {
         return ratings.stream()
-                .filter(rating -> matchesStudentActivityYear(rating, studentId, activityId, year))
+//                .filter(rating -> matchesStudentActivityYear(rating, studentId, activityId, year))
                 .map(this::mapRatingToDto)
                 .collect(Collectors.toList());
     }
@@ -98,7 +98,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<RatingsReportDto> aggregateRatingsDataByStudentYear(List<Rating> ratings, Long studentId, Integer year) {
         return ratings.stream()
-                .filter(rating -> matchesStudentYear(rating, studentId, year))
+//                .filter(rating -> matchesStudentYear(rating, studentId, year))
                 .map(this::mapRatingToDto)
                 .collect(Collectors.toList());
     }
@@ -106,7 +106,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<RatingsReportDto> aggregateRatingsDataByActivityYear(List<Rating> ratings, Long activityId, Integer year) {
         return ratings.stream()
-                .filter(rating -> matchesActivityYear(rating, activityId, year))
+//                .filter(rating -> matchesActivityYear(rating, activityId, year))
                 .map(this::mapRatingToDto)
                 .collect(Collectors.toList());
     }
@@ -114,7 +114,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<RatingsReportDto> aggregateRatingsDataByTeacherYear(List<Rating> ratings, Long teacherId, Integer year) {
         return ratings.stream()
-                .filter(rating -> matchesTeacherYear(rating, teacherId, year))
+//                .filter(rating -> matchesTeacherYear(rating, teacherId, year))
                 .map(this::mapRatingToDto)
                 .collect(Collectors.toList());
     }
@@ -130,7 +130,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByStudentActivityYear(List<ActivityPoint> activityPoints, Long studentId, Long activityId, Integer year) {
         return activityPoints.stream()
-                .filter(point -> matchesStudentActivityYearFromActivityPoint(point, studentId, activityId, year))
+//                .filter(point -> matchesStudentActivityYearFromActivityPoint(point, studentId, activityId, year))
                 .flatMap(activityPoint -> mapActivityPointToRatingsDto(activityPoint).stream())
                 .collect(Collectors.toList());
     }
@@ -138,7 +138,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByStudentYear(List<ActivityPoint> activityPoints, Long studentId, Integer year) {
         return activityPoints.stream()
-                .filter(point -> matchesStudentYearFromActivityPoint(point, studentId, year))
+//                .filter(point -> matchesStudentYearFromActivityPoint(point, studentId, year))
                 .flatMap(activityPoint -> mapActivityPointToRatingsDto(activityPoint).stream())
                 .collect(Collectors.toList());
     }
@@ -146,7 +146,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByActivityYear(List<ActivityPoint> activityPoints, Long activityId, Integer year) {
         return activityPoints.stream()
-                .filter(point -> matchesActivityYearFromActivityPoint(point, activityId, year))
+//                .filter(point -> matchesActivityYearFromActivityPoint(point, activityId, year))
                 .flatMap(activityPoint -> mapActivityPointToRatingsDto(activityPoint).stream())
                 .collect(Collectors.toList());
     }
@@ -154,7 +154,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<RatingsReportDto> aggregateRatingsDataFromActivityPointsByTeacherYear(List<ActivityPoint> activityPoints, Long teacherId, Integer year) {
         return activityPoints.stream()
-                .filter(point -> matchesTeacherYearFromActivityPoint(point, teacherId, year))
+//                .filter(point -> matchesTeacherYearFromActivityPoint(point, teacherId, year))
                 .flatMap(activityPoint -> mapActivityPointToRatingsDto(activityPoint).stream())
                 .collect(Collectors.toList());
     }
@@ -170,7 +170,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<ProgressReportDto> aggregateProgressDataByStudent(List<ActivityPoint> activityPoints, Long studentId, String entityType) {
         return activityPoints.stream()
-                .filter(point -> matchesStudent(point, studentId))
+//                .filter(point -> matchesStudent(point, studentId))
                 .map(point -> mapActivityPointToDto(point, entityType))
                 .collect(Collectors.toList());
     }
@@ -178,7 +178,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<ProgressReportDto> aggregateProgressDataByTeacher(List<ActivityPoint> activityPoints, Long teacherId, String entityType) {
         return activityPoints.stream()
-                .filter(point -> matchesTeacher(point, teacherId))
+//                .filter(point -> matchesTeacher(point, teacherId))
                 .map(point -> mapActivityPointToDto(point, entityType))
                 .collect(Collectors.toList());
     }
@@ -186,7 +186,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<ProgressReportDto> aggregateProgressDataBySubject(List<ActivityPoint> activityPoints, Long subjectId, String entityType) {
         return activityPoints.stream()
-                .filter(point -> matchesSubject(point, subjectId))
+//                .filter(point -> matchesSubject(point, subjectId))
                 .map(point -> mapActivityPointToDto(point, entityType))
                 .collect(Collectors.toList());
     }
@@ -194,7 +194,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<ProgressReportDto> aggregateProgressDataByClassroom(List<ActivityPoint> activityPoints, Long classroomId, String entityType) {
         return activityPoints.stream()
-                .filter(point -> matchesClassroom(point, classroomId))
+//                .filter(point -> matchesClassroom(point, classroomId))
                 .map(point -> mapActivityPointToDto(point, entityType))
                 .collect(Collectors.toList());
     }
@@ -202,7 +202,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<ProgressReportDto> aggregateProgressDataByActivity(List<ActivityPoint> activityPoints, Long activityId, String entityType) {
         return activityPoints.stream()
-                .filter(point -> matchesActivity(point, activityId))
+//                .filter(point -> matchesActivity(point, activityId))
                 .map(point -> mapActivityPointToDto(point, entityType))
                 .collect(Collectors.toList());
     }
@@ -210,7 +210,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<ProgressReportDto> aggregateProgressDataByFacilitator(List<ActivityPoint> activityPoints, Long facilitatorId, String entityType) {
         return activityPoints.stream()
-                .filter(point -> matchesFacilitator(point, facilitatorId))
+//                .filter(point -> matchesFacilitator(point, facilitatorId))
                 .map(point -> mapActivityPointToDto(point, entityType))
                 .collect(Collectors.toList());
     }
@@ -218,7 +218,7 @@ public class ReportDataAggregationServiceImpl implements ReportDataAggregationSe
     @Override
     public List<ProgressReportDto> aggregateProgressDataBySubjectFromMarks(List<Mark> marks, Long subjectId, String entityType) {
         return marks.stream()
-                .filter(mark -> matchesSubjectFromMark(mark, subjectId))
+//                .filter(mark -> matchesSubjectFromMark(mark, subjectId))
                 .map(mark -> mapMarkToProgressDto(mark, entityType))
                 .collect(Collectors.toList());
     }

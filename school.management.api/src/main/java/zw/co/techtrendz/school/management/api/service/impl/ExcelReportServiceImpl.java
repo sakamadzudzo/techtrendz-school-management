@@ -37,9 +37,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
     private final ReportDataAggregationService reportDataAggregationService;
 
     public ExcelReportServiceImpl(MarkService markService,
-                                RatingService ratingService,
-                                ActivityPointService activityPointService,
-                                ReportDataAggregationService reportDataAggregationService) {
+                                  RatingService ratingService,
+                                  ActivityPointService activityPointService,
+                                  ReportDataAggregationService reportDataAggregationService) {
         this.markService = markService;
         this.ratingService = ratingService;
         this.activityPointService = activityPointService;
@@ -59,16 +59,18 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksDataByStudentClassroomYear(marks, studentId, classroomId, year);
 
             return generateMarksExcelReport("Marks Report - Student, Classroom, Year", data, Map.of(
-                "Year", year.toString(),
-                "Classroom ID", classroomId.toString(),
-                "Student ID", studentId.toString()
+                    "Year", year.toString(),
+                    "Classroom ID", classroomId.toString(),
+                    "Classroom", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getClassroomName() : "",
+                    "Student ID", studentId.toString(),
+                    "Student", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getStudentName() : ""
             ));
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(String.format(
-                "Failed to generate Excel marks report for student ID %s in classroom ID %s for year %d: %s",
-                studentId, classroomId, year, e.getMessage()), e);
+                    "Failed to generate Excel marks report for student ID %s in classroom ID %s for year %d: %s",
+                    studentId, classroomId, year, e.getMessage()), e);
         }
     }
 
@@ -82,16 +84,18 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksDataByStudentSubjectYear(marks, studentId, subjectId, year);
 
             return generateMarksExcelReport("Marks Report - Student, Subject, Year", data, Map.of(
-                "Year", year.toString(),
-                "Subject ID", subjectId.toString(),
-                "Student ID", studentId.toString()
+                    "Year", year.toString(),
+                    "Subject ID", subjectId.toString(),
+                    "Subject", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getSubjectName() : "",
+                    "Student ID", studentId.toString(),
+                    "Student", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getStudentName() : ""
             ));
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(String.format(
-                "Failed to generate Excel marks report for student ID %s in subject ID %s for year %d: %s",
-                studentId, subjectId, year, e.getMessage()), e);
+                    "Failed to generate Excel marks report for student ID %s in subject ID %s for year %d: %s",
+                    studentId, subjectId, year, e.getMessage()), e);
         }
     }
 
@@ -104,8 +108,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksDataByStudentYear(marks, studentId, year);
 
             return generateMarksExcelReport("Marks Report - Student, Year", data, Map.of(
-                "Year", year.toString(),
-                "Student ID", studentId.toString()
+                    "Year", year.toString(),
+                    "Student ID", studentId.toString(),
+                    "Student", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getStudentName() : ""
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel marks by student year report", e);
@@ -120,7 +125,8 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksData(marks);
 
             return generateMarksExcelReport("Marks Report - Student", data, Map.of(
-                "Student ID", studentId.toString()
+                    "Student ID", studentId.toString(),
+                    "Student", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getStudentName() : ""
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel marks by student report", e);
@@ -135,13 +141,13 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksDataByYear(marks, year);
 
             return generateMarksExcelReport("Marks Report - Year", data, Map.of(
-                "Year", year.toString()
+                    "Year", year.toString()
             ));
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(String.format(
-                "Failed to generate Excel marks report for year %d: %s", year, e.getMessage()), e);
+                    "Failed to generate Excel marks report for year %d: %s", year, e.getMessage()), e);
         }
     }
 
@@ -167,7 +173,7 @@ public class ExcelReportServiceImpl implements ExcelReportService {
         } catch (Exception e) {
             CompletableFuture<byte[]> future = new CompletableFuture<>();
             future.completeExceptionally(new RuntimeException(String.format(
-                "Failed to generate async Excel marks report for year %d: %s", year, e.getMessage()), e));
+                    "Failed to generate async Excel marks report for year %d: %s", year, e.getMessage()), e));
             return future;
         }
     }
@@ -183,14 +189,16 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 
             if (data.size() > 50) {
                 byte[] report = generateMarksExcelReport("Marks Report - Classroom, Year", data, Map.of(
-                    "Year", year.toString(),
-                    "Classroom ID", classroomId.toString()
+                        "Year", year.toString(),
+                        "Classroom ID", classroomId.toString(),
+                        "Classroom", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getClassroomName() : ""
                 ));
                 return CompletableFuture.completedFuture(report);
             } else {
                 byte[] report = generateMarksExcelReport("Marks Report - Classroom, Year", data, Map.of(
-                    "Year", year.toString(),
-                    "Classroom ID", classroomId.toString()
+                        "Year", year.toString(),
+                        "Classroom ID", classroomId.toString(),
+                        "Classroom", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getClassroomName() : ""
                 ));
                 return CompletableFuture.completedFuture(report);
             }
@@ -210,8 +218,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksDataByClassroomYear(marks, classroomId, year);
 
             return generateMarksExcelReport("Marks Report - Classroom, Year", data, Map.of(
-                "Year", year.toString(),
-                "Classroom ID", classroomId.toString()
+                    "Year", year.toString(),
+                    "Classroom ID", classroomId.toString(),
+                    "Classroom", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getClassroomName() : ""
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel marks by classroom year report", e);
@@ -227,8 +236,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksDataBySubjectYear(marks, subjectId, year);
 
             return generateMarksExcelReport("Marks Report - Subject, Year", data, Map.of(
-                "Year", year.toString(),
-                "Subject ID", subjectId.toString()
+                    "Year", year.toString(),
+                    "Subject ID", subjectId.toString(),
+                    "Subject", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getSubjectName() : ""
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel marks by subject year report", e);
@@ -246,9 +256,11 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPointsByStudentActivityYear(activityPoints, studentId, activityId, year);
 
             return generateRatingsExcelReport("Ratings Report - Student, Activity, Year", data, Map.of(
-                "Year", year.toString(),
-                "Activity ID", activityId.toString(),
-                "Student ID", studentId.toString()
+                    "Year", year.toString(),
+                    "Activity ID", activityId.toString(),
+                    "Activity", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getExtraCurricularActivityName() : "",
+                    "Student ID", studentId.toString(),
+                    "Student", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getStudentName() : ""
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel ratings by student activity year report", e);
@@ -264,18 +276,19 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPointsByStudentYear(activityPoints, studentId, year);
 
             return generateRatingsExcelReport("Ratings Report - Student, Year", data, Map.of(
-                "Year", year.toString(),
-                "Student ID", studentId.toString()
+                    "Year", year.toString(),
+                    "Student ID", studentId.toString(),
+                    "Student", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getStudentName() : ""
             ));
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
             Logger.getLogger(ExcelReportServiceImpl.class.getName()).log(Level.WARNING,
-                String.format("Error generating Excel ratings report for student ID %s, year %d: %s",
-                studentId, year, e.getMessage()), e);
+                    String.format("Error generating Excel ratings report for student ID %s, year %d: %s",
+                            studentId, year, e.getMessage()), e);
             throw new RuntimeException(String.format(
-                "Failed to generate Excel ratings report for student ID %s for year %d: %s",
-                studentId, year, e.getMessage()), e);
+                    "Failed to generate Excel ratings report for student ID %s for year %d: %s",
+                    studentId, year, e.getMessage()), e);
         }
     }
 
@@ -288,8 +301,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPointsByActivityYear(activityPoints, activityId, year);
 
             return generateRatingsExcelReport("Ratings Report - Activity, Year", data, Map.of(
-                "Year", year.toString(),
-                "Activity ID", activityId.toString()
+                    "Year", year.toString(),
+                    "Activity ID", activityId.toString(),
+                    "Activity", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getExtraCurricularActivityName() : ""
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel ratings by activity year report", e);
@@ -304,7 +318,8 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPoints(activityPoints);
 
             return generateRatingsExcelReport("Ratings Report - Activity", data, Map.of(
-                "Activity ID", activityId.toString()
+                    "Activity ID", activityId.toString(),
+                    "Activity", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getExtraCurricularActivityName() : ""
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel ratings by activity report", e);
@@ -321,12 +336,14 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 
             if (data.size() > 30) {
                 byte[] report = generateRatingsExcelReport("Ratings Report - Activity", data, Map.of(
-                    "Activity ID", activityId.toString()
+                        "Activity ID", activityId.toString(),
+                        "Activity", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getExtraCurricularActivityName() : ""
                 ));
                 return CompletableFuture.completedFuture(report);
             } else {
                 byte[] report = generateRatingsExcelReport("Ratings Report - Activity", data, Map.of(
-                    "Activity ID", activityId.toString()
+                        "Activity ID", activityId.toString(),
+                        "Activity", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getExtraCurricularActivityName() : ""
                 ));
                 return CompletableFuture.completedFuture(report);
             }
@@ -337,7 +354,7 @@ public class ExcelReportServiceImpl implements ExcelReportService {
         } catch (Exception e) {
             CompletableFuture<byte[]> future = new CompletableFuture<>();
             future.completeExceptionally(new RuntimeException(String.format(
-                "Failed to generate async Excel ratings report for activity ID %s: %s", activityId, e.getMessage()), e));
+                    "Failed to generate async Excel ratings report for activity ID %s: %s", activityId, e.getMessage()), e));
             return future;
         }
     }
@@ -349,8 +366,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<MarksReportDto> data = reportDataAggregationService.aggregateMarksDataByTeacherYear(marks, teacherId, year);
 
             return generateMarksExcelReport("Marks Report - Teacher, Year", data, Map.of(
-                "Year", year.toString(),
-                "Teacher ID", teacherId.toString()
+                    "Year", year.toString(),
+                    "Teacher ID", teacherId.toString(),
+                    "Teacher", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getTeacherName() : ""
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel marks by teacher year report", e);
@@ -363,8 +381,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<RatingsReportDto> data = reportDataAggregationService.aggregateRatingsDataFromActivityPointsByTeacherYear(activityPoints, teacherId, year);
 
             return generateRatingsExcelReport("Ratings Report - Teacher, Year", data, Map.of(
-                "Year", year.toString(),
-                "Teacher ID", teacherId.toString()
+                    "Year", year.toString(),
+                    "Teacher ID", teacherId.toString(),
+                    "Teacher", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getFacilitatorName() : ""
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel ratings by teacher year report", e);
@@ -381,15 +400,16 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<ProgressReportDto> data = reportDataAggregationService.aggregateProgressDataByStudent(activityPoints, studentId, entityType);
 
             return generateProgressExcelReport("Progress Report - Student", data, Map.of(
-                "Student ID", studentId.toString(),
-                "Entity Type", entityType
+                    "Student ID", studentId.toString(),
+                    "Name", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getEntityName() : "",
+                    "Entity Type", entityType
             ));
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(String.format(
-                "Failed to generate Excel progress report for student ID %s with entity type '%s': %s",
-                studentId, entityType, e.getMessage()), e);
+                    "Failed to generate Excel progress report for student ID %s with entity type '%s': %s",
+                    studentId, entityType, e.getMessage()), e);
         }
     }
 
@@ -402,8 +422,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<ProgressReportDto> data = reportDataAggregationService.aggregateProgressDataByTeacher(activityPoints, teacherId, entityType);
 
             return generateProgressExcelReport("Progress Report - Teacher", data, Map.of(
-                "Teacher ID", teacherId.toString(),
-                "Entity Type", entityType
+                    "Teacher ID", teacherId.toString(),
+                    "Name", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getEntityName() : "",
+                    "Entity Type", entityType
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel progress report by teacher", e);
@@ -419,8 +440,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<ProgressReportDto> data = reportDataAggregationService.aggregateProgressDataBySubjectFromMarks(marks, subjectId, entityType);
 
             return generateProgressExcelReport("Progress Report - Subject", data, Map.of(
-                "Subject ID", subjectId.toString(),
-                "Entity Type", entityType
+                    "Subject ID", subjectId.toString(),
+                    "Name", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getEntityName() : "",
+                    "Entity Type", entityType
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel progress report by subject", e);
@@ -436,8 +458,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<ProgressReportDto> data = reportDataAggregationService.aggregateProgressDataByClassroom(activityPoints, classroomId, entityType);
 
             return generateProgressExcelReport("Progress Report - Classroom", data, Map.of(
-                "Classroom ID", classroomId.toString(),
-                "Entity Type", entityType
+                    "Classroom ID", classroomId.toString(),
+                    "Name", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getEntityName() : "",
+                    "Entity Type", entityType
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel progress report by classroom", e);
@@ -453,8 +476,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<ProgressReportDto> data = reportDataAggregationService.aggregateProgressDataByActivity(activityPoints, activityId, entityType);
 
             return generateProgressExcelReport("Progress Report - Activity", data, Map.of(
-                "Activity ID", activityId.toString(),
-                "Entity Type", entityType
+                    "Activity ID", activityId.toString(),
+                    "Name", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getEntityName() : "",
+                    "Entity Type", entityType
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel progress report by activity", e);
@@ -470,8 +494,9 @@ public class ExcelReportServiceImpl implements ExcelReportService {
             List<ProgressReportDto> data = reportDataAggregationService.aggregateProgressDataByFacilitator(activityPoints, facilitatorId, entityType);
 
             return generateProgressExcelReport("Progress Report - Facilitator", data, Map.of(
-                "Facilitator ID", facilitatorId.toString(),
-                "Entity Type", entityType
+                    "Facilitator ID", facilitatorId.toString(),
+                    "Name", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getEntityName() : "",
+                    "Entity Type", entityType
             ));
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate Excel progress report by facilitator", e);
@@ -489,14 +514,16 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 
             if (data.size() > 25) {
                 byte[] report = generateProgressExcelReport("Progress Report - Classroom", data, Map.of(
-                    "Classroom ID", classroomId.toString(),
-                    "Entity Type", entityType
+                        "Classroom ID", classroomId.toString(),
+                        "Name", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getEntityName() : "",
+                        "Entity Type", entityType
                 ));
                 return CompletableFuture.completedFuture(report);
             } else {
                 byte[] report = generateProgressExcelReport("Progress Report - Classroom", data, Map.of(
-                    "Classroom ID", classroomId.toString(),
-                    "Entity Type", entityType
+                        "Classroom ID", classroomId.toString(),
+                        "Name", data != null && !data.isEmpty() && data.get(0) != null ? data.get(0).getEntityName() : "",
+                        "Entity Type", entityType
                 ));
                 return CompletableFuture.completedFuture(report);
             }
@@ -507,8 +534,8 @@ public class ExcelReportServiceImpl implements ExcelReportService {
         } catch (Exception e) {
             CompletableFuture<byte[]> future = new CompletableFuture<>();
             future.completeExceptionally(new RuntimeException(String.format(
-                "Failed to generate async Excel progress report for classroom ID %s with entity type '%s': %s",
-                classroomId, entityType, e.getMessage()), e));
+                    "Failed to generate async Excel progress report for classroom ID %s with entity type '%s': %s",
+                    classroomId, entityType, e.getMessage()), e));
             return future;
         }
     }
@@ -521,7 +548,7 @@ public class ExcelReportServiceImpl implements ExcelReportService {
         } catch (Exception e) {
             CompletableFuture<byte[]> future = new CompletableFuture<>();
             future.completeExceptionally(new RuntimeException(String.format(
-                "Failed to generate async Excel report '%s': %s", reportName, e.getMessage()), e));
+                    "Failed to generate async Excel report '%s': %s", reportName, e.getMessage()), e));
             return future;
         }
     }
@@ -857,7 +884,7 @@ public class ExcelReportServiceImpl implements ExcelReportService {
         for (String param : requiredParams) {
             if (!parameters.containsKey(param) || parameters.get(param) == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    String.format("Required parameter '%s' is missing or null", param));
+                        String.format("Required parameter '%s' is missing or null", param));
             }
         }
     }
@@ -870,14 +897,14 @@ public class ExcelReportServiceImpl implements ExcelReportService {
         int currentYear = java.time.Year.now().getValue();
         if (year < 2000 || year > currentYear + 10) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                String.format("Year parameter must be between 2000 and %d", currentYear + 10));
+                    String.format("Year parameter must be between 2000 and %d", currentYear + 10));
         }
     }
 
     private void validateEntityId(Long entityId, String entityType) {
         if (entityId == null || entityId <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                String.format("%s ID is required and must be a positive number", entityType));
+                    String.format("%s ID is required and must be a positive number", entityType));
         }
     }
 }
