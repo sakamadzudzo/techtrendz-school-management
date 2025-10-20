@@ -613,6 +613,7 @@ export default async function handler(
         facilitatorId,
         entityType,
         type,
+        fileName,
       } = req.query;
 
       // Marks Reports
@@ -624,12 +625,13 @@ export default async function handler(
           studentId ? Number(studentId) : undefined,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "marks_by_student_classroom_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=marks_by_student_classroom_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -642,12 +644,13 @@ export default async function handler(
           studentId ? Number(studentId) : undefined,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "marks_by_student_subject_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=marks_by_student_subject_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -659,12 +662,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "marks_by_student_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=marks_by_student_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -675,12 +679,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "marks_by_student";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=marks_by_student.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -691,12 +696,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "marks_by_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=marks_by_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -708,12 +714,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "marks_by_classroom_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=marks_by_classroom_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -725,12 +732,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "marks_by_subject_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=marks_by_subject_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -744,12 +752,13 @@ export default async function handler(
           studentId ? Number(studentId) : undefined,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "ratings_by_student_activity_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=ratings_by_student_activity_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -761,12 +770,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "ratings_by_student_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=ratings_by_student_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -778,12 +788,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "ratings_by_activity_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=ratings_by_activity_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -794,12 +805,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "ratings_by_activity";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=ratings_by_activity.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -812,12 +824,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "marks_by_teacher_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=marks_by_teacher_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -829,12 +842,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "ratings_by_teacher_year";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=ratings_by_teacher_year.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -847,12 +861,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "progress_report_by_student";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=progress_report_by_student.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -864,12 +879,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "progress_report_by_teacher";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=progress_report_by_teacher.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -881,12 +897,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "progress_report_by_subject";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=progress_report_by_subject.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -898,12 +915,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "progress_report_by_classroom";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=progress_report_by_classroom.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -915,12 +933,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "progress_report_by_activity";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=progress_report_by_activity.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }
@@ -932,12 +951,13 @@ export default async function handler(
           authHeader,
           String(type || 'pdf')
         );
+        const filename = fileName ? String(fileName) : "progress_report_by_facilitator";
         return res
           .status(200)
           .setHeader("Content-Type", type === "excel" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "application/pdf")
           .setHeader(
             "Content-Disposition",
-            `attachment; filename=progress_report_by_facilitator.${type === "excel" ? "xlsx" : "pdf"}`
+            `attachment; filename="${filename}.${type === "excel" ? "xlsx" : "pdf"}"`
           )
           .send(Buffer.from(reportData));
       }

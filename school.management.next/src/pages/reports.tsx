@@ -141,6 +141,46 @@ export default function Reports({
     }
   }, [mutate, isError, setErrorMessage, setStatusCode]);
 
+  const generateFileName = useCallback(() => {
+    if (!reportType || !dropdowns) return reportType?.title || "report";
+    
+    const parts = [reportType.title];
+    const date = new Date();
+    const dateString = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    
+    if (reportFilter.studentId && dropdowns.students) {
+      const student = dropdowns.students.find(s => s.id === reportFilter.studentId);
+      if (student) parts.push(student.name);
+    }
+    
+    if (reportFilter.teacherId && dropdowns.teachers) {
+      const teacher = dropdowns.teachers.find(t => t.id === reportFilter.teacherId);
+      if (teacher) parts.push(teacher.name);
+    }
+    
+    if (reportFilter.classroomId && dropdowns.classrooms) {
+      const classroom = dropdowns.classrooms.find(c => c.id === reportFilter.classroomId);
+      if (classroom) parts.push(classroom.name);
+    }
+    
+    if (reportFilter.subjectId && dropdowns.subjects) {
+      const subject = dropdowns.subjects.find(s => s.id === reportFilter.subjectId);
+      if (subject) parts.push(subject.name);
+    }
+    
+    if (reportFilter.extraCurricularId && dropdowns.extraCurriculars) {
+      const activity = dropdowns.extraCurriculars.find(a => a.id === reportFilter.extraCurricularId);
+      if (activity) parts.push(activity.name);
+    }
+    
+    if (reportFilter.year) {
+      parts.push(reportFilter.year.toString());
+    }
+    
+    parts.push(dateString);
+    return parts.join(" - ");
+  }, [reportType, reportFilter, dropdowns]);
+
   const fetchReport = useCallback(
     async (type: "pdf" | "excel") => {
       setErrorMessage("");
@@ -152,8 +192,7 @@ export default function Reports({
       try {
         let reportResult;
         if (reportType?.function) {
-          let tempFilter = reportFilter;
-          tempFilter.type = type;
+          let tempFilter = { ...reportFilter, type, fileName: generateFileName() };
           reportResult = await reportType.function(tempFilter);
 
           if (reportResult?.statusCode === 204) {
@@ -180,12 +219,11 @@ export default function Reports({
           const blob = new Blob([reportResult.data], {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           });
-          const date = new Date();
-          const dateString = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+          const fileName = generateFileName();
           const url = URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = url;
-          link.download = `${reportType?.title} - ${dateString}.xlsx`;
+          link.download = `${fileName}.xlsx`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -200,6 +238,7 @@ export default function Reports({
       validate,
       reportType,
       reportFilter,
+      generateFileName,
       setReportData,
       setErrorMessage,
       setStatusCode,

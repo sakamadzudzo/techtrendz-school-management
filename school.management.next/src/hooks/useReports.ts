@@ -20,6 +20,7 @@ export function useGenerateMarksReport() {
       });
       if (reportFilter.classroomId) params.append("classroomId", String(reportFilter.classroomId));
       if (reportFilter.studentId) params.append("studentId", String(reportFilter.studentId));
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=marks-student-classroom-year&${params.toString()}`,
@@ -72,6 +73,7 @@ export function useGenerateMarksReport() {
         type: reportFilter.type,
       });
       if (reportFilter.studentId) params.append("studentId", String(reportFilter.studentId));
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=marks-student-subject-year&${params.toString()}`,
@@ -123,6 +125,7 @@ export function useGenerateMarksReport() {
         studentId: String(reportFilter.studentId!),
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=marks-student-year&${params.toString()}`,
@@ -170,6 +173,7 @@ export function useGenerateMarksReport() {
         studentId: String(reportFiler.studentId),
         type: reportFiler.type,
       });
+      if (reportFiler.fileName) params.append("fileName", reportFiler.fileName);
 
       const res = await fetch(
         `/api/reports?action=marks-student&${params.toString()}`,
@@ -217,6 +221,7 @@ export function useGenerateMarksReport() {
         year: String(reportFilter.year!),
         type: reportFilter.type
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=marks-year&${params.toString()}`,
@@ -265,6 +270,7 @@ export function useGenerateMarksReport() {
         classroomId: String(reportFiler.classroomId),
         type: reportFiler.type,
       });
+      if (reportFiler.fileName) params.append("fileName", reportFiler.fileName);
 
       const res = await fetch(
         `/api/reports?action=marks-classroom-year&${params.toString()}`,
@@ -313,6 +319,7 @@ export function useGenerateMarksReport() {
         subjectId: String(reportFilter.subjectId!),
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=marks-subject-year&${params.toString()}`,
@@ -376,6 +383,7 @@ export function useGenerateRatingsReport() {
         type: reportFilter.type,
       });
       if (reportFilter.studentId) params.append("studentId", String(reportFilter.studentId));
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=ratings-student-activity-year&${params.toString()}`,
@@ -424,6 +432,7 @@ export function useGenerateRatingsReport() {
         studentId: String(reportFilter.studentId!),
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=ratings-student-year&${params.toString()}`,
@@ -472,6 +481,7 @@ export function useGenerateRatingsReport() {
         activityId: String(reportFilter.extraCurricularId!),
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=ratings-activity-year&${params.toString()}`,
@@ -519,6 +529,7 @@ export function useGenerateRatingsReport() {
         activityId: String(reportFilter.extraCurricularId!),
         type: reportFilter.type
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=ratings-activity&${params.toString()}`,
@@ -578,6 +589,7 @@ export function useGenerateTeacherReport() {
         teacherId: String(reportFilter.teacherId!),
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=marks-teacher-year&${params.toString()}`,
@@ -627,6 +639,7 @@ export function useGenerateTeacherReport() {
         teacherId: String(reportFilter.teacherId!),
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=ratings-teacher-year&${params.toString()}`,
@@ -685,6 +698,7 @@ export function useGenerateProgressReport() {
         entityType: "student",
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=progress-student&${params.toString()}`,
@@ -733,6 +747,7 @@ export function useGenerateProgressReport() {
         entityType: "teacher",
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=progress-teacher&${params.toString()}`,
@@ -781,6 +796,7 @@ export function useGenerateProgressReport() {
         entityType: "subject",
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=progress-subject&${params.toString()}`,
@@ -829,6 +845,7 @@ export function useGenerateProgressReport() {
         entityType: "classroom",
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=progress-classroom&${params.toString()}`,
@@ -877,6 +894,7 @@ export function useGenerateProgressReport() {
         entityType: "activity",
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=progress-activity&${params.toString()}`,
@@ -925,6 +943,7 @@ export function useGenerateProgressReport() {
         entityType: "facilitator",
         type: reportFilter.type,
       });
+      if (reportFilter.fileName) params.append("fileName", reportFilter.fileName);
 
       const res = await fetch(
         `/api/reports?action=progress-facilitator&${params.toString()}`,

@@ -478,6 +478,7 @@ export type ReportFilter = {
   extraCurricularId: number | undefined;
   year: number | undefined;
   type: "pdf" | "excel";
+  fileName?: string;
 };
 
 export type ReportResult = {
