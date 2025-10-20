@@ -29,6 +29,9 @@ async function generateMarksByStudentClassroomYearReport(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError =
       "Generating marks by student classroom year report failed";
@@ -61,6 +64,9 @@ async function generateMarksByStudentSubjectYearReport(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating marks by student subject year report failed";
     try {
@@ -90,6 +96,9 @@ async function generateMarksByStudentYearReport(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating marks by student year report failed";
     try {
@@ -112,6 +121,9 @@ async function generateMarksByStudentReport(
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating marks by student report failed";
     try {
@@ -130,6 +142,9 @@ async function generateMarksByYearReport(year: number, authHeader: any, type?: s
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating marks by year report failed";
     try {
@@ -159,6 +174,9 @@ async function generateMarksByClassroomYearReport(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating marks by classroom year report failed";
     try {
@@ -188,6 +206,9 @@ async function generateMarksBySubjectYearReport(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating marks by subject year report failed";
     try {
@@ -220,6 +241,9 @@ async function generateRatingsByStudentActivityYearReport(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError =
       "Generating ratings by student activity year report failed";
@@ -250,6 +274,9 @@ async function generateRatingsByStudentYearReport(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating ratings by student year report failed";
     try {
@@ -279,6 +306,9 @@ async function generateRatingsByActivityYearReport(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating ratings by activity year report failed";
     try {
@@ -301,6 +331,9 @@ async function generateRatingsByActivityReport(
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating ratings by activity report failed";
     try {
@@ -331,6 +364,9 @@ async function generateMarksByTeacherYearReport(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating marks by teacher year report failed";
     try {
@@ -360,6 +396,9 @@ async function generateRatingsByTeacherYearReport(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating ratings by teacher year report failed";
     try {
@@ -387,6 +426,9 @@ async function generateProgressReportByStudent(
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating progress report by student failed";
     try {
@@ -413,6 +455,9 @@ async function generateProgressReportByTeacher(
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating progress report by teacher failed";
     try {
@@ -439,6 +484,9 @@ async function generateProgressReportBySubject(
     method: "POST",
     headers: { "Content-Type": "application/json", ...authHeader },
   });
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating progress report by subject failed";
     try {
@@ -468,6 +516,9 @@ async function generateProgressReportByClassroom(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating progress report by classroom failed";
     try {
@@ -497,6 +548,9 @@ async function generateProgressReportByActivity(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating progress report by activity failed";
     try {
@@ -526,6 +580,9 @@ async function generateProgressReportByFacilitator(
       headers: { "Content-Type": "application/json", ...authHeader },
     }
   );
+  if (res.status === 204) {
+    throw new ApiError("No Content", 204);
+  }
   if (!res.ok) {
     let backendError = "Generating progress report by facilitator failed";
     try {

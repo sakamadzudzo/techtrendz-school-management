@@ -32,6 +32,9 @@ export function useGenerateMarksReport() {
         }
       );
 
+      if (res.status === 204) {
+        return { success: false, error: "No Content", statusCode: 204 };
+      }
       if (!res.ok) {
         const errorData = await res.json();
         const err = errorData.error || "Failed to generate marks report";
@@ -81,6 +84,9 @@ export function useGenerateMarksReport() {
         }
       );
 
+      if (res.status === 204) {
+        return { success: false, error: "No Content", statusCode: 204 };
+      }
       if (!res.ok) {
         const errorData = await res.json();
         const err = errorData.error || "Failed to generate marks report";

@@ -7,7 +7,11 @@ import {
   Tooltip,
   Divider,
 } from "@heroui/react";
-import { ArrowClockwiseIcon, ClipboardIcon } from "@phosphor-icons/react";
+import {
+  ArrowClockwiseIcon,
+  ArrowCounterClockwiseIcon,
+  ClipboardIcon,
+} from "@phosphor-icons/react";
 import EditFormWrapper from "@/components/EditFormWrapper";
 import { Wrapper } from "@/components/Wrapper";
 import { ReportSelector } from "@/components/ReportSelector";
@@ -66,8 +70,6 @@ export default function Reports({
   const [reportData, setReportData] = useState<ArrayBuffer | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [statusCode, setStatusCode] = useState<number | undefined>();
-  const [msg, setMsg] = useState<string>("");
-  const [isErr, setIsErr] = useState<boolean>(false);
 
   // Use the custom hook for state management
   const {
@@ -125,6 +127,8 @@ export default function Reports({
     );
 
   const fetchDropdowns = useCallback(async () => {
+    setErrorMessage("");
+    setStatusCode(undefined);
     try {
       mutate();
       if (isError) {
@@ -139,6 +143,8 @@ export default function Reports({
 
   const fetchReport = useCallback(
     async (type: "pdf" | "excel") => {
+      setErrorMessage("");
+      setStatusCode(undefined);
       if (!validate()) {
         return;
       }
@@ -149,6 +155,13 @@ export default function Reports({
           let tempFilter = reportFilter;
           tempFilter.type = type;
           reportResult = await reportType.function(tempFilter);
+
+          if (reportResult?.statusCode === 204) {
+            setErrorMessage("No Content");
+            setStatusCode(204);
+            return;
+          }
+
           if (reportResult?.data) {
             setReportData(reportResult.data);
           }
@@ -163,7 +176,7 @@ export default function Reports({
         }
 
         // Handle Excel file download
-        if (type === "excel" && reportResult?.data) {
+        if (type === "excel" && !errorMessage && reportResult?.data) {
           const blob = new Blob([reportResult.data], {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           });
@@ -208,8 +221,15 @@ export default function Reports({
     return true;
   }, [dropdowns]);
 
+  const hasSelections = React.useMemo(() => {
+    if (!!reportType) {
+      return true;
+    }
+    return false;
+  }, [reportType]);
+
   return (
-    <Wrapper hasData={true} error={errorMessage} statusCode={statusCode}>
+    <Wrapper hasData={true} error={""} statusCode={statusCode}>
       <EditFormWrapper
         isNew={true}
         newMsg={`Select report type and filters, then fetch`}
@@ -219,12 +239,9 @@ export default function Reports({
           onSubmit={(e) => e.preventDefault}
           className="h-full w-full md:w-1/2 pb-2 flex flex-col overflow-auto"
         >
-          {msg &&
-            (isErr ? (
-              <InlineError title={msg} />
-            ) : (
-              <InlineSuccess title={msg} />
-            ))}
+          {errorMessage && (
+            <InlineError title={errorMessage} statusCode={statusCode} />
+          )}
           <ReportSelector
             reportTypes={reportTypes}
             selectedReportType={reportType}
@@ -243,6 +260,20 @@ export default function Reports({
               />
 
               <CardFooter className="flex gap-2 justify-end">
+                {hasSelections && (
+                  <Tooltip>
+                    <Button
+                      color="primary"
+                      className="button !w-fit"
+                      startContent={
+                        <ArrowCounterClockwiseIcon weight="thin" size={25} />
+                      }
+                      onPress={resetStates}
+                    >
+                      Reset
+                    </Button>
+                  </Tooltip>
+                )}
                 <Tooltip>
                   <Button
                     color="primary"

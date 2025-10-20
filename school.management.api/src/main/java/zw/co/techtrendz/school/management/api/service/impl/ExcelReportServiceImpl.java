@@ -555,6 +555,8 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 
     // Excel Generation Helper Methods
     private byte[] generateMarksExcelReport(String title, List<MarksReportDto> data, Map<String, String> parameters) throws IOException {
+        this.validateReportData(title,  data);
+
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Marks Report");
 
@@ -643,6 +645,8 @@ public class ExcelReportServiceImpl implements ExcelReportService {
     }
 
     private byte[] generateRatingsExcelReport(String title, List<RatingsReportDto> data, Map<String, String> parameters) throws IOException {
+        this.validateReportData(title,  data);
+
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Ratings Report");
 
@@ -726,6 +730,8 @@ public class ExcelReportServiceImpl implements ExcelReportService {
     }
 
     private byte[] generateProgressExcelReport(String title, List<ProgressReportDto> data, Map<String, String> parameters) throws IOException {
+        this.validateReportData(title,  data);
+
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Progress Report");
 
@@ -820,6 +826,8 @@ public class ExcelReportServiceImpl implements ExcelReportService {
     }
 
     private byte[] generateGenericExcelReport(String title, List<?> data, Map<String, Object> parameters) throws IOException {
+        this.validateReportData(title,  data);
+
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Report");
 
@@ -905,6 +913,14 @@ public class ExcelReportServiceImpl implements ExcelReportService {
         if (entityId == null || entityId <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     String.format("%s ID is required and must be a positive number", entityType));
+        }
+    }
+
+    // Validation methods
+    private void validateReportData(String reportName, List<?> data) {
+        if (data == null || data.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT,
+                    String.format("No data found for report: %s. Please check your parameters and ensure data exists.", reportName));
         }
     }
 }
