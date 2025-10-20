@@ -34,6 +34,22 @@ export default function OneParentPage() {
     // Put code to call reports.ts from here
   }
 
+  const getRatingsReport = () => {
+
+  }
+
+  const getProgressReport = () => {
+
+  }
+
+  const getYearlyMarksReport = () => {
+
+  }
+
+  const getYearlyRatingsReport = () => {
+
+  }
+
   return (
     <div className="grow overflow-auto">
       <div aria-label="Page buttons" className="w-full flex justify-end gap-4">
@@ -46,7 +62,7 @@ export default function OneParentPage() {
           Edit
         </Button>
       </div>
-      <Accordion isCompact={true} defaultExpandedKeys={["1"]}>
+      <Accordion isCompact={true} defaultExpandedKeys={["3"]}>
         <AccordionItem
           key="1"
           aria-label="Parent Overview"
@@ -269,9 +285,7 @@ export default function OneParentPage() {
                         size="sm"
                         color="primary"
                         variant="flat"
-                        as={Link}
-                        href={`/reports?studentId=${student.id}&type=pdf&endpoint=marks_by_student`}
-                        isExternal
+                        onPress={getMarksReport}
                       >
                         Marks Report
                       </Button>
@@ -279,9 +293,7 @@ export default function OneParentPage() {
                         size="sm"
                         color="secondary"
                         variant="flat"
-                        as={Link}
-                        href={`/reports?studentId=${student.id}&type=pdf&endpoint=ratings_by_student`}
-                        isExternal
+                        onPress={getRatingsReport}
                       >
                         Ratings Report
                       </Button>
@@ -289,9 +301,7 @@ export default function OneParentPage() {
                         size="sm"
                         color="success"
                         variant="flat"
-                        as={Link}
-                        href={`/reports?studentId=${student.id}&type=pdf&endpoint=progress_by_student`}
-                        isExternal
+                        onPress={getProgressReport}
                       >
                         Progress Report
                       </Button>
@@ -299,9 +309,7 @@ export default function OneParentPage() {
                         size="sm"
                         color="warning"
                         variant="flat"
-                        as={Link}
-                        href={`/reports?studentId=${student.id}&type=pdf&endpoint=marks_by_student_by_year`}
-                        isExternal
+                        onPress={getYearlyMarksReport}
                       >
                         Yearly Marks
                       </Button>
@@ -309,9 +317,7 @@ export default function OneParentPage() {
                         size="sm"
                         color="danger"
                         variant="flat"
-                        as={Link}
-                        href={`/reports?studentId=${student.id}&type=pdf&endpoint=ratings_by_student_by_year`}
-                        isExternal
+                        onPress={getYearlyRatingsReport}
                       >
                         Yearly Ratings
                       </Button>
