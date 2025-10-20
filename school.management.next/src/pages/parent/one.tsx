@@ -30,6 +30,10 @@ export default function OneParentPage() {
     isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
   }, [isError]);
 
+  const getMarksReport = () => {
+    // Put code to call reports.ts from here
+  }
+
   return (
     <div className="grow overflow-auto">
       <div aria-label="Page buttons" className="w-full flex justify-end gap-4">

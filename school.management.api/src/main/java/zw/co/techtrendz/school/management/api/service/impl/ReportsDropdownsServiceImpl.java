@@ -124,7 +124,7 @@ public class ReportsDropdownsServiceImpl implements ReportsDropdownsService {
             reportsFilters.setClassrooms(this.getAllClassroomsForDropdown());
         }
         if (subjects != null && subjects) {
-            reportsFilters.setStudents(this.getAllSubjectsForDropdown());
+            reportsFilters.setSubjects(this.getAllSubjectsForDropdown());
         }
         if (extraCurriculars != null && extraCurriculars) {
             reportsFilters.setExtraCurriculars(this.getAllExtraCurricularsForDropdown());

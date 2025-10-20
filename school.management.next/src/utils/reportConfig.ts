@@ -104,10 +104,10 @@ export const createReportTypes = (
         );
       },
       availableFilters: {
-        students: false,
+        students: true,
         teachers: false,
         courseworks: false,
-        classrooms: false,
+        classrooms: true,
         subjects: false,
         extraCurriculars: false,
         calendarYears: true,
@@ -130,7 +130,7 @@ export const createReportTypes = (
         );
       },
       availableFilters: {
-        students: false,
+        students: true,
         teachers: false,
         courseworks: false,
         classrooms: false,
@@ -234,7 +234,7 @@ export const createReportTypes = (
         );
       },
       availableFilters: {
-        students: false,
+        students: true,
         teachers: false,
         courseworks: false,
         classrooms: false,

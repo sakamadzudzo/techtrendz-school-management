@@ -64,7 +64,7 @@ export function useReportsDropdownsSelective(
   decrementLoading?: () => void
 ) {
   const token = useSelector((state: RootState) => state.auth.token);
-  const shouldFetch = !!token;
+  const shouldFetch = !!token && (students || teachers || courseworks || classrooms || subjects || extraCurriculars || calendarYears);
 
   const params = new URLSearchParams();
   if (students !== undefined) params.append("students", String(students));

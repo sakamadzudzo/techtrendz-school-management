@@ -20,6 +20,8 @@ import {
 } from "@/hooks/useReports";
 import { useReportsDropdownsSelective } from "@/hooks/useReportsDropdowns";
 import { useReportsState } from "@/hooks/useReportsState";
+import InlineSuccess from "@/components/InlineSuccess";
+import InlineError from "@/components/InlineError";
 
 export default function Reports({
   incrementLoading,
@@ -64,6 +66,8 @@ export default function Reports({
   const [reportData, setReportData] = useState<ArrayBuffer | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [statusCode, setStatusCode] = useState<number | undefined>();
+  const [msg, setMsg] = useState<string>("");
+  const [isErr, setIsErr] = useState<boolean>(false);
 
   // Use the custom hook for state management
   const {
@@ -215,6 +219,12 @@ export default function Reports({
           onSubmit={(e) => e.preventDefault}
           className="h-full w-full md:w-1/2 pb-2 flex flex-col overflow-auto"
         >
+          {msg &&
+            (isErr ? (
+              <InlineError title={msg} />
+            ) : (
+              <InlineSuccess title={msg} />
+            ))}
           <ReportSelector
             reportTypes={reportTypes}
             selectedReportType={reportType}
