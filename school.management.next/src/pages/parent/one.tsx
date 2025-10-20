@@ -6,8 +6,14 @@ import {
   AccordionItem,
   Avatar,
   Button,
+  Form,
   Image,
   Link,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Select,
+  SelectItem,
   Spacer,
 } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
@@ -16,39 +22,240 @@ import {
   UserFocusIcon,
   StudentIcon,
   PencilSimpleLineIcon,
-  FileTextIcon,
 } from "@phosphor-icons/react";
 import useToastError from "@/hooks/toasts/ToastError";
-import { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
+import {
+  useGenerateMarksReport,
+  useGenerateProgressReport,
+  useGenerateRatingsReport,
+} from "@/hooks/useReports";
+import { ReportFilter, StudentView } from "@/utils/types";
 
-export default function OneParentPage() {
+export default function OneParentPage({
+  incrementLoading,
+  decrementLoading,
+}: {
+  incrementLoading: () => void;
+  decrementLoading: () => void;
+}) {
   const searchParams = useSearchParams();
   const id: string | null = searchParams.get("id");
   const { parent, isLoading, isError } = useParentById(id!);
+  const [calendarYear, setCalendarYear] = React.useState<number | undefined>(
+    undefined
+  );
+  const { generateMarksByStudentYearReport } = useGenerateMarksReport();
+  const { generateRatingsByStudentYearReport } = useGenerateRatingsReport();
+  const { generateProgressReportByStudent } = useGenerateProgressReport();
 
   useEffect(() => {
-    isError && useToastError({ error: isError?.message, statusCode: isError?.statusCode });
+    isError &&
+      useToastError({
+        error: isError?.message,
+        statusCode: isError?.statusCode,
+      });
   }, [isError]);
 
-  const getMarksReport = () => {
-    // Put code to call reports.ts from here
-  }
+  const getMarksReport = useCallback(
+    async (student: StudentView, type: "excel" | "pdf") => {
+      const link2 = document.createElement("a");
+      link2.href = "#";
+      link2.download = `placeholder`;
+      document.body.appendChild(link2);
+      link2.focus();
+      document.body.removeChild(link2);
 
-  const getRatingsReport = () => {
+      const reportFilter: ReportFilter = {} as ReportFilter;
+      reportFilter.studentId = student.id;
+      reportFilter.year = calendarYear;
 
-  }
+      const date = new Date();
+      const dateString = `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+      const filename = `Marks By Student By Year - ${student.fullname} - ${calendarYear} - ${dateString}`;
+      reportFilter.fileName = filename;
+      reportFilter.type = type;
 
-  const getProgressReport = () => {
+      const { data, error, statusCode, success } =
+        await generateMarksByStudentYearReport(
+          reportFilter,
+          incrementLoading,
+          decrementLoading,
+          () => {
+            setCalendarYear(undefined);
+          },
+          (error, statusCode) => {
+            useToastError({ error, statusCode });
+            setCalendarYear(undefined);
+          }
+        );
 
-  }
+      if (statusCode === 204) {
+        useToastError({ error: "No Content", statusCode });
+        setCalendarYear(undefined);
+        return;
+      }
 
-  const getYearlyMarksReport = () => {
+      if (statusCode !== 200) {
+        return;
+      }
 
-  }
+      let blob;
+      if (type === "excel") {
+        blob = new Blob([data!], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+      } else {
+        blob = new Blob([data!], {
+          type: "application/pdf",
+        });
+      }
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${filename}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    },
+    [generateMarksByStudentYearReport]
+  );
 
-  const getYearlyRatingsReport = () => {
+  const getRatingsReport = useCallback(
+    async (student: StudentView, type: "excel" | "pdf") => {
+      const link2 = document.createElement("a");
+      link2.href = "#";
+      link2.download = `placeholder`;
+      document.body.appendChild(link2);
+      link2.focus();
+      document.body.removeChild(link2);
 
-  }
+      const reportFilter: ReportFilter = {} as ReportFilter;
+      reportFilter.studentId = student.id;
+      reportFilter.year = calendarYear;
+
+      const date = new Date();
+      const dateString = `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+      const filename = `Ratings By Student By Year - ${student.fullname} - ${calendarYear} - ${dateString}`;
+      reportFilter.fileName = filename;
+      reportFilter.type = type;
+
+      const { data, error, statusCode, success } =
+        await generateRatingsByStudentYearReport(
+          reportFilter,
+          incrementLoading,
+          decrementLoading,
+          () => {
+            setCalendarYear(undefined);
+          },
+          (error, statusCode) => {
+            useToastError({ error, statusCode });
+            setCalendarYear(undefined);
+          }
+        );
+
+      if (statusCode === 204) {
+        useToastError({ error: "No Content", statusCode });
+        setCalendarYear(undefined);
+        return;
+      }
+
+      if (statusCode !== 200) {
+        return;
+      }
+
+      let blob;
+      if (type === "excel") {
+        blob = new Blob([data!], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+      } else {
+        blob = new Blob([data!], {
+          type: "application/pdf",
+        });
+      }
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${filename}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    },
+    [generateRatingsByStudentYearReport]
+  );
+
+  const getProgressReport = useCallback(
+    async (student: StudentView, type: "excel" | "pdf") => {
+      const link2 = document.createElement("a");
+      link2.href = "#";
+      link2.download = `placeholder`;
+      document.body.appendChild(link2);
+      link2.focus();
+      document.body.removeChild(link2);
+
+      const reportFilter: ReportFilter = {} as ReportFilter;
+      reportFilter.studentId = student.id;
+
+      const date = new Date();
+      const dateString = `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+      const filename = `Progress By Student - ${student.fullname} - ${dateString}`;
+      reportFilter.fileName = filename;
+      reportFilter.type = type;
+
+      const { data, error, statusCode, success } =
+        await generateProgressReportByStudent(
+          reportFilter,
+          incrementLoading,
+          decrementLoading,
+          () => {
+            setCalendarYear(undefined);
+          },
+          (error, statusCode) => {
+            useToastError({ error, statusCode });
+            setCalendarYear(undefined);
+          }
+        );
+
+      if (statusCode === 204) {
+        useToastError({ error: "No Content", statusCode });
+        setCalendarYear(undefined);
+        return;
+      }
+
+      if (statusCode !== 200) {
+        return;
+      }
+
+      let blob;
+      if (type === "excel") {
+        blob = new Blob([data!], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+      } else {
+        blob = new Blob([data!], {
+          type: "application/pdf",
+        });
+      }
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${filename}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    },
+    [generateRatingsByStudentYearReport]
+  );
 
   return (
     <div className="grow overflow-auto">
@@ -86,8 +293,7 @@ export default function OneParentPage() {
                     color="primary"
                     className="cursor-pointer w-full h-full"
                   >
-                    {!parent?.avatarUrl &&
-                      getInitials(parent?.name || "User")}
+                    {!parent?.avatarUrl && getInitials(parent?.name || "User")}
                   </Avatar>
                 )}
               </div>
@@ -265,7 +471,11 @@ export default function OneParentPage() {
         >
           <div className="flex flex-col px-4 gap-4">
             {parent?.students?.map((student, index) => (
-              <div key={student.id} className="border rounded-lg p-4">
+              <div
+                key={student.id}
+                id={`student-${student.id}`}
+                className="border rounded-lg p-4"
+              >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="info-row">
@@ -281,46 +491,181 @@ export default function OneParentPage() {
                     </div>
                     <Spacer x={4} y={2} />
                     <div className="flex gap-2 flex-wrap">
-                      <Button
-                        size="sm"
-                        color="primary"
-                        variant="flat"
-                        onPress={getMarksReport}
-                      >
-                        Marks Report
-                      </Button>
-                      <Button
-                        size="sm"
-                        color="secondary"
-                        variant="flat"
-                        onPress={getRatingsReport}
-                      >
-                        Ratings Report
-                      </Button>
-                      <Button
-                        size="sm"
-                        color="success"
-                        variant="flat"
-                        onPress={getProgressReport}
-                      >
-                        Progress Report
-                      </Button>
-                      <Button
-                        size="sm"
-                        color="warning"
-                        variant="flat"
-                        onPress={getYearlyMarksReport}
-                      >
-                        Yearly Marks
-                      </Button>
-                      <Button
-                        size="sm"
-                        color="danger"
-                        variant="flat"
-                        onPress={getYearlyRatingsReport}
-                      >
-                        Yearly Ratings
-                      </Button>
+                      <Popover placement="right" backdrop="blur">
+                        <PopoverTrigger>
+                          <Button size="sm" color="primary" variant="flat">
+                            Marks Report
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <div className="px-1 py-2">
+                            <Form>
+                              <Select
+                                label="Year"
+                                variant="bordered"
+                                selectionMode="single"
+                                placeholder="Select year..."
+                                className={calendarYear ? "mb-2" : ""}
+                                selectedKeys={
+                                  calendarYear ? [String(calendarYear)] : []
+                                }
+                                errorMessage={
+                                  !calendarYear ? "Year is required" : ""
+                                }
+                                isInvalid={!calendarYear}
+                                onSelectionChange={(e) =>
+                                  setCalendarYear(
+                                    e ? Number(e.currentKey) : undefined
+                                  )
+                                }
+                              >
+                                {[
+                                  ...Array.from(
+                                    {
+                                      length:
+                                        Number(student.endYear) +
+                                        1 -
+                                        Number(student.startYear),
+                                    },
+                                    (v, k) => k + Number(student.startYear)
+                                  ),
+                                ].map((year) => (
+                                  <SelectItem key={String(year)}>
+                                    {String(year)}
+                                  </SelectItem>
+                                ))}
+                              </Select>
+                            </Form>
+                            {calendarYear && (
+                              <div className="space-x-2">
+                                <Button
+                                  size="sm"
+                                  color="primary"
+                                  variant="flat"
+                                  onPress={() => getMarksReport(student, "pdf")}
+                                >
+                                  PDF
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  color="primary"
+                                  variant="flat"
+                                  onPress={() =>
+                                    getMarksReport(student, "excel")
+                                  }
+                                >
+                                  Excel
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                      <Popover placement="right" backdrop="blur">
+                        <PopoverTrigger>
+                          <Button size="sm" color="secondary" variant="flat">
+                            Ratings Report
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <div className="px-1 py-2">
+                            <Form>
+                              <Select
+                                label="Year"
+                                variant="bordered"
+                                selectionMode="single"
+                                placeholder="Select year..."
+                                className={calendarYear ? "mb-2" : ""}
+                                selectedKeys={
+                                  calendarYear ? [String(calendarYear)] : []
+                                }
+                                errorMessage={
+                                  !calendarYear ? "Year is required" : ""
+                                }
+                                isInvalid={!calendarYear}
+                                onSelectionChange={(e) =>
+                                  setCalendarYear(
+                                    e ? Number(e.currentKey) : undefined
+                                  )
+                                }
+                              >
+                                {[
+                                  ...Array.from(
+                                    {
+                                      length:
+                                        Number(student.endYear) +
+                                        1 -
+                                        Number(student.startYear),
+                                    },
+                                    (v, k) => k + Number(student.startYear)
+                                  ),
+                                ].map((year) => (
+                                  <SelectItem key={String(year)}>
+                                    {String(year)}
+                                  </SelectItem>
+                                ))}
+                              </Select>
+                            </Form>
+                            {calendarYear && (
+                              <div className="space-x-2">
+                                <Button
+                                  size="sm"
+                                  color="secondary"
+                                  variant="flat"
+                                  onPress={() =>
+                                    getRatingsReport(student, "pdf")
+                                  }
+                                >
+                                  PDF
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  color="secondary"
+                                  variant="flat"
+                                  onPress={() =>
+                                    getRatingsReport(student, "excel")
+                                  }
+                                >
+                                  Excel
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                      <Popover placement="right" backdrop="blur">
+                        <PopoverTrigger>
+                          <Button size="sm" color="success" variant="flat">
+                            Progress Report
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <div className="px-1 py-2">
+                            <div className="space-x-2">
+                              <Button
+                                size="sm"
+                                color="success"
+                                variant="flat"
+                                onPress={() =>
+                                  getProgressReport(student, "pdf")
+                                }
+                              >
+                                PDF
+                              </Button>
+                              <Button
+                                size="sm"
+                                color="success"
+                                variant="flat"
+                                onPress={() =>
+                                  getProgressReport(student, "excel")
+                                }
+                              >
+                                Excel
+                              </Button>
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
                   </div>
                   <Button

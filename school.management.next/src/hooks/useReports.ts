@@ -45,7 +45,7 @@ export function useGenerateMarksReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -98,7 +98,7 @@ export function useGenerateMarksReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -147,7 +147,7 @@ export function useGenerateMarksReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -195,7 +195,7 @@ export function useGenerateMarksReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -243,7 +243,7 @@ export function useGenerateMarksReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -292,7 +292,7 @@ export function useGenerateMarksReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -341,7 +341,7 @@ export function useGenerateMarksReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -405,7 +405,7 @@ export function useGenerateRatingsReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -454,7 +454,7 @@ export function useGenerateRatingsReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -503,7 +503,7 @@ export function useGenerateRatingsReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -551,7 +551,7 @@ export function useGenerateRatingsReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -612,7 +612,7 @@ export function useGenerateTeacherReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -662,7 +662,7 @@ export function useGenerateTeacherReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -720,7 +720,7 @@ export function useGenerateProgressReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -769,7 +769,7 @@ export function useGenerateProgressReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -818,7 +818,7 @@ export function useGenerateProgressReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -867,7 +867,7 @@ export function useGenerateProgressReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -916,7 +916,7 @@ export function useGenerateProgressReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
@@ -965,7 +965,7 @@ export function useGenerateProgressReport() {
       } else {
         const reportData = await res.arrayBuffer();
         onSuccess?.(reportData);
-        return { success: true, data: reportData };
+        return { success: true, data: reportData, statusCode: res.status };
       }
     } catch (err: any) {
       const errorMessage =
