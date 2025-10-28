@@ -185,6 +185,7 @@ public class UserServiceImpl implements UserService {
 //        );
 //        return this.userRepository.findOne(spec).orElse(null);
         BooleanExpression predicate = QuerydslUtils.exactMatch(User.class, "username", username, "user");
+        predicate = QuerydslUtils.chainPredicate(predicate, QuerydslUtils.exactMatch(User.class, "person.email", username, "user"), false);
         return AppUtils.userDtoToEntity(this.userQueryService.getUserDetails(predicate));
     }
 
