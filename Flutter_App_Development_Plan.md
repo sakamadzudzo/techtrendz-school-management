@@ -3,12 +3,12 @@
 ## 1. Project Overview
 
 ### Purpose and Main Functionality
-The Flutter School Management App is a mobile application designed to replicate the core functionality of the existing Next.js web application (@school.management.next). It provides a comprehensive school management system that enables administrators, teachers, staff, parents, and students to manage and access school-related data efficiently.
+The Flutter School Management App is a mobile application designed to replicate the core functionality of the existing Next.js web application (@school.management.next). It provides a comprehensive school management system that enables administrators, teachers, staff, and parents to manage and access school-related data efficiently.
 
 The app maintains the same user experience and feature flow as the web version while optimizing for mobile interfaces, including touch interactions, responsive design, and offline capabilities where appropriate.
 
 ### High-Level Summary of How the Flutter App Will Mirror the Next.js App
-- **Authentication & Authorization**: Login, registration, and role-based access (Admin, Teacher, Staff, Parent, Student)
+- **Authentication & Authorization**: Login, registration, and role-based access (Admin, Teacher, Staff, Parent)
 - **Entity Management**: CRUD operations for Students, Parents, Teachers, Staff, Users, Classrooms, Subjects, Extra-Curriculars, Dorms, and Schools
 - **Academic Records**: Coursework/Activity points, marks/ratings for subjects and extra-curriculars
 - **Reporting**: PDF and Excel report generation with various filters (by classroom, student, subject, teacher, etc.)
@@ -88,7 +88,7 @@ lib/
 │   │   │   ├── admin_home_screen.dart
 │   │   │   ├── teacher_home_screen.dart
 │   │   │   ├── parent_home_screen.dart
-│   │   │   └── student_home_screen.dart
+│   │   │   └── staff_home_screen.dart
 │   │   ├── management/
 │   │   │   ├── students/
 │   │   │   │   ├── student_list_screen.dart

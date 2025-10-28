@@ -57,7 +57,7 @@ class User extends Equatable {
   final DateTime? dateOfBirth;
   final DateTime datestamp;
 
-  const User({
+  User({
     required this.id,
     this.personId,
     this.salutation,
@@ -94,6 +94,10 @@ class User extends Equatable {
 
   bool get isParent => roles.contains(Role.PARENT);
 
+  Role? activeRole;
+
+  bool get isStudent => roles.contains(Role.STUDENT);
+
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
@@ -121,6 +125,7 @@ class User extends Equatable {
     bool? changePassword,
     DateTime? dateOfBirth,
     DateTime? datestamp,
+    Role? activeRole,
   }) {
     return User(
       id: id ?? this.id,
@@ -145,7 +150,7 @@ class User extends Equatable {
       changePassword: changePassword ?? this.changePassword,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       datestamp: datestamp ?? this.datestamp,
-    );
+    )..activeRole = activeRole ?? this.activeRole;
   }
 
   @override
@@ -172,5 +177,6 @@ class User extends Equatable {
         changePassword,
         dateOfBirth,
         datestamp,
+        activeRole,
       ];
 }

@@ -16,6 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthRegisterRequested>(_onAuthRegisterRequested);
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
     on<AuthTokenRefreshRequested>(_onAuthTokenRefreshRequested);
+    on<AuthRoleSelected>(_onAuthRoleSelected);
   }
 
   Future<void> _onAuthCheckRequested(
@@ -108,5 +109,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthAuthenticated(user));
       },
     );
+  }
+
+  Future<void> _onAuthRoleSelected(
+    AuthRoleSelected event,
+    Emitter<AuthState> emit,
+  ) async {
+    if (state is AuthAuthenticated) {
+      final currentUser = (state as AuthAuthenticated).user;
+      final updatedUser = currentUser.copyWith(activeRole: event.role);
+      emit(AuthAuthenticated(updatedUser));
+      // Navigation will be handled by the router redirect or manual navigation
+    }
   }
 }

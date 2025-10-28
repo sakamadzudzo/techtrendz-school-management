@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../core/constants/dimensions.dart';
+import '../../../core/constants/enums.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/utils/validators.dart';
 import '../../../presentation/blocs/auth/auth_bloc.dart';
 import '../common/custom_text_field.dart';
+import '../role_selection_dialog.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -44,6 +47,29 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
+  void _navigateToHomeScreen(BuildContext context, Role role) {
+    switch (role) {
+      case Role.ADMIN:
+        context.go('/admin-home');
+        break;
+      case Role.TEACHER:
+        context.go('/teacher-home');
+        break;
+      case Role.PARENT:
+        context.go('/parent-home');
+        break;
+      case Role.STUDENT:
+        context.go('/student-home');
+        break;
+      case Role.STAFF:
+        context.go('/staff-home');
+        break;
+      case Role.GUEST:
+        // Guests shouldn't have access
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -55,6 +81,28 @@ class _LoginFormState extends State<LoginForm> {
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
+        } else if (state is AuthAuthenticated) {
+          final user = state.user;
+          if (user.activeRole != null) {
+            // User has an active role, navigate to appropriate home screen
+            _navigateToHomeScreen(context, user.activeRole!);
+          } else if (user.roles.length > 1) {
+            // Show role selection dialog if user has multiple roles
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => RoleSelectionDialog(
+                roles: user.roles,
+                onRoleSelected: (role) {
+                  context.read<AuthBloc>().add(AuthRoleSelected(role));
+                },
+              ),
+            );
+          } else if (user.roles.isNotEmpty) {
+            // Auto-select the only role
+            context.read<AuthBloc>().add(AuthRoleSelected(user.roles.first));
+            _navigateToHomeScreen(context, user.activeRole!);
+          }
         }
       },
       child: Form(

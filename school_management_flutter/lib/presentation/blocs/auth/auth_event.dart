@@ -65,3 +65,12 @@ class AuthLogoutRequested extends AuthEvent {
 class AuthTokenRefreshRequested extends AuthEvent {
   const AuthTokenRefreshRequested();
 }
+
+class AuthRoleSelected extends AuthEvent {
+  final dynamic role;
+
+  const AuthRoleSelected(this.role);
+
+  @override
+  List<Object?> get props => [role];
+}

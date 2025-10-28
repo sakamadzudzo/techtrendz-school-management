@@ -31,7 +31,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       ? null
       : DateTime.parse(json['dateOfBirth'] as String),
   datestamp: DateTime.parse(json['datestamp'] as String),
-);
+)..activeRole = $enumDecodeNullable(_$RoleEnumMap, json['activeRole']);
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'id': instance.id,
@@ -56,4 +56,14 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'changePassword': instance.changePassword,
   'dateOfBirth': instance.dateOfBirth?.toIso8601String(),
   'datestamp': instance.datestamp.toIso8601String(),
+  'activeRole': _$RoleEnumMap[instance.activeRole],
+};
+
+const _$RoleEnumMap = {
+  Role.ADMIN: 'ADMIN',
+  Role.TEACHER: 'TEACHER',
+  Role.STUDENT: 'STUDENT',
+  Role.PARENT: 'PARENT',
+  Role.STAFF: 'STAFF',
+  Role.GUEST: 'GUEST',
 };
