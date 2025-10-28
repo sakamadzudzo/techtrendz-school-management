@@ -95,6 +95,10 @@ public class AppUtils {
     }
 
     public static User userDtoToEntity(UserDto userDto) {
+        if (userDto == null) {
+            return null;
+        }
+
         User user = new User();
         Person person = new Person();
 
@@ -160,6 +164,10 @@ public class AppUtils {
     }
 
     public static Teacher dtoToTeacher(TeacherDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
         Person person = new Person();
         person.setSalutation(dto.getSalutation());
         person.setFirstName(dto.getFirstName());
@@ -170,6 +178,10 @@ public class AppUtils {
     }
 
     public static Student dtoToStudent(StudentDto dto) {
+        if (dto == null) {
+            return null;
+        }
+        
         Person person = new Person();
         person.setSalutation(dto.getSalutation());
         person.setFirstName(dto.getFirstName());

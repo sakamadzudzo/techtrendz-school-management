@@ -37,6 +37,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<Map<String, Object>> login(AuthDto authDto, HttpServletRequest request) {
+        if (authDto == null || authDto.getUsername() == null || authDto.getUsername().isBlank()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", "Username is required");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
         String fingerprint = AppUtils.getClientFingerprint(request);
         User user = this.userService.getByUsername(authDto.getUsername());
 
