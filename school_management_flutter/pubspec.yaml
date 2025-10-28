@@ -1,5 +1,5 @@
 name: school_management_flutter
-description: "A basic school and student management system."
+description: "A comprehensive school management system mobile application."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -35,6 +35,61 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  # State Management
+  flutter_bloc: ^9.1.1
+  provider: ^6.0.5
+
+  # Networking
+  dio: ^5.3.2
+  pretty_dio_logger: ^1.3.1
+
+  # Local Storage
+  shared_preferences: ^2.2.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # UI Components
+  flutter_screenutil: ^5.9.0
+  cached_network_image: ^3.3.0
+
+  # Forms
+  flutter_form_builder: ^10.2.0
+  form_builder_validators: ^11.2.0
+
+  # Date/Time
+  intl: ^0.20.2
+  persian_datetime_picker: ^3.2.0
+
+  # PDF/Excel
+  pdf: ^3.10.4
+  excel: ^4.0.6
+  printing: ^5.12.0
+
+  # Image Handling
+  image_picker: ^1.0.4
+  flutter_image_compress: ^2.1.0
+
+  # Icons
+  phosphor_flutter: ^2.0.0
+
+  # Themes
+  flex_color_scheme: ^8.3.1
+
+  # Navigation
+  go_router: ^16.3.0
+
+  # Serialization
+  json_serializable: ^6.7.1
+  freezed_annotation: ^3.1.0
+
+  # Error Handling
+  dartz: ^0.10.1
+
+  # Additional utilities
+  equatable: ^2.0.5
+  path_provider: ^2.1.3
+  permission_handler: ^12.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -45,6 +100,15 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+
+  # Code generation
+  build_runner: ^2.4.8
+  freezed: ^3.2.3
+  json_annotation: ^4.8.1
+
+  # Testing
+  bloc_test: ^10.0.0
+  mockito: ^5.4.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
