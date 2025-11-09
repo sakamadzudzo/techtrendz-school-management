@@ -6,10 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.*;
-import zw.co.techtrendz.school.management.api.entity.Person;
-import zw.co.techtrendz.school.management.api.entity.Student;
-import zw.co.techtrendz.school.management.api.repository.StudentRepository;
-import zw.co.techtrendz.school.management.api.service.impl.StudentServiceImpl;
+import zw.co.techtrendz.school.management.api.user.entity.Person;
+import zw.co.techtrendz.school.management.api.user.entity.Student;
+import zw.co.techtrendz.school.management.api.user.repository.StudentRepository;
+import zw.co.techtrendz.school.management.api.user.service.impl.StudentServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;

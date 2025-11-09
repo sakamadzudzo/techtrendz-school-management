@@ -1,0 +1,167 @@
+package zw.co.techtrendz.school.management.api.academic.querydsl;
+
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.stereotype.Service;
+import zw.co.techtrendz.school.management.api.academic.entity.ActivityPoint;
+import zw.co.techtrendz.school.management.api.academic.entity.QActivityPoint;
+import zw.co.techtrendz.school.management.api.common.utility.ViewProjectionUtils;
+
+import java.util.List;
+
+@Service
+public class ActivityPointQueryService {
+
+    private final JPAQueryFactory queryFactory;
+
+    public ActivityPointQueryService(JPAQueryFactory queryFactory) {
+        this.queryFactory = queryFactory;
+    }
+
+    public ActivityPoint getById(long id) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
+                .from(activityPoint)
+                .where(activityPoint.id.eq(id))
+                .fetchOne();
+    }
+
+    public List<ActivityPoint> getAll() {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
+                .from(activityPoint)
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByActivityId(long activityId) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.id.eq(activityId))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByActivityIds(List<Long> activityIds) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.id.in(activityIds))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByStudentId(long studentId) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
+                .from(activityPoint)
+                .where(activityPoint.student.id.eq(studentId))
+                .fetch();
+    }
+
+    public ActivityPoint getByStudentIdByActivityId(long studentId, long activityId) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(
+                        ViewProjectionUtils.getActivityPoints()
+                )
+                .from(activityPoint)
+                .where(activityPoint.student.id.eq(studentId)
+                        .and(activityPoint.extraCurricularYear.id.eq(activityId)))
+                .fetchOne();
+    }
+
+    public List<ActivityPoint> getAllByTeacherId(long teacherId) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.facilitators.any().id.eq(teacherId))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByClassroomId(long classroomId) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .leftJoin(activityPoint.student.classroom)
+                .where(activityPoint.student.classroom.id.eq(classroomId))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByFacilitatorId(long facilitatorId) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.facilitators.any().id.eq(facilitatorId))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByStudentIdByActivityIdByYear(long studentId, long activityId, Integer year) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.student.id.eq(studentId)
+                        .and(activityPoint.extraCurricularYear.id.eq(activityId))
+                        .and(activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByStudentIdByYear(long studentId, Integer year) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.student.id.eq(studentId)
+                        .and(activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByActivityIdByYear(long activityId, Integer year) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.id.eq(activityId)
+                        .and(activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
+
+    public List<ActivityPoint> getAllByTeacherIdByYear(long teacherId, Integer year) {
+        QActivityPoint activityPoint = QActivityPoint.activityPoint;
+
+        return queryFactory
+                .select(ViewProjectionUtils.getActivityPoints())
+                .from(activityPoint)
+                .where(activityPoint.extraCurricularYear.facilitators.any().id.eq(teacherId)
+                        .and(activityPoint.extraCurricularYear.calendarYear.eq(year)))
+                .fetch();
+    }
+}

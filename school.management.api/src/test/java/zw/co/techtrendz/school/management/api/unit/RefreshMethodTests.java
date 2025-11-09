@@ -9,9 +9,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import zw.co.techtrendz.school.management.api.security.JwtUtil;
-import zw.co.techtrendz.school.management.api.service.impl.AuthServiceImpl;
-import zw.co.techtrendz.school.management.api.utility.AppUtils;
+import zw.co.techtrendz.school.management.api.common.security.JwtUtil;
+import zw.co.techtrendz.school.management.api.auth.service.impl.AuthServiceImpl;
+import zw.co.techtrendz.school.management.api.common.utility.AppUtils;
 
 class RefreshMethodTests {
 

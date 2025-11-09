@@ -421,7 +421,10 @@ export default function ParentEdit({
             placeholder="Select students"
             selectionMode="multiple"
             selectedKeys={selectedStudentIds}
-            onSelectionChange={setSelectedStudentIds}
+            onSelectionChange={(keys) => {
+              const stringKeys = new Set([...keys].map(k => String(k)));
+              setSelectedStudentIds(stringKeys);
+            }}
             variant="bordered"
             renderValue={(items) => (
               <div className="flex flex-wrap gap-2">

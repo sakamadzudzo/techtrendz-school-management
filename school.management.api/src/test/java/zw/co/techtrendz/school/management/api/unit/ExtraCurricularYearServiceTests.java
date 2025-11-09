@@ -6,9 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.*;
-import zw.co.techtrendz.school.management.api.entity.ExtraCurricularYear;
-import zw.co.techtrendz.school.management.api.repository.ExtraCurricularYearRepository;
-import zw.co.techtrendz.school.management.api.service.impl.ExtraCurricularYearServiceImpl;
+import zw.co.techtrendz.school.management.api.academic.entity.ExtraCurricularYear;
+import zw.co.techtrendz.school.management.api.academic.repository.ExtraCurricularYearRepository;
+import zw.co.techtrendz.school.management.api.academic.service.impl.ExtraCurricularYearServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;

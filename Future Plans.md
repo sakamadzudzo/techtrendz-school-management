@@ -10,6 +10,12 @@ Make better dashboards. Maybe find a designer to help...
 - *Plan*: How and where to add caching (backend)?
 - *Plan*: How and where to make data-changing transactional (backend)?
 
+## Minor
+- reports page -> filter which to show by role
+- When role is parent, only show home and parent/one.
+- Label for parent/one -> View Info
+- **Check logic of progress reports**
+
 ## Ambitious
 - Convert to microservices with:
 - Auth

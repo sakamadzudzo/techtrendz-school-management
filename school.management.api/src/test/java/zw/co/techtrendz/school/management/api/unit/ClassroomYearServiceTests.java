@@ -6,9 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.*;
-import zw.co.techtrendz.school.management.api.entity.ClassroomYear;
-import zw.co.techtrendz.school.management.api.repository.ClassroomYearRepository;
-import zw.co.techtrendz.school.management.api.service.impl.ClassroomYearServiceImpl;
+import zw.co.techtrendz.school.management.api.academic.entity.ClassroomYear;
+import zw.co.techtrendz.school.management.api.academic.repository.ClassroomYearRepository;
+import zw.co.techtrendz.school.management.api.academic.service.impl.ClassroomYearServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;
