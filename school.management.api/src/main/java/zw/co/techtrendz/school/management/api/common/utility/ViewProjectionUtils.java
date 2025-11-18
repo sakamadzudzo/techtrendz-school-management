@@ -6,6 +6,7 @@ import com.querydsl.core.types.Projections;
 import zw.co.techtrendz.school.management.api.academic.dto.CourseworkDropdown;
 import zw.co.techtrendz.school.management.api.academic.entity.*;
 import zw.co.techtrendz.school.management.api.academic.view.*;
+import zw.co.techtrendz.school.management.api.finance.entity.*;
 import zw.co.techtrendz.school.management.api.user.entity.*;
 import zw.co.techtrendz.school.management.api.user.view.StudentDto;
 import zw.co.techtrendz.school.management.api.user.view.TeacherDto;
@@ -516,7 +517,8 @@ public class ViewProjectionUtils {
                                                 new NullExpression<>(String.class),
                                                 new NullExpression<>(String.class),
                                                 new NullExpression<>(String.class),
-                                                new NullExpression<>(LocalDate.class)
+                                                new NullExpression<>(LocalDate.class),
+                                                subjectYear.teacher.person.identification
                                         )
                                 ),
                                 new NullExpression<>(List.class)
@@ -541,7 +543,8 @@ public class ViewProjectionUtils {
                                 new NullExpression<>(String.class),
                                 new NullExpression<>(String.class),
                                 new NullExpression<>(String.class),
-                                new NullExpression<>(LocalDate.class)
+                                new NullExpression<>(LocalDate.class),
+                                mark.student.person.identification
                         ),
                         Projections.constructor(ClassroomYear.class,
                                 mark.student.classroom.id,
@@ -589,7 +592,8 @@ public class ViewProjectionUtils {
                                 new NullExpression<>(String.class),
                                 new NullExpression<>(String.class),
                                 new NullExpression<>(String.class),
-                                new NullExpression<>(LocalDate.class)
+                                new NullExpression<>(LocalDate.class),
+                                activityPoint.student.person.identification
                         ),
                         new NullExpression<>(Integer.class),
                         new NullExpression<>(Integer.class),
@@ -636,7 +640,8 @@ public class ViewProjectionUtils {
                                 new NullExpression<>(String.class),
                                 new NullExpression<>(String.class),
                                 new NullExpression<>(String.class),
-                                new NullExpression<>(LocalDate.class)
+                                new NullExpression<>(LocalDate.class),
+                                activityPoint.student.person.identification
                         ),
                         new NullExpression<>(Integer.class),
                         new NullExpression<>(Integer.class),
@@ -681,7 +686,8 @@ public class ViewProjectionUtils {
                                         new NullExpression<>(String.class),
                                         new NullExpression<>(String.class),
                                         new NullExpression<>(String.class),
-                                        new NullExpression<>(LocalDate.class)
+                                        new NullExpression<>(LocalDate.class),
+                                        student.person.identification
                                 ),
                                 student.startYear,
                                 student.endYear,
@@ -733,7 +739,8 @@ public class ViewProjectionUtils {
                                         new NullExpression<>(String.class),
                                         new NullExpression<>(String.class),
                                         new NullExpression<>(String.class),
-                                        new NullExpression<>(LocalDate.class)
+                                        new NullExpression<>(LocalDate.class),
+                                        student.person.identification
                                 ),
                                 new NullExpression<>(Integer.class),
                                 new NullExpression<>(Integer.class),
@@ -776,6 +783,77 @@ public class ViewProjectionUtils {
                         coursework.subject.subject.id,
                         coursework.subject.subject.name
                 )
+        );
+    }
+
+    public static ConstructorExpression<BankAccount> getBankAccount() {
+        QBankAccount bankAccount = QBankAccount.bankAccount;
+
+        return Projections.constructor(BankAccount.class,
+                bankAccount.id,
+                bankAccount.name,
+                bankAccount.description,
+                Projections.constructor(Person.class,
+                        bankAccount.holder.id,
+                        bankAccount.holder.salutation,
+                        bankAccount.holder.firstName,
+                        bankAccount.holder.otherNames,
+                        bankAccount.holder.lastName,
+                        new NullExpression<>(String.class),
+                        new NullExpression<>(String.class),
+                        new NullExpression<>(String.class),
+                        new NullExpression<>(String.class),
+                        new NullExpression<>(String.class),
+                        new NullExpression<>(String.class),
+                        new NullExpression<>(String.class),
+                        new NullExpression<>(LocalDate.class),
+                        bankAccount.holder.identification
+                ),
+                Projections.constructor(Bank.class,
+                        bankAccount.bank.id,
+                        bankAccount.bank.name,
+                        bankAccount.bank.description
+                ),
+                bankAccount.branch,
+                bankAccount.branchCode,
+                bankAccount.accountNumber,
+                Projections.constructor(Currency.class,
+                        bankAccount.currency.id,
+                        bankAccount.currency.name,
+                        bankAccount.currency.description
+                ),
+                bankAccount.status,
+                bankAccount.datestamp
+        );
+    }
+
+    public static ConstructorExpression<Fee> getFee() {
+        QFee fee = QFee.fee;
+
+        return Projections.constructor(Fee.class,
+                fee.id,
+                Projections.constructor(Student.class,
+                        fee.student.id,
+                        Projections.constructor(Person.class,
+                                fee.student.person.id,
+                                fee.student.person.salutation,
+                                fee.student.person.firstName,
+                                fee.student.person.otherNames,
+                                fee.student.person.lastName,
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(LocalDate.class),
+                                fee.student.person.identification
+                        ),
+                        new NullExpression<>(ClassroomYear.class)
+                ),
+                fee.calendarYear,
+                new NullExpression<>(List.class)
         );
     }
 }

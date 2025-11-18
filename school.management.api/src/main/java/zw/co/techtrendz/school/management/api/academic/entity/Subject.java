@@ -26,7 +26,7 @@ public class Subject extends Base {
 
     @NotEmpty(message = "Name cannot be empty or null")
     @Column(nullable = false)
-    @Schema(description = "Name of the subject", example = "Mathematics", required = true)
+    @Schema(description = "Name of the subject", example = "Mathematics", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
     @Size(max = 255, message = "Description cannot exceed 255 characters")

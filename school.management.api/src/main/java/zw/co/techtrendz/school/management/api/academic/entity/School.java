@@ -25,7 +25,7 @@ public class School extends Base {
 
     @NotEmpty(message = "Name cannot be empty or null")
     @Column(nullable = false)
-    @Schema(description = "Name of the school", example = "Springfield High School", required = true)
+    @Schema(description = "Name of the school", example = "Springfield High School", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
     @Schema(description = "Email address of the school", example = "info@springfield.edu")

@@ -31,20 +31,20 @@ public class Coursework extends Base {
     private String title;
 
     @NotNull(message = "Coursework type is required")
-    @Schema(description = "Type of coursework", example = "EXAM", required = true)
+    @Schema(description = "Type of coursework", example = "EXAM", requiredMode = Schema.RequiredMode.REQUIRED)
     private CourseworkType type;
 
     @ManyToOne
     @NotNull(message = "Subject is required")
-    @Schema(description = "Subject-year this coursework belongs to", required = true)
+    @Schema(description = "Subject-year this coursework belongs to", requiredMode = Schema.RequiredMode.REQUIRED)
     private SubjectYear subject;
 
     @NotNull(message = "Coursework total is required")
-    @Schema(description = "Total marks for the coursework", example = "100.0", required = true)
+    @Schema(description = "Total marks for the coursework", example = "100.0", requiredMode = Schema.RequiredMode.REQUIRED)
     private Float total;
 
     @NotNull(message = "Coursework pass mark is required")
-    @Schema(description = "Minimum pass mark for the coursework", example = "50.0", required = true)
+    @Schema(description = "Minimum pass mark for the coursework", example = "50.0", requiredMode = Schema.RequiredMode.REQUIRED)
     private Float passMark;
 
     @Transient

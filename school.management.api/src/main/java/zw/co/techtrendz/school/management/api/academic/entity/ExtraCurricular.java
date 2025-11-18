@@ -25,7 +25,7 @@ public class ExtraCurricular extends Base {
 
     @NotEmpty(message = "Name cannot be empty or null")
     @Column(nullable = false)
-    @Schema(description = "Name of the extra-curricular activity", example = "Basketball Team", required = true)
+    @Schema(description = "Name of the extra-curricular activity", example = "Basketball Team", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
     @Size(max = 255, message = "Description cannot exceed 255 characters")

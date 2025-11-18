@@ -30,13 +30,13 @@ public class User extends Base {
 
     @NotEmpty(message = "Username cannot be empty or null")
     @Column(nullable = false)
-    @Schema(description = "Username for login", example = "john.doe", required = true)
+    @Schema(description = "Username for login", example = "john.doe", requiredMode = Schema.RequiredMode.REQUIRED)
     private String username;
 
     @NotEmpty(message = "User must have a password")
     @Column(nullable = false)
     @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Schema(description = "Hashed password for authentication", example = "$2a$10...", required = true)
+    @Schema(description = "Hashed password for authentication", example = "$2a$10...", requiredMode = Schema.RequiredMode.REQUIRED)
     private String password;
 
     @Schema(description = "Whether the user account is verified", example = "true")

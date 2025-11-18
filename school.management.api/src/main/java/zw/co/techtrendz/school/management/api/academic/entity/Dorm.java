@@ -25,7 +25,7 @@ public class Dorm extends Base {
 
     @NotEmpty(message = "Name cannot be empty or null")
     @Column(nullable = false)
-    @Schema(description = "Name of the dormitory", example = "Lincoln House", required = true)
+    @Schema(description = "Name of the dormitory", example = "Lincoln House", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
     @Size(max = 255, message = "Description cannot exceed 255 characters")

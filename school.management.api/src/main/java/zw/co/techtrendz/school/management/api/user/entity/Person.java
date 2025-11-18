@@ -1,10 +1,7 @@
 package zw.co.techtrendz.school.management.api.user.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import zw.co.techtrendz.school.management.api.common.entity.Base;
@@ -62,6 +59,10 @@ public class Person extends Base {
 
     @Schema(description = "Date of birth", example = "1990-05-15")
     private LocalDate dateOfBirth;
+
+    @Column(nullable = false)
+    @Schema(description = "Any form of identification e.g. passport number, ID number", example = "90-334352k49", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String identification;
 
     public Person(long id) {
         this.id = id;
