@@ -26,6 +26,9 @@ public class BankQueryService {
     }
 
     public List<YearDropdown> getAllBankDropdown(List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("name");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
 
         QBank bank = QBank.bank;
 
@@ -45,6 +48,10 @@ public class BankQueryService {
     }
 
     private OrderSpecifier<?>[] getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("name");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         // Build sorting order
         Order order = sortDir == Sort.Direction.ASC ? Order.ASC : Order.DESC;
 

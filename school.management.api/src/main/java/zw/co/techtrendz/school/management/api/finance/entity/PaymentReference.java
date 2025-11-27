@@ -25,7 +25,7 @@ public class PaymentReference extends Base {
     @Schema(description = "Type of reference of an electronic payment", example = "ReferenceType.TRANSACTION_ID")
     private ReferenceType referenceType;
 
-    @Column(nullable = false)
-    @Schema(description = "Reference of an electronic payment", example = "TRANS1xN:00012")
+    @Column(nullable = false, unique = true)
+    @Schema(description = "Reference of an electronic payment", example = "TRANS1xN:00012", requiredMode = Schema.RequiredMode.REQUIRED)
     private String reference;
 }

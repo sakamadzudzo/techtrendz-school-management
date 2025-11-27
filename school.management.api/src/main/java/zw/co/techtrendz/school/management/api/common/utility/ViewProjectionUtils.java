@@ -856,4 +856,133 @@ public class ViewProjectionUtils {
                 new NullExpression<>(List.class)
         );
     }
+
+    public static ConstructorExpression<FeePayment> getFeePayment() {
+        QFeePayment feePayment = QFeePayment.feePayment;
+
+        return Projections.constructor(FeePayment.class,
+                feePayment.id,
+                Projections.constructor(Student.class,
+                        feePayment.student.id,
+                        Projections.constructor(Person.class,
+                                feePayment.student.person.id,
+                                feePayment.student.person.salutation,
+                                feePayment.student.person.firstName,
+                                feePayment.student.person.otherNames,
+                                feePayment.student.person.lastName,
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(LocalDate.class),
+                                feePayment.student.person.identification
+                        ),
+                        new NullExpression<>(ClassroomYear.class)
+                ),
+                feePayment.paymentType,
+                Projections.constructor(BankAccount.class,
+                        feePayment.payingAccount.id,
+                        feePayment.payingAccount.name,
+                        feePayment.payingAccount.description,
+                        Projections.constructor(Person.class,
+                                feePayment.payingAccount.holder.id,
+                                feePayment.payingAccount.holder.salutation,
+                                feePayment.payingAccount.holder.firstName,
+                                feePayment.payingAccount.holder.otherNames,
+                                feePayment.payingAccount.holder.lastName,
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(LocalDate.class),
+                                feePayment.payingAccount.holder.identification
+                        ),
+                        Projections.constructor(Bank.class,
+                                feePayment.payingAccount.bank.id,
+                                feePayment.payingAccount.bank.name,
+                                feePayment.payingAccount.bank.description
+                        ),
+                        feePayment.payingAccount.branch,
+                        feePayment.payingAccount.branchCode,
+                        feePayment.payingAccount.accountNumber,
+                        Projections.constructor(Currency.class,
+                                feePayment.payingAccount.currency.id,
+                                feePayment.payingAccount.currency.name,
+                                feePayment.payingAccount.currency.description
+                        ),
+                        feePayment.payingAccount.status,
+                        feePayment.payingAccount.datestamp
+                ),
+                Projections.constructor(BankAccount.class,
+                        feePayment.receivingAccount.id,
+                        feePayment.receivingAccount.name,
+                        feePayment.receivingAccount.description,
+                        Projections.constructor(Person.class,
+                                feePayment.receivingAccount.holder.id,
+                                feePayment.receivingAccount.holder.salutation,
+                                feePayment.receivingAccount.holder.firstName,
+                                feePayment.receivingAccount.holder.otherNames,
+                                feePayment.receivingAccount.holder.lastName,
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(String.class),
+                                new NullExpression<>(LocalDate.class),
+                                feePayment.receivingAccount.holder.identification
+                        ),
+                        Projections.constructor(Bank.class,
+                                feePayment.receivingAccount.bank.id,
+                                feePayment.receivingAccount.bank.name,
+                                feePayment.receivingAccount.bank.description
+                        ),
+                        feePayment.receivingAccount.branch,
+                        feePayment.receivingAccount.branchCode,
+                        feePayment.receivingAccount.accountNumber,
+                        Projections.constructor(Currency.class,
+                                feePayment.receivingAccount.currency.id,
+                                feePayment.receivingAccount.currency.name,
+                                feePayment.receivingAccount.currency.description
+                        ),
+                        feePayment.receivingAccount.status,
+                        feePayment.receivingAccount.datestamp
+                ),
+                feePayment.referenceType,
+                feePayment.reference,
+                feePayment.kindType,
+                Projections.constructor(Currency.class,
+                        feePayment.currency.id,
+                        feePayment.currency.name,
+                        feePayment.currency.description
+                ),
+                feePayment.amount,
+                feePayment.paymentDate,
+                feePayment.paymentTime,
+                feePayment.verified,
+                feePayment.status,
+                feePayment.datestamp
+        );
+    }
+
+    public static ConstructorExpression<FeeItem> getFeeItem() {
+        QFeeItem feeItem = QFeeItem.feeItem;
+
+        return Projections.constructor(FeeItem.class,
+                feeItem.id,
+                feeItem.name,
+                feeItem.description,
+                feeItem.price,
+                feeItem.quantity,
+                feeItem.status,
+                feeItem.datestamp
+        );
+    }
 }

@@ -35,6 +35,10 @@ public class BankAccountQueryService {
     }
 
     public Page<BankAccount> getByPredicate(int page, int size, List<String> sortBy, Sort.Direction sortDir, BooleanExpression predicate) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         QBankAccount bankAccount = QBankAccount.bankAccount;
 
         Pageable pageable = this.getPageRequest(page, size, sortBy, sortDir);
@@ -60,6 +64,10 @@ public class BankAccountQueryService {
     }
 
     public List<BankAccount> getByPredicate(List<String> sortBy, Sort.Direction sortDir, BooleanExpression predicate) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         QBankAccount bankAccount = QBankAccount.bankAccount;
 
         return this.queryFactory
@@ -71,6 +79,10 @@ public class BankAccountQueryService {
     }
 
     public Page<BankAccount> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         QBankAccount bankAccount = QBankAccount.bankAccount;
 
         Pageable pageable = this.getPageRequest(page, size, sortBy, sortDir);
@@ -94,6 +106,10 @@ public class BankAccountQueryService {
     }
 
     public List<BankAccount> getAll(List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         QBankAccount bankAccount = QBankAccount.bankAccount;
 
         return this.queryFactory
@@ -104,6 +120,10 @@ public class BankAccountQueryService {
     }
 
     private OrderSpecifier<?>[] getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         // Build sorting order
         Order order = sortDir == Sort.Direction.ASC ? Order.ASC : Order.DESC;
 

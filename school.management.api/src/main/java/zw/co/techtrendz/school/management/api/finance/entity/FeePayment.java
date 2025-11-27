@@ -2,12 +2,14 @@ package zw.co.techtrendz.school.management.api.finance.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import zw.co.techtrendz.school.management.api.common.entity.Base;
 import zw.co.techtrendz.school.management.api.finance.enums.KindType;
 import zw.co.techtrendz.school.management.api.finance.enums.PaymentType;
 import zw.co.techtrendz.school.management.api.finance.enums.ReferenceType;
+import zw.co.techtrendz.school.management.api.user.entity.Student;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,6 +32,12 @@ public class FeePayment extends Base {
     private Long id;
 
     @Column(nullable = false)
+    @ManyToOne
+    @Schema(description = "The student for whom payment is being done", example = "Student{ \"id\": 12 }", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull
+    private Student student;
+
+    @Column(nullable = false)
     @Schema(description = "The type of the payment", example = "PaymentType.SWIPE", requiredMode = Schema.RequiredMode.REQUIRED)
     private PaymentType paymentType;
 
@@ -45,6 +53,7 @@ public class FeePayment extends Base {
     @Schema(description = "Type of reference of the electronic payment", example = "ReferenceType.TRANSACTION_ID")
     private ReferenceType referenceType;
 
+    @Column(unique = true)
     @Schema(description = "Reference of the electronic payment", example = "TRANS1xN:00012")
     private String reference;
 
@@ -72,6 +81,7 @@ public class FeePayment extends Base {
 
     public FeePayment(
             Long id,
+            Student student,
             PaymentType paymentType,
             BankAccount payingAccount,
             BankAccount receivingAccount,
@@ -84,6 +94,7 @@ public class FeePayment extends Base {
             LocalTime paymentTime
     ) {
         this.id = id;
+        this.student = student;
         this.paymentType = paymentType;
         this.payingAccount = payingAccount;
         this.receivingAccount = receivingAccount;

@@ -24,6 +24,10 @@ public class FeeQueryService {
     }
 
     public Page<Fee> getByPredicate(int page, int size, List<String> sortBy, Sort.Direction sortDir, BooleanExpression predicate) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         QFee fee = QFee.fee;
 
         Pageable pageable = this.getPageRequest(page, size, sortBy, sortDir);
@@ -49,6 +53,10 @@ public class FeeQueryService {
     }
 
     public List<Fee> getByPredicate(List<String> sortBy, Sort.Direction sortDir, BooleanExpression predicate) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         QFee fee = QFee.fee;
 
         return this.queryFactory
@@ -60,6 +68,10 @@ public class FeeQueryService {
     }
 
     public Page<Fee> getAll(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         QFee fee = QFee.fee;
 
         Pageable pageable = this.getPageRequest(page, size, sortBy, sortDir);
@@ -83,6 +95,10 @@ public class FeeQueryService {
     }
 
     public List<Fee> getAll(List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         QFee fee = QFee.fee;
 
         return this.queryFactory
@@ -93,6 +109,10 @@ public class FeeQueryService {
     }
 
     private OrderSpecifier<?>[] getOrderSpecifiers(List<String> sortBy, Sort.Direction sortDir) {
+        if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;
+
         // Build sorting order
         Order order = sortDir == Sort.Direction.ASC ? Order.ASC : Order.DESC;
 
@@ -107,7 +127,7 @@ public class FeeQueryService {
 
     private Pageable getPageRequest(int page, int size, List<String> sortBy, Sort.Direction sortDir) {
         if (sortBy == null) sortBy = new ArrayList<>();
-        if (sortBy.isEmpty()) sortBy.add("accountNumber");
+        if (sortBy.isEmpty()) sortBy.add("id");
         if (sortDir == null) sortDir = Sort.Direction.DESC;
 
         String[] sortFields = sortBy.toArray(new String[0]);

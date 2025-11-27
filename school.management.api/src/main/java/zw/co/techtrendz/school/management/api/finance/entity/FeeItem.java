@@ -9,6 +9,7 @@ import org.hibernate.envers.Audited;
 import zw.co.techtrendz.school.management.api.common.entity.Base;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -43,4 +44,10 @@ public class FeeItem extends Base {
     @Column(nullable = false)
     @Schema(description = "Quantity of the item line", example = "1.0", requiredMode = Schema.RequiredMode.REQUIRED)
     private BigDecimal quantity;
+
+    public BigDecimal getTotal() {
+        if (price == null || quantity == null) return BigDecimal.ZERO;
+
+        return price.multiply(quantity).setScale(2, RoundingMode.HALF_UP);
+    }
 }

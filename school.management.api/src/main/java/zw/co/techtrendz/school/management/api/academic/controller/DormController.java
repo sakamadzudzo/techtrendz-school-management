@@ -73,7 +73,7 @@ public class DormController {
     )
     @GetMapping("/get/all/by/example")
     public Page<DormDto> getAllDormsByExample(
-            @RequestBody @Valid Dorm dorm,
+            @Parameter(description = "Dorm object with only fields to used in search") @RequestBody Dorm dorm,
             @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "25") int size,
             @Parameter(description = "Sort fields") @RequestParam(defaultValue = "name") List<String> sortBy,

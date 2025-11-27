@@ -6,6 +6,7 @@ import org.springframework.data.domain.Example;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class QuerydslUtils {
 
@@ -81,6 +82,14 @@ public class QuerydslUtils {
             return entityPath.getNumber(fieldName, Double.class).loe(max);
         }
         return null; // No filtering if both are null
+    }
+
+    public static <T> BooleanExpression in(Class<T> entityClass, String fieldName, List<? extends Object> values, String alias) {
+        PathBuilder<T> entityPath = new PathBuilder<>(entityClass, alias);
+        if (values == null || values.isEmpty()) {
+            return null; // No filtering if value is null
+        }
+        return entityPath.get(fieldName).in(values);
     }
 
     public static <T> BooleanExpression toPredicate(Example<T> example, Class<T> entityClass, String alias) {
