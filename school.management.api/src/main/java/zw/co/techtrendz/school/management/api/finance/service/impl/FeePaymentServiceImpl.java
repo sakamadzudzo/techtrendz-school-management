@@ -168,7 +168,7 @@ public class FeePaymentServiceImpl extends AbstractGenericServiceImpl<FeePayment
     }
 
     @Scheduled(cron = "0 0 7,12,17 * * *")
-    private void verifyPayments() {
+    protected void verifyPayments() {
         List<FeePayment> feePayments = this.getAllByVerified(false);
         this.verifyPayments(feePayments);
     }

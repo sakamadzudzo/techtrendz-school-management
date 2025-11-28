@@ -171,6 +171,7 @@ public class DummyDataRunner {
         p1.setFirstName("Arlington");
         p1.setOtherNames("Chikozho");
         p1.setLastName("Maridimuka");
+        p1.setIdentification(generateZimbabweanId());
         p1.setEmail("amaridimuka@mail.com");
         p1.setMobileNumber("0771234567");
         p1.setMobileNumber2("0771234568");
@@ -185,6 +186,7 @@ public class DummyDataRunner {
         p2.setFirstName("Leah");
         p2.setOtherNames("Ane");
         p2.setLastName("Kandemwa");
+        p2.setIdentification(generateZimbabweanId());
         p2.setEmail("leah.a.kandemwa@mail.com");
         p2.setDateOfBirth(LocalDate.of(2010, 5, 15));
 
@@ -193,6 +195,7 @@ public class DummyDataRunner {
         p3.setFirstName("Saka");
         p3.setOtherNames("Shingirai");
         p3.setLastName("Madzudzo");
+        p3.setIdentification(generateZimbabweanId());
         p3.setEmail("sakamadzudzo@mail.com");
         p3.setMobileNumber("0773702467");
         p3.setMobileNumber2("0719702467");
@@ -249,6 +252,7 @@ public class DummyDataRunner {
         p.setFirstName(firstName);
         p.setOtherNames(otherNames);
         p.setLastName(lastName);
+        p.setIdentification(generateZimbabweanId());
         p.setEmail(email);
         p.setMobileNumber(mobile);
         p.setWhatsapp(mobile);
@@ -300,6 +304,7 @@ public class DummyDataRunner {
             person.setLastName(lastNames[AppUtils.getRandom(0, 30)]);
             int otherNameLotto = AppUtils.getRandom(0, 93);
             person.setOtherNames(otherNameLotto < 70 ? firstNames[otherNameLotto] : "");
+            person.setIdentification(generateZimbabweanId());
             person.setSalutation(random.nextBoolean() ? Salutation.MR : Salutation.MS);
             person.setDateOfBirth(LocalDate.of(1980 + random.nextInt(15), 1 + random.nextInt(12), 1 + random.nextInt(28)));
             person.setEmail(person.getFirstName().toLowerCase() + "." + person.getLastName().toLowerCase() + "@schoolmail.ac.zw");
@@ -507,6 +512,7 @@ public class DummyDataRunner {
             person.setFirstName(firstName);
             person.setOtherNames(otherName);
             person.setLastName(lastName);
+            person.setIdentification(generateZimbabweanId());
             person.setEmail(firstName.toLowerCase() + "." + lastName.toLowerCase() + "@studentmail.co.zw");
             person.setMobileNumber("07" + (10000000 + random.nextInt(9000000)));
             person.setDateOfBirth(LocalDate.of(2006 + (i % 5), 1 + (i % 12), 1 + (i % 28)));
@@ -567,6 +573,7 @@ public class DummyDataRunner {
             person.setFirstName(getRandomParentFirstName(random));
             person.setOtherNames(random.nextBoolean() ? getRandomParentFirstName(random) : "");
             person.setLastName(getRandomParentLastName(random));
+            person.setIdentification(this.generateZimbabweanId());
             String email = person.getFirstName().toLowerCase() + "." + person.getLastName().toLowerCase();
             while (this.userService.existsByEmail(email + "@parentmail.co.zw", null)) {
                 email += "1";
@@ -1237,5 +1244,24 @@ public class DummyDataRunner {
             Logger.getLogger(DummyDataRunner.class.getName()).log(Level.SEVERE,
                     "Failed to generate report parameter examples", e);
         }
+    }
+
+    private String generateZimbabweanId() {
+        Random random = new Random();
+        // Generate a Zimbabwean ID number format: XX-XXXXXXXAXX
+        // Where X is a digit and A is a letter
+        StringBuilder id = new StringBuilder();
+        // First two digits
+        id.append(String.format("%02d", random.nextInt(100)));
+        id.append("-");
+        // Next seven digits
+        for (int i = 0; i < 7; i++) {
+            id.append(random.nextInt(10));
+        }
+        // Letter (A-Z)
+        id.append((char) ('A' + random.nextInt(26)));
+        // Last two digits
+        id.append(String.format("%02d", random.nextInt(100)));
+        return id.toString();
     }
 }

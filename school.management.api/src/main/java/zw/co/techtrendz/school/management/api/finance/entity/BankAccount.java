@@ -33,12 +33,12 @@ public class BankAccount extends Base {
     private String description;
 
     @ManyToOne
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Schema(description = "Owner of the account", example = "Person{ \"id\": 71 }", requiredMode = Schema.RequiredMode.REQUIRED)
     private Person holder;
 
     @ManyToOne
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Schema(description = "Bank under which the account is registered", example = "Bank{ \"id\": 1 }", requiredMode = Schema.RequiredMode.REQUIRED)
     private Bank bank;
 
@@ -53,7 +53,7 @@ public class BankAccount extends Base {
     private String accountNumber;
 
     @ManyToOne
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Schema(description = "Base currency of the account", example = "Currency{ \"id\": 1 }", requiredMode = Schema.RequiredMode.REQUIRED)
     private Currency currency;
 }

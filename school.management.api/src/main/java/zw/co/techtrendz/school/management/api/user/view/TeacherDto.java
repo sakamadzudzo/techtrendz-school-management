@@ -44,6 +44,8 @@ public class TeacherDto {
 
     private String linkedin;
 
+    private String identification;
+
     private Status status;
 
     private LocalDateTime datestamp;

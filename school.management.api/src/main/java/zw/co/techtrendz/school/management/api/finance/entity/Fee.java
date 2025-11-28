@@ -29,7 +29,7 @@ public class Fee extends Base {
     private Long id;
 
     @NotEmpty(message = "Student cannot be empty or null")
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Schema(description = "Student being billed", example = "Student{ \"id\": 1 }", requiredMode = Schema.RequiredMode.REQUIRED)
     @ManyToOne
     private Student student;

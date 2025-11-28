@@ -31,7 +31,7 @@ public class FeePayment extends Base {
     @Schema(description = "Unique identifier of the payment", example = "1")
     private Long id;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @ManyToOne
     @Schema(description = "The student for whom payment is being done", example = "Student{ \"id\": 12 }", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull
@@ -62,7 +62,7 @@ public class FeePayment extends Base {
     private KindType kindType;
 
     @ManyToOne
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Schema(description = "Actual currency used in the payment", example = "USD", requiredMode = Schema.RequiredMode.REQUIRED)
     private Currency currency;
 

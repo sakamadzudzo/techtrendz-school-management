@@ -50,6 +50,7 @@ public class ParentQueryService {
                                 parent.person.whatsapp,
                                 parent.person.facebook,
                                 parent.person.linkedin,
+                                parent.person.identification,
                                 parent.status,
                                 parent.datestamp,
                                 new NullExpression<>(List.class)
@@ -77,6 +78,7 @@ public class ParentQueryService {
                                 parent.person.whatsapp,
                                 parent.person.facebook,
                                 parent.person.linkedin,
+                                parent.person.identification,
                                 parent.status,
                                 parent.datestamp,
                                 new NullExpression<>(List.class)
@@ -107,6 +109,7 @@ public class ParentQueryService {
                                 parent.person.whatsapp,
                                 parent.person.facebook,
                                 parent.person.linkedin,
+                                parent.person.identification,
                                 parent.status,
                                 parent.datestamp,
                                 new NullExpression<>(List.class)
@@ -144,6 +147,7 @@ public class ParentQueryService {
                                 parent.person.whatsapp,
                                 parent.person.facebook,
                                 parent.person.linkedin,
+                                parent.person.identification,
                                 parent.status,
                                 parent.datestamp,
                                 new NullExpression<>(List.class)
@@ -186,7 +190,7 @@ public class ParentQueryService {
                         tuple.get(student.person.otherNames),
                         tuple.get(student.person.lastName),
                         null, null, null, null, null, null, null, null, null, null,
-                        null, null, null,
+                        null, null, null, null,
                         tuple.get(student.startYear),
                         tuple.get(student.endYear),
                         null, null, null,

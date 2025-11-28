@@ -29,6 +29,7 @@ public class ParentDto {
     private String whatsapp;
     private String facebook;
     private String linkedin;
+    private String identification;
     private Status status;
     private LocalDateTime datestamp;
     private List<StudentDto> students;

@@ -1,6 +1,7 @@
 package zw.co.techtrendz.school.management.api.finance.service.impl;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.common.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.common.service.impl.AbstractGenericServiceImpl;
 import zw.co.techtrendz.school.management.api.finance.entity.Currency;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+@Service
 public class CurrencyServiceImpl extends AbstractGenericServiceImpl<Currency, Long> implements CurrencyService {
 
     public CurrencyServiceImpl(CurrencyRepository currencyRepository) {

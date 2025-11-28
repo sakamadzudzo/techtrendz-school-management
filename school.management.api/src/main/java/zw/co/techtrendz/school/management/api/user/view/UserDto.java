@@ -45,6 +45,8 @@ public class UserDto {
 
     private String linkedin;
 
+    private String identification;
+
     private String username;
 
     private String password;

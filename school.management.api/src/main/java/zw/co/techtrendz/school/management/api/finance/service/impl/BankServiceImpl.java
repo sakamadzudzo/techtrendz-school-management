@@ -1,6 +1,7 @@
 package zw.co.techtrendz.school.management.api.finance.service.impl;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import zw.co.techtrendz.school.management.api.common.dto.YearDropdown;
 import zw.co.techtrendz.school.management.api.common.service.impl.AbstractGenericServiceImpl;
 import zw.co.techtrendz.school.management.api.finance.entity.Bank;
@@ -11,6 +12,7 @@ import zw.co.techtrendz.school.management.api.finance.service.BankService;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class BankServiceImpl extends AbstractGenericServiceImpl<Bank, Long> implements BankService {
 
     private final BankQueryService bankQueryService;
