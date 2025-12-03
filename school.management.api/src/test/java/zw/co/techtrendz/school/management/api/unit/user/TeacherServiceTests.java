@@ -9,6 +9,7 @@ import org.springframework.data.domain.*;
 import zw.co.techtrendz.school.management.api.user.entity.Person;
 import zw.co.techtrendz.school.management.api.user.entity.Teacher;
 import zw.co.techtrendz.school.management.api.user.repository.TeacherRepository;
+import zw.co.techtrendz.school.management.api.user.service.PersonService;
 import zw.co.techtrendz.school.management.api.user.service.impl.TeacherServiceImpl;
 
 import java.util.Arrays;
@@ -22,6 +23,9 @@ class TeacherServiceTests {
 
     @Mock
     private TeacherRepository teacherRepository;
+
+    @Mock
+    private PersonService personService;
 
     @InjectMocks
     private TeacherServiceImpl teacherService;
@@ -47,6 +51,7 @@ class TeacherServiceTests {
         teacher1.setId(1L);
         teacher1.setPerson(person1);
 
+        when(personService.save(person)).thenReturn(person1);
         when(teacherRepository.save(teacher)).thenReturn(teacher);
 
         Teacher savedTeacher = teacherService.save(teacher);
@@ -90,7 +95,10 @@ class TeacherServiceTests {
         List<Teacher> teachers = Arrays.asList(teacher1, teacher2);
         List<Teacher> newTeachers = Arrays.asList(result_teacher1, result_teacher2);
 
-        when(teacherRepository.saveAll(teachers)).thenReturn(newTeachers);
+        when(personService.save(person1)).thenReturn(result_person1);
+        when(personService.save(person2)).thenReturn(result_person2);
+        when(teacherRepository.save(teacher1)).thenReturn(result_teacher1);
+        when(teacherRepository.save(teacher2)).thenReturn(result_teacher2);
 
         List<Teacher> savedTeachers = teacherService.saveAll(teachers);
 

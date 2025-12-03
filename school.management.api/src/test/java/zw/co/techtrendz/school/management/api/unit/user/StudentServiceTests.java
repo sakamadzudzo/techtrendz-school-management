@@ -9,6 +9,7 @@ import org.springframework.data.domain.*;
 import zw.co.techtrendz.school.management.api.user.entity.Person;
 import zw.co.techtrendz.school.management.api.user.entity.Student;
 import zw.co.techtrendz.school.management.api.user.repository.StudentRepository;
+import zw.co.techtrendz.school.management.api.user.service.PersonService;
 import zw.co.techtrendz.school.management.api.user.service.impl.StudentServiceImpl;
 
 import java.util.Arrays;
@@ -22,6 +23,9 @@ class StudentServiceTests {
 
     @Mock
     private StudentRepository studentRepository;
+
+    @Mock
+    private PersonService personService;
 
     @InjectMocks
     private StudentServiceImpl studentService;
@@ -47,6 +51,7 @@ class StudentServiceTests {
         student1.setId(1L);
         student1.setPerson(person1);
 
+        when(personService.save(person)).thenReturn(person1);
         when(studentRepository.save(student)).thenReturn(student1);
 
         Student savedStudent = studentService.save(student);
@@ -91,14 +96,16 @@ class StudentServiceTests {
 
         List<Student> students = Arrays.asList(student1, student2);
 
-        when(studentRepository.saveAll(students)).thenReturn(Arrays.asList(result_student1,result_student2));
+        when(personService.save(person1)).thenReturn(result_person1);
+        when(personService.save(person2)).thenReturn(result_person2);
+        when(studentRepository.save(student1)).thenReturn(result_student1);
+        when(studentRepository.save(student2)).thenReturn(result_student2);
 
         List<Student> savedStudents = studentService.saveAll(students);
 
         assertNotNull(savedStudents);
         assertEquals(2, savedStudents.size());
-        verify(studentRepository, times(1)).save(student1);
-        verify(studentRepository, times(1)).save(student2);
+        verify(studentRepository, times(2)).save(any(Student.class));
     }
 
     @Test

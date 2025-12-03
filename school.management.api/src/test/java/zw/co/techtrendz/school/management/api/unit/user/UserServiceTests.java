@@ -10,7 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import zw.co.techtrendz.school.management.api.user.entity.Person;
 import zw.co.techtrendz.school.management.api.user.entity.User;
 import zw.co.techtrendz.school.management.api.user.repository.UserRepository;
+import zw.co.techtrendz.school.management.api.user.service.PersonService;
+import zw.co.techtrendz.school.management.api.user.querydsl.UserQueryService;
 import zw.co.techtrendz.school.management.api.user.service.impl.UserServiceImpl;
+import zw.co.techtrendz.school.management.api.user.view.UserDto;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,11 +21,18 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
 
 class UserServiceTests {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PersonService personService;
+
+    @Mock
+    private UserQueryService userQueryService;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -54,6 +64,7 @@ class UserServiceTests {
         user1.setPassword("password");
         user1.setPerson(person1);
 
+        when(personService.save(person)).thenReturn(person1);
         when(userRepository.save(user)).thenReturn(user);
 
         User savedUser = userService.save(user);
@@ -88,6 +99,7 @@ class UserServiceTests {
         result_person1.setId(1L);
         result_person1.setFirstName("John");
         result_person1.setLastName("Doe");
+        result_person1.setEmail("johndoe@mail.com");
         User result_user1 = new User();
         result_user1.setId(1L);
         result_user1.setPerson(result_person1);
@@ -96,6 +108,7 @@ class UserServiceTests {
         result_person2.setId(2L);
         result_person2.setFirstName("Jane");
         result_person2.setLastName("Doe");
+        result_person2.setEmail("janedoe@mail.com");
         User result_user2 = new User();
         result_user2.setId(2L);
         result_user2.setPerson(result_person2);
@@ -103,7 +116,10 @@ class UserServiceTests {
         List<User> users = Arrays.asList(user1, user2);
         List<User> newUsers = Arrays.asList(result_user1, result_user2);
 
-        when(userRepository.saveAll(users)).thenReturn(newUsers);
+        when(personService.save(person1)).thenReturn(result_person1);
+        when(personService.save(person2)).thenReturn(result_person2);
+        when(userRepository.save(user1)).thenReturn(result_user1);
+        when(userRepository.save(user2)).thenReturn(result_user2);
 
         List<User> savedUsers = userService.saveAll(users);
 
@@ -205,91 +221,95 @@ class UserServiceTests {
 
     @Test
     void testGetByUsername() {
-        User user = new User();
-        user.setUsername("johndoe");
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setUsername("johndoe");
+        userDto.setFirstName("John");
+        userDto.setLastName("Doe");
 
-        when(userRepository.findOne(any(Specification.class))).thenReturn(Optional.of(user));
+        when(userQueryService.getUserDetails(any(BooleanExpression.class))).thenReturn(userDto);
 
         User foundUser = userService.getByUsername("johndoe");
 
         assertNotNull(foundUser);
         assertEquals("johndoe", foundUser.getUsername());
-        verify(userRepository, times(1)).findOne(any(Specification.class));
+        verify(userQueryService, times(1)).getUserDetails(any(BooleanExpression.class));
     }
 
     @Test
     void testGetByEmail() {
-        Person person = new Person();
-        person.setEmail("johndoe@mail.com");
-        User user = new User();
-        user.setPerson(person);
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setEmail("johndoe@mail.com");
+        userDto.setFirstName("John");
+        userDto.setLastName("Doe");
 
-        when(userRepository.findOne(any(Specification.class))).thenReturn(Optional.of(user));
+        when(userQueryService.getUserDetails(any(BooleanExpression.class))).thenReturn(userDto);
 
         User foundUser = userService.getByEmail("johndoe@mail.com");
 
         assertNotNull(foundUser);
         assertEquals("johndoe@mail.com", foundUser.getPerson().getEmail());
-        verify(userRepository, times(1)).findOne(any(Specification.class));
+        verify(userQueryService, times(1)).getUserDetails(any(BooleanExpression.class));
     }
 
     @Test
     void testGetByPhoneNumber() {
-        Person person = new Person();
-        person.setMobileNumber("123456789");
-        User user = new User();
-        user.setPerson(person);
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setMobileNumber("123456789");
+        userDto.setFirstName("John");
+        userDto.setLastName("Doe");
 
-        when(userRepository.findOne(any(Specification.class))).thenReturn(Optional.of(user));
+        when(userQueryService.getUserDetails(any(BooleanExpression.class))).thenReturn(userDto);
 
         User foundUser = userService.getByPhoneNumber("123456789");
 
         assertNotNull(foundUser);
         assertEquals("123456789", foundUser.getPerson().getMobileNumber());
-        verify(userRepository, times(1)).findOne(any(Specification.class));
+        verify(userQueryService, times(1)).getUserDetails(any(BooleanExpression.class));
     }
 
     @Test
     void testExistsByUsername() {
-        User user = new User();
-        user.setUsername("johndoe");
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setUsername("johndoe");
 
-        when(userRepository.findOne(any(Specification.class))).thenReturn(Optional.of(user));
+        when(userQueryService.getUserDetails(any(BooleanExpression.class))).thenReturn(userDto);
 
         boolean exists = userService.existsByUsername("johndoe");
 
         assertTrue(exists);
-        verify(userRepository, times(1)).findOne(any(Specification.class));
+        verify(userQueryService, times(1)).getUserDetails(any(BooleanExpression.class));
     }
 
     @Test
     void testExistsByEmail() {
-        Person person = new Person();
-        person.setEmail("johndoe@mail.com");
-        User user = new User();
-        user.setPerson(person);
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setEmail("johndoe@mail.com");
 
-        when(userRepository.findOne(any(Specification.class))).thenReturn(Optional.of(user));
+        when(userQueryService.getUserDetails(any(BooleanExpression.class))).thenReturn(userDto);
 
         boolean exists = userService.existsByEmail("johndoe@mail.com");
 
         assertTrue(exists);
-        verify(userRepository, times(1)).findOne(any(Specification.class));
+        verify(userQueryService, times(1)).getUserDetails(any(BooleanExpression.class));
     }
 
     @Test
     void testExistsByPhoneNumber() {
-        Person person = new Person();
-        person.setMobileNumber("123456789");
-        User user = new User();
-        user.setPerson(person);
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setMobileNumber("123456789");
 
-        when(userRepository.findOne(any(Specification.class))).thenReturn(Optional.of(user));
+        when(userQueryService.getUserDetails(any(BooleanExpression.class))).thenReturn(userDto);
 
         boolean exists = userService.existsByPhoneNumber("123456789");
 
         assertTrue(exists);
-        verify(userRepository, times(1)).findOne(any(Specification.class));
+        verify(userQueryService, times(1)).getUserDetails(any(BooleanExpression.class));
     }
 
     @Test
