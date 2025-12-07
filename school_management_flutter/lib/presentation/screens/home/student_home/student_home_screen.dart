@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:go_router/go_router.dart';
 import '../../../blocs/auth/auth_bloc.dart';
 
 class StudentHomeScreen extends StatelessWidget {
@@ -31,49 +32,47 @@ class StudentHomeScreen extends StatelessWidget {
               context,
               'My Grades',
               PhosphorIconsRegular.clipboardText,
-              () {
-                // TODO: Navigate to grades
-              },
+              () => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Grades view coming soon')),
+              ),
             ),
             _buildMenuCard(
               context,
               'Schedule',
               PhosphorIconsRegular.calendar,
-              () {
-                // TODO: Navigate to schedule
-              },
+              () => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Schedule view coming soon')),
+              ),
             ),
             _buildMenuCard(
               context,
               'Assignments',
               PhosphorIconsRegular.bookOpen,
-              () {
-                // TODO: Navigate to assignments
-              },
+              () => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Assignments coming soon')),
+              ),
             ),
             _buildMenuCard(
               context,
               'Activities',
               PhosphorIconsRegular.trophy,
-              () {
-                // TODO: Navigate to activities
-              },
+              () => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Activities coming soon')),
+              ),
             ),
             _buildMenuCard(
               context,
               'Messages',
               PhosphorIconsRegular.chat,
-              () {
-                // TODO: Navigate to messages
-              },
+              () => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Messages coming soon')),
+              ),
             ),
             _buildMenuCard(
               context,
               'Profile',
               PhosphorIconsRegular.user,
-              () {
-                // TODO: Navigate to profile
-              },
+              () => context.go('/profile'),
             ),
           ],
         ),
@@ -83,20 +82,39 @@ class StudentHomeScreen extends StatelessWidget {
 
   Widget _buildMenuCard(BuildContext context, String title, IconData icon, VoidCallback onTap) {
     return Card(
-      elevation: 4.0,
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8.0),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+        borderRadius: BorderRadius.circular(12.0),
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).primaryColor.withOpacity(0.05),
+                Theme.of(context).primaryColor.withOpacity(0.02),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(12.0),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 48.0, color: Theme.of(context).primaryColor),
-              const SizedBox(height: 8.0),
+              Container(
+                padding: const EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 40.0, color: Theme.of(context).primaryColor),
+              ),
+              const SizedBox(height: 12.0),
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
             ],

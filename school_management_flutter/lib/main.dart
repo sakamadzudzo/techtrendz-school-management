@@ -22,6 +22,39 @@ import 'presentation/screens/home/teacher_home/teacher_home_screen.dart';
 import 'presentation/screens/home/parent_home/parent_home_screen.dart';
 import 'presentation/screens/home/staff_home/staff_home_screen.dart';
 import 'presentation/screens/home/student_home/student_home_screen.dart';
+import 'presentation/screens/management/students/student_list/student_list_screen.dart';
+import 'presentation/screens/management/students/student_detail/student_detail_screen.dart';
+import 'presentation/screens/management/students/student_form/student_form_screen.dart';
+import 'presentation/screens/management/teachers/teacher_list/teacher_list_screen.dart';
+import 'presentation/screens/management/teachers/teacher_detail/teacher_detail_screen.dart';
+import 'presentation/screens/management/teachers/teacher_form/teacher_form_screen.dart';
+import 'presentation/screens/management/parents/parent_list/parent_list_screen.dart';
+import 'presentation/screens/management/parents/parent_detail/parent_detail_screen.dart';
+import 'presentation/screens/management/parents/parent_form/parent_form_screen.dart';
+import 'presentation/screens/management/schools/school_list/school_list_screen.dart';
+import 'presentation/screens/management/schools/school_detail/school_detail_screen.dart';
+import 'presentation/screens/management/schools/school_form/school_form_screen.dart';
+import 'presentation/screens/management/classrooms/classroom_list/classroom_list_screen.dart';
+import 'presentation/screens/management/classrooms/classroom_detail/classroom_detail_screen.dart';
+import 'presentation/screens/management/classrooms/classroom_form/classroom_form_screen.dart';
+import 'presentation/screens/reports/report_list_screen.dart';
+import 'presentation/screens/reports/report_filters_screen.dart';
+import 'presentation/screens/reports/report_viewer_screen.dart';
+import 'presentation/screens/profile/profile/profile_screen.dart';
+import 'presentation/screens/profile/change_password/change_password_screen.dart';
+import 'data/repositories/student_repository.dart';
+import 'data/datasources/remote/student_remote_data_source.dart';
+import 'presentation/blocs/student/student_bloc.dart';
+import 'data/repositories/school_repository.dart';
+import 'data/datasources/remote/school_remote_data_source.dart';
+import 'presentation/blocs/school/school_bloc.dart';
+import 'data/repositories/classroom_repository.dart';
+import 'data/datasources/remote/classroom_remote_data_source.dart';
+import 'presentation/blocs/classroom/classroom_bloc.dart';
+import 'data/repositories/report_repository.dart';
+import 'data/repositories/report_repository_impl.dart';
+import 'data/datasources/remote/report_remote_data_source.dart';
+import 'presentation/blocs/report/report_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -75,6 +108,136 @@ class _MyAppState extends State<MyApp> {
           path: '/student-home',
           builder: (context, state) => const StudentHomeScreen(),
         ),
+        GoRoute(
+          path: '/students',
+          builder: (context, state) => const StudentListScreen(),
+        ),
+        GoRoute(
+          path: '/students/new',
+          builder: (context, state) => const StudentFormScreen(),
+        ),
+        GoRoute(
+          path: '/students/:id',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return StudentDetailScreen(studentId: id);
+          },
+        ),
+        GoRoute(
+          path: '/students/:id/edit',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return StudentFormScreen(studentId: id);
+          },
+        ),
+        GoRoute(
+          path: '/teachers',
+          builder: (context, state) => const TeacherListScreen(),
+        ),
+        GoRoute(
+          path: '/teachers/new',
+          builder: (context, state) => const TeacherFormScreen(),
+        ),
+        GoRoute(
+          path: '/teachers/:id',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return TeacherDetailScreen(teacherId: id);
+          },
+        ),
+        GoRoute(
+          path: '/teachers/:id/edit',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return TeacherFormScreen(teacherId: id);
+          },
+        ),
+        GoRoute(
+          path: '/parents',
+          builder: (context, state) => const ParentListScreen(),
+        ),
+        GoRoute(
+          path: '/parents/new',
+          builder: (context, state) => const ParentFormScreen(),
+        ),
+        GoRoute(
+          path: '/parents/:id',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return ParentDetailScreen(parentId: id);
+          },
+        ),
+        GoRoute(
+          path: '/parents/:id/edit',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return ParentFormScreen(parentId: id);
+          },
+        ),
+        GoRoute(
+          path: '/schools',
+          builder: (context, state) => const SchoolListScreen(),
+        ),
+        GoRoute(
+          path: '/schools/new',
+          builder: (context, state) => const SchoolFormScreen(),
+        ),
+        GoRoute(
+          path: '/schools/:id',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return SchoolDetailScreen(schoolId: id);
+          },
+        ),
+        GoRoute(
+          path: '/schools/:id/edit',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return SchoolFormScreen(schoolId: id);
+          },
+        ),
+        GoRoute(
+          path: '/classrooms',
+          builder: (context, state) => const ClassroomListScreen(),
+        ),
+        GoRoute(
+          path: '/classrooms/new',
+          builder: (context, state) => const ClassroomFormScreen(),
+        ),
+        GoRoute(
+          path: '/classrooms/:id',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return ClassroomDetailScreen(classroomId: id);
+          },
+        ),
+        GoRoute(
+          path: '/classrooms/:id/edit',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return ClassroomFormScreen(classroomId: id);
+          },
+        ),
+        GoRoute(
+          path: '/reports',
+          builder: (context, state) => const ReportListScreen(),
+        ),
+        GoRoute(
+          path: '/reports/filters',
+          builder: (context, state) => const ReportFiltersScreen(),
+        ),
+        GoRoute(
+          path: '/reports/viewer',
+          builder: (context, state) => const ReportViewerScreen(),
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) => const ProfileScreen(),
+        ),
+        GoRoute(
+          path: '/change-password',
+          builder: (context, state) => const ChangePasswordScreen(),
+        ),
       ],
       redirect: (context, state) {
         // Get the current auth state
@@ -123,8 +286,8 @@ class _MyAppState extends State<MyApp> {
         }
 
         // If user is not authenticated and trying to access protected routes, redirect to login
-        final protectedRoutes = ['/admin-home', '/teacher-home', '/parent-home', '/student-home', '/staff-home'];
-        if (protectedRoutes.contains(state.matchedLocation) && authState is! AuthAuthenticated) {
+        final protectedRoutes = ['/admin-home', '/teacher-home', '/parent-home', '/student-home', '/staff-home', '/students', '/teachers', '/parents', '/schools'];
+        if (protectedRoutes.any((route) => state.matchedLocation.startsWith(route)) && authState is! AuthAuthenticated) {
           return '/login';
         }
 
@@ -148,6 +311,26 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(
           create: (context) => AuthBloc(
             context.read<AuthProvider>().authRepository,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => StudentBloc(
+            StudentRepository(StudentRemoteDataSource()),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => SchoolBloc(
+            SchoolRepository(SchoolRemoteDataSource()),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => ClassroomBloc(
+            ClassroomRepository(ClassroomRemoteDataSource()),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => ReportBloc(
+            ReportRepositoryImpl(ReportRemoteDataSourceImpl()),
           ),
         ),
       ],

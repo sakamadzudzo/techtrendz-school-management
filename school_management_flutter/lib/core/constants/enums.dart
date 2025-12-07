@@ -106,3 +106,34 @@ enum Salutation {
     );
   }
 }
+
+enum Grade {
+  A_P('A+'),
+  A('A'),
+  A_M('A-'),
+  B_P('B+'),
+  B('B'),
+  B_M('B-'),
+  C_P('C+'),
+  C('C'),
+  C_M('C-'),
+  D_P('D+'),
+  D('D'),
+  D_M('D-'),
+  E('E'),
+  F('F'),
+  U('U');
+
+  const Grade(this.value);
+
+  final String value;
+
+  String get displayName => value;
+
+  static Grade fromString(String grade) {
+    return Grade.values.firstWhere(
+      (e) => e.name.toUpperCase() == grade.toUpperCase(),
+      orElse: () => Grade.U,
+    );
+  }
+}

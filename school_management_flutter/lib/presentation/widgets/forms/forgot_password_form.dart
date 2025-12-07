@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:dio/dio.dart';
 import '../../../core/constants/dimensions.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/utils/validators.dart';
+import '../../../core/config/environment.dart';
 
 class ForgotPasswordForm extends StatefulWidget {
   const ForgotPasswordForm({super.key});
@@ -28,21 +30,35 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         _isLoading = true;
       });
 
-      // TODO: Implement forgot password API call
-      // For now, just simulate a delay
-      await Future.delayed(const Duration(seconds: 2));
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppStrings.passwordResetSent),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
+      try {
+        final response = await Dio().post(
+          '${EnvironmentConfig.fullBaseUrl}/auth/forgot-password',
+          data: {'email': _emailController.text},
         );
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppStrings.passwordResetSent),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to send reset email: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
     }
   }

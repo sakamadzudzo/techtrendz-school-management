@@ -35,7 +35,7 @@ class DioClient {
     final interceptors = <Interceptor>[];
 
     // Add logging interceptor in development
-    if (true) { // TODO: Replace with proper environment check
+    if (EnvironmentConfig.enableLogging) {
       interceptors.add(
         PrettyDioLogger(
           requestHeader: true,

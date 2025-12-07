@@ -10,7 +10,15 @@ Make better dashboards. Maybe find a designer to help...
 - ***Plan***: How and where to add caching (backend)?
 - ***Plan***: How and where to make data-changing transactional (backend)?
 - Add ID number to `Person` object. Propagate to frontend
-- Add `@NotNull` to all fields with `@Column(nullable = false)`
+- Add `@NotNull` to all fields with `@Column(nullable = false)` or `@Schema(requiredMode = Schema.RequiredMode.REQUIRED)`
+- Add null and empty checks in all `*QueryService` for sortBy and SortDir -> `if (sortBy == null) sortBy = new ArrayList<>();
+        if (sortBy.isEmpty()) sortBy.add("id");
+        if (sortDir == null) sortDir = Sort.Direction.DESC;`
+- Remove `@Valid` from get endpoints
+- Rafactor services and impl in other packages to use same structure as services in finance package
+- Dashboard buttons not having effect
+- Logout button throwing DioError
+- Call validate in useEffect and watch object changes
 
 ## Minor
 - reports page -> filter which to show by role
@@ -21,12 +29,14 @@ Make better dashboards. Maybe find a designer to help...
 - Copy `GenericService` and impl from `BankService` and impl logic
 - Pass `new String[0]` to `toArray` method calls
 - *Use jlink or other tools to create standalone application*
+- Correct routes and links in flutter app
 
 ## Ambitious
 - Convert to microservices with:
 - Auth
 - School
 - Payment
+- Inventory
 - Can add more...
 
 ## Financial/Accounts module
