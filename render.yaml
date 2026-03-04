@@ -1,0 +1,112 @@
+# ===================================================================
+# Render YAML Configuration for School Management System
+# ===================================================================
+# This render.yaml configures the deployment of both the Spring Boot API
+# and Next.js frontend services on Render.
+#
+# For more information about render.yaml, visit:
+# https://render.com/docs/yaml
+# ===================================================================
+
+services:
+  # ---------------------------------------------------------------------
+  # API Service (Spring Boot Backend)
+  # ---------------------------------------------------------------------
+  - name: school-management-api
+    type: docker
+    region: frankfurt  # Change to your preferred region
+    plan: free  # Use 'starter' or 'standard' for production
+    
+    # Docker configuration
+    dockerfilePath: school.management.api/Dockerfile
+    dockerContext: .
+    
+    # Environment variables for API
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:h2:file:/data/schoolmanage
+      - key: SPRING_DATASOURCE_USERNAME
+        value: sa
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: schoolmanage
+      - key: SERVER_PORT
+        value: "4002"
+      - key: JWT_SECRET
+        value: School_management_application_by_TechTrendz
+      - key: JWT_EXPIRATION
+        value: "60"
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_H2_CONSOLE_ENABLED
+        value: "true"
+      - key: JAVA_OPTS
+        value: -Xmx512m -Xms256m
+    
+    # Port configuration
+    ports:
+      - port: 4002
+        protocol: http
+    
+    # Health check configuration
+    healthCheck:
+      path: /actuator/health
+      interval: 30
+      timeout: 10
+      retries: 3
+    
+    # Auto-deploy settings
+    autoDeploy: true
+
+  # ---------------------------------------------------------------------
+  # Frontend Service (Next.js)
+  # ---------------------------------------------------------------------
+  - name: school-management-frontend
+    type: docker
+    region: frankfurt  # Change to your preferred region
+    plan: free  # Use 'starter' or 'standard' for production
+    
+    # Docker configuration
+    dockerfilePath: school.management.next/Dockerfile
+    dockerContext: .
+    
+    # Environment variables for Frontend
+    envVars:
+      - key: API_BASE
+        # Use the internal Render service URL for container-to-container communication
+        value: http://school-management-api:4002
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+    
+    # Port configuration
+    ports:
+      - port: 3000
+        protocol: http
+    
+    # Health check configuration
+    healthCheck:
+      path: /
+      interval: 30
+      timeout: 10
+      retries: 3
+    
+    # Dependencies - frontend depends on API
+    dependsOn:
+      - serviceName: school-management-api
+        type: readiness  # Wait for API to be healthy before deploying
+    
+    # Auto-deploy settings
+    autoDeploy: true
+
+# ---------------------------------------------------------------------
+# Persistent Disk (for database storage)
+# ---------------------------------------------------------------------
+# Uncomment the following section if you need persistent storage for the database
+# disks:
+#   - name: api-data
+#     sizeGB: 1
+#     mountPath: /data
+#     # Attach to the API service by adding:
+#     # service: school-management-api
+#     # to the service definition above
