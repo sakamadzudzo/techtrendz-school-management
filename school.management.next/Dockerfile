@@ -17,13 +17,13 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 # Copy package files first to leverage Docker cache
-COPY school.management.next/package*.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm ci
 
 # Copy source files
-COPY school.management.next/ ./
+COPY ./ ./
 
 # -----------------------------------------------------------------------------
 # Environment Variables for Production Build
