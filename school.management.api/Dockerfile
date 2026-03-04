@@ -17,10 +17,10 @@ FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy pom.xml first to leverage Docker cache for dependencies
-COPY school.management.api/pom.xml .
+COPY pom.xml .
 
 # Copy source files
-COPY school.management.api/src ./src
+COPY src ./src
 
 # Build the application (skip tests for faster builds)
 # The Maven wrapper is not needed since we use Maven directly
