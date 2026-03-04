@@ -1,0 +1,35 @@
+# ===================================================================
+# Root Docker ignore
+# ===================================================================
+# Files and directories to exclude from Docker build context
+
+# IDE
+.idea/
+.vscode/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+!README.md
+
+# Flutter (not needed for Docker)
+school_management_flutter/
+
+# Node.js (not needed for API build)
+node_modules/
+package-lock.json
+
+# Database files (generated at runtime)
+*.mv.db
+*.trace.db
+
+# Logs
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db

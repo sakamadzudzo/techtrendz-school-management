@@ -1,0 +1,115 @@
+# ===================================================================
+# Docker Compose for School Management System
+# ===================================================================
+# This docker-compose.yml orchestrates both the Spring Boot API
+# and Next.js frontend services.
+#
+# Usage:
+#   docker-compose up -d          # Start all services
+#   docker-compose logs -f        # View logs
+#   docker-compose down           # Stop all services
+# ===================================================================
+
+version: '3.8'
+
+services:
+  # -----------------------------------------------------------------------------
+  # API Service (Spring Boot Backend)
+  # -----------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: school.management.api/Dockerfile
+    container_name: school-management-api
+    restart: unless-stopped
+    
+    # Environment variables for API
+    environment:
+      # Database Configuration (H2 in-memory/file)
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/data/schoolmanage
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: schoolmanage
+      
+      # Server Configuration
+      SERVER_PORT: 4002
+      
+      # JWT Configuration
+      JWT_SECRET: School_management_application_by_TechTrendz
+      JWT_EXPIRATION: 60
+      
+      # JPA Configuration
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      
+      # H2 Console (disable in production by setting to false)
+      SPRING_H2_CONSOLE_ENABLED: "true"
+    
+    # Expose API port
+    ports:
+      - "4002:4002"
+    
+    # Volume for persistent database storage
+    volumes:
+      - api-data:/data
+    
+    # Health check for API
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4002/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Networks
+    networks:
+      - school-network
+
+  # -----------------------------------------------------------------------------
+  # Frontend Service (Next.js)
+  # -----------------------------------------------------------------------------
+  frontend:
+    build:
+      context: .
+      dockerfile: school.management.next/Dockerfile
+    container_name: school-management-next
+    restart: unless-stopped
+    
+    # Environment variables for Frontend
+    environment:
+      # API Base URL - points to the API service in Docker network
+      API_BASE: http://api:4002
+      NODE_ENV: production
+    
+    # Expose frontend port
+    ports:
+      - "3000:3000"
+    
+    # Wait for API to be ready before starting frontend
+    depends_on:
+      api:
+        condition: service_healthy
+    
+    # Health check for Frontend
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    
+    # Networks
+    networks:
+      - school-network
+
+# -----------------------------------------------------------------------------
+# Networks
+# -----------------------------------------------------------------------------
+networks:
+  school-network:
+    driver: bridge
+
+# -----------------------------------------------------------------------------
+# Volumes (for persistent data)
+# -----------------------------------------------------------------------------
+volumes:
+  api-data:
+    driver: local

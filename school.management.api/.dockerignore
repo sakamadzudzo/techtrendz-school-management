@@ -1,0 +1,40 @@
+# ===================================================================
+# Docker ignore for School Management API
+# ===================================================================
+# Files and directories to exclude from Docker build context
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+.project
+.classpath
+.settings/
+.factorypath
+.sts4-cache
+
+# Logs
+logs/
+*.log
+
+# Database files (these will be in the volume)
+*.mv.db
+*.trace.db
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Build artifacts that shouldn't be included
+*.jar.original
