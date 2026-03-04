@@ -15,11 +15,10 @@ services:
   - name: school-management-api
     type: web
     region: frankfurt  # Change to your preferred region
-    plan: free  # Use 'starter' or 'standard' for production
+    plan: starter  # Use 'starter' or 'standard' for production
     
-    # Docker configuration
-    dockerfilePath: school.management.api/Dockerfile
-    dockerContext: .
+    # Build configuration - Render will auto-detect Spring Boot from pom.xml
+    rootDirectory: school.management.api/
     
     # Environment variables for API
     envVars:
@@ -43,9 +42,7 @@ services:
         value: -Xmx512m -Xms256m
     
     # Port configuration
-    ports:
-      - port: 4002
-        protocol: http
+    targetPort: 4002
     
     # Health check configuration
     healthCheck:
@@ -63,11 +60,10 @@ services:
   - name: school-management-frontend
     type: web
     region: frankfurt  # Change to your preferred region
-    plan: free  # Use 'starter' or 'standard' for production
+    plan: starter  # Use 'starter' or 'standard' for production
     
-    # Docker configuration
-    dockerfilePath: school.management.next/Dockerfile
-    dockerContext: .
+    # Build configuration - Render will auto-detect Next.js from package.json
+    rootDirectory: school.management.next/
     
     # Environment variables for Frontend
     envVars:
@@ -80,9 +76,7 @@ services:
         value: "3000"
     
     # Port configuration
-    ports:
-      - port: 3000
-        protocol: http
+    targetPort: 3000
     
     # Health check configuration
     healthCheck:
@@ -93,8 +87,7 @@ services:
     
     # Dependencies - frontend depends on API
     dependsOn:
-      - serviceName: school-management-api
-        type: readiness  # Wait for API to be healthy before deploying
+      - service: school-management-api
     
     # Auto-deploy settings
     autoDeploy: true
