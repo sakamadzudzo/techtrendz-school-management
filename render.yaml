@@ -13,7 +13,7 @@ services:
   # API Service (Spring Boot Backend)
   # ---------------------------------------------------------------------
   - name: school-management-api
-    type: container
+    type: web
     region: frankfurt  # Change to your preferred region
     plan: free  # Use 'starter' or 'standard' for production
     
@@ -61,7 +61,7 @@ services:
   # Frontend Service (Next.js)
   # ---------------------------------------------------------------------
   - name: school-management-frontend
-    type: container
+    type: web
     region: frankfurt  # Change to your preferred region
     plan: free  # Use 'starter' or 'standard' for production
     
