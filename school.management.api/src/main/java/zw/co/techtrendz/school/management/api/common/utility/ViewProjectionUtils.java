@@ -13,7 +13,10 @@ import zw.co.techtrendz.school.management.api.user.view.TeacherDto;
 import zw.co.techtrendz.school.management.api.user.view.UserDto;
 
 import java.time.LocalDate;
+import java.util.Currency;
 import java.util.List;
+
+import javax.security.auth.Subject;
 
 public class ViewProjectionUtils {
 
@@ -94,6 +97,7 @@ public class ViewProjectionUtils {
                         classroomYear.homeroomTeacher.person.whatsapp,
                         classroomYear.homeroomTeacher.person.facebook,
                         classroomYear.homeroomTeacher.person.linkedin,
+                        classroomYear.homeroomTeacher.person.identification,
                         classroomYear.homeroomTeacher.status,
                         classroomYear.homeroomTeacher.datestamp,
                         new NullExpression<>(List.class),
@@ -160,6 +164,7 @@ public class ViewProjectionUtils {
                         subjectYear.teacher.person.whatsapp,
                         subjectYear.teacher.person.facebook,
                         subjectYear.teacher.person.linkedin,
+                        subjectYear.teacher.person.identification,
                         subjectYear.teacher.status,
                         subjectYear.teacher.datestamp,
                         new NullExpression<>(List.class),
@@ -203,6 +208,7 @@ public class ViewProjectionUtils {
                         subjectYear.teacher.person.whatsapp,
                         subjectYear.teacher.person.facebook,
                         subjectYear.teacher.person.linkedin,
+                        subjectYear.teacher.person.identification,
                         subjectYear.teacher.status,
                         subjectYear.teacher.datestamp,
                         new NullExpression<>(List.class),
