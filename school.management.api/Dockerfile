@@ -47,12 +47,13 @@ COPY --from=build /app/target/*.jar app.jar
 ENV SPRING_DATASOURCE_URL=jdbc:h2:file:/data/schoolmanage
 ENV SPRING_DATASOURCE_USERNAME=sa
 ENV SPRING_DATASOURCE_PASSWORD=schoolmanage
+ENV SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
 
 # Server Configuration
 ENV SERVER_PORT=4002
 
 # JWT Configuration
-ENV JWT_SECRET=School_management_application_by_TechTrendz
+ENV JWT_SECRET=School management application by TechTrendz (Saka Shingirai Madzudzo)
 ENV JWT_EXPIRATION=60
 
 # JPA Configuration
@@ -60,6 +61,19 @@ ENV SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
 # H2 Console (disable in production)
 ENV SPRING_H2_CONSOLE_ENABLED=true
+ENV SPRING_H2_CONSOLE_PATH=/h2-console
+
+# Application Name
+ENV SPRING_APPLICATION_NAME=school.management.api
+
+# Swagger Configuration
+ENV SPRINGDOC_SWAGGER_UI_PATH=/swagger
+
+# Actuator Configuration
+ENV MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,info
+ENV MANAGEMENT_ENDPOINT_HEALTH_ENABLED=true
+ENV MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS=always
+ENV MANAGEMENT_ENDPOINTS_WEB_BASE_PATH=/actuator
 
 # -----------------------------------------------------------------------------
 # Expose the application port
