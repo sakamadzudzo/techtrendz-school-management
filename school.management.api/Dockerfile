@@ -53,7 +53,7 @@ ENV SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
 ENV SERVER_PORT=4002
 
 # JWT Configuration
-ENV JWT_SECRET=School management application by TechTrendz (Saka Shingirai Madzudzo)
+ENV JWT_SECRET=School_management_application_by_TechTrendz_(Saka_Shingirai_Madzudzo)
 ENV JWT_EXPIRATION=60
 
 # JPA Configuration
