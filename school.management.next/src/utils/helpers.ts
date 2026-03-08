@@ -105,7 +105,8 @@ export const sanitizeForWhatsapp = (phone: string) => {
   }
 };
 
-export const API_URL = "http://localhost:4002";
+// export const API_URL = "http://localhost:4002";
+export const API_URL = "https://techtrendz-school-management.onrender.com";
 
 export const passwordRegex =
   // eslint-disable-next-line no-useless-escape
