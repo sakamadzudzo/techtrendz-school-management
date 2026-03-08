@@ -29,7 +29,7 @@ COPY ./ ./
 # Environment Variables for Production Build
 # -----------------------------------------------------------------------------
 # The API URL - update this to point to your API container/service
-ENV API_BASE=http://localhost:4002
+ENV API_BASE=https://techtrendz-school-management.onrender.com
 
 # Build the Next.js application
 RUN npm run build
@@ -52,8 +52,8 @@ COPY --from=build /app/public ./public
 # -----------------------------------------------------------------------------
 # The API Base URL - must match the API service name in docker-compose
 # In Docker Compose, this will be http://api:4002
-ENV API_BASE=http://api:4002
-ENV NODE_ENV=production
+ENV API_BASE=https://techtrendz-school-management.onrender.com
+ENV NODE_ENV=development
 
 # -----------------------------------------------------------------------------
 # Expose the frontend port (Next.js default)
