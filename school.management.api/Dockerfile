@@ -50,7 +50,7 @@ ENV SPRING_DATASOURCE_PASSWORD=schoolmanage
 ENV SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
 
 # Server Configuration
-ENV SERVER_PORT=4002
+ENV SERVER_PORT=8080
 
 # JWT Configuration
 ENV JWT_SECRET=School_management_application_by_TechTrendz_(Saka_Shingirai_Madzudzo)
